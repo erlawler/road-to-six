@@ -89,7 +89,7 @@ The MVP tests whether football-only and market-aware probabilities differ in use
 - [x] API keys remain server-side and are excluded from logs.
 - [x] Forecast is backtested with Brier score and calibration reporting.
 - [x] Runtime AI output is schema validated and falls back safely.
-- [ ] Dedicated OpenAI project maximum is $10 and the application cutoff is $9.50.
+- [x] Dedicated OpenAI project maximum is $10 and the application cutoff is $9.50.
 - [x] Responsible gambling notice is visible beside market analysis.
 
 ## Decision

@@ -15,7 +15,7 @@ This review documents product risk decisions. It is not legal advice or a guaran
 | Area | Decision | Control and accepted limitation |
 |---|---|---|
 | Data rights | ACCEPTED WITH LIMITATIONS | nflverse presents its data repository under CC BY 4.0. The application provides attribution, links to the source and license, states that the snapshot was transformed, and acknowledges that the license covers only rights the licensor can grant. Underlying third party rights may still apply. |
-| Market data | ACCEPTED WITH CONDITIONS | The Odds API terms support websites, dashboards, and analytical tools when the data is not redistributed as a standalone product. The project shows only normalized consensus values and keeps the key server-side. Live display remains blocked until a private key is configured and one response is validated. |
+| Market data | ACCEPTED WITH CONDITIONS | The Odds API terms support websites, dashboards, and analytical tools when the data is not redistributed as a standalone product. The project shows only normalized consensus values and keeps the key server-side. A current response was validated through the private release candidate. |
 | Trademark | ACCEPTED WITH LIMITATIONS | The NFL states that league and club names, logos, uniform designs, and related marks are protected. The project uses factual text references to identify the subject, excludes logos and uniform artwork, avoids official colors as a copied trade dress claim, and displays a prominent non-affiliation notice. A rights holder could still object. |
 | Player publicity | ACCEPTED WITH LIMITATIONS | Names and public performance statistics are used as factual evidence. No headshots, likenesses, medical information, endorsements, or private data are included. |
 | Responsible use | ACCEPTED | The product calculates educational probabilities and uncertainty. It provides no picks, stakes, payouts, affiliate links, sportsbook links, wager placement, or personalized advice. |
@@ -45,4 +45,4 @@ This review documents product risk decisions. It is not legal advice or a guaran
 
 ## Acceptance record
 
-Eric Lawler explicitly requested completion of the public-use review and acceptance of the documented limitations on July 15, 2026. The release can advance to a private hosted candidate while the credential-dependent live gates and public-hosting approval remain open.
+Eric Lawler explicitly requested completion of the public-use review and acceptance of the documented limitations on July 15, 2026. The release can advance to a private hosted candidate while the Runtime AI billing gate and public-hosting approval remain open.
