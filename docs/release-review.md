@@ -4,7 +4,7 @@
 
 **Release candidate:** READY WITH EXTERNAL BLOCKERS
 
-**Public source repository:** AUTHORIZED, BLOCKED BY GITHUB SIGN-IN
+**Public source repository:** COMPLETE
 
 **Private hosted candidate:** COMPLETE
 
@@ -14,7 +14,7 @@
 
 The release candidate passes the product, accessibility, security, privacy, responsible-use, data-rights, trademark, build, and test gates with the documented limitations accepted in the [Public Use Review](public-use-review.md).
 
-The deterministic product is release ready. The live odds and runtime AI gates cannot pass until their private keys are configured. GitHub creation cannot complete until the expired local GitHub session is renewed. Public hosting remains outside the current approval.
+The deterministic product is release ready. The live odds and runtime AI gates cannot pass until their private keys are configured. Public hosting remains outside the current approval.
 
 ## Gate status
 
@@ -29,7 +29,7 @@ The deterministic product is release ready. The live odds and runtime AI gates c
 | Security and privacy | COMPLETE | No credentials were found in the repository. Secrets remain server-side. Request size, content type, numeric inputs, timeouts, CSP, HSTS, frame blocking, browser permissions, and cross-origin policies are enforced. `npm audit` found zero vulnerabilities. |
 | Responsible use | COMPLETE | The interface provides probabilities and uncertainty without picks, stakes, payouts, affiliate links, sportsbook links, or wager placement. |
 | Trademark and public content | ACCEPTED WITH LIMITATIONS | Official logos, player likenesses, uniforms, endorsement claims, and copied NFL content are excluded. Text references identify the subject and the non-affiliation notice is visible. A rights holder could still object. |
-| GitHub | BLOCKED | Public repository creation and initial push are authorized. The local GitHub CLI session for `erlawler` is expired and must be renewed. |
+| GitHub | COMPLETE | The public [erlawler/road-to-six](https://github.com/erlawler/road-to-six) repository contains the validated release history, CI, security guidance, source attribution, and release documentation. |
 | Private hosting | COMPLETE | The owner-only [Road to Six release candidate](https://road-to-six-erl.erlrickylre.chatgpt.site) is deployed. One user and no groups have access. Nonsecret model and budget settings are active. |
 | Public hosting | BLOCKER | Do not change access to public or deploy a public version until Eric Lawler approves the private candidate. |
 
@@ -49,7 +49,6 @@ The deterministic product is release ready. The live odds and runtime AI gates c
 
 ## Remaining checklist
 
-- [ ] Eric: renew the GitHub CLI sign-in so the public repository can be created and pushed.
 - [ ] Eric: add a private free-tier The Odds API key.
 - [ ] Eric: create or select a dedicated OpenAI project, set its budget to $10, and provide its key through secure secret configuration.
 - [ ] Codex: validate one live odds response and one Runtime AI response after the keys are available.
