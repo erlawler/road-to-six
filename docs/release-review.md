@@ -39,9 +39,9 @@ The deterministic product and live odds integration are release ready. Runtime A
 - Four opponent leaders updated from the selected weekly matchup
 - Walk-forward forecast backtest on the 2024 to 2025 holdout
 - Football-only, vig-adjusted market, and market-aware probabilities shown separately
-- Live odds returned five current Dallas events from The Odds API without exposing the key
-- Runtime AI reached OpenAI but received `insufficient_quota`; the deterministic fallback and D1 budget ledger remained available
-- The prior owner-authenticated candidate verified the page, budget endpoint, deterministic forecast fallback, semantic control group, and lack of horizontal overflow
+- Local and owner-authenticated hosted checks returned five current Dallas events from The Odds API without exposing the key
+- Local and hosted Runtime AI requests reached the configured integration but could not complete while OpenAI returned `insufficient_quota`; the deterministic fallback and D1 budget ledger remained available
+- The owner-authenticated hosted smoke test verified the page, budget endpoint, current odds response, deterministic forecast fallback, semantic control group, and lack of horizontal overflow
 - Browser semantic tree and status announcements verified on the updated release candidate
 - Security headers verified on the rendered page and API routes
 - Current dependency audit returned zero vulnerabilities
