@@ -28,7 +28,7 @@ The MVP now uses a versioned nflverse snapshot for the 2026 Dallas roster and sc
 
 ## Quick start
 
-Requirements: Node.js 22.13.0 or newer.
+Requirements: Node.js 22.19.0 or newer.
 
 ```bash
 npm install
