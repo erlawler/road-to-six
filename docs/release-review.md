@@ -1,9 +1,13 @@
 # Release Review
 
-**Review date:** July 15, 2026  
-**Release candidate:** READY WITH EXTERNAL BLOCKERS  
-**Public source repository:** AUTHORIZED, BLOCKED BY GITHUB SIGN-IN  
-**Private hosted candidate:** IN PROGRESS  
+**Review date:** July 15, 2026
+
+**Release candidate:** READY WITH EXTERNAL BLOCKERS
+
+**Public source repository:** AUTHORIZED, BLOCKED BY GITHUB SIGN-IN
+
+**Private hosted candidate:** COMPLETE
+
 **Public hosting:** BLOCKED pending Eric Lawler's final approval
 
 ## Decision
@@ -26,7 +30,7 @@ The deterministic product is release ready. The live odds and runtime AI gates c
 | Responsible use | COMPLETE | The interface provides probabilities and uncertainty without picks, stakes, payouts, affiliate links, sportsbook links, or wager placement. |
 | Trademark and public content | ACCEPTED WITH LIMITATIONS | Official logos, player likenesses, uniforms, endorsement claims, and copied NFL content are excluded. Text references identify the subject and the non-affiliation notice is visible. A rights holder could still object. |
 | GitHub | BLOCKED | Public repository creation and initial push are authorized. The local GitHub CLI session for `erlawler` is expired and must be renewed. |
-| Private hosting | IN PROGRESS | Sites project `road-to-six-erl` is owner-only. Nonsecret runtime model and budget settings are configured. Source push and private deployment remain. |
+| Private hosting | COMPLETE | The owner-only [Road to Six release candidate](https://road-to-six-erl.erlrickylre.chatgpt.site) is deployed. One user and no groups have access. Nonsecret model and budget settings are active. |
 | Public hosting | BLOCKER | Do not change access to public or deploy a public version until Eric Lawler approves the private candidate. |
 
 ## Validation evidence
@@ -37,6 +41,7 @@ The deterministic product is release ready. The live odds and runtime AI gates c
 - Football-only, vig-adjusted market, and market-aware probabilities shown separately
 - Live odds configuration-required response verified without exposing a key
 - Runtime AI deterministic fallback and available D1 budget ledger verified without exposing a key
+- Owner-authenticated hosted smoke test verified the page, budget endpoint, odds fallback, forecast fallback, semantic control group, and lack of horizontal overflow
 - Browser semantic tree and status announcements verified on the updated release candidate
 - Security headers verified on the rendered page and API routes
 - Current dependency audit returned zero vulnerabilities
@@ -48,6 +53,5 @@ The deterministic product is release ready. The live odds and runtime AI gates c
 - [ ] Eric: add a private free-tier The Odds API key.
 - [ ] Eric: create or select a dedicated OpenAI project, set its budget to $10, and provide its key through secure secret configuration.
 - [ ] Codex: validate one live odds response and one Runtime AI response after the keys are available.
-- [ ] Codex: finish the owner-only deployment and private smoke test.
 - [ ] Eric: approve public hosting.
 - [ ] Codex: change hosting access to public and run the production smoke test only after approval.

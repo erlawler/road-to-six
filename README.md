@@ -10,7 +10,7 @@ The name reflects the Cowboys' pursuit of a sixth Super Bowl championship after 
 
 Change the assumptions, compare the football and market signals, and understand the probability and uncertainty.
 
-The local MVP now uses a versioned nflverse snapshot for the 2026 Dallas roster and schedule, complete 2025 regular-season player production baselines, market lines where available, a walk-forward probability model, a holdout backtest, and a cost-safe runtime explanation endpoint. Publication has not occurred.
+The MVP now uses a versioned nflverse snapshot for the 2026 Dallas roster and schedule, complete 2025 regular-season player production baselines, market lines where available, a walk-forward probability model, a holdout backtest, and a cost-safe runtime explanation endpoint. An owner-only [hosted release candidate](https://road-to-six-erl.erlrickylre.chatgpt.site) is deployed. Public hosting has not been approved.
 
 ## Portfolio proof
 
