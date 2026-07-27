@@ -42,6 +42,9 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /New York Giants/);
   assert.match(html, /Jaxson Dart/);
   assert.match(html, /Refresh odds/);
+  assert.match(html, /Uncertainty to keep in view/);
+  assert.match(html, /The Odds API current markets/);
+  assert.match(html, /Illustrative uncertainty band/);
   assert.doesNotMatch(html, /Monthly runtime AI safety limit/);
   assert.doesNotMatch(html, />Cost<|>Brand</);
   assert.match(html, /Educational probability, not a recommended bet/);
@@ -60,6 +63,7 @@ test("forecast API preserves the deterministic fallback", async () => {
       body: JSON.stringify({
         gameId: "2026_01_DAL_NYG",
         controls: { quarterback: 100, lamb: 100, pickens: 100, williams: 100, defense: 100, opponentStar: 100 },
+        market: { cowboysMoneyline: -10_000, opponentMoneyline: 10_000 },
       }),
     }),
     {
@@ -73,6 +77,8 @@ test("forecast API preserves the deterministic fallback", async () => {
   assert.equal(payload.explanation.mode, "deterministic");
   assert.equal(payload.forecast.modelVersion, "elo-market-v1.1.0");
   assert.equal(payload.forecast.probability > 0 && payload.forecast.probability < 1, true);
+  assert.equal(payload.forecast.marketImplied < 0.7, true);
+  assert.equal(payload.marketEvidence.source, "Bundled nflverse market snapshot");
   assert.match(payload.fallbackReason, /OPENAI_API_KEY/);
 });
 

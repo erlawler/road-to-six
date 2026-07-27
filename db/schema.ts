@@ -8,3 +8,12 @@ CREATE TABLE IF NOT EXISTS ai_monthly_budget (
   updated_at TEXT NOT NULL
 )
 `;
+
+export const ODDS_CACHE_SCHEMA_SQL = `
+CREATE TABLE IF NOT EXISTS odds_cache (
+  cache_key TEXT PRIMARY KEY,
+  payload TEXT NOT NULL,
+  fetched_at TEXT NOT NULL,
+  expires_at INTEGER NOT NULL
+)
+`;

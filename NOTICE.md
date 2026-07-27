@@ -14,7 +14,7 @@ The nflverse repository license applies only to rights the licensor has authorit
 
 ## Market data
 
-The live adapter is designed for The Odds API. Current market data is shown only inside an educational analytical interface. It is not offered through a public API, downloadable file, or standalone data product. The adapter remains disabled until a private key is configured and a live display check passes.
+The live adapter uses The Odds API. Current market data is normalized into consensus values and shown only inside the educational analytical interface. The same-site application endpoint is not documented or licensed as a standalone feed, does not enable cross-origin access, and caches results for six hours to protect the free allowance. The private key is configured server-side and the live display check passes.
 
 ## Names and marks
 

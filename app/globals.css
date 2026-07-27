@@ -136,6 +136,10 @@ nav a:hover { color: white; }
   padding: 14px 19px;
   text-transform: uppercase;
 }
+button:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
 .primary-action { background: white; border: 1px solid white; color: var(--navy-950); }
 .primary-action.dark { background: var(--blue-500); border-color: var(--blue-500); color: white; }
 .secondary-action { border: 1px solid rgba(255, 255, 255, 0.3); color: white; }
@@ -219,6 +223,11 @@ nav a:hover { color: white; }
 .driver-list span { font-size: 0.78rem; font-weight: 850; }
 .driver-list strong { color: var(--blue-300); font-size: 0.76rem; }
 .driver-list small { color: #8fa2b8; font-size: 0.7rem; grid-column: 1 / -1; line-height: 1.5; }
+.uncertainty-panel { background: rgba(255,255,255,0.055); border-left: 3px solid var(--blue-300); margin-top: 22px; padding: 18px 20px; }
+.uncertainty-panel > strong { font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.uncertainty-panel ul { color: #aebed0; font-size: 0.72rem; line-height: 1.55; margin: 12px 0; padding-left: 18px; }
+.uncertainty-panel li + li { margin-top: 7px; }
+.uncertainty-panel small { color: #d0dae6; display: block; font-size: 0.7rem; line-height: 1.5; }
 .runtime-action { align-items: center; display: flex; gap: 16px; margin: 24px 0; }
 .runtime-action small { color: #9dafc2; line-height: 1.45; }
 .players-section { background: #e8edf2; border-bottom: 1px solid #d2d9e0; border-top: 1px solid #d2d9e0; }
@@ -240,7 +249,7 @@ nav a:hover { color: white; }
 .player-card span { color: var(--blue-500); font-size: 0.65rem; font-weight: 900; letter-spacing: 0.1em; }
 .player-card h3 { font-size: 1.22rem; letter-spacing: -0.03em; margin: 7px 0 10px; }
 .player-card p { color: var(--muted); font-size: 0.75rem; line-height: 1.5; margin: 0; }
-.player-card > small { border-top: 1px solid #e1e6eb; color: #6c7988; font-size: 0.65rem; grid-column: 1 / -1; padding-top: 13px; text-transform: uppercase; }
+.player-card > small { border-top: 1px solid #e1e6eb; color: #566575; font-size: 0.65rem; grid-column: 1 / -1; padding-top: 13px; text-transform: uppercase; }
 
 .model-section { background: var(--navy-900); color: white; }
 .section-heading.inverse p { color: #a9b9cb; }
@@ -278,7 +287,14 @@ footer span, footer p { color: #91a3b7; font-size: 0.72rem; line-height: 1.6; ma
 
 @media (max-width: 920px) {
   .site-header { grid-template-columns: 1fr auto; }
-  .site-header nav { display: none; }
+  .site-header nav {
+    gap: 20px;
+    grid-column: 1 / -1;
+    overflow-x: auto;
+    padding: 2px 0 3px;
+    scrollbar-width: thin;
+  }
+  .site-header nav a { white-space: nowrap; }
   .hero { grid-template-columns: 1fr; }
   .hero-forecast { max-width: 560px; }
   .market-strip { grid-template-columns: repeat(2, 1fr); }

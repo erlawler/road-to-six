@@ -34,6 +34,16 @@ test("returns bounded football and market probabilities", () => {
   assert.equal(forecast.confidenceHigh > forecast.probability, true);
 });
 
+test("uses the per-book consensus probability when the trusted adapter supplies one", () => {
+  const forecast = calculateForecast({
+    game: { ...game, marketImpliedProbability: 0.61 },
+    ratings: { DAL: 1457.3, NYG: 1360.4 },
+    controls: { quarterback: 100, lamb: 100, pickens: 100, williams: 100, defense: 100, opponentStar: 100 },
+  });
+
+  assert.equal(forecast.marketImplied, 0.61);
+});
+
 test("quarterback participation materially changes the scenario", () => {
   const healthy = calculateForecast({
     game,

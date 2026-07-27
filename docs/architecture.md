@@ -2,7 +2,7 @@
 
 ## Answer
 
-The implemented local MVP is a public-ready, anonymous Market Bias Lab with server-side data adapters, a versioned nflverse snapshot, a testable probability function, a D1 monthly budget ledger, and a runtime AI explanation endpoint. Live vendor calls remain disabled until credentials are configured.
+The implemented private release candidate is a public-ready, anonymous Market Bias Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, a D1 monthly budget ledger, and a runtime AI explanation endpoint. Live odds are enabled. Runtime AI remains on deterministic fallback until OpenAI provider quota is available.
 
 ```mermaid
 flowchart LR
@@ -57,9 +57,9 @@ flowchart LR
 ## Data flow
 
 1. The snapshot builder reads approved football and market records, normalizes identifiers, and writes a versioned local artifact.
-2. The free odds adapter can refresh current markets on demand after its server-side key is configured.
+2. The free odds adapter refreshes current markets through a six-hour shared cache that protects the monthly free allowance.
 3. The visitor selects a game, reviews the opponent's four highest 2025 PPR producers who remain on its active 2026 roster, and changes Cowboys or opponent scenario assumptions without signing in.
-4. The feature builder calculates football-only probability and blends it with vig-adjusted moneyline probability. Spread, total, and line status remain visible market context without being double counted.
+4. The feature builder calculates football-only probability and blends it with the median of each sportsbook's independently vig-adjusted Dallas probability. Median moneylines, spread, total, and line status remain visible market context without being double counted.
 5. The runtime AI calls the versioned probability function as a required tool.
 6. The function returns the calculated probability, confidence band, and model version.
 7. The AI returns structured drivers, evidence references, and uncertainty while preserving the function result.
@@ -82,12 +82,14 @@ flowchart LR
 - Convert consensus moneyline to a vig-adjusted implied probability for comparison.
 - Use vig-adjusted moneyline as the market probability input. Show spread, total, and line status as separate evidence.
 - Bound probability from 0 to 1 and reject malformed or unsupported outputs.
-- Require structured output with probability, confidence, drivers, evidence, uncertainty, and notice.
+- Require structured output with probability, model version, source timestamp, drivers, evidence, uncertainty, and notice.
+- Reject AI output that changes the forecast contract or contains actionable betting guidance.
 - Set `store: false` for OpenAI Responses API calls.
 - Default to GPT-5.6 Luna and reserve cost before each request using model-specific standard token rates.
 - Reconcile actual input and output tokens in D1 after each successful response.
 - Use a dedicated OpenAI project with a $10 monthly maximum and stop application calls at $9.50.
-- Bound prompt size and output tokens. Add request caching before a public launch if traffic requires it.
+- Bound streamed request bytes, prompt size, and output tokens.
+- Cache current odds for six hours in D1 and disable repeated client requests while a refresh is active.
 - Prohibit recommended bets, stake sizes, payout claims, and sportsbook links.
 
 ## Codex operating model

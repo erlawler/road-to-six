@@ -21,7 +21,7 @@ Advance with this cost-bounded data strategy:
 | Need | Recommended source | Cost signal | License and product decision |
 |---|---|---:|---|
 | Players, rosters, schedules, and game statistics | [nflverse data releases](https://github.com/nflverse/nflverse-data) | $0 vendor fee | The release repository is labeled CC BY 4.0. nflverse also states that underlying NFL data remains governed by its owners. Attribute the source, preserve an as-of date, exclude headshots, and complete final terms review before publication. |
-| Current moneyline, spreads, and totals | [The Odds API](https://the-odds-api.com/) | Free for 500 credits per month | Three markets in one region cost three credits per request under the documented formula. Its [terms](https://the-odds-api.com/terms-and-conditions.html) permit user-facing websites, dashboards, and analytical tools when the data is not redistributed as a standalone feed. Historical odds are excluded because they require a paid plan. Store source timestamps and keep the API key server-side. |
+| Current moneyline, spreads, and totals | [The Odds API](https://the-odds-api.com/) | Free for 500 credits per month | Three markets in one region cost three credits per request under the documented formula. Its [terms](https://the-odds-api.com/terms-and-conditions.html) permit user-facing websites, dashboards, and analytical tools when the data is not redistributed as a standalone feed. Historical odds are excluded because they require a paid plan. Store source timestamps, keep the API key server-side, and cache consensus results for six hours. |
 | Runtime forecast explanation | [OpenAI API pricing](https://developers.openai.com/api/docs/pricing) | Usage based, capped at $10 per month | Use a dedicated OpenAI project, bounded prompts and outputs, caching, rate limits, and an application safety cutoff. Do not use paid web search at runtime because the application supplies the evidence. |
 
 ## Cost answer
@@ -33,6 +33,8 @@ Advance with this cost-bounded data strategy:
 | Hosting | $0 target | Cloudflare Workers Free for portfolio traffic; paid tier is not required for the private preview |
 
 Runtime AI cost varies with prompt size and model selection. The application defaults to GPT-5.6 Luna. The D1 ledger reserves cost before each request using the configured model's standard rates and reconciles actual input and output token use afterward, so the application does not depend on a traffic estimate to enforce the cutoff.
+
+The six-hour shared odds cache limits continuous refreshes to no more than four vendor calls per day. At three credits per call, that is at most 372 credits in a 31-day month before any upstream outage or off-season reduction, below the 500-credit free allowance.
 
 ## Runtime AI budget controls
 
@@ -83,7 +85,7 @@ The MVP tests whether football-only and market-aware probabilities differ in use
 
 ## Exit criteria
 
-- [ ] Public-display rights confirmed for every production data source.
+- [x] Public-display review completed with documented limitations for every production data source.
 - [x] Free odds quota, analytical display terms, and refresh cadence confirmed before deployment.
 - [x] Source attribution and as-of timestamps visible in the interface.
 - [x] API keys remain server-side and are excluded from logs.

@@ -1,6 +1,6 @@
 # Product Brief: Road to Six Market Bias Lab
 
-**Status:** IMPLEMENTED LOCALLY  
+**Status:** PRIVATE RELEASE CANDIDATE
 **Owner:** Eric Lawler  
 **Product type:** Public technical product management portfolio prototype  
 **Audience:** Hiring managers, technical product leaders, football fans, and product peers
@@ -16,7 +16,7 @@ Football and betting conversations often jump from a result to a confident predi
 1. Select a Dallas Cowboys game and relevant Cowboys and opponent player signals.
 2. Review sourced football evidence, including the opponent's top four production leaders, with freshness timestamps.
 3. Review consensus moneyline, spreads, totals, and available line movement.
-4. Review line movement and the vig-adjusted implied market probability.
+4. Review line status and the vig-adjusted implied market probability.
 5. Change scenario assumptions and calculate football-only and market-aware probabilities.
 6. Use cost-capped runtime AI to explain the probability, forecast drivers, evidence, and uncertainty.
 
@@ -106,4 +106,4 @@ The weakest dimension is effort. Improve it with staged free-data adapters, a sm
 
 ## Launch decision
 
-The local Market Bias Lab MVP is complete and validated with a deterministic no-key mode. Public GitHub publication remains blocked until Eric explicitly approves it, public-display rights are signed off, the free odds key is validated, the OpenAI project maximum is configured, and final public content review is complete.
+The public GitHub repository and owner-only hosted candidate are complete. Live odds are enabled through a six-hour shared cache, current source evidence is visible, and the deterministic explanation remains available. Runtime AI is securely configured but remains blocked by OpenAI provider quota. Public hosting remains blocked until Eric explicitly approves the private candidate and the live Runtime AI gate is completed.

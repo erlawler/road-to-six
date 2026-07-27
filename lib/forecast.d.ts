@@ -13,6 +13,7 @@ export type ForecastGame = {
   venue: "home" | "away" | "neutral";
   cowboysMoneyline: number | null;
   opponentMoneyline: number | null;
+  marketImpliedProbability?: number | null;
   opponentStarName?: string;
 };
 

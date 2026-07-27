@@ -16,7 +16,16 @@ type LiveMarket = {
   opponentMoneyline: number | null;
   cowboysSpread: number | null;
   totalLine: number | null;
+  marketImpliedProbability: number | null;
   sportsbookCount: number;
+};
+
+type MarketMetadata = {
+  source: string;
+  retrievedAt: string;
+  cacheExpiresAt?: string;
+  cacheTtlHours?: number;
+  cached: boolean;
 };
 
 type Explanation = {
@@ -56,6 +65,16 @@ function gameDate(date: string) {
     day: "numeric",
     timeZone: "UTC",
   }).format(new Date(`${date}T12:00:00Z`));
+}
+
+function evidenceTimestamp(value: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  }).format(new Date(value));
 }
 
 function playerEvidence(player: Player) {
@@ -101,8 +120,11 @@ export default function Home() {
     fallbackReason?: string;
   } | null>(null);
   const [runtimeStatus, setRuntimeStatus] = useState("Ready to explain this scenario");
+  const [isExplaining, setIsExplaining] = useState(false);
   const [markets, setMarkets] = useState<Record<string, LiveMarket>>({});
   const [marketStatus, setMarketStatus] = useState("Bundled nflverse snapshot");
+  const [marketMetadata, setMarketMetadata] = useState<MarketMetadata | null>(null);
+  const [isRefreshingMarkets, setIsRefreshingMarkets] = useState(false);
 
   const selectedGame = snapshot.schedule.find((game) => game.id === selectedGameId) ?? snapshot.schedule[0];
   const selectedOpponent = snapshot.opponents[selectedGame.opponent as keyof typeof snapshot.opponents];
@@ -130,7 +152,7 @@ export default function Home() {
     }),
     [controls, effectiveGame, opponentLeader?.name],
   );
-  const scenarioKey = `${selectedGame.id}:${controls.quarterback}:${controls.lamb}:${controls.pickens}:${controls.williams}:${controls.defense}:${controls.opponentStar}:${effectiveGame.cowboysMoneyline}:${effectiveGame.opponentMoneyline}`;
+  const scenarioKey = `${selectedGame.id}:${controls.quarterback}:${controls.lamb}:${controls.pickens}:${controls.williams}:${controls.defense}:${controls.opponentStar}`;
   const localExplanation = useMemo(
     () => deterministicExplanation({
       forecast,
@@ -151,6 +173,8 @@ export default function Home() {
   }
 
   async function explainForecast() {
+    if (isExplaining) return;
+    setIsExplaining(true);
     setRuntimeStatus("Grounding the explanation in the forecast function...");
     try {
       const response = await fetch("/api/forecast", {
@@ -159,16 +183,21 @@ export default function Home() {
         body: JSON.stringify({
           gameId: selectedGame.id,
           controls,
-          market: liveMarket ? {
-            cowboysMoneyline: liveMarket.cowboysMoneyline,
-            opponentMoneyline: liveMarket.opponentMoneyline,
-            cowboysSpread: liveMarket.cowboysSpread,
-            totalLine: liveMarket.totalLine,
-          } : undefined,
         }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Forecast unavailable");
+      if (data.marketEvidence?.source === "The Odds API" && data.marketEvidence.market) {
+        setMarkets((current) => ({
+          ...current,
+          [selectedGame.id]: data.marketEvidence.market,
+        }));
+        setMarketMetadata({
+          source: data.marketEvidence.source,
+          retrievedAt: data.marketEvidence.retrievedAt,
+          cached: Boolean(data.marketEvidence.cached),
+        });
+      }
       setRuntimeResult({
         key: scenarioKey,
         explanation: data.explanation,
@@ -182,16 +211,24 @@ export default function Home() {
       );
     } catch {
       setRuntimeStatus("The local deterministic explanation remains available.");
+    } finally {
+      setIsExplaining(false);
     }
   }
 
   async function refreshMarkets() {
+    if (isRefreshingMarkets) return;
+    setIsRefreshingMarkets(true);
     setMarketStatus("Checking current markets...");
     try {
       const response = await fetch("/api/odds");
       const data = await response.json();
       if (!response.ok) {
-        setMarketStatus(data.message ?? "Live market refresh is not configured");
+        setMarketStatus(
+          marketMetadata
+            ? `Refresh unavailable. Retaining ${marketMetadata.source} data retrieved ${evidenceTimestamp(marketMetadata.retrievedAt)}.`
+            : data.message ?? "Live market refresh is not configured",
+        );
         return;
       }
       const nextMarkets: Record<string, LiveMarket> = {};
@@ -207,17 +244,35 @@ export default function Home() {
           opponentMoneyline: event.opponentMoneyline,
           cowboysSpread: event.cowboysSpread,
           totalLine: event.total,
+          marketImpliedProbability: event.cowboysConsensusProbability,
           sportsbookCount: event.sportsbookCount,
         };
       }
       setMarkets(nextMarkets);
+      if (Object.keys(nextMarkets).length) {
+        setRuntimeResult(null);
+        setRuntimeStatus("Markets refreshed. Generate a new explanation when ready.");
+      }
+      setMarketMetadata({
+        source: data.source,
+        retrievedAt: data.retrievedAt,
+        cacheExpiresAt: data.cacheExpiresAt,
+        cacheTtlHours: data.cacheTtlHours,
+        cached: Boolean(data.cached),
+      });
       setMarketStatus(
         Object.keys(nextMarkets).length
-          ? `Current consensus loaded for ${Object.keys(nextMarkets).length} Cowboys game(s)`
+          ? `${data.source} consensus retrieved ${evidenceTimestamp(data.retrievedAt)} for ${Object.keys(nextMarkets).length} Cowboys game(s). Cached up to ${data.cacheTtlHours} hours.`
           : "No matching current Cowboys markets were returned",
       );
     } catch {
-      setMarketStatus("Live refresh unavailable. The nflverse snapshot remains visible.");
+      setMarketStatus(
+        marketMetadata
+          ? `Refresh unavailable. Retaining ${marketMetadata.source} data retrieved ${evidenceTimestamp(marketMetadata.retrievedAt)}.`
+          : "Live refresh unavailable. The nflverse snapshot remains visible.",
+      );
+    } finally {
+      setIsRefreshingMarkets(false);
     }
   }
 
@@ -235,7 +290,7 @@ export default function Home() {
           <a href="#model">Model audit</a>
           <a href="#trust">Trust</a>
         </nav>
-        <span className="unofficial">ERL</span>
+        <span className="unofficial" aria-label="Eric Ryan Lawler">ERL</span>
       </header>
 
       <section className="hero" id="top">
@@ -270,7 +325,7 @@ export default function Home() {
             <div><span>Market implied</span><strong>{percent(displayedForecast.marketImplied)}</strong></div>
           </div>
           <p>
-            Confidence range {percent(displayedForecast.confidenceLow)} to {percent(displayedForecast.confidenceHigh)}
+            Illustrative uncertainty band {percent(displayedForecast.confidenceLow)} to {percent(displayedForecast.confidenceHigh)}
           </p>
           <small>Educational probability, not a recommended bet.</small>
         </article>
@@ -280,7 +335,7 @@ export default function Home() {
         <div><span>Dallas moneyline</span><strong>{moneyline(effectiveGame.cowboysMoneyline)}</strong></div>
         <div><span>Spread</span><strong>{spread(effectiveGame.cowboysSpread)}</strong></div>
         <div><span>Total</span><strong>{effectiveGame.totalLine ?? "Pending"}</strong></div>
-        <div><span>Line movement</span><strong>{liveMarket ? "Refreshed" : "Baseline"}</strong></div>
+        <div><span>Line status</span><strong>{liveMarket ? "Current" : "Baseline"}</strong></div>
       </section>
 
       <section className="forecast-section" id="forecast">
@@ -347,15 +402,25 @@ export default function Home() {
                 <strong>Market data</strong>
                 <small role="status">{marketStatus}</small>
               </div>
-              <button type="button" className="text-button" onClick={refreshMarkets}>Refresh odds</button>
+              <button
+                type="button"
+                className="text-button"
+                onClick={refreshMarkets}
+                disabled={isRefreshingMarkets}
+                aria-busy={isRefreshingMarkets}
+              >
+                {isRefreshingMarkets ? "Refreshing odds" : "Refresh odds"}
+              </button>
             </div>
           </div>
 
-          <article className="result-panel" aria-live="polite">
+          <article className="result-panel">
             <div className="result-header">
               <div>
                 <span className="eyebrow">Scenario result</span>
-                <h3>{percent(displayedForecast.probability)} Dallas win probability</h3>
+                <h3 aria-live="polite" aria-atomic="true">
+                  {percent(displayedForecast.probability)} Dallas win probability
+                </h3>
               </div>
               <span className={`mode-badge ${displayedExplanation.mode}`}>
                 {displayedExplanation.mode === "ai" ? "Runtime AI" : "Deterministic"}
@@ -371,9 +436,22 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            <div className="uncertainty-panel">
+              <strong>Uncertainty to keep in view</strong>
+              <ul>
+                {displayedExplanation.uncertainty.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+              <small>{displayedExplanation.disclaimer}</small>
+            </div>
             <div className="runtime-action">
-              <button type="button" className="primary-action dark" onClick={explainForecast}>
-                Generate grounded explanation
+              <button
+                type="button"
+                className="primary-action dark"
+                onClick={explainForecast}
+                disabled={isExplaining}
+                aria-busy={isExplaining}
+              >
+                {isExplaining ? "Generating explanation" : "Generate grounded explanation"}
               </button>
               <small role="status">{runtimeStatus}</small>
             </div>
@@ -497,7 +575,17 @@ export default function Home() {
               <small>{source.license}</small>
             </a>
           ))}
-          <p>Model version: {displayedForecast.modelVersion}. Market snapshot captured {selectedGame.sourceUpdatedAt}.</p>
+          <a href="https://the-odds-api.com/" target="_blank" rel="noreferrer">
+            <span>The Odds API current markets</span>
+            <small>Normalized consensus values cached for six hours to protect the free allowance.</small>
+          </a>
+          <p>
+            Model version: {displayedForecast.modelVersion}. Football snapshot: {selectedGame.sourceUpdatedAt}.
+            {" "}
+            Market evidence: {liveMarket && marketMetadata
+              ? `${marketMetadata.source}, retrieved ${evidenceTimestamp(marketMetadata.retrievedAt)}`
+              : `bundled snapshot captured ${selectedGame.sourceUpdatedAt}`}.
+          </p>
         </div>
       </section>
 
