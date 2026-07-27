@@ -1,6 +1,6 @@
 # MVP Backlog: Market Bias Lab Expansion
 
-**Implementation status:** OPTIMIZED PRIVATE RELEASE CANDIDATE COMPLETE. The public source repository, version 6 owner-only hosted candidate, live odds validation, private smoke test, and internal public-use review are complete. A successful live Runtime AI response and explicit approval for public hosting remain open. Scores assume one sport, Cowboys-only views, cached market refreshes, and no product authentication.
+**Implementation status:** OPTIMIZED PRIVATE RELEASE CANDIDATE COMPLETE. The public source repository, current owner-only hosted candidate, live odds validation, private smoke test, and internal public-use review are complete. A successful live Runtime AI response and explicit approval for public hosting remain open. Scores assume one sport, Cowboys-only views, cached market refreshes, and no product authentication.
 
 ## Prioritization rule
 

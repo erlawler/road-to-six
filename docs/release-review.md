@@ -6,7 +6,7 @@
 
 **Public source repository:** COMPLETE
 
-**Private hosted candidate:** OPTIMIZED VERSION 6 COMPLETE
+**Private hosted candidate:** CURRENT OPTIMIZED VERSION COMPLETE
 
 **Public hosting:** BLOCKED pending Eric Lawler's final approval
 
@@ -14,7 +14,7 @@
 
 The release candidate passes the internal product, accessibility, security, privacy, responsible-use, build, and test gates. Data-rights and trademark risks are accepted with documented limitations in the [Public Use Review](public-use-review.md); this acceptance is not legal clearance. Runtime AI and public hosting remain open gates.
 
-The optimized workspace build and live odds integration are deployed to the owner-only site. Version 6 was built from commit `ea4bbb9`, passed GitHub CI, and passed an owner-authenticated private smoke test. Runtime AI reached OpenAI successfully but the provider returned `insufficient_quota`, so the live AI gate remains blocked until API billing or prepaid credit is enabled for the dedicated project. Public hosting remains outside the current approval.
+The optimized workspace build and live odds integration are deployed to the owner-only site from the validated main branch. The current release passed GitHub CI and an owner-authenticated private smoke test. Runtime AI reached OpenAI successfully but the provider returned `insufficient_quota`, so the live AI gate remains blocked until API billing or prepaid credit is enabled for the dedicated project. Public hosting remains outside the current approval.
 
 ## Gate status
 
@@ -30,7 +30,7 @@ The optimized workspace build and live odds integration are deployed to the owne
 | Responsible use | COMPLETE | The interface provides probabilities and uncertainty without picks, stakes, payouts, affiliate links, sportsbook links, or wager placement. |
 | Trademark and public content | ACCEPTED WITH LIMITATIONS | Official logos, player likenesses, uniforms, endorsement claims, and copied NFL content are excluded. Text references identify the subject, educational-use language appears beside the forecast, and the full non-affiliation statement appears in the footer. A rights holder could still object. |
 | GitHub | COMPLETE | The public [erlawler/road-to-six](https://github.com/erlawler/road-to-six) repository contains the validated release history, CI, security guidance, source attribution, and release documentation. |
-| Private hosting | COMPLETE | Optimized version 6 of the owner-only [Road to Six release candidate](https://road-to-six-erl.erlrickylre.chatgpt.site) is deployed from commit `ea4bbb9`. One user and no groups have access. Provider credentials remain hidden, and the owner-authenticated page, budget, and current-odds checks returned HTTP 200. |
+| Private hosting | COMPLETE | The current optimized [Road to Six release candidate](https://road-to-six-erl.erlrickylre.chatgpt.site) is deployed from the validated main branch. One user and no groups have access. Provider credentials remain hidden, and the owner-authenticated page, budget, and current-odds checks returned HTTP 200. |
 | Public hosting | BLOCKER | Do not change access to public or deploy a public version until Eric Lawler approves the private candidate. |
 
 ## Validation evidence
@@ -46,9 +46,9 @@ The optimized workspace build and live odds integration are deployed to the owne
 - Offline AI evaluation passed 12 of 12 expected outcomes across two positive and ten adversarial cases, seven criteria, and 84 binary checks
 - Duplicate integration requests are disabled in the interface while work is in progress
 - Mobile section navigation remains available below the desktop breakpoint
-- Local and version 6 owner-authenticated hosted checks returned five current Dallas events from The Odds API without exposing the key
+- Local and current owner-authenticated hosted checks returned five current Dallas events from The Odds API without exposing the key
 - Local and hosted Runtime AI requests reached the configured integration but could not complete while OpenAI returned `insufficient_quota`; the deterministic fallback and D1 budget ledger remained available
-- The version 6 owner-authenticated smoke test verified the technical product case, visible uncertainty, $9.50 budget limit, current cached odds source, retrieval timestamp, and five Dallas events
+- The current owner-authenticated smoke test verified the technical product case, visible uncertainty, $9.50 budget limit, current cached odds source, retrieval timestamp, and five Dallas events
 - Browser semantic tree and status announcements verified on the updated release candidate
 - Security headers verified on the rendered page and API routes
 - Current dependency audit returned zero vulnerabilities
