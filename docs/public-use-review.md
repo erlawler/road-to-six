@@ -6,7 +6,7 @@
 
 ## Answer
 
-Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. The public source repository and an owner-only hosted release candidate are complete. The July 27 optimized build still requires a private hosted refresh and smoke test. This acceptance does not authorize public hosting, which still requires Eric Lawler's final approval after the refreshed private candidate and remaining Runtime AI gate are reviewed.
+Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. The public source repository and optimized owner-only hosted release candidate are complete. This acceptance does not authorize public hosting, which still requires Eric Lawler's final approval after the private candidate and remaining Runtime AI gate are reviewed.
 
 This review documents product risk decisions. It is not legal advice or a guarantee that a third party will not object.
 
