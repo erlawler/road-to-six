@@ -35,7 +35,7 @@ The product name is grounded in the Dallas Cowboys' five Super Bowl championship
 - **Evidence before prediction:** A forecast is not shown without source, timestamp, and model version.
 - **Evidence before confidence:** Every initiative names its supporting evidence and data status.
 - **Assumptions are controls:** Users can change inputs and immediately see the effect.
-- **AI calculates through trusted tools:** Runtime AI calls a versioned probability function and returns the calculated result unchanged.
+- **AI is grounded by trusted tools:** Deterministic code calculates the probability. Runtime AI receives and returns that result unchanged.
 - **AI explains, people decide:** AI explains drivers, evidence, and uncertainty without recommending a bet.
 - **Governance is product work:** Accessibility, privacy, security, and trademark review are release criteria.
 
@@ -70,6 +70,7 @@ The product name is grounded in the Dallas Cowboys' five Super Bowl championship
 | Forecast completion | 60% | Measures end-to-end scenario completion. |
 | Evidence traceability | 100% | Protects forecast integrity. |
 | Probability tool fidelity | 100% | AI output must match the versioned probability function. |
+| AI evaluation expectation rate | 100% | Positive and adversarial cases must produce their expected binary outcomes. |
 | Forecast calibration | Reported for every model release | Makes forecast quality observable. |
 | Data freshness labeling | 100% | Prevents stale lines or statistics from appearing current. |
 | Accessibility gate closure | 100% before public launch | Makes inclusion a release condition. |
@@ -97,13 +98,13 @@ The weakest dimension is effort. Improve it with staged free-data adapters, a sm
 | Risk | Control |
 |---|---|
 | Trademark confusion | Unofficial disclaimer, no official marks, no player likenesses. |
-| Unlicensed data reuse | Require a source, license label, and public-display approval before enabling a feed. |
+| Unlicensed data reuse | Complete a source and public-display review, label the license, document unresolved underlying-rights limits, and retain a removal path. |
 | Stale or mismatched records | Show source timestamps, normalize identifiers, and fail closed when joins are uncertain. |
 | Black box forecast | Publish feature definitions, model version, backtest, Brier score, and calibration. |
-| AI invents a probability | Require a probability-function tool call, validate the response schema, and preserve a deterministic fallback. |
+| AI invents a probability or evidence | Require a probability-function tool call, validate exact forecast evidence and uncertainty through binary evaluations, and preserve a deterministic fallback. |
 | Betting advice perception | Use educational language and prohibit picks, stake sizes, payout claims, and wager links. |
 | Portfolio becomes a coding demo only | Keep PRD, metrics, decisions, backlog, and release gate first class. |
 
 ## Launch decision
 
-The public GitHub repository and owner-only hosted candidate are complete. Live odds are enabled through a six-hour shared cache, current source evidence is visible, and the deterministic explanation remains available. Runtime AI is securely configured but remains blocked by OpenAI provider quota. Public hosting remains blocked until Eric explicitly approves the private candidate and the live Runtime AI gate is completed.
+The public GitHub repository and an owner-only hosted candidate are complete. The July 27 optimized build passes its local build and automated test gate, and its private hosted refresh and smoke test remain pending. Live odds are enabled through a six-hour shared cache, current source evidence is visible, and the deterministic explanation remains available. Runtime AI is securely configured but remains blocked by OpenAI provider quota. Public hosting remains blocked until Eric explicitly approves the refreshed private candidate and the live Runtime AI gate is completed.

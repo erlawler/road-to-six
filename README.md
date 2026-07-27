@@ -1,89 +1,188 @@
 # Road to Six
 
-![Road to Six social preview](public/og-market-bias.png)
+[![CI](https://github.com/erlawler/road-to-six/actions/workflows/ci.yml/badge.svg)](https://github.com/erlawler/road-to-six/actions/workflows/ci.yml)
+[![AI eval: 12 of 12](https://img.shields.io/badge/AI%20eval-12%20of%2012%20passed-1f7a4d)](docs/ai-evaluation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-1d6fd1.svg)](LICENSE)
 
-**Road to Six** is an unofficial Dallas Cowboys forecasting and market-bias lab. It demonstrates how a technical product manager can combine sourced football evidence, betting lines, probability modeling, runtime AI, responsible-use controls, and release governance.
+![Road to Six social preview](public/og-market-bias.jpg)
 
-The name reflects the Cowboys' pursuit of a sixth Super Bowl championship after five wins. See the [Dallas Cowboys historical overview](https://www.dallascowboys.com/news/super-powers-what-the-cowboys-can-take-from-the-1992-team) and [Pro Football Hall of Fame team history](https://www.profootballhof.com/teams/dallas-cowboys).
+**Road to Six is a technical product management case study in evidence-grounded AI.** It turns Dallas Cowboys football data and betting-market context into an inspectable probability workflow without giving betting advice.
 
-## Product promise
+The product demonstrates how I frame an ambiguous problem, choose the right boundary between deterministic software and frontier AI, integrate governed data sources, define measurable quality gates, and move a product from concept to a private release candidate.
 
-Change the assumptions, compare the football and market signals, and understand the probability and uncertainty.
+> **Current status:** The source repository is public and the hosted release candidate remains private pending my final approval. Runtime AI is securely integrated, but the live provider gate remains blocked by OpenAI quota. The deterministic forecast and explanation remain available.
 
-The MVP now uses a versioned nflverse snapshot for the 2026 Dallas roster and schedule, complete 2025 regular-season player production baselines, market lines where available, a walk-forward probability model, a holdout backtest, and a cost-safe runtime explanation endpoint. An owner-only [hosted release candidate](https://road-to-six-erl.erlrickylre.chatgpt.site) is deployed. Public hosting has not been approved.
+## Recruiter snapshot
 
-## Portfolio proof
+| Area | Summary |
+|---|---|
+| My role | Technical product manager, product decision owner, and release approver |
+| Delivery model | I directed Codex as an implementation and review partner while retaining product, architecture, risk, and acceptance decisions |
+| Target user | Hiring managers and technical product leaders evaluating product judgment, plus football fans exploring forecast assumptions |
+| Core job | Inspect football and market evidence, change assumptions, and understand a traceable probability and its uncertainty |
+| Product scope | Real roster, schedule, player, game, and current market data; scenario modeling; model audit; runtime AI explanation |
+| Key constraint | $0 sports-data vendor spend and no more than $10 monthly runtime AI spend |
+| Current release | Validated private release candidate with public source and documented launch blockers |
 
-- Product brief with problem, users, outcomes, scope, and measurement plan
-- Real player and game evidence with source and freshness labels
-- Weekly opponent production leaders joined from the selected game's active 2026 roster and complete 2025 stats
-- Interactive football-only and market-aware probability forecasts
-- Scenario controls for Dak Prescott, CeeDee Lamb, George Pickens, Javonte Williams, the defensive core, and the selected opponent's top producer
-- Moneyline, spread, total, line-status, and market-implied probability comparison
-- Walk-forward model evaluation on a 2024 to 2025 holdout
-- Runtime AI function calling with structured evidence, uncertainty, a $9.50 application cutoff, and deterministic fallback
-- Release gate covering data, quality, accessibility, and trademark risk
-- Codex operating instructions, a reusable review skill, tests, and CI
-- Editable [Figma user flow](https://www.figma.com/board/m4Jj2PH2pCWMjcyUFNibyS?utm_source=other&utm_content=edit_in_figjam&oai_id=v1%2FxUmyGVk5KOQTJRulUQKNwQe3yEmxEnoOxDP8Doq1z3TYSWL0h07UaA&request_id=ee641610-369e-4632-a92c-ff043a56fac1)
+**Ownership:** I owned the product strategy, technical decisions, risk acceptance, and release approval. Codex accelerated implementation, testing, review, and documentation within the boundaries I defined.
 
-## Quick start
+## Two-minute reviewer path
+
+1. **First 30 seconds:** Read [The problem](#the-problem) and [What I owned](#what-i-owned).
+2. **Next 30 seconds:** Scan the [key product decisions](#key-product-decisions-and-tradeoffs).
+3. **Next 30 seconds:** Review the [verified outcomes](#verified-outcomes), including the honest model conclusion.
+4. **Final 30 seconds:** Inspect the [architecture](#architecture), [frontier AI judgment](#frontier-ai-product-judgment), and [artifact set](#portfolio-artifacts).
+
+For the complete narrative, open the [portfolio case study](docs/portfolio-case-study.md).
+
+## The problem
+
+Sports forecasts often present a confident number without showing the evidence, assumptions, uncertainty, market context, or model limitations. That creates a product trust problem, not only a modeling problem.
+
+Road to Six makes the decision path visible:
+
+1. Select a Dallas matchup.
+2. Inspect sourced team, player, opponent, and market evidence.
+3. Change named scenario assumptions.
+4. Compare football-only, market-implied, and market-aware probabilities.
+5. Review the forecast drivers, uncertainty, source freshness, and model version.
+6. Request a grounded AI explanation that cannot change the calculated probability.
+
+## What I owned
+
+1. **Product strategy:** Defined the user, job to be done, product principles, scope, non-goals, success measures, and release decision.
+2. **Prioritization:** Used BETS to advance the concept, then documented major tradeoffs through architecture decision records.
+3. **Data product design:** Selected attributed nflverse data and free-tier odds, defined normalization and freshness requirements, and rejected paid bettor-split data.
+4. **Forecast governance:** Chose a transparent walk-forward Elo baseline and a predeclared market blend before considering a more complex model.
+5. **Frontier AI design:** Assigned probability calculation to a versioned deterministic function and AI to structured explanation, evidence, and uncertainty.
+6. **Platform controls:** Defined server-side secrets, request limits, schema validation, a six-hour odds cache, a $9.50 AI cutoff, and deterministic fallback.
+7. **Release management:** Made accessibility, security, privacy, data rights, responsible use, and trademark review explicit launch gates.
+
+## Key product decisions and tradeoffs
+
+| Decision | Product rationale | Tradeoff accepted |
+|---|---|---|
+| Use deterministic code for probability | The result stays testable, reproducible, and versioned | The system is less flexible than asking an LLM to reason freely |
+| Use AI for explanation only | AI adds accessible synthesis without becoming the source of truth | Explanations must pass schema and semantic validation |
+| Blend 20% football Elo with 80% market probability | Establishes a transparent, predeclared baseline | The baseline does not claim to beat the market |
+| Keep exploration anonymous | Reduces friction, privacy risk, and security scope | No saved scenarios or personalization |
+| Use free data sources and a six-hour odds cache | Keeps operating cost predictable | Data breadth and refresh frequency are intentionally limited |
+| Exclude bettor splits | Avoids unsupported claims about Cowboys popularity | Market-bias conclusions remain bounded to available evidence |
+| Prohibit betting recommendations | Keeps the experience educational and responsible | The product provides analysis, not action |
+
+## Verified outcomes
+
+These are implemented or validated outcomes, not portfolio targets.
+
+| Outcome | Verified evidence |
+|---|---|
+| Sourced football experience | Versioned 2026 roster and schedule snapshot with complete 2025 regular-season player baselines and weekly opponent leaders |
+| Transparent model evaluation | 2024 to 2025 walk-forward holdout: football-only Brier 0.220, market-aware Brier 0.207, market baseline Brier 0.206 |
+| Honest model conclusion | The market-aware baseline improved on football-only Elo but did not outperform the market baseline |
+| Live market integration | Five Dallas events returned in the private release review with source and retrieval time preserved |
+| Free-tier cost design | Six-hour shared cache limits continuous usage to at most 372 credits in a 31-day month, below the 500-credit allowance |
+| AI reliability controls | Offline evaluation passed 12 of 12 expected outcomes across seven criteria and 84 binary checks |
+| Product quality | Production build, lint, and 34 automated tests passed |
+| Dependency security | Current audit returned zero vulnerabilities |
+| Release governance | Accessibility, security, privacy, responsible-use, data-rights, and trademark reviews are documented |
+
+See the [release review](docs/release-review.md) for the full evidence and the remaining Runtime AI and public-hosting gates.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    visitor[Visitor] --> ui[React experience]
+    ui --> api[Scenario API]
+    football[nflverse snapshot] --> features[Feature builder]
+    odds[The Odds API] --> cache[Six-hour D1 cache]
+    cache --> features
+    api --> features
+    features --> model[Versioned probability function]
+    model --> result[Structured forecast]
+    result --> ui
+    result --> budget[AI budget gate]
+    budget --> ai[OpenAI explanation]
+    budget --> fallback[Deterministic fallback]
+    ai --> validate[Schema and policy validation]
+    validate --> ui
+    fallback --> ui
+```
+
+The architecture keeps credentials and vendor calls server-side. It also keeps the calculation path available when market data, AI, or budget capacity is unavailable.
+
+## Frontier AI product judgment
+
+This project is intentionally not an LLM wrapper.
+
+- **AI explains:** It translates model drivers, source evidence, and uncertainty into a structured narrative.
+- **AI does not calculate:** The versioned probability function owns the number.
+- **AI is grounded:** The server supplies a bounded scenario, model result, and cited evidence.
+- **AI is evaluated:** The response must preserve probability, model version, source time, required evidence, and uncertainty.
+- **AI is constrained:** The server rejects actionable betting language and malformed output.
+- **AI can fail safely:** A deterministic explanation preserves the core user job when quota, timeout, budget, or validation blocks AI.
+- **AI cost is governed:** A D1 ledger reserves and reconciles estimated use, stops application calls at $9.50, and preserves a margin under the $10 project limit.
+
+I also used Codex as a delivery system, not as an ungoverned author. Repository instructions, scoped tasks, automated checks, specialist reviews, and explicit publication approval kept the work auditable.
+
+## Portfolio artifacts
+
+| Artifact | What it demonstrates |
+|---|---|
+| [Detailed portfolio case study](docs/portfolio-case-study.md) | Product narrative, ownership, tradeoffs, evidence, and lessons |
+| [Product brief](docs/product-brief.md) | Problem framing, users, scope, success measures, and launch decision |
+| [Architecture](docs/architecture.md) | Components, trust boundaries, data flow, and AI controls |
+| [Frontier AI architecture](docs/frontier-ai-architecture.md) | Deterministic and AI responsibilities, trust boundaries, runtime flow, and failure behavior |
+| [Runtime AI evaluation](docs/ai-evaluation.md) | Binary product criteria, positive cases, adversarial cases, and release gate |
+| [Codex collaboration](docs/codex-collaboration.md) | Eric's ownership, Codex acceleration, governance, and human approval points |
+| [Decision log](docs/decision-log.md) | Thirteen product and architecture decisions with rationale |
+| [MVP backlog](docs/mvp-backlog.md) | Prioritization, sequencing, acceptance criteria, and delivery status |
+| [Measurement plan](docs/measurement-plan.md) | Vision, adoption, integrity, model, and platform measures |
+| [Data and licensing spike](docs/data-licensing-spike.md) | Source selection, cost model, rights review, and exit criteria |
+| [Release review](docs/release-review.md) | Quality gates, validation evidence, blockers, and approval boundary |
+| [Public-use review](docs/public-use-review.md) | Responsible use, privacy, data rights, trademark, and accepted limitations |
+| [Editable Figma user flow](https://www.figma.com/board/m4Jj2PH2pCWMjcyUFNibyS?utm_source=other&utm_content=edit_in_figjam&oai_id=v1%2FxUmyGVk5KOQTJRulUQKNwQe3yEmxEnoOxDP8Doq1z3TYSWL0h07UaA&request_id=ee641610-369e-4632-a92c-ff043a56fac1) | End-to-end experience and product evolution |
+| [LinkedIn launch kit](docs/linkedin-launch-kit.md) | Launch post, project summary, demo script, and publication checklist |
+
+## Run locally
 
 Requirements: Node.js 22.19.0 or newer.
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
-The finished preview remains fully usable without external credentials. Add the free market-data and runtime AI keys through local or hosted secret configuration to validate those live integrations. Never commit credentials. Runtime AI defaults to GPT-5.6 Luna and the application stops calls at the $9.50 monthly safety cutoff.
+The application remains usable without external credentials through bundled data and deterministic fallback. Never commit credentials.
 
-```bash
-cp .env.example .env.local
-```
-
-Validation:
+Run the quality gates:
 
 ```bash
 npm run lint
+npm run eval
 npm test
+npm audit --audit-level=high
 ```
 
-Rebuild the attributed data snapshot after downloading the current nflverse source files:
+Rebuild the attributed football snapshot after downloading current nflverse source files:
 
 ```bash
 npm run data:snapshot
 ```
 
-The player snapshot uses nflverse's `stats_player_reg_2025.csv` release asset. Raw source files remain outside the repository.
+The snapshot builder uses nflverse release assets. Raw source files remain outside the repository.
 
-## Documentation
+## Technology
 
-- [Product brief](docs/product-brief.md)
-- [Architecture](docs/architecture.md)
-- [MVP backlog](docs/mvp-backlog.md)
-- [Measurement plan](docs/measurement-plan.md)
-- [Data and licensing spike](docs/data-licensing-spike.md)
-- [Release review](docs/release-review.md)
-- [Public use review](docs/public-use-review.md)
-- [Figma flow](docs/figma-flow.md)
-- [Decision log](docs/decision-log.md)
+Next.js compatible React, TypeScript, vinext, Cloudflare Workers compatible output, D1 caching and budget ledger, OpenAI Responses API, Node test runner, ESLint, and GitHub Actions.
 
 ## Product boundaries
 
 - No player medical, contract, private, or nonpublic data
-- No official Dallas Cowboys or NFL marks
-- No player likenesses or official uniforms
-- No unlicensed feed is enabled for public display
-- No paid sports-data feeds, bettor splits, or paid historical odds in the MVP
-- No personalized betting advice, picks, stake sizes, payout claims, affiliate links, or wager placement
+- No official Dallas Cowboys or NFL logos, player likenesses, or uniform artwork
+- No paid sports-data feeds, bettor splits, or paid historical odds
+- No personalized betting advice, picks, stake sizes, payout claims, affiliate links, sportsbook links, or wager placement
 - No affiliation with or endorsement by the Dallas Cowboys, the NFL, or their partners
 
-## Technology
-
-Next.js compatible React, TypeScript, vinext, Cloudflare Workers compatible output, D1 budget ledger, OpenAI Responses API integration, Node test runner, ESLint, and GitHub Actions.
-
-## Rights notice
-
-Original code and documentation are available under the [MIT License](LICENSE). Third party data and rights are governed by the [Third Party Data and Rights Notice](NOTICE.md).
-
-This project is a portfolio prototype. Dallas Cowboys, NFL, Super Bowl, player names, and related marks belong to their respective owners. References identify the subject of the project and do not imply affiliation or endorsement.
+Original code and documentation are available under the [MIT License](LICENSE). Third-party data and rights are governed by the [Third Party Data and Rights Notice](NOTICE.md).

@@ -103,3 +103,19 @@
 **Decision:** Expand the versioned forecast controls to Dak Prescott, CeeDee Lamb, George Pickens, Javonte Williams, the defensive core, and the selected opponent's top 2025 PPR producer. For each scheduled opponent, join its active 2026 roster to complete 2025 regular-season stats and show the top four PPR production leaders.
 
 **Why:** Weekly opponent evidence makes the game selector materially useful, while named controls let visitors test more football assumptions without introducing medical claims or opaque AI scoring.
+
+## ADR 014: Treat AI evaluations as product requirements
+
+**Status:** DECIDED
+
+**Decision:** Define seven binary runtime-AI criteria covering probability, model version, source freshness, evidence, uncertainty, responsible use, and deterministic fallback. Run positive and adversarial cases locally and in CI without requiring a live provider call.
+
+**Why:** A schema proves shape, not product quality. Binary evaluations make the AI contract inspectable, reproducible, and connected to user trust. One successful live structured response remains a separate release gate after provider quota is available.
+
+## ADR 015: Make product ownership and limitations explicit
+
+**Status:** DECIDED
+
+**Decision:** Lead the repository and product experience with the problem, Eric's ownership, key tradeoffs, verified evidence, Codex collaboration model, and current limitations. Keep adoption targets separate from observed outcomes.
+
+**Why:** A technical product management portfolio should demonstrate judgment and accountability, not only implementation breadth. Clear ownership and honest limitations make the evidence easier for recruiters and product leaders to evaluate.

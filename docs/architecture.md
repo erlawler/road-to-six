@@ -2,7 +2,13 @@
 
 ## Answer
 
-The implemented private release candidate is a public-ready, anonymous Market Bias Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, a D1 monthly budget ledger, and a runtime AI explanation endpoint. Live odds are enabled. Runtime AI remains on deterministic fallback until OpenAI provider quota is available.
+The implemented private release candidate is a public-launch candidate for an anonymous Market Bias Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, a D1 monthly budget ledger, and a runtime AI explanation endpoint. The hosting platform currently restricts the preview to the owner, while the product itself has no account or identity layer. Live odds are enabled. Runtime AI remains on deterministic fallback until OpenAI provider quota is available.
+
+Recruiter-facing views:
+
+- [Frontier AI architecture](frontier-ai-architecture.md)
+- [Runtime AI evaluation](ai-evaluation.md)
+- [Codex collaboration and product ownership](codex-collaboration.md)
 
 ```mermaid
 flowchart LR

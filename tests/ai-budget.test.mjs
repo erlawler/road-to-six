@@ -27,5 +27,14 @@ test("prices GPT-5.6 alias conservatively as the Sol model", () => {
 
 test("reserves enough budget for the bounded two-call explanation flow", () => {
   assert.equal(requestReservationMicros("gpt-5.6-luna"), 25_000);
-  assert.equal(requestReservationMicros("gpt-5.6"), 55_000);
+  assert.equal(requestReservationMicros("gpt-5.6"), 61_250);
+});
+
+test("can price the prompt cache write premium conservatively", () => {
+  assert.equal(estimateTokenCostMicros({
+    model: "gpt-5.6",
+    inputTokens: 1_000,
+    outputTokens: 500,
+    inputRateMultiplier: 1.25,
+  }), 21_250);
 });

@@ -12,12 +12,14 @@ Can a visitor inspect football and market evidence, change assumptions, and unde
 | Adoption | Scenario start | Visitor selects a game, player signal, or scenario input. | 70% | Keep the product usable without sign-in. |
 | Metrics | Time to forecast | Time from first interaction to the structured forecast. | Under 5 minutes | Do not remove source or responsible-use checks. |
 | Platform | Probability fidelity | Displayed probability matches the versioned probability function. | 100% | CI blocks schema or calculation mismatches. |
+| Platform | AI evaluation expectation rate | Positive and adversarial cases return the expected pass or fail decision. | 100% | Any missed adversarial case blocks release. |
 | Model | Calibration reporting | Brier score and calibration are published for every model release. | 100% | Do not claim market bias without out-of-sample evidence. |
 | Platform | Sports-data cost | Monthly sports-data vendor spend. | $0 | Paid feeds remain outside MVP scope. |
 | Platform | Runtime AI cost | Monthly OpenAI API spend for the public product. | No more than $10 | Stop application AI at $9.50 and use deterministic fallback. |
 | Integrity | Evidence traceability | Every driver references a source record and timestamp. | 100% | Missing or stale evidence produces a visible limitation. |
 | Integrity | Data freshness | Every football and market record shows its as-of time. | 100% | Stale lines cannot appear current. |
 | Integrity | Prohibited advice | Forecasts contain no picks, stake sizes, payout claims, or sportsbook links. | 100% | A violation blocks public release. |
+| Integrity | Grounded explanation fidelity | AI preserves the trusted model version, source time, drivers, evidence, impacts, and uncertainty. | 100% | Any changed contract field triggers deterministic fallback. |
 | Integrity | Accessibility gate | Required accessibility checks closed before public launch. | 100% | An open gate blocks publication. |
 
 ## Event plan for a later instrumented version
@@ -43,4 +45,4 @@ Can a visitor inspect football and market evidence, change assumptions, and unde
 - Do not send raw vendor payloads to analytics or runtime AI.
 - Report targets and actuals separately.
 
-No analytics are implemented in the local MVP. The targets above are hypotheses.
+No product analytics are implemented in the owner-only release candidate. The targets above remain hypotheses, not observed outcomes.

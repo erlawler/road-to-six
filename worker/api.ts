@@ -9,8 +9,10 @@ import {
 } from "../lib/forecast.mjs";
 import {
   estimateTokenCostMicros,
+  PROMPT_CACHE_WRITE_INPUT_MULTIPLIER,
   requestReservationMicros,
 } from "../lib/ai-budget.mjs";
+import { assertAIOutput } from "../lib/ai-evaluation.mjs";
 
 type RuntimeEnv = {
   DB?: D1Database;
@@ -39,6 +41,7 @@ type OddsCacheRow = {
 type OddsCachePayload = {
   status: "current";
   source: "The Odds API";
+  fetchedAt: string;
   retrievedAt: string;
   cacheExpiresAt: string;
   cacheTtlHours: number;
@@ -48,6 +51,7 @@ type OddsCachePayload = {
 
 type MarketEvidence = {
   source: string;
+  fetchedAt: string;
   retrievedAt: string;
   cached: boolean;
   market: {
@@ -66,9 +70,13 @@ const MAX_FORECAST_BODY_BYTES = 8_192;
 const ODDS_CACHE_KEY = "nfl-us-h2h-spreads-totals";
 const ODDS_CACHE_TTL_HOURS = 6;
 const ODDS_CACHE_TTL_MS = ODDS_CACHE_TTL_HOURS * 60 * 60 * 1_000;
+const ODDS_REFRESH_COOLDOWN_SECONDS = 60;
+const ODDS_REFRESH_COOLDOWN_MS = ODDS_REFRESH_COOLDOWN_SECONDS * 1_000;
 
 let memoryOddsCache: OddsCachePayload | null = null;
 let memoryOddsCacheExpiresAt = 0;
+let oddsRefreshAllowedAt = 0;
+let oddsRefreshPromise: Promise<OddsCachePayload> | null = null;
 
 function jsonResponse(body: unknown, status = 200, additionalHeaders?: HeadersInit) {
   const headers = new Headers(additionalHeaders);
@@ -101,6 +109,40 @@ async function ensureOddsCacheTable(db: D1Database) {
   await db.prepare(ODDS_CACHE_SCHEMA_SQL).run();
 }
 
+function normalizeCachedOddsPayload(value: unknown, fallbackFetchedAt: string) {
+  if (!value || typeof value !== "object") return null;
+  const parsed = value as Partial<OddsCachePayload>;
+  if (
+    parsed.status !== "current"
+    || parsed.source !== "The Odds API"
+    || !Array.isArray(parsed.events)
+  ) {
+    return null;
+  }
+  const fetchedAt = typeof parsed.fetchedAt === "string"
+    ? parsed.fetchedAt
+    : typeof parsed.retrievedAt === "string"
+      ? parsed.retrievedAt
+      : fallbackFetchedAt;
+  const retrievedAt = typeof parsed.retrievedAt === "string"
+    ? parsed.retrievedAt
+    : fetchedAt;
+  if (!Number.isFinite(Date.parse(fetchedAt)) || !Number.isFinite(Date.parse(retrievedAt))) {
+    return null;
+  }
+  return {
+    ...parsed,
+    status: "current" as const,
+    source: "The Odds API" as const,
+    fetchedAt,
+    retrievedAt,
+    cacheExpiresAt: String(parsed.cacheExpiresAt ?? ""),
+    cacheTtlHours: Number(parsed.cacheTtlHours) || ODDS_CACHE_TTL_HOURS,
+    cached: Boolean(parsed.cached),
+    events: parsed.events,
+  };
+}
+
 async function readOddsCache(env: RuntimeEnv) {
   const now = Date.now();
   if (memoryOddsCache && memoryOddsCacheExpiresAt > now) {
@@ -115,7 +157,8 @@ async function readOddsCache(env: RuntimeEnv) {
       .bind(ODDS_CACHE_KEY)
       .first<OddsCacheRow>();
     if (!row || row.expires_at <= now) return null;
-    const payload = JSON.parse(row.payload) as OddsCachePayload;
+    const payload = normalizeCachedOddsPayload(JSON.parse(row.payload), row.fetched_at);
+    if (!payload) return null;
     memoryOddsCache = payload;
     memoryOddsCacheExpiresAt = row.expires_at;
     return { ...payload, cached: true };
@@ -140,7 +183,7 @@ async function writeOddsCache(env: RuntimeEnv, payload: OddsCachePayload, expire
           fetched_at = excluded.fetched_at,
           expires_at = excluded.expires_at
       `)
-      .bind(ODDS_CACHE_KEY, JSON.stringify(payload), payload.retrievedAt, expiresAt)
+      .bind(ODDS_CACHE_KEY, JSON.stringify(payload), payload.fetchedAt, expiresAt)
       .run();
   } catch {
     // The in-memory cache still prevents duplicate requests in the active worker.
@@ -213,9 +256,10 @@ async function reconcileBudget(env: RuntimeEnv, reservedMicros: number, inputTok
   if (!env.DB) return;
   const actualMicros = estimateTokenCostMicros({
     model: env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL,
-    // A 25 percent input premium safely covers any cache-write pricing.
-    inputTokens: Math.ceil(inputTokens * 1.25),
+    inputTokens,
     outputTokens,
+    // This is conservative for reads and covers the maximum cache-write rate.
+    inputRateMultiplier: PROMPT_CACHE_WRITE_INPUT_MULTIPLIER,
   });
   const adjustment = actualMicros - reservedMicros;
   await env.DB
@@ -280,6 +324,7 @@ async function resolveTrustedMarket(env: RuntimeEnv, game: SnapshotGame): Promis
       game,
       evidence: {
         source: "Bundled nflverse market snapshot",
+        fetchedAt: game.sourceUpdatedAt,
         retrievedAt: game.sourceUpdatedAt,
         cached: true,
         market: {
@@ -307,6 +352,7 @@ async function resolveTrustedMarket(env: RuntimeEnv, game: SnapshotGame): Promis
     game: { ...game, ...market },
     evidence: {
       source: cached.source,
+      fetchedAt: cached.fetchedAt,
       retrievedAt: cached.retrievedAt,
       cached: cached.cached,
       market,
@@ -353,43 +399,6 @@ function responseUsage(response: Record<string, unknown>) {
   };
 }
 
-function validateAIExplanation(
-  value: unknown,
-  forecast: ForecastResult,
-  sourceUpdatedAt: string,
-) {
-  if (!value || typeof value !== "object") throw new Error("AI explanation must be an object");
-  const parsed = value as Record<string, unknown>;
-  const probability = Number(parsed.probability);
-  if (!Number.isFinite(probability) || Math.abs(probability - forecast.probability) > 1e-9) {
-    throw new Error("AI explanation changed the forecast probability");
-  }
-  if (parsed.modelVersion !== forecast.modelVersion) {
-    throw new Error("AI explanation changed the model version");
-  }
-  if (parsed.sourceUpdatedAt !== sourceUpdatedAt) {
-    throw new Error("AI explanation changed the source timestamp");
-  }
-
-  const drivers = Array.isArray(parsed.drivers) ? parsed.drivers : [];
-  const uncertainty = Array.isArray(parsed.uncertainty) ? parsed.uncertainty : [];
-  if (!drivers.length || !uncertainty.length) {
-    throw new Error("AI explanation omitted evidence or uncertainty");
-  }
-  const policyText = [
-    parsed.summary,
-    ...drivers.flatMap((driver) => driver && typeof driver === "object"
-      ? [(driver as Record<string, unknown>).label, (driver as Record<string, unknown>).evidence]
-      : []),
-    ...uncertainty,
-  ].map(String).join(" ");
-  if (/\b(best bet|bet on|wager on|you should|we recommend|place a bet|stake|parlay|lock of the week)\b/i.test(policyText)) {
-    throw new Error("AI explanation contained prohibited betting guidance");
-  }
-
-  return parsed;
-}
-
 async function openAIRequest(env: RuntimeEnv, body: Record<string, unknown>) {
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
@@ -429,7 +438,7 @@ async function createAIExplanation(
   const input = [
     {
       role: "system",
-      content: "Explain an educational football forecast. Call get_forecast before explaining. Preserve the exact probability, model version, and source timestamp returned by the tool. Never recommend a bet, stake, payout, sportsbook, or action. Name evidence and uncertainty.",
+      content: "Explain an educational football forecast. Call get_forecast before explaining. Preserve the exact probability, model version, source timestamp, driver labels, driver evidence, driver impacts, and uncertainty returned by the tool. Never recommend a bet, stake, payout, sportsbook, or action.",
     },
     {
       role: "user",
@@ -478,7 +487,7 @@ async function createAIExplanation(
                 properties: {
                   label: { type: "string" },
                   evidence: { type: "string" },
-                  impact: { type: "string" },
+                  impact: { type: "number" },
                 },
                 required: ["label", "evidence", "impact"],
                 additionalProperties: false,
@@ -507,11 +516,18 @@ async function createAIExplanation(
     store: false,
   });
 
-  const parsed = validateAIExplanation(
-    JSON.parse(extractOutputText(second)),
-    forecast,
-    sourceUpdatedAt,
-  );
+  const parsed = assertAIOutput({
+    output: {
+      explanation: JSON.parse(extractOutputText(second)) as Record<string, unknown>,
+    },
+    contract: {
+      probability: forecast.probability,
+      modelVersion: forecast.modelVersion,
+      sourceUpdatedAt,
+      expectedDrivers: forecast.drivers,
+      expectedUncertainty: forecast.uncertainty,
+    },
+  });
   const firstUsage = responseUsage(first);
   const secondUsage = responseUsage(second);
   return {
@@ -628,18 +644,7 @@ function median(values: number[]) {
   return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle];
 }
 
-async function oddsResponse(env: RuntimeEnv) {
-  if (!env.THE_ODDS_API_KEY) {
-    return jsonResponse({ status: "configuration_required", message: "Using the bundled nflverse market snapshot until a free odds key is configured." }, 503);
-  }
-
-  const cached = await readOddsCache(env);
-  if (cached) {
-    return jsonResponse(cached, 200, {
-      "Cache-Control": "public, max-age=300, s-maxage=21600, stale-while-revalidate=3600",
-    });
-  }
-
+async function fetchOddsPayload(env: RuntimeEnv) {
   const url = new URL("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/");
   url.searchParams.set("apiKey", env.THE_ODDS_API_KEY);
   url.searchParams.set("regions", "us");
@@ -647,7 +652,7 @@ async function oddsResponse(env: RuntimeEnv) {
   url.searchParams.set("oddsFormat", "american");
   url.searchParams.set("dateFormat", "iso");
   const response = await fetch(url, { signal: AbortSignal.timeout(8_000) });
-  if (!response.ok) return jsonResponse({ status: "upstream_unavailable" }, 502);
+  if (!response.ok) throw new Error(`Odds provider returned status ${response.status}`);
   const events = await response.json() as Array<Record<string, unknown>>;
   const dallasEvents = events.filter(
     (event) => event.home_team === "Dallas Cowboys" || event.away_team === "Dallas Cowboys",
@@ -710,22 +715,77 @@ async function oddsResponse(env: RuntimeEnv) {
     };
   });
 
-  const retrievedAt = new Date().toISOString();
+  const fetchedAt = new Date().toISOString();
   const expiresAt = Date.now() + ODDS_CACHE_TTL_MS;
   const payload: OddsCachePayload = {
     status: "current",
     source: "The Odds API",
-    retrievedAt,
+    fetchedAt,
+    retrievedAt: fetchedAt,
     cacheExpiresAt: new Date(expiresAt).toISOString(),
     cacheTtlHours: ODDS_CACHE_TTL_HOURS,
     cached: false,
     events: normalized,
   };
   await writeOddsCache(env, payload, expiresAt);
+  return payload;
+}
 
-  return jsonResponse(payload, 200, {
+function oddsCacheHeaders() {
+  return {
     "Cache-Control": "public, max-age=300, s-maxage=21600, stale-while-revalidate=3600",
-  });
+  };
+}
+
+async function oddsResponse(env: RuntimeEnv) {
+  const cached = await readOddsCache(env);
+  if (cached) return jsonResponse(cached, 200, oddsCacheHeaders());
+
+  if (!env.THE_ODDS_API_KEY) {
+    return jsonResponse({
+      status: "configuration_required",
+      message: "Using the bundled nflverse market snapshot until a free odds key is configured.",
+    }, 503);
+  }
+
+  const now = Date.now();
+  const joinedRefresh = Boolean(oddsRefreshPromise);
+  if (!oddsRefreshPromise && now < oddsRefreshAllowedAt) {
+    const retryAfterSeconds = Math.max(
+      1,
+      Math.ceil((oddsRefreshAllowedAt - now) / 1_000),
+    );
+    return jsonResponse({
+      status: "refresh_throttled",
+      message: "A market refresh was attempted recently. Try again after the cooldown.",
+      retryAfterSeconds,
+    }, 429, {
+      "Retry-After": String(retryAfterSeconds),
+    });
+  }
+
+  if (!oddsRefreshPromise) {
+    oddsRefreshAllowedAt = now + ODDS_REFRESH_COOLDOWN_MS;
+    oddsRefreshPromise = fetchOddsPayload(env).finally(() => {
+      oddsRefreshPromise = null;
+    });
+  }
+
+  try {
+    const payload = await oddsRefreshPromise;
+    return jsonResponse(
+      joinedRefresh ? { ...payload, cached: true } : payload,
+      200,
+      oddsCacheHeaders(),
+    );
+  } catch {
+    return jsonResponse({
+      status: "upstream_unavailable",
+      retryAfterSeconds: ODDS_REFRESH_COOLDOWN_SECONDS,
+    }, 502, {
+      "Retry-After": String(ODDS_REFRESH_COOLDOWN_SECONDS),
+    });
+  }
 }
 
 export async function handleApiRequest(request: Request, env: RuntimeEnv) {

@@ -188,7 +188,7 @@ button:disabled {
 .market-strip span { color: var(--muted); font-size: 0.66rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
 .market-strip strong { font-size: 1.35rem; }
 
-.forecast-section, .players-section, .model-section, .trust-section { padding: 100px clamp(22px, 7vw, 110px); }
+.forecast-section, .players-section, .model-section, .case-study-section, .trust-section { padding: 100px clamp(22px, 7vw, 110px); }
 .section-heading { display: flex; gap: 24px; margin-bottom: 46px; }
 .section-heading.compact { max-width: 900px; }
 .section-number { color: var(--blue-500); font-size: 0.7rem; font-weight: 900; padding-top: 6px; }
@@ -228,6 +228,7 @@ button:disabled {
 .uncertainty-panel ul { color: #aebed0; font-size: 0.72rem; line-height: 1.55; margin: 12px 0; padding-left: 18px; }
 .uncertainty-panel li + li { margin-top: 7px; }
 .uncertainty-panel small { color: #d0dae6; display: block; font-size: 0.7rem; line-height: 1.5; }
+.result-evidence { color: #aebed0; display: flex; flex-wrap: wrap; font-size: 0.66rem; gap: 6px 18px; margin-top: 15px; }
 .runtime-action { align-items: center; display: flex; gap: 16px; margin: 24px 0; }
 .runtime-action small { color: #9dafc2; line-height: 1.45; }
 .players-section { background: #e8edf2; border-bottom: 1px solid #d2d9e0; border-top: 1px solid #d2d9e0; }
@@ -264,6 +265,97 @@ button:disabled {
 .model-note p { color: #c3cfdd; line-height: 1.65; }
 .model-note small { color: #869ab1; line-height: 1.5; }
 
+.case-study-section { background: #e8edf2; border-bottom: 1px solid #d2d9e0; }
+.case-pillars { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); }
+.case-pillars article {
+  background: white;
+  border-top: 3px solid var(--blue-500);
+  min-height: 210px;
+  padding: 25px;
+}
+.case-pillars span {
+  color: var(--blue-500);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.case-pillars p { color: var(--muted); font-size: 0.82rem; line-height: 1.65; margin: 20px 0 0; }
+.eval-proof {
+  align-items: center;
+  background: var(--navy-950);
+  color: white;
+  display: grid;
+  gap: 38px;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(520px, 1.1fr);
+  margin-top: 26px;
+  padding: clamp(26px, 4vw, 42px);
+}
+.eval-proof h3 {
+  font-size: clamp(2rem, 4vw, 3.7rem);
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+  margin: 10px 0 14px;
+}
+.eval-proof p { color: #aebed0; font-size: 0.78rem; line-height: 1.6; margin: 0; max-width: 620px; }
+.eval-proof dl { display: grid; gap: 1px; grid-template-columns: repeat(4, 1fr); margin: 0; }
+.eval-proof dl div {
+  background: rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  min-height: 132px;
+  padding: 20px;
+}
+.eval-proof dt { color: #9fb0c4; font-size: 0.64rem; font-weight: 850; line-height: 1.4; text-transform: uppercase; }
+.eval-proof dd { font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 900; letter-spacing: -0.06em; margin: auto 0 0; }
+.decision-table {
+  background: white;
+  border: 1px solid #cfd7df;
+  margin-top: 26px;
+  overflow-x: auto;
+}
+.decision-table table { border-collapse: collapse; min-width: 760px; width: 100%; }
+.decision-table caption {
+  color: var(--navy-900);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 19px 22px;
+  text-align: left;
+  text-transform: uppercase;
+}
+.decision-table th, .decision-table td {
+  border-top: 1px solid #e0e5ea;
+  font-size: 0.76rem;
+  line-height: 1.55;
+  padding: 17px 22px;
+  text-align: left;
+  vertical-align: top;
+}
+.decision-table thead th {
+  background: var(--navy-900);
+  color: white;
+  font-size: 0.67rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.decision-table tbody th { color: var(--navy-900); width: 31%; }
+.decision-table td { color: var(--muted); }
+.portfolio-links { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); margin-top: 26px; }
+.portfolio-links a {
+  background: var(--navy-900);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 122px;
+  padding: 22px;
+}
+.portfolio-links a:hover { background: var(--blue-500); }
+.portfolio-links span { font-size: 0.82rem; font-weight: 900; }
+.portfolio-links small { color: #b8c6d5; font-size: 0.7rem; line-height: 1.5; }
+.portfolio-links a:hover small { color: white; }
+
 .trust-section { background: white; }
 .trust-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
 .trust-grid article { background: #f1f4f7; border-top: 3px solid var(--navy-900); min-height: 150px; padding: 23px; }
@@ -283,6 +375,9 @@ footer span, footer p { color: #91a3b7; font-size: 0.72rem; line-height: 1.6; ma
   .player-grid, .opponent-grid { grid-template-columns: repeat(2, 1fr); }
   .forecast-workspace { grid-template-columns: 1fr; }
   .model-grid { grid-template-columns: repeat(2, 1fr); }
+  .case-pillars { grid-template-columns: repeat(2, 1fr); }
+  .eval-proof { grid-template-columns: 1fr; }
+  .portfolio-links { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 920px) {
@@ -294,7 +389,7 @@ footer span, footer p { color: #91a3b7; font-size: 0.72rem; line-height: 1.6; ma
     padding: 2px 0 3px;
     scrollbar-width: thin;
   }
-  .site-header nav a { white-space: nowrap; }
+  .site-header nav a { align-items: center; display: flex; min-height: 36px; white-space: nowrap; }
   .hero { grid-template-columns: 1fr; }
   .hero-forecast { max-width: 560px; }
   .market-strip { grid-template-columns: repeat(2, 1fr); }
@@ -305,7 +400,7 @@ footer span, footer p { color: #91a3b7; font-size: 0.72rem; line-height: 1.6; ma
 @media (max-width: 640px) {
   .site-header { padding: 15px 19px; }
   .unofficial { display: none; }
-  .hero, .forecast-section, .players-section, .model-section, .trust-section { padding-left: 19px; padding-right: 19px; }
+  .hero, .forecast-section, .players-section, .model-section, .case-study-section, .trust-section { padding-left: 19px; padding-right: 19px; }
   .hero { min-height: auto; padding-top: 68px; }
   .hero h1 { font-size: 3.35rem; }
   .market-strip { grid-template-columns: 1fr; padding: 0 19px; }
@@ -321,6 +416,8 @@ footer span, footer p { color: #91a3b7; font-size: 0.72rem; line-height: 1.6; ma
   .opponent-heading { align-items: start; flex-direction: column; }
   .opponent-heading p { text-align: left; }
   .model-grid { grid-template-columns: 1fr; }
+  .case-pillars { grid-template-columns: 1fr; }
+  .eval-proof dl { grid-template-columns: repeat(2, 1fr); }
   .source-list a { grid-template-columns: 1fr; }
   footer { gap: 22px; grid-template-columns: 1fr; }
 }

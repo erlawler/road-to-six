@@ -68,13 +68,15 @@ function gameDate(date: string) {
 }
 
 function evidenceTimestamp(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "time unavailable";
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
     timeZoneName: "short",
-  }).format(new Date(value));
+  }).format(date);
 }
 
 function playerEvidence(player: Player) {
@@ -188,13 +190,21 @@ export default function Home() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Forecast unavailable");
       if (data.marketEvidence?.source === "The Odds API" && data.marketEvidence.market) {
+        const evidenceSource = typeof data.marketEvidence.source === "string"
+          ? data.marketEvidence.source
+          : "The Odds API";
+        const evidenceRetrievedAt = typeof data.marketEvidence.retrievedAt === "string"
+          ? data.marketEvidence.retrievedAt
+          : typeof data.marketEvidence.fetchedAt === "string"
+            ? data.marketEvidence.fetchedAt
+            : new Date().toISOString();
         setMarkets((current) => ({
           ...current,
           [selectedGame.id]: data.marketEvidence.market,
         }));
         setMarketMetadata({
-          source: data.marketEvidence.source,
-          retrievedAt: data.marketEvidence.retrievedAt,
+          source: evidenceSource,
+          retrievedAt: evidenceRetrievedAt,
           cached: Boolean(data.marketEvidence.cached),
         });
       }
@@ -224,13 +234,22 @@ export default function Home() {
       const response = await fetch("/api/odds");
       const data = await response.json();
       if (!response.ok) {
-        setMarketStatus(
-          marketMetadata
-            ? `Refresh unavailable. Retaining ${marketMetadata.source} data retrieved ${evidenceTimestamp(marketMetadata.retrievedAt)}.`
-            : data.message ?? "Live market refresh is not configured",
-        );
+        setMarkets({});
+        setMarketMetadata(null);
+        setRuntimeResult(null);
+        setRuntimeStatus("Live market data was cleared. The bundled scenario remains available.");
+        setMarketStatus(data.message ?? "Live refresh unavailable. The bundled nflverse snapshot remains visible.");
         return;
       }
+      const source = typeof data.source === "string" ? data.source : "The Odds API";
+      const retrievedAt = typeof data.retrievedAt === "string"
+        ? data.retrievedAt
+        : typeof data.fetchedAt === "string"
+          ? data.fetchedAt
+          : new Date().toISOString();
+      const cacheTtlHours = Number.isFinite(Number(data.cacheTtlHours))
+        ? Number(data.cacheTtlHours)
+        : null;
       const nextMarkets: Record<string, LiveMarket> = {};
       for (const event of data.events ?? []) {
         const opponentName = event.homeTeam === "Dallas Cowboys" ? event.awayTeam : event.homeTeam;
@@ -249,28 +268,30 @@ export default function Home() {
         };
       }
       setMarkets(nextMarkets);
+      setRuntimeResult(null);
       if (Object.keys(nextMarkets).length) {
-        setRuntimeResult(null);
         setRuntimeStatus("Markets refreshed. Generate a new explanation when ready.");
+      } else {
+        setRuntimeStatus("No current market matched the schedule. The bundled scenario remains available.");
       }
       setMarketMetadata({
-        source: data.source,
-        retrievedAt: data.retrievedAt,
+        source,
+        retrievedAt,
         cacheExpiresAt: data.cacheExpiresAt,
-        cacheTtlHours: data.cacheTtlHours,
+        cacheTtlHours: cacheTtlHours ?? undefined,
         cached: Boolean(data.cached),
       });
       setMarketStatus(
         Object.keys(nextMarkets).length
-          ? `${data.source} consensus retrieved ${evidenceTimestamp(data.retrievedAt)} for ${Object.keys(nextMarkets).length} Cowboys game(s). Cached up to ${data.cacheTtlHours} hours.`
+          ? `${source} consensus retrieved ${evidenceTimestamp(retrievedAt)} for ${Object.keys(nextMarkets).length} Cowboys game(s).${cacheTtlHours === null ? "" : ` Cached up to ${cacheTtlHours} hours.`}`
           : "No matching current Cowboys markets were returned",
       );
     } catch {
-      setMarketStatus(
-        marketMetadata
-          ? `Refresh unavailable. Retaining ${marketMetadata.source} data retrieved ${evidenceTimestamp(marketMetadata.retrievedAt)}.`
-          : "Live refresh unavailable. The nflverse snapshot remains visible.",
-      );
+      setMarkets({});
+      setMarketMetadata(null);
+      setRuntimeResult(null);
+      setRuntimeStatus("Live market data was cleared. The bundled scenario remains available.");
+      setMarketStatus("Live refresh unavailable. The bundled nflverse snapshot remains visible.");
     } finally {
       setIsRefreshingMarkets(false);
     }
@@ -288,6 +309,7 @@ export default function Home() {
           <a href="#forecast">Forecast</a>
           <a href="#players">Players</a>
           <a href="#model">Model audit</a>
+          <a href="#case-study">Product case</a>
           <a href="#trust">Trust</a>
         </nav>
         <span className="unofficial" aria-label="Eric Ryan Lawler">ERL</span>
@@ -295,15 +317,16 @@ export default function Home() {
 
       <section className="hero" id="top">
         <div className="hero-copy">
-          <span className="eyebrow">Dallas Cowboys scenario lab</span>
+          <span className="eyebrow">Frontier AI product case study</span>
           <h1>Football evidence meets market reality.</h1>
           <p>
-            Explore actual players, scheduled games, lines, and transparent win probabilities.
-            Change the assumptions and see what moves the forecast without receiving betting advice.
+            An evidence-grounded product that joins actual players, games, and market lines with
+            transparent win probabilities. Explore scenarios, inspect the model, and see how cost,
+            safety, and release decisions are governed.
           </p>
           <div className="hero-actions">
             <a className="primary-action" href="#forecast">Run the forecast</a>
-            <a className="secondary-action" href="#model">Audit the model</a>
+            <a className="secondary-action" href="#case-study">Review the product case</a>
           </div>
           <div className="source-stamp">
             <span>Source</span>
@@ -418,7 +441,7 @@ export default function Home() {
             <div className="result-header">
               <div>
                 <span className="eyebrow">Scenario result</span>
-                <h3 aria-live="polite" aria-atomic="true">
+                <h3 role="status" aria-live="polite" aria-atomic="true">
                   {percent(displayedForecast.probability)} Dallas win probability
                 </h3>
               </div>
@@ -442,6 +465,14 @@ export default function Home() {
                 {displayedExplanation.uncertainty.map((item) => <li key={item}>{item}</li>)}
               </ul>
               <small>{displayedExplanation.disclaimer}</small>
+              <div className="result-evidence">
+                <span>Model {displayedForecast.modelVersion}</span>
+                <span>
+                  {liveMarket && marketMetadata
+                    ? `${marketMetadata.source} retrieved ${evidenceTimestamp(marketMetadata.retrievedAt)}`
+                    : `nflverse market snapshot ${selectedGame.sourceUpdatedAt}`}
+                </span>
+              </div>
             </div>
             <div className="runtime-action">
               <button
@@ -549,9 +580,116 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="trust-section" id="trust">
+      <section className="case-study-section" id="case-study">
         <div className="section-heading compact">
           <span className="section-number">04</span>
+          <div>
+            <span className="eyebrow">Technical product management</span>
+            <h2>Product judgment, made inspectable.</h2>
+            <p>
+              The portfolio proof is not the forecast alone. It is the set of product decisions
+              that makes the experience useful, measurable, affordable, and safe to release.
+            </p>
+          </div>
+        </div>
+
+        <div className="case-pillars">
+          {[
+            ["Opportunity", "Test whether football evidence and market prices tell the same story without claiming a wagering edge."],
+            ["AI role", "Deterministic code owns the probability. Runtime AI explains named evidence, uncertainty, and source freshness."],
+            ["Operating model", "Free sports data, a six-hour odds cache, a $9.50 AI cutoff, and a deterministic fallback protect cost and reliability."],
+            ["Launch governance", "Accessibility, security, data rights, trademark, responsible-use, and private-release gates are explicit."],
+          ].map(([title, copy]) => (
+            <article key={title}>
+              <span>{title}</span>
+              <p>{copy}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="eval-proof" aria-labelledby="eval-proof-title">
+          <div>
+            <span className="eyebrow">AI evaluation release gate</span>
+            <h3 id="eval-proof-title">12 of 12 expected outcomes detected.</h3>
+            <p>
+              The offline suite verifies positive and adversarial behavior without spending API
+              budget. A live structured response remains a separate provider gate.
+            </p>
+          </div>
+          <dl>
+            <div><dt>Positive cases</dt><dd>2</dd></div>
+            <div><dt>Adversarial cases</dt><dd>10</dd></div>
+            <div><dt>Product criteria</dt><dd>7</dd></div>
+            <div><dt>Binary checks</dt><dd>84</dd></div>
+          </dl>
+        </div>
+
+        <div className="decision-table" role="region" aria-label="Key product decisions" tabIndex={0}>
+          <table>
+            <caption>Key product decisions and their evidence</caption>
+            <thead>
+              <tr>
+                <th scope="col">Decision</th>
+                <th scope="col">Tradeoff</th>
+                <th scope="col">Inspectable proof</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Transparent baseline before model complexity</th>
+                <td>Less sophistication, faster trust and testability</td>
+                <td>544-game walk-forward holdout and visible Brier scores</td>
+              </tr>
+              <tr>
+                <th scope="row">AI explains but does not invent probability</th>
+                <td>Less autonomy, stronger numerical integrity</td>
+                <td>Versioned forecast function, structured output, and binary evals</td>
+              </tr>
+              <tr>
+                <th scope="row">Anonymous exploration</th>
+                <td>No saved profiles, lower privacy and security exposure</td>
+                <td>No personal data, wagering history, or authenticated product state</td>
+              </tr>
+              <tr>
+                <th scope="row">Free data and bounded runtime cost</th>
+                <td>Lower market depth, predictable portfolio operating cost</td>
+                <td>Normalized consensus cache, budget ledger, and fallback path</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div className="portfolio-links" aria-label="Portfolio documentation">
+          <a
+            href="https://github.com/erlawler/road-to-six/blob/main/docs/portfolio-case-study.md"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>Read the case study</span>
+            <small>Problem, ownership, tradeoffs, outcomes, and next bets</small>
+          </a>
+          <a
+            href="https://github.com/erlawler/road-to-six/blob/main/docs/ai-evaluation.md"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>Inspect the AI evaluation</span>
+            <small>Binary quality gates, adversarial cases, and release criteria</small>
+          </a>
+          <a
+            href="https://github.com/erlawler/road-to-six/blob/main/docs/frontier-ai-architecture.md"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>Review the architecture</span>
+            <small>Trust boundaries, runtime controls, and failure behavior</small>
+          </a>
+        </div>
+      </section>
+
+      <section className="trust-section" id="trust">
+        <div className="section-heading compact">
+          <span className="section-number">05</span>
           <div>
             <span className="eyebrow">Trust and release controls</span>
             <h2>Probability with product guardrails.</h2>
@@ -590,7 +728,10 @@ export default function Home() {
       </section>
 
       <footer>
-        <div><strong>Road to Six</strong><span>Technical product management portfolio built with Codex.</span></div>
+        <div>
+          <strong>Road to Six</strong>
+          <span>Product ownership and strategy by Eric Ryan Lawler. Implemented with Codex.</span>
+        </div>
         <p>
           Unofficial educational analytics. Not affiliated with or endorsed by the Dallas Cowboys, the NFL, sportsbooks, or their partners. No betting recommendation is provided.
         </p>

@@ -1,12 +1,12 @@
 # Public Use Review
 
-**Review date:** July 15, 2026  
+**Review date:** July 27, 2026
 **Decision owner:** Eric Lawler  
 **Decision:** ACCEPTED WITH DOCUMENTED LIMITATIONS
 
 ## Answer
 
-Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. This acceptance authorizes release preparation and a public source repository. It does not authorize public hosting, which still requires Eric Lawler's final approval after the private deployment review.
+Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. The public source repository and an owner-only hosted release candidate are complete. The July 27 optimized build still requires a private hosted refresh and smoke test. This acceptance does not authorize public hosting, which still requires Eric Lawler's final approval after the refreshed private candidate and remaining Runtime AI gate are reviewed.
 
 This review documents product risk decisions. It is not legal advice or a guarantee that a third party will not object.
 
@@ -15,8 +15,8 @@ This review documents product risk decisions. It is not legal advice or a guaran
 | Area | Decision | Control and accepted limitation |
 |---|---|---|
 | Data rights | ACCEPTED WITH LIMITATIONS | nflverse presents its data repository under CC BY 4.0. The application provides attribution, links to the source and license, states that the snapshot was transformed, and acknowledges that the license covers only rights the licensor can grant. Underlying third party rights may still apply. |
-| Market data | ACCEPTED WITH CONDITIONS | The Odds API terms support websites, dashboards, and analytical tools when the data is not redistributed as a standalone product. The project shows only normalized consensus values and keeps the key server-side. A current response was validated through the private release candidate. |
-| Trademark | ACCEPTED WITH LIMITATIONS | The NFL states that league and club names, logos, uniform designs, and related marks are protected. The project uses factual text references to identify the subject, excludes logos and uniform artwork, avoids official colors as a copied trade dress claim, and displays a clear footer non-affiliation notice. A rights holder could still object. |
+| Market data | ACCEPTED WITH CONDITIONS | The Odds API terms support websites, dashboards, and analytical tools when the data is not redistributed as a standalone product. The project shows only normalized consensus values, uses a six-hour cache, does not enable cross-origin access, and keeps the key server-side. A current response was validated through the owner-only release candidate. |
+| Trademark | ACCEPTED WITH LIMITATIONS | The NFL states that league and club names, logos, uniform designs, and related marks are protected. The project uses factual text references to identify the subject, excludes logos and uniform artwork, avoids official colors as a copied trade dress claim, places educational-use language beside the forecast, and displays the full non-affiliation statement in the footer. A rights holder could still object. |
 | Player publicity | ACCEPTED WITH LIMITATIONS | Names and public performance statistics are used as factual evidence. No headshots, likenesses, medical information, endorsements, or private data are included. |
 | Responsible use | ACCEPTED | The product calculates educational probabilities and uncertainty. It provides no picks, stakes, payouts, affiliate links, sportsbook links, wager placement, or personalized advice. |
 | Privacy | ACCEPTED | Public exploration is anonymous. No profile, wagering history, or personal information is collected. The D1 record is an aggregate monthly AI cost ledger only. |
@@ -37,12 +37,13 @@ This review documents product risk decisions. It is not legal advice or a guaran
 
 1. Remove or revise data or naming if a rights holder raises a valid concern.
 2. Do not add official logos, uniforms, player images, or copied NFL site content.
-3. Do not expose raw odds data through an API, download, or standalone feed.
+3. Do not expose raw odds data through an API, download, or standalone feed. Keep the same-site normalized endpoint limited to application use and without cross-origin access.
 4. Do not infer bettor popularity without a licensed bettor-split source.
 5. Keep the deterministic forecast available when live odds or runtime AI are unavailable.
 6. Stop runtime AI through the application ledger before estimated monthly spend exceeds $9.50. The separate OpenAI project budget must be set to $10 before enabling the live key.
-7. Keep public hosting private until Eric Lawler gives the final go-live approval.
+7. Keep the hosted candidate owner-only until Eric Lawler approves public access. After approval, run a production smoke test before declaring the site live.
+8. Keep educational-use language beside the forecast and the full non-affiliation statement in the footer.
 
 ## Acceptance record
 
-Eric Lawler explicitly requested completion of the public-use review and acceptance of the documented limitations on July 15, 2026. The release can advance to a private hosted candidate while the Runtime AI billing gate and public-hosting approval remain open.
+Eric Lawler explicitly requested completion of the public-use review and acceptance of the documented limitations on July 15, 2026. The review was reconciled with the owner-only hosted candidate on July 27, 2026. The public source repository and private candidate may remain available while the Runtime AI billing gate and public-hosting approval remain open.

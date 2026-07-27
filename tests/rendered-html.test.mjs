@@ -31,7 +31,7 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>Road to Six \| Cowboys Market Bias Lab<\/title>/i);
+  assert.match(html, /<title>Road to Six \| Technical PM and AI Case Study<\/title>/i);
   assert.match(html, /Football evidence meets market reality/);
   assert.match(html, /Interactive forecast/);
   assert.match(html, /Model audit/);
@@ -45,6 +45,12 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Uncertainty to keep in view/);
   assert.match(html, /The Odds API current markets/);
   assert.match(html, /Illustrative uncertainty band/);
+  assert.match(html, /Product judgment, made inspectable/);
+  assert.match(html, /12 of 12 expected outcomes detected/);
+  assert.match(html, /Binary checks/);
+  assert.match(html, /AI explains but does not invent probability/);
+  assert.match(html, /Read the case study/);
+  assert.match(html, /Inspect the AI evaluation/);
   assert.doesNotMatch(html, /Monthly runtime AI safety limit/);
   assert.doesNotMatch(html, />Cost<|>Brand</);
   assert.match(html, /Educational probability, not a recommended bet/);
@@ -90,7 +96,7 @@ test("removes disposable starter content", async () => {
   ]);
 
   assert.match(page, /Road to Six/);
-  assert.match(layout, /Road to Six \| Cowboys Market Bias Lab/);
+  assert.match(layout, /Road to Six \| Technical PM and AI Case Study/);
   assert.match(packageJson, /"name": "road-to-six"/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   await assert.rejects(access(new URL("../app\/_sites-preview", templateRoot)));

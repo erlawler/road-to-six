@@ -5,9 +5,14 @@ Review the pull request against `AGENTS.md` and the product artifacts in `docs/`
 Focus on:
 
 - scoring correctness and test coverage
-- synthetic data labeling and evidence traceability
+- sourced data labeling, licensing, and evidence traceability
+- probability fidelity between the deterministic function and runtime AI
+- evidence, uncertainty, model-version, and source-freshness completeness
+- responsible-use refusal behavior and deterministic fallback reliability
+- API cost controls, odds caching, secret handling, and request boundaries
 - accessibility and responsive behavior
 - privacy, security, and trademark boundaries
-- product scope and decision clarity
+- product scope, tradeoff clarity, measurement, and release-gate ownership
+- portfolio claims that exceed the verified implementation or evaluation evidence
 
 Return only actionable findings ordered by severity. If there are no findings, state that clearly and list the validation evidence reviewed.

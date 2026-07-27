@@ -1,6 +1,6 @@
 # MVP Backlog: Market Bias Lab Expansion
 
-**Implementation status:** PRIVATE PREVIEW COMPLETE. External-key validation, final data-rights approval, and publication remain open. Scores assume one sport, Cowboys-only views, daily or event-based refreshes, and no authentication.
+**Implementation status:** OPTIMIZED PRIVATE RELEASE CANDIDATE READY FOR REDEPLOYMENT. The public source repository, current owner-only hosted candidate, live odds validation, and internal public-use review are complete. The July 27 optimized build still requires private redeployment and a smoke test. A successful live Runtime AI response and explicit approval for public hosting remain open. Scores assume one sport, Cowboys-only views, cached market refreshes, and no product authentication.
 
 ## Prioritization rule
 
@@ -44,7 +44,7 @@ Acceptance criteria:
 - [x] Normalize event, team, and player identifiers with failure reporting.
 - [x] Store a versioned attributed snapshot without committing raw vendor data.
 - [x] Keep every vendor API key server-side.
-- [ ] Validate the live free-odds call with an account key.
+- [x] Validate the live free-odds call with an account key through the owner-only hosted candidate.
 
 ## P0: Probability forecast
 
@@ -84,10 +84,12 @@ Acceptance criteria:
 - [x] Explain drivers, cited evidence, missing data, and uncertainty.
 - [x] Reject betting recommendations, stake sizing, payout claims, and sportsbook links.
 - [x] Set `store: false` and bound input and output tokens.
-- [ ] Use a dedicated OpenAI project with a $10 monthly maximum.
+- [x] Use a dedicated OpenAI project with a $10 monthly maximum.
 - [x] Stop application AI at $9.50 per calendar month through a D1 ledger.
 - [x] Fall back to a deterministic explanation when the AI call fails or the budget is exhausted.
-- [ ] Validate the live Responses API function-call loop with an OpenAI project key.
+- [x] Run positive and adversarial AI evaluations for probability, model version, source freshness, exact evidence, exact uncertainty, responsible use, and fallback.
+- [x] Fail closed when AI changes a driver label, evidence statement, numeric impact, or uncertainty statement.
+- [ ] Validate one successful live Responses API function-call loop after provider billing or prepaid credit is available. The configured key already reaches OpenAI, but the provider currently returns `insufficient_quota`.
 
 ## P0: Public market exploration
 

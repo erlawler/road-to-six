@@ -73,8 +73,13 @@ test("normalizes per-book consensus and reuses the six-hour odds cache", async (
     assert.equal(firstPayload.cached, false);
     assert.equal(secondPayload.cached, true);
     assert.equal(firstPayload.cacheTtlHours, 6);
-    assert.equal(firstPayload.events[0].cowboysConsensusProbability > 0, true);
-    assert.equal(firstPayload.events[0].cowboysConsensusProbability < 1, true);
+    assert.equal(firstPayload.source, "The Odds API");
+    assert.equal(Number.isFinite(Date.parse(firstPayload.fetchedAt)), true);
+    assert.equal(firstPayload.retrievedAt, firstPayload.fetchedAt);
+    assert.equal(
+      Math.abs(firstPayload.events[0].cowboysConsensusProbability - 0.4891304347826087) < 1e-12,
+      true,
+    );
   } finally {
     globalThis.fetch = originalFetch;
   }
