@@ -7,7 +7,7 @@
 The hosted release candidate remains private. Replace every `[ADD PUBLIC URL AFTER APPROVAL]` placeholder only after:
 
 1. Eric explicitly approves public hosting.
-2. The Runtime AI gate passes or the public launch decision explicitly accepts deterministic fallback.
+2. The final v1.0.0 regression and private-candidate review pass.
 3. Codex makes hosting public.
 4. The production smoke test passes.
 5. The final URL works in a signed-out browser.
@@ -37,6 +37,7 @@ The most important AI decision was what the model should not do:
 - Schema and semantic checks reject changed numbers or betting guidance.
 - A deterministic fallback preserves the experience when AI, quota, or budget is unavailable.
 - A $9.50 application cutoff keeps spend under the $10 monthly project limit.
+- A reliability receipt makes model, prompt, contract, evaluation, latency, tokens, cost, source, validation, and fallback state inspectable.
 
 The transparent holdout result matters too. The market-aware model improved on football-only Elo, with a Brier score of **0.207 versus 0.220**, but it did not beat the **0.206 market baseline**. The product reports that limitation rather than turning it into a marketing claim.
 
@@ -88,7 +89,7 @@ Road to Six is an unofficial Dallas Cowboys forecasting lab and technical produc
 
 - Led strategy and delivery of an evidence-grounded AI forecasting product that combined attributed football data, current odds, scenario analysis, and transparent probability modeling.
 - Defined a tool-bounded AI architecture in which deterministic software owned the forecast and Runtime AI explained evidence and uncertainty, with schema, semantic, policy, cost, and fallback controls.
-- Designed a $0 sports-data operating model and six-hour cache that limited modeled usage to 372 of 500 monthly free-tier credits.
+- Designed a $0 sports-data operating model and six-hour cache that models 372 of 500 monthly free-tier credits when cache persistence succeeds.
 - Established release governance across accessibility, security, privacy, responsible use, data rights, trademark, automated testing, and explicit publication approval.
 - Directed Codex-assisted delivery using scoped requirements, architecture decisions, acceptance criteria, specialist reviews, and CI quality gates.
 
@@ -116,7 +117,7 @@ Refresh odds, run the scenario, and show the model-audit section.
 
 "Deterministic code calculates the probability. Runtime AI can explain the evidence and uncertainty, but it cannot change the number or recommend a bet. Invalid output, provider failure, or the $9.50 monthly cutoff activates a deterministic fallback."
 
-Show the grounded explanation and uncertainty list. If Runtime AI is unavailable, identify the fallback as the designed reliability state.
+Show the grounded explanation, uncertainty list, and AI reliability receipt. If Runtime AI is unavailable, identify the fallback and its reason code as the designed reliability state.
 
 ### 75 to 90 seconds: Close with product leadership
 
@@ -126,12 +127,14 @@ End on the GitHub README or artifact index.
 
 ## Demo capture checklist
 
+- [ ] `[NEEDS INPUT]` Record the demo. No video is currently claimed as complete.
 - [ ] Record at 1440 by 900 or another clear 16:10 desktop resolution.
 - [ ] Use a clean browser window with no personal tabs or credentials visible.
 - [ ] Confirm the market source and retrieval time are current.
 - [ ] Select a matchup with four populated opponent cards.
 - [ ] Change at least one Dallas control and one opponent control.
 - [ ] Show the probability, drivers, uncertainty, and model version.
+- [ ] Show the AI reliability receipt with no credentials or private identifiers visible.
 - [ ] Show the model-audit Brier scores.
 - [ ] Show deterministic fallback only if Runtime AI remains an accepted launch limitation.
 - [ ] Keep the recording between 60 and 90 seconds.
@@ -146,9 +149,21 @@ End on the GitHub README or artifact index.
 4. **Model audit:** Show the three holdout Brier scores and the honest conclusion.
 5. **Architecture and artifacts:** Show the README architecture diagram and documentation index.
 
+## Media asset status
+
+| Asset | Status |
+|---|---|
+| Market Context Lab social card | COMPLETE in `public/og-market-context.png` |
+| 60 to 90 second demo video | `[NEEDS INPUT]` |
+| Demo captions and transcript | `[NEEDS INPUT]` |
+| Approved hero screenshot | `[NEEDS INPUT]` |
+| Approved scenario screenshot | `[NEEDS INPUT]` |
+| Approved AI reliability receipt screenshot | `[NEEDS INPUT]` |
+| Approved model-audit screenshot | `[NEEDS INPUT]` |
+
 ## Social image alt text
 
-Road to Six portfolio project social card for an evidence-grounded Dallas Cowboys forecasting and market-bias lab.
+Road to Six portfolio project social card for an evidence-grounded Dallas Cowboys forecasting and market-context lab.
 
 ## Interview talking points
 
@@ -170,14 +185,14 @@ I treated Codex as a delivery and review system. I supplied product boundaries, 
 
 ### What would you do next?
 
-I would clear the live Runtime AI quota gate, run the public production smoke test after approval, instrument privacy-preserving funnel events, and evaluate whether users understand the evidence and uncertainty within five minutes.
+I would complete five privacy-safe usability sessions, run the public production smoke test after approval, instrument privacy-preserving funnel events, and evaluate whether users understand the evidence and uncertainty within five minutes.
 
 ## Final launch checklist
 
 - [ ] Replace `[ADD PUBLIC URL AFTER APPROVAL]` in this file.
 - [ ] Confirm Runtime AI status and describe fallback accurately.
 - [ ] Confirm the GitHub repository is public and the default branch is current.
-- [ ] Confirm the social image renders from `public/og-market-bias.jpg`.
+- [ ] Confirm the social image renders from `public/og-market-context.png`.
 - [ ] Run lint, tests, production build, and dependency audit.
 - [ ] Run desktop, mobile, keyboard, and signed-out smoke tests.
 - [ ] Verify source timestamps, non-affiliation notice, and responsible-use language.

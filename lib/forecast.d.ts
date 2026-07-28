@@ -14,6 +14,7 @@ export type ForecastGame = {
   cowboysMoneyline: number | null;
   opponentMoneyline: number | null;
   marketImpliedProbability?: number | null;
+  sportsbookCount?: number;
   opponentStarName?: string;
 };
 

@@ -105,7 +105,7 @@ Codex can prepare evidence and recommend a path, but it does not silently expand
 - The measurement plan contains targets, not observed public-user outcomes. Product analytics are not implemented.
 - Codex-generated work can be incomplete or wrong. Repository rules, tests, source checks, previews, and human review reduce risk but do not remove it.
 - The release reviews are product-risk reviews, not legal or accessibility certifications.
-- The hosted runtime AI path remains blocked by provider quota in the current release review. The deterministic fallback is the validated behavior.
+- A four-scenario live scorecard passed every Runtime AI and deterministic case after billing was enabled. Runtime AI returned in AI mode with no fallback in each bounded scenario. Deterministic fallback remains a separately tested reliability state.
 - The source repository demonstrates direction, implementation, and governance, but it does not imply that Eric independently performed every specialist task.
 
 ## How to present the work

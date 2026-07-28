@@ -34,7 +34,7 @@ Advance with this cost-bounded data strategy:
 
 Runtime AI cost varies with prompt size and model selection. The application defaults to GPT-5.6 Luna. The D1 ledger reserves cost before each request using the configured model's standard rates and reconciles actual input and output token use afterward, so the application does not depend on a traffic estimate to enforce the cutoff.
 
-The six-hour shared odds cache limits continuous refreshes to no more than four vendor calls per day. At three credits per call, that is at most 372 credits in a 31-day month before any upstream outage or off-season reduction, below the 500-credit free allowance.
+When cache persistence succeeds, the six-hour shared odds cache permits no more than four scheduled vendor refreshes per day. At three credits per call, the modeled usage is 372 credits in a 31-day month before any upstream outage or off-season reduction, below the 500-credit free allowance. Upstream and D1 persistence failures remain monitored because they can invalidate that modeled ceiling.
 
 ## Runtime AI budget controls
 

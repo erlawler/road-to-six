@@ -36,12 +36,20 @@ test("returns bounded football and market probabilities", () => {
 
 test("uses the per-book consensus probability when the trusted adapter supplies one", () => {
   const forecast = calculateForecast({
-    game: { ...game, marketImpliedProbability: 0.61 },
+    game: {
+      ...game,
+      marketImpliedProbability: 0.61,
+      sportsbookCount: 4,
+    },
     ratings: { DAL: 1457.3, NYG: 1360.4 },
     controls: { quarterback: 100, lamb: 100, pickens: 100, williams: 100, defense: 100, opponentStar: 100 },
   });
 
   assert.equal(forecast.marketImplied, 0.61);
+  assert.equal(
+    forecast.drivers.find((driver) => driver.label === "Market consensus")?.evidence,
+    "Median of 4 independently vig-adjusted sportsbook probabilities.",
+  );
 });
 
 test("quarterback participation materially changes the scenario", () => {

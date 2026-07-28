@@ -1,8 +1,15 @@
 import snapshot from "../app/data/nfl-snapshot.json";
-import { AI_BUDGET_SCHEMA_SQL, ODDS_CACHE_SCHEMA_SQL } from "../db/schema";
+import {
+  AI_BUDGET_SCHEMA_SQL,
+  AI_RUN_LEDGER_INDEX_SCHEMA_SQL,
+  AI_RUN_LEDGER_SCHEMA_SQL,
+  ODDS_CACHE_SCHEMA_SQL,
+  ODDS_REFRESH_CONTROL_SCHEMA_SQL,
+} from "../db/schema";
 import {
   calculateForecast,
   deterministicExplanation,
+  MODEL_VERSION,
   removeVig,
   type ForecastResult,
   type ScenarioControls,
@@ -13,6 +20,18 @@ import {
   requestReservationMicros,
 } from "../lib/ai-budget.mjs";
 import { assertAIOutput } from "../lib/ai-evaluation.mjs";
+import {
+  AI_CONTRACT_VERSION,
+  AI_EVAL_VERSION,
+  AI_PROMPT_VERSION,
+  buildGroundedForecastExplanationRequest,
+  buildInitialForecastExplanationRequest,
+  isApprovedOpenAIModel,
+  type AIFallbackReasonCode,
+  type AIReliabilityMode,
+  type AIReliabilityReceipt,
+  type AIValidationStatus,
+} from "../lib/ai-contract.mjs";
 
 type RuntimeEnv = {
   DB?: D1Database;
@@ -24,12 +43,31 @@ type RuntimeEnv = {
 
 type SnapshotGame = (typeof snapshot.schedule)[number];
 
-type BudgetRow = {
-  month: string;
-  estimated_spend_micros: number;
-  request_count: number;
-  input_tokens: number;
-  output_tokens: number;
+type BudgetReservation =
+  | { ok: true; reservedMicros: number }
+  | {
+    ok: false;
+    reasonCode: Extract<
+      AIFallbackReasonCode,
+      "budget_ledger_unavailable" | "budget_exhausted"
+    >;
+  };
+
+type RateLimitResult =
+  | { allowed: true }
+  | {
+    allowed: false;
+    reasonCode: Extract<
+      AIFallbackReasonCode,
+      "rate_limit_unavailable" | "rate_limited"
+    >;
+    retryAfterSeconds: number;
+  };
+
+type RuntimeUsage = {
+  inputTokens: number;
+  outputTokens: number;
+  usageUncertain: boolean;
 };
 
 type OddsCacheRow = {
@@ -48,6 +86,19 @@ type OddsCachePayload = {
   cached: boolean;
   events: Array<Record<string, unknown>>;
 };
+
+type OddsRefreshControlRow = {
+  lease_expires_at: number;
+  cooldown_until: number;
+};
+
+type OddsRefreshLease =
+  | { acquired: true; token: string }
+  | {
+    acquired: false;
+    retryAfterSeconds: number;
+    controlUnavailable: boolean;
+  };
 
 type MarketEvidence = {
   source: string;
@@ -72,11 +123,61 @@ const ODDS_CACHE_TTL_HOURS = 6;
 const ODDS_CACHE_TTL_MS = ODDS_CACHE_TTL_HOURS * 60 * 60 * 1_000;
 const ODDS_REFRESH_COOLDOWN_SECONDS = 60;
 const ODDS_REFRESH_COOLDOWN_MS = ODDS_REFRESH_COOLDOWN_SECONDS * 1_000;
+const ODDS_REFRESH_LEASE_SECONDS = 15;
+const ODDS_REFRESH_LEASE_MS = ODDS_REFRESH_LEASE_SECONDS * 1_000;
+const AI_RATE_LIMIT_SCOPE = "forecast_ai_global";
+const AI_RATE_LIMIT_MAX_REQUESTS = 20;
+const AI_RATE_LIMIT_WINDOW_SECONDS = 5 * 60;
+const AI_RATE_LIMIT_WINDOW_MS = AI_RATE_LIMIT_WINDOW_SECONDS * 1_000;
+const AI_RUN_LEDGER_RETENTION_DAYS = 30;
+const AI_RUN_LEDGER_RETENTION_MS = AI_RUN_LEDGER_RETENTION_DAYS * 24 * 60 * 60 * 1_000;
+const CANONICAL_AI_DISCLAIMER =
+  "Educational analytics only. This product does not recommend a bet or stake.";
+
+const FALLBACK_REASON_MESSAGES: Record<AIFallbackReasonCode, string> = {
+  ai_not_configured: "OPENAI_API_KEY is not configured",
+  unsupported_model: "The configured Runtime AI model is not approved",
+  rate_limit_unavailable: "The anonymous AI rate limit is unavailable",
+  rate_limited: "The anonymous AI request limit was reached",
+  budget_ledger_unavailable: "The monthly AI budget ledger is unavailable",
+  budget_exhausted: "The monthly AI budget is exhausted",
+  provider_timeout: "Runtime AI timed out",
+  provider_http_error: "Runtime AI returned a provider error",
+  provider_unavailable: "Runtime AI is unavailable",
+  tool_contract_violation: "Runtime AI did not call the required forecast tool",
+  output_parse_failed: "Runtime AI returned an unreadable structured response",
+  output_validation_failed: "Runtime AI failed the grounded output evaluation",
+  runtime_error: "Runtime AI was unavailable",
+  request_body_too_large: "Request body is too large",
+  unsupported_content_type: "Content-Type must be application/json",
+  invalid_json: "Invalid JSON body",
+  unknown_game: "Unknown game",
+};
 
 let memoryOddsCache: OddsCachePayload | null = null;
 let memoryOddsCacheExpiresAt = 0;
 let oddsRefreshAllowedAt = 0;
 let oddsRefreshPromise: Promise<OddsCachePayload> | null = null;
+
+class RuntimeAIError extends Error {
+  reasonCode: AIFallbackReasonCode;
+  validationStatus: AIValidationStatus;
+  usageUncertain: boolean;
+
+  constructor(
+    reasonCode: AIFallbackReasonCode,
+    options: {
+      validationStatus?: AIValidationStatus;
+      usageUncertain?: boolean;
+    } = {},
+  ) {
+    super(reasonCode);
+    this.name = "RuntimeAIError";
+    this.reasonCode = reasonCode;
+    this.validationStatus = options.validationStatus ?? "not_run";
+    this.usageUncertain = options.usageUncertain ?? false;
+  }
+}
 
 function jsonResponse(body: unknown, status = 200, additionalHeaders?: HeadersInit) {
   const headers = new Headers(additionalHeaders);
@@ -107,6 +208,159 @@ async function ensureBudgetTable(db: D1Database) {
 
 async function ensureOddsCacheTable(db: D1Database) {
   await db.prepare(ODDS_CACHE_SCHEMA_SQL).run();
+}
+
+async function ensureRunLedgerTable(db: D1Database) {
+  await db.prepare(AI_RUN_LEDGER_SCHEMA_SQL).run();
+  await db.prepare(AI_RUN_LEDGER_INDEX_SCHEMA_SQL).run();
+}
+
+async function ensureOddsRefreshControlTable(db: D1Database) {
+  await db.prepare(ODDS_REFRESH_CONTROL_SCHEMA_SQL).run();
+}
+
+function reliabilityReceipt(input: {
+  mode: AIReliabilityMode;
+  requestId: string;
+  model: string;
+  forecastVersion?: string;
+  validationStatus: AIValidationStatus;
+  startedAt: number;
+  inputTokens?: number;
+  outputTokens?: number;
+  estimatedCostMicros?: number;
+  fallbackReasonCode: AIFallbackReasonCode | null;
+  sourceUpdatedAt?: string;
+}): AIReliabilityReceipt {
+  return {
+    mode: input.mode,
+    requestId: input.requestId,
+    model: input.model,
+    promptVersion: AI_PROMPT_VERSION,
+    contractVersion: AI_CONTRACT_VERSION,
+    evalVersion: AI_EVAL_VERSION,
+    forecastVersion: input.forecastVersion ?? MODEL_VERSION,
+    validationStatus: input.validationStatus,
+    latencyMs: Math.max(0, Date.now() - input.startedAt),
+    inputTokens: Math.max(0, input.inputTokens ?? 0),
+    outputTokens: Math.max(0, input.outputTokens ?? 0),
+    estimatedCostUsd: Math.max(0, input.estimatedCostMicros ?? 0) / 1_000_000,
+    fallbackReasonCode: input.fallbackReasonCode,
+    sourceUpdatedAt: input.sourceUpdatedAt ?? snapshot.asOf,
+  };
+}
+
+async function writeRunLedger(env: RuntimeEnv, receipt: AIReliabilityReceipt) {
+  if (!env.DB) return false;
+
+  try {
+    await ensureRunLedgerTable(env.DB);
+    const retentionCutoff = new Date(Date.now() - AI_RUN_LEDGER_RETENTION_MS).toISOString();
+    try {
+      await env.DB
+        .prepare("DELETE FROM ai_run_ledger WHERE created_at < ?")
+        .bind(retentionCutoff)
+        .run();
+    } catch {
+      // Retention cleanup is best effort and never stores personal identifiers.
+    }
+    try {
+      await env.DB
+        .prepare("DELETE FROM ai_rate_limit_window WHERE expires_at <= ?")
+        .bind(Date.now())
+        .run();
+    } catch {
+      // Cleanup runs only after a budgeted AI outcome, never on denied traffic.
+    }
+    await env.DB
+      .prepare(`
+        INSERT INTO ai_run_ledger (
+          request_id,
+          created_at,
+          mode,
+          model,
+          prompt_version,
+          contract_version,
+          eval_version,
+          forecast_version,
+          validation_status,
+          latency_ms,
+          input_tokens,
+          output_tokens,
+          estimated_cost_micros,
+          fallback_reason_code,
+          source_updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `)
+      .bind(
+        receipt.requestId,
+        new Date().toISOString(),
+        receipt.mode,
+        receipt.model,
+        receipt.promptVersion,
+        receipt.contractVersion,
+        receipt.evalVersion,
+        receipt.forecastVersion,
+        receipt.validationStatus,
+        receipt.latencyMs,
+        receipt.inputTokens,
+        receipt.outputTokens,
+        Math.round(receipt.estimatedCostUsd * 1_000_000),
+        receipt.fallbackReasonCode,
+        receipt.sourceUpdatedAt,
+      )
+      .run();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function consumeAnonymousAIRateLimit(env: RuntimeEnv): Promise<RateLimitResult> {
+  if (!env.DB) {
+    return {
+      allowed: false,
+      reasonCode: "rate_limit_unavailable",
+      retryAfterSeconds: AI_RATE_LIMIT_WINDOW_SECONDS,
+    };
+  }
+
+  const now = Date.now();
+  const windowStart = Math.floor(now / AI_RATE_LIMIT_WINDOW_MS) * AI_RATE_LIMIT_WINDOW_MS;
+  const expiresAt = windowStart + AI_RATE_LIMIT_WINDOW_MS;
+  const retryAfterSeconds = Math.max(1, Math.ceil((expiresAt - now) / 1_000));
+
+  try {
+    const result = await env.DB
+      .prepare(`
+        INSERT INTO ai_rate_limit_window (
+          scope, window_start, request_count, expires_at
+        ) VALUES (?, ?, 1, ?)
+        ON CONFLICT(scope, window_start) DO UPDATE SET
+          request_count = request_count + 1
+        WHERE request_count < ?
+        RETURNING request_count
+      `)
+      .bind(
+        AI_RATE_LIMIT_SCOPE,
+        windowStart,
+        expiresAt,
+        AI_RATE_LIMIT_MAX_REQUESTS,
+      )
+      .first<{ request_count: number }>();
+    if (result) return { allowed: true };
+    return {
+      allowed: false,
+      reasonCode: "rate_limited",
+      retryAfterSeconds,
+    };
+  } catch {
+    return {
+      allowed: false,
+      reasonCode: "rate_limit_unavailable",
+      retryAfterSeconds,
+    };
+  }
 }
 
 function normalizeCachedOddsPayload(value: unknown, fallbackFetchedAt: string) {
@@ -190,89 +444,192 @@ async function writeOddsCache(env: RuntimeEnv, payload: OddsCachePayload, expire
   }
 }
 
-async function readBudget(env: RuntimeEnv) {
-  const limitMicros = budgetLimitMicros(env);
+async function acquireOddsRefreshLease(env: RuntimeEnv): Promise<OddsRefreshLease> {
   if (!env.DB) {
     return {
-      available: false,
-      month: monthKey(),
-      spentUsd: 0,
-      limitUsd: limitMicros / 1_000_000,
-      remainingUsd: limitMicros / 1_000_000,
-      requestCount: 0,
+      acquired: false,
+      retryAfterSeconds: ODDS_REFRESH_COOLDOWN_SECONDS,
+      controlUnavailable: true,
     };
   }
 
-  await ensureBudgetTable(env.DB);
-  const row = await env.DB
-    .prepare("SELECT month, estimated_spend_micros, request_count, input_tokens, output_tokens FROM ai_monthly_budget WHERE month = ?")
-    .bind(monthKey())
-    .first<BudgetRow>();
-  const spentMicros = row?.estimated_spend_micros ?? 0;
+  const now = Date.now();
+  const token = crypto.randomUUID();
+  const leaseExpiresAt = now + ODDS_REFRESH_LEASE_MS;
+  const cooldownUntil = now + ODDS_REFRESH_COOLDOWN_MS;
+  try {
+    await ensureOddsRefreshControlTable(env.DB);
+    const acquired = await env.DB
+      .prepare(`
+        INSERT INTO odds_refresh_control (
+          cache_key,
+          lease_token,
+          lease_expires_at,
+          cooldown_until,
+          updated_at
+        ) VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(cache_key) DO UPDATE SET
+          lease_token = excluded.lease_token,
+          lease_expires_at = excluded.lease_expires_at,
+          cooldown_until = excluded.cooldown_until,
+          updated_at = excluded.updated_at
+        WHERE odds_refresh_control.lease_expires_at <= ?
+          AND odds_refresh_control.cooldown_until <= ?
+        RETURNING lease_token
+      `)
+      .bind(
+        ODDS_CACHE_KEY,
+        token,
+        leaseExpiresAt,
+        cooldownUntil,
+        new Date().toISOString(),
+        now,
+        now,
+      )
+      .first<{ lease_token: string }>();
+    if (acquired?.lease_token === token) {
+      return { acquired: true, token };
+    }
 
-  return {
-    available: true,
-    month: monthKey(),
-    spentUsd: spentMicros / 1_000_000,
-    limitUsd: limitMicros / 1_000_000,
-    remainingUsd: Math.max(0, limitMicros - spentMicros) / 1_000_000,
-    requestCount: row?.request_count ?? 0,
-  };
+    const control = await env.DB
+      .prepare(`
+        SELECT lease_expires_at, cooldown_until
+        FROM odds_refresh_control
+        WHERE cache_key = ?
+      `)
+      .bind(ODDS_CACHE_KEY)
+      .first<OddsRefreshControlRow>();
+    const blockedUntil = Math.max(
+      control?.lease_expires_at ?? now,
+      control?.cooldown_until ?? now + ODDS_REFRESH_COOLDOWN_MS,
+    );
+    return {
+      acquired: false,
+      retryAfterSeconds: Math.max(1, Math.ceil((blockedUntil - now) / 1_000)),
+      controlUnavailable: false,
+    };
+  } catch {
+    return {
+      acquired: false,
+      retryAfterSeconds: ODDS_REFRESH_COOLDOWN_SECONDS,
+      controlUnavailable: true,
+    };
+  }
 }
 
-async function reserveBudget(env: RuntimeEnv) {
-  if (!env.DB) return false;
+async function releaseOddsRefreshLease(env: RuntimeEnv, token: string) {
+  if (!env.DB) return;
+  try {
+    await env.DB
+      .prepare(`
+        UPDATE odds_refresh_control
+        SET lease_token = NULL,
+            lease_expires_at = 0,
+            updated_at = ?
+        WHERE cache_key = ? AND lease_token = ?
+      `)
+      .bind(new Date().toISOString(), ODDS_CACHE_KEY, token)
+      .run();
+  } catch {
+    // The short lease expires automatically if release is unavailable.
+  }
+}
+
+async function reserveBudget(env: RuntimeEnv): Promise<BudgetReservation> {
+  if (!env.DB) {
+    return { ok: false, reasonCode: "budget_ledger_unavailable" };
+  }
   const limitMicros = budgetLimitMicros(env);
   const reservationMicros = requestReservationMicros(env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL);
-  if (reservationMicros > limitMicros) return false;
-  await ensureBudgetTable(env.DB);
-  const now = new Date().toISOString();
-  const result = await env.DB
-    .prepare(`
-      INSERT INTO ai_monthly_budget (
-        month, estimated_spend_micros, request_count, input_tokens, output_tokens, updated_at
-      ) VALUES (?, ?, 1, 0, 0, ?)
-      ON CONFLICT(month) DO UPDATE SET
-        estimated_spend_micros = estimated_spend_micros + ?,
-        request_count = request_count + 1,
-        updated_at = ?
-      WHERE estimated_spend_micros + ? <= ?
-      RETURNING month
-    `)
-    .bind(
-      monthKey(),
-      reservationMicros,
-      now,
-      reservationMicros,
-      now,
-      reservationMicros,
-      limitMicros,
-    )
-    .first<{ month: string }>();
-  return result ? reservationMicros : false;
+  if (reservationMicros > limitMicros) {
+    return { ok: false, reasonCode: "budget_exhausted" };
+  }
+
+  try {
+    await ensureBudgetTable(env.DB);
+    const now = new Date().toISOString();
+    const result = await env.DB
+      .prepare(`
+        INSERT INTO ai_monthly_budget (
+          month, estimated_spend_micros, request_count, input_tokens, output_tokens, updated_at
+        ) VALUES (?, ?, 1, 0, 0, ?)
+        ON CONFLICT(month) DO UPDATE SET
+          estimated_spend_micros = estimated_spend_micros + ?,
+          request_count = request_count + 1,
+          updated_at = ?
+        WHERE estimated_spend_micros + ? <= ?
+        RETURNING month
+      `)
+      .bind(
+        monthKey(),
+        reservationMicros,
+        now,
+        reservationMicros,
+        now,
+        reservationMicros,
+        limitMicros,
+      )
+      .first<{ month: string }>();
+    return result
+      ? { ok: true, reservedMicros: reservationMicros }
+      : { ok: false, reasonCode: "budget_exhausted" };
+  } catch {
+    return { ok: false, reasonCode: "budget_ledger_unavailable" };
+  }
 }
 
-async function reconcileBudget(env: RuntimeEnv, reservedMicros: number, inputTokens: number, outputTokens: number) {
-  if (!env.DB) return;
-  const actualMicros = estimateTokenCostMicros({
+async function reconcileBudget(
+  env: RuntimeEnv,
+  reservedMicros: number,
+  usage: RuntimeUsage,
+) {
+  const knownUsageMicros = estimateTokenCostMicros({
     model: env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL,
-    inputTokens,
-    outputTokens,
+    inputTokens: usage.inputTokens,
+    outputTokens: usage.outputTokens,
     // This is conservative for reads and covers the maximum cache-write rate.
     inputRateMultiplier: PROMPT_CACHE_WRITE_INPUT_MULTIPLIER,
   });
-  const adjustment = actualMicros - reservedMicros;
-  await env.DB
-    .prepare(`
-      UPDATE ai_monthly_budget
-      SET estimated_spend_micros = MAX(0, estimated_spend_micros + ?),
-          input_tokens = input_tokens + ?,
-          output_tokens = output_tokens + ?,
-          updated_at = ?
-      WHERE month = ?
-    `)
-    .bind(adjustment, inputTokens, outputTokens, new Date().toISOString(), monthKey())
-    .run();
+  const reconciledMicros = usage.usageUncertain
+    ? Math.max(reservedMicros, knownUsageMicros)
+    : knownUsageMicros;
+  if (!env.DB) {
+    return {
+      estimatedCostMicros: reservedMicros,
+      reconciled: false,
+    };
+  }
+
+  try {
+    const adjustment = reconciledMicros - reservedMicros;
+    await env.DB
+      .prepare(`
+        UPDATE ai_monthly_budget
+        SET estimated_spend_micros = MAX(0, estimated_spend_micros + ?),
+            input_tokens = input_tokens + ?,
+            output_tokens = output_tokens + ?,
+            updated_at = ?
+        WHERE month = ?
+      `)
+      .bind(
+        adjustment,
+        usage.inputTokens,
+        usage.outputTokens,
+        new Date().toISOString(),
+        monthKey(),
+      )
+      .run();
+    return {
+      estimatedCostMicros: reconciledMicros,
+      reconciled: true,
+    };
+  } catch {
+    // The original reservation remains charged if reconciliation is unavailable.
+    return {
+      estimatedCostMicros: reservedMicros,
+      reconciled: false,
+    };
+  }
 }
 
 function normalizeControls(input: unknown): ScenarioControls {
@@ -306,6 +663,29 @@ function safeProbability(value: unknown) {
   return Number.isFinite(parsed) && parsed > 0 && parsed < 1 ? parsed : null;
 }
 
+function bundledMarketContext(game: SnapshotGame): {
+  game: SnapshotGame & { marketImpliedProbability?: number | null };
+  evidence: MarketEvidence;
+} {
+  return {
+    game,
+    evidence: {
+      source: "Bundled nflverse market snapshot",
+      fetchedAt: game.sourceUpdatedAt,
+      retrievedAt: game.sourceUpdatedAt,
+      cached: true,
+      market: {
+        cowboysMoneyline: game.cowboysMoneyline,
+        opponentMoneyline: game.opponentMoneyline,
+        cowboysSpread: game.cowboysSpread,
+        totalLine: game.totalLine,
+        marketImpliedProbability: null,
+        sportsbookCount: 0,
+      },
+    },
+  };
+}
+
 async function resolveTrustedMarket(env: RuntimeEnv, game: SnapshotGame): Promise<{
   game: SnapshotGame & { marketImpliedProbability?: number | null };
   evidence: MarketEvidence;
@@ -320,23 +700,7 @@ async function resolveTrustedMarket(env: RuntimeEnv, game: SnapshotGame): Promis
   });
 
   if (!cached || !event) {
-    return {
-      game,
-      evidence: {
-        source: "Bundled nflverse market snapshot",
-        fetchedAt: game.sourceUpdatedAt,
-        retrievedAt: game.sourceUpdatedAt,
-        cached: true,
-        market: {
-          cowboysMoneyline: game.cowboysMoneyline,
-          opponentMoneyline: game.opponentMoneyline,
-          cowboysSpread: game.cowboysSpread,
-          totalLine: game.totalLine,
-          marketImpliedProbability: null,
-          sportsbookCount: 0,
-        },
-      },
-    };
+    return bundledMarketContext(game);
   }
 
   const market = {
@@ -391,28 +755,55 @@ function extractOutputText(response: Record<string, unknown>) {
 
 function responseUsage(response: Record<string, unknown>) {
   const usage = response.usage && typeof response.usage === "object"
+    && !Array.isArray(response.usage)
     ? response.usage as Record<string, unknown>
-    : {};
+    : null;
+  const validTokenCount = (value: unknown) => (
+    typeof value === "number"
+    && Number.isFinite(value)
+    && Number.isInteger(value)
+    && value >= 0
+  );
+  const inputValid = validTokenCount(usage?.input_tokens);
+  const outputValid = validTokenCount(usage?.output_tokens);
   return {
-    inputTokens: Number(usage.input_tokens ?? 0),
-    outputTokens: Number(usage.output_tokens ?? 0),
+    inputTokens: inputValid ? Number(usage?.input_tokens) : 0,
+    outputTokens: outputValid ? Number(usage?.output_tokens) : 0,
+    valid: inputValid && outputValid,
   };
 }
 
 async function openAIRequest(env: RuntimeEnv, body: Record<string, unknown>) {
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.OPENAI_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(8_000),
-  });
-  if (!response.ok) {
-    throw new Error(`OpenAI request failed with status ${response.status}`);
+  let response: Response;
+  try {
+    response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(8_000),
+    });
+  } catch (error) {
+    const name = error instanceof Error ? error.name : "";
+    if (name === "AbortError" || name === "TimeoutError") {
+      throw new RuntimeAIError("provider_timeout", { usageUncertain: true });
+    }
+    throw new RuntimeAIError("provider_unavailable", { usageUncertain: true });
   }
-  return await response.json() as Record<string, unknown>;
+  if (!response.ok) {
+    throw new RuntimeAIError("provider_http_error", { usageUncertain: true });
+  }
+  try {
+    const payload = await response.json() as unknown;
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+      throw new RuntimeAIError("provider_unavailable", { usageUncertain: true });
+    }
+    return payload as Record<string, unknown>;
+  } catch {
+    throw new RuntimeAIError("provider_unavailable", { usageUncertain: true });
+  }
 }
 
 async function createAIExplanation(
@@ -421,119 +812,104 @@ async function createAIExplanation(
   controls: ScenarioControls,
   forecast: ForecastResult,
   sourceUpdatedAt: string,
+  usage: RuntimeUsage,
 ) {
   const model = env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL;
-  const tool = {
-    type: "function",
-    name: "get_forecast",
-    description: "Return the versioned probability result that must be used without alteration.",
-    parameters: {
-      type: "object",
-      properties: {},
-      required: [],
-      additionalProperties: false,
-    },
-    strict: true,
-  };
-  const input = [
-    {
-      role: "system",
-      content: "Explain an educational football forecast. Call get_forecast before explaining. Preserve the exact probability, model version, source timestamp, driver labels, driver evidence, driver impacts, and uncertainty returned by the tool. Never recommend a bet, stake, payout, sportsbook, or action.",
-    },
-    {
-      role: "user",
-      content: `Explain the Dallas scenario for Week ${game.week} against ${game.opponentName}. The scenario assumptions are ${JSON.stringify(controls)}.`,
-    },
-  ];
-
-  const first = await openAIRequest(env, {
+  const first = await openAIRequest(env, buildInitialForecastExplanationRequest({
     model,
-    input,
-    tools: [tool],
-    tool_choice: { type: "function", name: "get_forecast" },
-    max_output_tokens: 300,
-    store: false,
-  });
-  const firstOutput = Array.isArray(first.output) ? first.output : [];
-  const functionCall = firstOutput.find(
-    (item) => item && typeof item === "object" && (item as { type?: string }).type === "function_call",
-  ) as { call_id?: string } | undefined;
-  if (!functionCall?.call_id) throw new Error("The forecast tool was not called");
-
-  const second = await openAIRequest(env, {
-    model,
-    input: [
-      ...input,
-      ...firstOutput,
-      {
-        type: "function_call_output",
-        call_id: functionCall.call_id,
-        output: JSON.stringify({ forecast, sourceUpdatedAt }),
-      },
-    ],
-    text: {
-      format: {
-        type: "json_schema",
-        name: "forecast_explanation",
-        strict: true,
-        schema: {
-          type: "object",
-          properties: {
-            summary: { type: "string" },
-            drivers: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  label: { type: "string" },
-                  evidence: { type: "string" },
-                  impact: { type: "number" },
-                },
-                required: ["label", "evidence", "impact"],
-                additionalProperties: false,
-              },
-            },
-            uncertainty: { type: "array", items: { type: "string" } },
-            disclaimer: { type: "string" },
-            probability: { type: "number" },
-            modelVersion: { type: "string" },
-            sourceUpdatedAt: { type: "string" },
-          },
-          required: [
-            "summary",
-            "drivers",
-            "uncertainty",
-            "disclaimer",
-            "probability",
-            "modelVersion",
-            "sourceUpdatedAt",
-          ],
-          additionalProperties: false,
-        },
-      },
-    },
-    max_output_tokens: 500,
-    store: false,
-  });
-
-  const parsed = assertAIOutput({
-    output: {
-      explanation: JSON.parse(extractOutputText(second)) as Record<string, unknown>,
-    },
-    contract: {
-      probability: forecast.probability,
-      modelVersion: forecast.modelVersion,
-      sourceUpdatedAt,
-      expectedDrivers: forecast.drivers,
-      expectedUncertainty: forecast.uncertainty,
-    },
-  });
+    game,
+    controls,
+  }));
   const firstUsage = responseUsage(first);
+  usage.inputTokens += firstUsage.inputTokens;
+  usage.outputTokens += firstUsage.outputTokens;
+  usage.usageUncertain = usage.usageUncertain || !firstUsage.valid;
+  const firstOutput = Array.isArray(first.output) ? first.output : [];
+  const functionCalls = firstOutput.filter(
+    (item) => item && typeof item === "object" && (item as { type?: string }).type === "function_call",
+  ) as Array<{
+    call_id?: unknown;
+    name?: unknown;
+    arguments?: unknown;
+  }>;
+  const functionCall = functionCalls[0];
+  let toolArguments: unknown = null;
+  if (typeof functionCall?.arguments === "string") {
+    try {
+      toolArguments = JSON.parse(functionCall.arguments) as unknown;
+    } catch {
+      toolArguments = null;
+    }
+  }
+  const validToolArguments = Boolean(toolArguments)
+    && typeof toolArguments === "object"
+    && !Array.isArray(toolArguments)
+    && Object.keys(toolArguments as Record<string, unknown>).length === 0;
+  if (
+    functionCalls.length !== 1
+    || functionCall?.name !== "get_forecast"
+    || typeof functionCall.call_id !== "string"
+    || functionCall.call_id.trim().length === 0
+    || !validToolArguments
+  ) {
+    throw new RuntimeAIError("tool_contract_violation", {
+      validationStatus: "failed",
+    });
+  }
+
+  const second = await openAIRequest(env, buildGroundedForecastExplanationRequest({
+    model,
+    game,
+    controls,
+    firstOutput: firstOutput as Array<Record<string, unknown>>,
+    callId: functionCall.call_id,
+    forecast,
+    sourceUpdatedAt,
+  }));
   const secondUsage = responseUsage(second);
+  usage.inputTokens += secondUsage.inputTokens;
+  usage.outputTokens += secondUsage.outputTokens;
+  usage.usageUncertain = usage.usageUncertain || !secondUsage.valid;
+
+  let explanation: Record<string, unknown>;
+  try {
+    explanation = JSON.parse(extractOutputText(second)) as Record<string, unknown>;
+  } catch {
+    throw new RuntimeAIError("output_parse_failed", {
+      validationStatus: "failed",
+    });
+  }
+  const governedExplanation = {
+    summary: `The governed forecast assigns Dallas a ${Math.round(forecast.probability * 100)}% win probability against ${game.opponentName}.`,
+    drivers: explanation.drivers,
+    uncertainty: explanation.uncertainty,
+    disclaimer: CANONICAL_AI_DISCLAIMER,
+    probability: explanation.probability,
+    modelVersion: explanation.modelVersion,
+    sourceUpdatedAt: explanation.sourceUpdatedAt,
+  };
+
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = assertAIOutput({
+      output: { explanation: governedExplanation },
+      contract: {
+        probability: forecast.probability,
+        modelVersion: forecast.modelVersion,
+        sourceUpdatedAt,
+        expectedDrivers: forecast.drivers,
+        expectedUncertainty: forecast.uncertainty,
+      },
+    });
+  } catch {
+    throw new RuntimeAIError("output_validation_failed", {
+      validationStatus: "failed",
+    });
+  }
+
   return {
-    explanation: { ...parsed, mode: "ai" },
-    inputTokens: firstUsage.inputTokens + secondUsage.inputTokens,
-    outputTokens: firstUsage.outputTokens + secondUsage.outputTokens,
+    ...parsed,
+    mode: "ai",
   };
 }
 
@@ -560,81 +936,237 @@ async function readBoundedJson(request: Request, maxBytes: number) {
     body.set(chunk, offset);
     offset += chunk.byteLength;
   }
-  return JSON.parse(new TextDecoder().decode(body)) as Record<string, unknown>;
+  return JSON.parse(new TextDecoder().decode(body)) as unknown;
+}
+
+async function terminalForecastResponse(
+  env: RuntimeEnv,
+  body: Record<string, unknown>,
+  receipt: AIReliabilityReceipt,
+  status = 200,
+  additionalHeaders?: HeadersInit,
+  persistRunLedger = true,
+) {
+  if (persistRunLedger) await writeRunLedger(env, receipt);
+  return jsonResponse(
+    { ...body, reliability: receipt },
+    status,
+    additionalHeaders,
+  );
+}
+
+function runtimeFailure(error: unknown) {
+  if (error instanceof RuntimeAIError) return error;
+  return new RuntimeAIError("runtime_error");
 }
 
 async function forecastResponse(request: Request, env: RuntimeEnv) {
+  const requestId = crypto.randomUUID();
+  const startedAt = Date.now();
+  const model = env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL;
+  const rejected = async (
+    reasonCode: Extract<
+      AIFallbackReasonCode,
+      | "request_body_too_large"
+      | "unsupported_content_type"
+      | "invalid_json"
+      | "unknown_game"
+    >,
+    status: number,
+  ) => terminalForecastResponse(
+    env,
+    { error: FALLBACK_REASON_MESSAGES[reasonCode] },
+    reliabilityReceipt({
+      mode: "rejected",
+      requestId,
+      model,
+      validationStatus: "not_run",
+      startedAt,
+      fallbackReasonCode: reasonCode,
+    }),
+    status,
+    undefined,
+    false,
+  );
+
   const contentLength = Number(request.headers.get("content-length") ?? 0);
   if (Number.isFinite(contentLength) && contentLength > MAX_FORECAST_BODY_BYTES) {
-    return jsonResponse({ error: "Request body is too large" }, 413);
+    return rejected("request_body_too_large", 413);
   }
   const contentType = request.headers.get("content-type") ?? "";
   if (!contentType.toLowerCase().includes("application/json")) {
-    return jsonResponse({ error: "Content-Type must be application/json" }, 415);
+    return rejected("unsupported_content_type", 415);
   }
   let body: Record<string, unknown>;
   try {
-    body = await readBoundedJson(request, MAX_FORECAST_BODY_BYTES);
+    const parsedBody = await readBoundedJson(request, MAX_FORECAST_BODY_BYTES);
+    if (
+      !parsedBody
+      || typeof parsedBody !== "object"
+      || Array.isArray(parsedBody)
+    ) {
+      return rejected("invalid_json", 400);
+    }
+    body = parsedBody as Record<string, unknown>;
   } catch (error) {
     if (error instanceof Error && error.message === "body_too_large") {
-      return jsonResponse({ error: "Request body is too large" }, 413);
+      return rejected("request_body_too_large", 413);
     }
-    return jsonResponse({ error: "Invalid JSON body" }, 400);
+    return rejected("invalid_json", 400);
   }
 
   const snapshotGame = getGame(body.gameId);
-  if (!snapshotGame) return jsonResponse({ error: "Unknown game" }, 400);
-  const { game, evidence: marketEvidence } = await resolveTrustedMarket(env, snapshotGame);
+  if (!snapshotGame) return rejected("unknown_game", 400);
   const controls = normalizeControls(body.controls);
-  const forecast = makeForecast(game, controls);
-  const fallback = deterministicExplanation({
-    forecast,
-    game: {
-      ...game,
-      venue: game.venue as "home" | "away" | "neutral",
-      opponentStarName: snapshot.opponents[game.opponent as keyof typeof snapshot.opponents]?.leaders[0]?.name,
-    },
-  });
+  const buildScenario = (
+    context: Awaited<ReturnType<typeof resolveTrustedMarket>>,
+  ) => {
+    const forecast = makeForecast(context.game, controls);
+    const fallback = deterministicExplanation({
+      forecast,
+      game: {
+        ...context.game,
+        venue: context.game.venue as "home" | "away" | "neutral",
+        opponentStarName:
+          snapshot.opponents[context.game.opponent as keyof typeof snapshot.opponents]
+            ?.leaders[0]?.name,
+      },
+    });
+    return {
+      game: context.game,
+      marketEvidence: context.evidence,
+      forecast,
+      fallback,
+    };
+  };
+  const bundledScenario = buildScenario(bundledMarketContext(snapshotGame));
+  const fallbackResponse = async (
+    scenario: ReturnType<typeof buildScenario>,
+    reasonCode: AIFallbackReasonCode,
+    options: {
+      validationStatus?: AIValidationStatus;
+      usage?: RuntimeUsage;
+      estimatedCostMicros?: number;
+      retryAfterSeconds?: number;
+      status?: number;
+      persistRunLedger?: boolean;
+    } = {},
+  ) => {
+    const receipt = reliabilityReceipt({
+      mode: "deterministic",
+      requestId,
+      model,
+      forecastVersion: scenario.forecast.modelVersion,
+      validationStatus: options.validationStatus ?? "not_run",
+      startedAt,
+      inputTokens: options.usage?.inputTokens,
+      outputTokens: options.usage?.outputTokens,
+      estimatedCostMicros: options.estimatedCostMicros,
+      fallbackReasonCode: reasonCode,
+      sourceUpdatedAt: scenario.marketEvidence.retrievedAt,
+    });
+    const headers = options.retryAfterSeconds
+      ? { "Retry-After": String(options.retryAfterSeconds) }
+      : undefined;
+    return terminalForecastResponse(env, {
+      forecast: scenario.forecast,
+      explanation: scenario.fallback,
+      fallbackReason: FALLBACK_REASON_MESSAGES[reasonCode],
+      marketEvidence: scenario.marketEvidence,
+    }, receipt, options.status ?? 200, headers, options.persistRunLedger ?? false);
+  };
+
+  const rateLimit = await consumeAnonymousAIRateLimit(env);
+  if (!rateLimit.allowed) {
+    return fallbackResponse(bundledScenario, rateLimit.reasonCode, {
+      retryAfterSeconds: rateLimit.retryAfterSeconds,
+      status: rateLimit.reasonCode === "rate_limited" ? 429 : 503,
+    });
+  }
+
+  if (!isApprovedOpenAIModel(model)) {
+    return fallbackResponse(bundledScenario, "unsupported_model");
+  }
 
   if (!env.OPENAI_API_KEY) {
-    return jsonResponse({
-      forecast,
-      explanation: fallback,
-      fallbackReason: "OPENAI_API_KEY is not configured",
-      marketEvidence,
-      budget: await readBudget(env),
-    });
+    return fallbackResponse(bundledScenario, "ai_not_configured");
   }
 
-  const reservedMicros = await reserveBudget(env);
-  if (!reservedMicros) {
-    return jsonResponse({
-      forecast,
-      explanation: fallback,
-      fallbackReason: "Monthly AI budget is unavailable or exhausted",
-      marketEvidence,
-      budget: await readBudget(env),
-    });
+  const scenario = buildScenario(await resolveTrustedMarket(env, snapshotGame));
+  const { game, marketEvidence, forecast } = scenario;
+  const reservation = await reserveBudget(env);
+  if (!reservation.ok) {
+    return fallbackResponse(scenario, reservation.reasonCode);
   }
 
+  const usage: RuntimeUsage = {
+    inputTokens: 0,
+    outputTokens: 0,
+    usageUncertain: false,
+  };
+  let explanation: Record<string, unknown> | null = null;
+  let failure: RuntimeAIError | null = null;
   try {
-    const ai = await createAIExplanation(env, game, controls, forecast, marketEvidence.retrievedAt);
-    await reconcileBudget(env, reservedMicros, ai.inputTokens, ai.outputTokens);
-    return jsonResponse({
+    explanation = await createAIExplanation(
+      env,
+      game,
+      controls,
       forecast,
-      explanation: ai.explanation,
-      marketEvidence,
-      budget: await readBudget(env),
-    });
-  } catch {
-    return jsonResponse({
-      forecast,
-      explanation: fallback,
-      fallbackReason: "Runtime AI was unavailable",
-      marketEvidence,
-      budget: await readBudget(env),
+      marketEvidence.retrievedAt,
+      usage,
+    );
+  } catch (error) {
+    failure = runtimeFailure(error);
+    usage.usageUncertain = usage.usageUncertain || failure.usageUncertain;
+  }
+
+  const reconciliation = await reconcileBudget(
+    env,
+    reservation.reservedMicros,
+    usage,
+  );
+  if (failure || !explanation) {
+    return fallbackResponse(scenario, failure?.reasonCode ?? "runtime_error", {
+      validationStatus: failure?.validationStatus ?? "not_run",
+      usage,
+      estimatedCostMicros: reconciliation.estimatedCostMicros,
+      persistRunLedger: true,
     });
   }
+
+  const receipt = reliabilityReceipt({
+    mode: "ai",
+    requestId,
+    model,
+    forecastVersion: forecast.modelVersion,
+    validationStatus: "passed",
+    startedAt,
+    inputTokens: usage.inputTokens,
+    outputTokens: usage.outputTokens,
+    estimatedCostMicros: reconciliation.estimatedCostMicros,
+    fallbackReasonCode: null,
+    sourceUpdatedAt: marketEvidence.retrievedAt,
+  });
+  return terminalForecastResponse(env, {
+      forecast,
+      explanation,
+      marketEvidence,
+    }, receipt);
+}
+
+async function publicBudgetStatus(env: RuntimeEnv) {
+  const model = env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL;
+  return {
+    status: isApprovedOpenAIModel(model) && Boolean(env.OPENAI_API_KEY)
+      ? "managed"
+      : "unavailable",
+  };
+}
+
+function publicBudgetHeaders() {
+  return {
+    "Cache-Control": "public, max-age=300, s-maxage=3600",
+  };
 }
 
 function median(values: number[]) {
@@ -711,7 +1243,7 @@ async function fetchOddsPayload(env: RuntimeEnv) {
       cowboysConsensusProbability: median(perBookCowboysProbabilities),
       cowboysSpread: median(cowboysSpreads),
       total: median(totals),
-      sportsbookCount: bookmakers.length,
+      sportsbookCount: perBookCowboysProbabilities.length,
     };
   });
 
@@ -748,6 +1280,16 @@ async function oddsResponse(env: RuntimeEnv) {
     }, 503);
   }
 
+  if (!env.DB) {
+    return jsonResponse({
+      status: "refresh_control_unavailable",
+      message: "Using the bundled nflverse market snapshot because shared refresh control is unavailable.",
+      retryAfterSeconds: ODDS_REFRESH_COOLDOWN_SECONDS,
+    }, 503, {
+      "Retry-After": String(ODDS_REFRESH_COOLDOWN_SECONDS),
+    });
+  }
+
   const now = Date.now();
   const joinedRefresh = Boolean(oddsRefreshPromise);
   if (!oddsRefreshPromise && now < oddsRefreshAllowedAt) {
@@ -765,8 +1307,30 @@ async function oddsResponse(env: RuntimeEnv) {
   }
 
   if (!oddsRefreshPromise) {
+    let leaseToken: string | null = null;
+    const lease = await acquireOddsRefreshLease(env);
+    if (!lease.acquired) {
+      const refreshedCache = await readOddsCache(env);
+      if (refreshedCache) {
+        return jsonResponse(refreshedCache, 200, oddsCacheHeaders());
+      }
+      const status = lease.controlUnavailable
+        ? "refresh_control_unavailable"
+        : "refresh_throttled";
+      return jsonResponse({
+        status,
+        message: lease.controlUnavailable
+          ? "Using the bundled nflverse market snapshot because shared refresh control is unavailable."
+          : "A market refresh is active or cooling down.",
+        retryAfterSeconds: lease.retryAfterSeconds,
+      }, lease.controlUnavailable ? 503 : 429, {
+        "Retry-After": String(lease.retryAfterSeconds),
+      });
+    }
+    leaseToken = lease.token;
     oddsRefreshAllowedAt = now + ODDS_REFRESH_COOLDOWN_MS;
-    oddsRefreshPromise = fetchOddsPayload(env).finally(() => {
+    oddsRefreshPromise = fetchOddsPayload(env).finally(async () => {
+      if (leaseToken) await releaseOddsRefreshLease(env, leaseToken);
       oddsRefreshPromise = null;
     });
   }
@@ -797,7 +1361,11 @@ export async function handleApiRequest(request: Request, env: RuntimeEnv) {
     return oddsResponse(env);
   }
   if (url.pathname === "/api/budget" && request.method === "GET") {
-    return jsonResponse(await readBudget(env));
+    return jsonResponse(
+      await publicBudgetStatus(env),
+      200,
+      publicBudgetHeaders(),
+    );
   }
   return jsonResponse({ error: "Not found" }, 404);
 }

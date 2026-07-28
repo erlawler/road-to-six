@@ -2,7 +2,7 @@
 
 ## Executive summary
 
-Road to Six is an unofficial Dallas Cowboys forecasting and market-bias lab that demonstrates end-to-end technical product management for an evidence-grounded AI product.
+Road to Six is an unofficial Dallas Cowboys forecasting and market-context lab that demonstrates end-to-end technical product management for an evidence-grounded AI product. Market bias remains an unvalidated hypothesis because the approved scope excludes bettor-split data.
 
 I designed the product around one question:
 
@@ -10,7 +10,7 @@ I designed the product around one question:
 
 I owned the product strategy, prioritization, data and AI boundaries, acceptance criteria, release governance, and go-live decision. I used Codex as an implementation and review partner. That operating model let me move quickly while preserving explicit human ownership of requirements, risk decisions, and publication approval.
 
-The result is a validated private release candidate with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, and a complete product artifact set.
+The result is a locally validated v1.0.0 release candidate with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, and a complete product artifact set. The owner-only URL still contains the prior candidate until the final private deployment gate is completed.
 
 ## Product context
 
@@ -49,7 +49,7 @@ I served as the technical product manager and decision owner.
 | Vendor and cost management | $0 sports-data target, free-tier odds plan, $10 OpenAI project limit, and $9.50 application cutoff |
 | Risk and governance | Accessibility, security, privacy, responsible use, data rights, trademark, and release review |
 | Delivery management | Acceptance criteria, Codex task direction, specialist reviews, test gates, documentation, and private deployment approval |
-| Release ownership | Kept public hosting blocked pending explicit final approval and unresolved Runtime AI quota validation |
+| Release ownership | Kept public hosting blocked pending explicit final approval, validated the live Runtime AI baseline, and completed final regression as a separate gate |
 
 I did not represent Codex-generated implementation as unsupervised product work. I established repository rules, reviewed outputs, challenged assumptions, requested corrections, and accepted or rejected release gates.
 
@@ -93,6 +93,7 @@ These product adoption targets remain hypotheses because analytics are intention
 - Named scenarios for Dallas and the selected opponent's top producer
 - Walk-forward model audit and visible Brier scores
 - Structured Runtime AI explanation of drivers, evidence, and uncertainty
+- Runtime reliability receipt with model, prompt, contract, evaluation, latency, token, cost, validation, source, and fallback evidence
 - Deterministic explanation when AI is unavailable
 - Source, freshness, model-version, and responsible-use labels
 - Public product, architecture, backlog, measurement, decision, and release artifacts
@@ -148,7 +149,7 @@ Accounts and saved scenarios remain out of scope.
 
 **Tradeoff:** The product cannot personalize or persist scenarios.
 
-### 6. Free data over unsupported market-bias claims
+### 6. Free data with a bounded market-context claim
 
 The product uses nflverse and The Odds API free tier. Bettor splits were rejected.
 
@@ -170,7 +171,7 @@ The flow turns model transparency into a usable product experience:
 8. Runtime AI may explain the result if quota, budget, and validation gates pass.
 9. The deterministic explanation preserves the result when AI is unavailable.
 
-The editable [Figma user flow](https://www.figma.com/board/m4Jj2PH2pCWMjcyUFNibyS?utm_source=other&utm_content=edit_in_figjam&oai_id=v1%2FxUmyGVk5KOQTJRulUQKNwQe3yEmxEnoOxDP8Doq1z3TYSWL0h07UaA&request_id=ee641610-369e-4632-a92c-ff043a56fac1) preserves both the original readiness concept and the evolved Market Bias Lab.
+The editable [Figma user flow](https://www.figma.com/board/m4Jj2PH2pCWMjcyUFNibyS?utm_source=other&utm_content=edit_in_figjam&oai_id=v1%2FxUmyGVk5KOQTJRulUQKNwQe3yEmxEnoOxDP8Doq1z3TYSWL0h07UaA&request_id=ee641610-369e-4632-a92c-ff043a56fac1) preserves both the original readiness concept and the evolved Market Context Lab. A static Mermaid representation is checked into [Figma Flow](figma-flow.md) so the experience remains reviewable without external access.
 
 ## Technical architecture
 
@@ -236,7 +237,7 @@ An accepted AI response must:
 
 The system uses a dedicated OpenAI project with a $10 monthly maximum. The application reserves estimated cost before a request, reconciles actual token use, stops AI calls at $9.50, and serves the deterministic explanation afterward.
 
-The integration is securely configured. The live OpenAI test currently returns `insufficient_quota`, so the Runtime AI launch gate remains blocked. This limitation is visible in the [release review](release-review.md) rather than hidden.
+After billing was enabled, one live OpenAI response completed in AI mode with no fallback. It preserved probability `0.5531549573107291`, forecast model `elo-market-v1.1.0`, source date `2026-07-15`, three drivers, and three uncertainty items. The same seven-criterion evaluator passed all seven checks. The later four-scenario scorecard and 72-test regression also pass. Final private deployment remains a separate owner gate.
 
 ## Data and model integrity
 
@@ -280,21 +281,23 @@ This is the same product-management pattern I would use with an engineering team
 | Responsible use | COMPLETE |
 | Data rights | ACCEPTED WITH LIMITATIONS |
 | Trademark and public content | ACCEPTED WITH LIMITATIONS |
-| Runtime AI live response | BLOCKED by provider quota |
+| Runtime AI live response | COMPLETE for the live baseline |
+| v1.0.0 hardening regression | COMPLETE |
 | Public hosting | BLOCKED pending explicit approval |
 
 ## Verified outcomes
 
 1. The production build and lint checks pass.
-2. All 34 automated tests pass.
+2. All 72 automated tests pass.
 3. The current dependency audit reports zero vulnerabilities.
 4. The private release candidate returned five current Dallas events from The Odds API.
-5. A six-hour cache keeps the modeled maximum at 372 credits in a 31-day month, below the free allowance.
+5. Successful six-hour cache persistence models 372 credits in a 31-day month, below the free allowance. Upstream and persistence failures remain monitored separately.
 6. Market probability is calculated after removing vig within each sportsbook.
 7. The 2024 to 2025 holdout reports all three Brier scores in the interface.
 8. The Runtime AI suite passes 12 of 12 expected outcomes across seven criteria and 84 binary checks, including exact evidence, exact uncertainty, and prohibited-advice cases.
-9. The product remains usable through bundled odds and deterministic explanation when an external dependency fails.
-10. Desktop and mobile accessibility and overflow checks pass the documented portfolio review.
+9. A four-scenario live scorecard passed four of four Runtime AI and four of four deterministic cases. Runtime AI averaged 3,568 ms and an estimated $0.013118 total with no fallbacks in this bounded sample.
+10. The product remains usable through bundled odds and deterministic explanation when an external dependency fails.
+11. Desktop and mobile accessibility and overflow checks pass the documented portfolio review.
 
 ## What I learned
 
@@ -308,7 +311,7 @@ This is the same product-management pattern I would use with an engineering team
 ## Current limitations and next decisions
 
 1. Product adoption targets remain unmeasured because analytics are not implemented.
-2. Runtime AI needs one successful structured provider response after quota is enabled.
+2. Five privacy-safe usability sessions and the resulting product decisions remain `[NEEDS INPUT]`.
 3. The forecast is a transparent portfolio baseline, not a production wagering model.
 4. Historical odds and bettor splits remain outside the free-data scope.
 5. Public hosting requires explicit final approval and a production smoke test.
@@ -321,6 +324,7 @@ This is the same product-management pattern I would use with an engineering team
 - [Architecture](architecture.md)
 - [Frontier AI architecture](frontier-ai-architecture.md)
 - [Runtime AI evaluation](ai-evaluation.md)
+- [Live AI scorecard](live-ai-scorecard.md)
 - [Codex collaboration](codex-collaboration.md)
 - [MVP backlog](mvp-backlog.md)
 - [Measurement plan](measurement-plan.md)
@@ -330,5 +334,7 @@ This is the same product-management pattern I would use with an engineering team
 - [Release review](release-review.md)
 - [Figma flow](figma-flow.md)
 - [LinkedIn launch kit](linkedin-launch-kit.md)
+- [Usability research](usability-research.md)
+- [Repository launch checklist](repository-launch-checklist.md)
 - [Third Party Data and Rights Notice](../NOTICE.md)
 - [Security policy](../SECURITY.md)

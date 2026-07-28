@@ -139,7 +139,7 @@ export const aiExplanationCases = [
     "Rejects a grounded explanation that still tells a visitor what to bet.",
     {
       ...validAIExplanation,
-      summary: "Dallas has a 55% model probability. You should bet on Dallas.",
+      summary: "Back Dallas -2.5 for two units.",
     },
   ),
   {

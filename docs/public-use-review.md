@@ -6,7 +6,7 @@
 
 ## Answer
 
-Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. The public source repository and optimized owner-only hosted release candidate are complete. This acceptance does not authorize public hosting, which still requires Eric Lawler's final approval after the private candidate and remaining Runtime AI gate are reviewed.
+Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. The public source repository and prior owner-only hosted candidate are available for review. The live Runtime AI scorecard and local v1.0.0 regression pass. Version 1.0.0 has not yet replaced the prior hosted candidate. This acceptance does not authorize public hosting, which still requires Eric Lawler's final approval after the final private deployment and smoke test.
 
 This review documents product risk decisions. It is not legal advice or a guarantee that a third party will not object.
 
@@ -19,7 +19,7 @@ This review documents product risk decisions. It is not legal advice or a guaran
 | Trademark | ACCEPTED WITH LIMITATIONS | The NFL states that league and club names, logos, uniform designs, and related marks are protected. The project uses factual text references to identify the subject, excludes logos and uniform artwork, avoids official colors as a copied trade dress claim, places educational-use language beside the forecast, and displays the full non-affiliation statement in the footer. A rights holder could still object. |
 | Player publicity | ACCEPTED WITH LIMITATIONS | Names and public performance statistics are used as factual evidence. No headshots, likenesses, medical information, endorsements, or private data are included. |
 | Responsible use | ACCEPTED | The product calculates educational probabilities and uncertainty. It provides no picks, stakes, payouts, affiliate links, sportsbook links, wager placement, or personalized advice. |
-| Privacy | ACCEPTED | Public exploration is anonymous. No profile, wagering history, or personal information is collected. The D1 record is an aggregate monthly AI cost ledger only. |
+| Privacy | ACCEPTED | Public exploration is anonymous. No profile, wagering history, or personal information is collected. D1 stores an aggregate monthly AI cost ledger, shared request-window counts, cached normalized odds, and bounded AI-run metadata. It does not store prompts, user identity, wagering history, or raw vendor payloads. |
 | Runtime AI data | ACCEPTED WITH LIMITATIONS | OpenAI states that API data is not used for model training unless the customer opts in. Default abuse monitoring may retain customer content for up to 30 days. The app sends no personal data, uses a bounded scenario, and sets `store: false`. |
 | Accessibility | ACCEPTED | The browser semantic tree exposes one level-one heading, ordered section headings, a named navigation, named controls, a scenario fieldset, live statuses, and the probability graphic. A skip link, visible focus rules, reduced motion support, responsive layouts, and normal-text contrast of at least 4.5 to 1 are implemented. This is a portfolio review, not a formal accessibility certification. |
 
@@ -40,10 +40,11 @@ This review documents product risk decisions. It is not legal advice or a guaran
 3. Do not expose raw odds data through an API, download, or standalone feed. Keep the same-site normalized endpoint limited to application use and without cross-origin access.
 4. Do not infer bettor popularity without a licensed bettor-split source.
 5. Keep the deterministic forecast available when live odds or runtime AI are unavailable.
-6. Stop runtime AI through the application ledger before estimated monthly spend exceeds $9.50. The separate OpenAI project budget must be set to $10 before enabling the live key.
+6. Stop Runtime AI through the application ledger before estimated monthly spend exceeds $9.50. Keep the separate OpenAI project budget at $10 while the live key is enabled.
 7. Keep the hosted candidate owner-only until Eric Lawler approves public access. After approval, run a production smoke test before declaring the site live.
 8. Keep educational-use language beside the forecast and the full non-affiliation statement in the footer.
+9. Keep the shared anonymous request limit and bounded run ledger active while public Runtime AI is available.
 
 ## Acceptance record
 
-Eric Lawler explicitly requested completion of the public-use review and acceptance of the documented limitations on July 15, 2026. The review was reconciled with the owner-only hosted candidate on July 27, 2026. The public source repository and private candidate may remain available while the Runtime AI billing gate and public-hosting approval remain open.
+Eric Lawler explicitly requested completion of the public-use review and acceptance of the documented limitations on July 15, 2026. The review was reconciled with the owner-only hosted candidate, successful live Runtime AI baseline, and local v1.0.0 regression on July 27, 2026. The public source repository and private candidate may remain available while final private deployment review and public-hosting approval remain open.

@@ -54,7 +54,7 @@
 
 **Historical decision:** The first expansion proposal included licensed bettor-split data. ADR 011 replaced that proposal with a $0 sports-data boundary and explicitly excluded bettor splits.
 
-**Why:** Real data materially improves portfolio credibility and enables a testable Cowboys market-bias hypothesis. Every feed requires source attribution, freshness metadata, and public-display approval.
+**Why:** Real data materially improves portfolio credibility and makes the relationship between football evidence and market prices inspectable. The later $0 data decision means Cowboys popularity and market bias are not testable in this release. Every feed still requires source attribution, freshness metadata, and public-display approval.
 
 ## ADR 008: Add runtime AI with a probability tool
 
@@ -76,7 +76,7 @@
 
 **Status:** DECIDED
 
-**Decision:** Do not require authentication for the Market Bias Lab MVP.
+**Decision:** Do not require authentication for the Market Context Lab MVP.
 
 **Why:** Immediate public exploration serves the portfolio job, avoids collecting personal or wagering data, and preserves implementation focus for data quality and forecast governance.
 
@@ -110,7 +110,7 @@
 
 **Decision:** Define seven binary runtime-AI criteria covering probability, model version, source freshness, evidence, uncertainty, responsible use, and deterministic fallback. Run positive and adversarial cases locally and in CI without requiring a live provider call.
 
-**Why:** A schema proves shape, not product quality. Binary evaluations make the AI contract inspectable, reproducible, and connected to user trust. One successful live structured response remains a separate release gate after provider quota is available.
+**Why:** A schema proves shape, not product quality. Binary evaluations make the AI contract inspectable, reproducible, and connected to user trust. A separate live structured response subsequently passed the same seven criteria after provider billing was enabled.
 
 ## ADR 015: Make product ownership and limitations explicit
 
@@ -119,3 +119,19 @@
 **Decision:** Lead the repository and product experience with the problem, Eric's ownership, key tradeoffs, verified evidence, Codex collaboration model, and current limitations. Keep adoption targets separate from observed outcomes.
 
 **Why:** A technical product management portfolio should demonstrate judgment and accountability, not only implementation breadth. Clear ownership and honest limitations make the evidence easier for recruiters and product leaders to evaluate.
+
+## ADR 016: Position the product as Market Context Lab
+
+**Status:** DECIDED
+
+**Decision:** Replace Market Bias Lab positioning with Market Context Lab. Treat Cowboys popularity and market bias as unvalidated hypotheses unless a future, licensed dataset can test bettor behavior directly.
+
+**Why:** Current moneyline, spread, total, and forecast evidence can show agreement or disagreement, but it cannot explain bettor motivation. The product claim must stay narrower than the data.
+
+## ADR 017: Make Runtime AI operations inspectable
+
+**Status:** DECIDED
+
+**Decision:** Protect the anonymous AI path with a shared limit of 20 requests per aligned five-minute bucket. Record bounded operational metadata for each run and display a reliability receipt containing model, prompt, contract, evaluation, forecast, latency, token, estimated-cost, source, validation, and fallback evidence. Do not store prompts, user identity, wagering history, or raw vendor data.
+
+**Why:** A public AI feature needs observable quality, failure, and cost controls. The shared limit protects the budget without expanding authentication or personal-data scope, while the receipt turns AI operations into reviewable product evidence.

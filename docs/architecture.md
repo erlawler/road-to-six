@@ -2,7 +2,7 @@
 
 ## Answer
 
-The implemented private release candidate is a public-launch candidate for an anonymous Market Bias Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, a D1 monthly budget ledger, and a runtime AI explanation endpoint. The hosting platform currently restricts the preview to the owner, while the product itself has no account or identity layer. Live odds are enabled. Runtime AI remains on deterministic fallback until OpenAI provider quota is available.
+The local v1.0.0 release candidate is a public-launch candidate for an anonymous Market Context Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI explanation endpoint, and an inspectable reliability receipt. The hosting platform restricts the prior preview to the owner, while the product itself has no account or identity layer. Live odds and a four-scenario Runtime AI scorecard have been validated locally. Version 1.0.0 still requires a final owner-only deployment and smoke test. Public hosting remains blocked pending Eric Lawler's approval.
 
 Recruiter-facing views:
 
@@ -13,7 +13,7 @@ Recruiter-facing views:
 ```mermaid
 flowchart LR
     visitor[Public visitor]
-    ui[Market Bias interface]
+    ui[Market Context interface]
     football[NFL data adapter]
     odds[Odds adapter]
     ingest[Normalizer and validator]
@@ -21,8 +21,10 @@ flowchart LR
     scenario[Scenario API]
     features[Feature builder]
     probability[Probability function]
+    limit[Anonymous AI rate limit]
     budget[Monthly AI budget gate]
     ai[OpenAI Responses API]
+    receipt[AI run receipt]
     result[Structured forecast]
     fallback[Deterministic fallback]
 
@@ -34,15 +36,17 @@ flowchart LR
     scenario --> features
     snapshots --> features
     features --> probability
-    scenario --> budget
+    scenario --> limit
+    limit --> budget
     budget --> ai
     budget --> fallback
     ai --> probability
     probability --> ai
     ai --> result
+    result --> receipt
     probability --> fallback
-    result --> ui
-    fallback --> ui
+    receipt --> ui
+    fallback --> receipt
 ```
 
 ## Target components
@@ -54,8 +58,11 @@ flowchart LR
 | Versioned snapshots | Preserve the exact evidence used for a forecast | Makes results reproducible and auditable. |
 | Feature builder | Produce documented football-only and market-aware model inputs | Separates raw data from modeling choices. |
 | Probability function | Return probability, confidence band, and model metadata | Provides a testable forecast rather than an LLM guess. |
+| Odds refresh control | Coordinate edge-worker refreshes through an atomic D1 lease and cooldown | Prevents concurrent isolates from multiplying vendor usage. |
 | Monthly AI budget gate | Stop application AI at $9.50 against a $10 project maximum | Keeps the personal operating cost predictable and preserves a safety margin. |
+| Anonymous AI rate limit | Limit the shared public AI path to 20 requests per aligned five-minute bucket through one atomic D1 statement | Protects the budget without collecting identity, avoids request-path schema work, and denies excess traffic before market reads. |
 | Runtime AI endpoint | Call the probability function and explain drivers, evidence, and uncertainty | Demonstrates function calling and grounded product AI. |
+| AI run ledger and reliability receipt | Record bounded operational metadata and show model, prompt, contract, evaluation, latency, tokens, cost, source, validation, and fallback state | Makes AI operations and failure evidence inspectable without exposing prompts or personal data. |
 | Deterministic fallback | Return the probability and templated explanation if AI is unavailable | Protects reliability and cost limits. |
 | Public React interface | Explore games, players, lines, spreads, scenarios, and forecast results | Keeps the portfolio immediately accessible without sign-in. |
 | CI and evaluation suite | Test joins, probability bounds, model calibration, schema fidelity, and content policy | Makes quality and governance observable. |
@@ -63,13 +70,15 @@ flowchart LR
 ## Data flow
 
 1. The snapshot builder reads approved football and market records, normalizes identifiers, and writes a versioned local artifact.
-2. The free odds adapter refreshes current markets through a six-hour shared cache that protects the monthly free allowance.
+2. The free odds adapter acquires an atomic D1 refresh lease, then refreshes current markets through a six-hour shared cache.
 3. The visitor selects a game, reviews the opponent's four highest 2025 PPR producers who remain on its active 2026 roster, and changes Cowboys or opponent scenario assumptions without signing in.
 4. The feature builder calculates football-only probability and blends it with the median of each sportsbook's independently vig-adjusted Dallas probability. Median moneylines, spread, total, and line status remain visible market context without being double counted.
-5. The runtime AI calls the versioned probability function as a required tool.
-6. The function returns the calculated probability, confidence band, and model version.
-7. The AI returns structured drivers, evidence references, and uncertainty while preserving the function result.
-8. The server validates the response. If validation or the AI call fails, it returns the probability with a deterministic explanation.
+5. The server enforces the anonymous request window, payload limits, and monthly AI budget before making a provider call.
+6. The Runtime AI calls the versioned probability function as a required tool.
+7. The function returns the calculated probability, confidence band, and model version.
+8. The AI returns structured drivers, evidence references, and uncertainty while preserving the function result.
+9. The server replaces the model summary and disclaimer with canonical product copy, exposes only validated fields, and records bounded operational evidence after a budget reservation.
+10. If validation or the AI call fails, the server returns the probability with a deterministic explanation and a reason code.
 
 ## Trust boundaries
 
@@ -77,6 +86,7 @@ flowchart LR
 - No account, profile, or wagering-history data is collected.
 - No browser data is persisted.
 - OpenAI receives a bounded scenario payload and cited evidence, not raw vendor responses or personal data.
+- The aggregate budget, request-window, and AI-run records contain no account, profile, wagering, prompt, or raw vendor data.
 - The generated social card contains no official team mark or player likeness.
 - Headshots, logos, and official uniform artwork are excluded.
 - A feed cannot be enabled publicly until its display rights are documented.
@@ -91,11 +101,12 @@ flowchart LR
 - Require structured output with probability, model version, source timestamp, drivers, evidence, uncertainty, and notice.
 - Reject AI output that changes the forecast contract or contains actionable betting guidance.
 - Set `store: false` for OpenAI Responses API calls.
-- Default to GPT-5.6 Luna and reserve cost before each request using model-specific standard token rates.
+- Default to GPT-5.6 Luna, allow only the four explicitly priced GPT-5.6 configurations, and reserve cost before each request using model-specific standard token rates.
 - Reconcile actual input and output tokens in D1 after each successful response.
 - Use a dedicated OpenAI project with a $10 monthly maximum and stop application calls at $9.50.
 - Bound streamed request bytes, prompt size, and output tokens.
-- Cache current odds for six hours in D1 and disable repeated client requests while a refresh is active.
+- Limit the anonymous AI endpoint to 20 requests per shared aligned five-minute bucket and return `429` with `Retry-After` when the limit is reached.
+- Cache current odds for six hours in D1, coordinate concurrent edge workers with an atomic D1 lease, and disable repeated client requests while a refresh is active.
 - Prohibit recommended bets, stake sizes, payout claims, and sportsbook links.
 
 ## Codex operating model
@@ -110,4 +121,4 @@ The repository uses:
 
 ## Implementation boundary
 
-Authentication and saved scenarios remain out of scope. The only persistent record is an aggregate monthly AI-cost ledger with no identity data. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).
+Authentication and saved scenarios remain out of scope. Persistence is limited to normalized odds cache data, refresh controls, aggregate AI cost, anonymous request buckets, and bounded AI run metadata. None contains user identity, wagering history, prompts, or raw provider responses. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).

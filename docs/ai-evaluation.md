@@ -66,7 +66,36 @@ Runtime AI is ready for public release only when:
 
 - `npm run eval` reports a 100% expectation rate.
 - The full automated test suite passes.
-- One live structured response passes the same seven checks after provider quota is available.
+- One live structured response passes the same seven checks.
 - The deterministic fallback remains available at the $9.50 application cutoff and for provider failures.
+
+## Live provider gate
+
+After billing was enabled on July 27, 2026, one live response returned:
+
+| Field | Verified result |
+|---|---|
+| HTTP status | 200 |
+| Mode | Runtime AI |
+| Fallback | None |
+| Probability | `0.5531549573107291` |
+| Forecast model | `elo-market-v1.1.0` |
+| Source date | `2026-07-15` |
+| Drivers | 3 |
+| Uncertainty items | 3 |
+| Seven-criterion evaluation | 7 of 7 passed |
+
+This single run proves that the integrated provider path can satisfy the contract. It does not establish an aggregate quality, latency, or cost distribution. The bounded four-scenario scorecard below adds comparative evidence without becoming a production benchmark.
+
+## Four-scenario live scorecard
+
+A bounded comparison then exercised four scenarios covering the standard baseline, reduced George Pickens participation, reduced Javonte Williams participation, and a two-sided stress case.
+
+| Mode | Cases passed | Pass rate | Average latency | Total estimated cost |
+|---|---:|---:|---:|---:|
+| Runtime AI | 4 of 4 | 100% | 3,568 ms | $0.013118 |
+| Deterministic explanation | 4 of 4 | 100% | 0.024 ms | $0 |
+
+Every Runtime AI case returned in AI mode, passed validation, and used no fallback. The sanitized [live scorecard evidence](../evals/live/2026-07-27-gpt-5.6-luna.json) is checked in. Four cases support functional contract readiness for these scenarios, not a population-level provider quality, latency, or cost claim.
 
 The local evaluation proves contract enforcement and adversarial detection. It does not prove production model quality, provider uptime, or the quality of every future response. Those remain monitored release conditions.

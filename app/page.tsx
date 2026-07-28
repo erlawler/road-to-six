@@ -8,6 +8,7 @@ import {
   type ForecastResult,
   type ScenarioControls,
 } from "@/lib/forecast.mjs";
+import type { AIReliabilityReceipt } from "@/lib/ai-contract.mjs";
 
 type Player = (typeof snapshot.players)[number];
 
@@ -79,6 +80,36 @@ function evidenceTimestamp(value: string) {
   }).format(date);
 }
 
+function reliabilityLabel(value?: string) {
+  if (!value) return "Unavailable";
+  return value
+    .replaceAll("_", " ")
+    .replaceAll("-", " ")
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function tokenLabel(receipt?: AIReliabilityReceipt) {
+  if (!receipt) return "Not returned";
+  return `${receipt.inputTokens.toLocaleString()} in • ${receipt.outputTokens.toLocaleString()} out`;
+}
+
+function costLabel(value?: number) {
+  if (!Number.isFinite(value)) return "Not returned";
+  if (value === 0) return "$0.0000";
+  if ((value ?? 0) < 0.0001) return "< $0.0001";
+  return `$${value?.toFixed(4)}`;
+}
+
+function latencyLabel(value?: number) {
+  if (!Number.isFinite(value)) return "Not returned";
+  const bucket = (value ?? 0) < 2_000
+    ? "Under 2 sec"
+    : (value ?? 0) < 5_000
+      ? "2 to 5 sec"
+      : "Over 5 sec";
+  return `${bucket} • ${value} ms`;
+}
+
 function playerEvidence(player: Player) {
   if (!player.stats || !player.statsSeason) return "2026 active roster";
   if (player.position === "QB") {
@@ -120,6 +151,7 @@ export default function Home() {
     explanation: Explanation;
     forecast: ForecastResult;
     fallbackReason?: string;
+    reliability?: AIReliabilityReceipt;
   } | null>(null);
   const [runtimeStatus, setRuntimeStatus] = useState("Ready to explain this scenario");
   const [isExplaining, setIsExplaining] = useState(false);
@@ -188,7 +220,22 @@ export default function Home() {
         }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error ?? "Forecast unavailable");
+      if (!response.ok) {
+        if (data.reliability) {
+          setRuntimeResult({
+            key: scenarioKey,
+            explanation: data.explanation ?? localExplanation,
+            forecast: data.forecast ?? forecast,
+            fallbackReason: data.error ?? "Forecast request was rejected",
+            reliability: data.reliability,
+          });
+          setRuntimeStatus(
+            `Deterministic explanation preserved: ${data.reliability.fallbackReasonCode ?? data.error ?? "request rejected"}`,
+          );
+          return;
+        }
+        throw new Error(data.error ?? "Forecast unavailable");
+      }
       if (data.marketEvidence?.source === "The Odds API" && data.marketEvidence.market) {
         const evidenceSource = typeof data.marketEvidence.source === "string"
           ? data.marketEvidence.source
@@ -213,6 +260,7 @@ export default function Home() {
         explanation: data.explanation,
         forecast: data.forecast,
         fallbackReason: data.fallbackReason,
+        reliability: data.reliability,
       });
       setRuntimeStatus(
         data.explanation.mode === "ai"
@@ -303,7 +351,7 @@ export default function Home() {
       <header className="site-header">
         <a className="brand" href="#top" aria-label="Road to Six home">
           <span>ROAD TO SIX</span>
-          <small>Market Bias Lab</small>
+          <small>Market Context Lab</small>
         </a>
         <nav aria-label="Primary navigation">
           <a href="#forecast">Forecast</a>
@@ -486,6 +534,92 @@ export default function Home() {
               </button>
               <small role="status">{runtimeStatus}</small>
             </div>
+            {runtimeResult?.key === scenarioKey && (
+              <section className="reliability-receipt" aria-labelledby="reliability-title">
+                <div className="reliability-heading">
+                  <div>
+                    <span className="eyebrow">Runtime evidence</span>
+                    <h4 id="reliability-title">AI reliability receipt</h4>
+                  </div>
+                  <span className={`validation-badge ${
+                    runtimeResult.reliability?.validationStatus === "passed"
+                      ? "passed"
+                      : runtimeResult.reliability?.validationStatus === "failed"
+                        ? "failed"
+                        : "review"
+                  }`}>
+                    {reliabilityLabel(runtimeResult.reliability?.validationStatus)}
+                  </span>
+                </div>
+                <dl className="reliability-grid">
+                  <div>
+                    <dt>Mode</dt>
+                    <dd>
+                      {(runtimeResult.reliability?.mode ?? runtimeResult.explanation.mode) === "ai"
+                        ? "Runtime AI"
+                        : runtimeResult.reliability?.mode === "rejected"
+                          ? "Request rejected"
+                          : "Deterministic fallback"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Model</dt>
+                    <dd>{runtimeResult.reliability?.model ?? "No model call"}</dd>
+                  </div>
+                  <div>
+                    <dt>Latency</dt>
+                    <dd>{latencyLabel(runtimeResult.reliability?.latencyMs)}</dd>
+                  </div>
+                  <div>
+                    <dt>Token use</dt>
+                    <dd>{tokenLabel(runtimeResult.reliability)}</dd>
+                  </div>
+                  <div>
+                    <dt>Prompt</dt>
+                    <dd>{runtimeResult.reliability?.promptVersion ?? "Unavailable"}</dd>
+                  </div>
+                  <div>
+                    <dt>Output contract</dt>
+                    <dd>{runtimeResult.reliability?.contractVersion ?? "Unavailable"}</dd>
+                  </div>
+                  <div>
+                    <dt>Evaluation</dt>
+                    <dd>{runtimeResult.reliability?.evalVersion ?? "Unavailable"}</dd>
+                  </div>
+                  <div>
+                    <dt>Forecast</dt>
+                    <dd>{runtimeResult.reliability?.forecastVersion ?? displayedForecast.modelVersion}</dd>
+                  </div>
+                  <div>
+                    <dt>Estimated request cost</dt>
+                    <dd>{costLabel(runtimeResult.reliability?.estimatedCostUsd)}</dd>
+                  </div>
+                  <div>
+                    <dt>Fallback reason</dt>
+                    <dd>
+                      {runtimeResult.reliability?.fallbackReasonCode
+                        ? <code>{runtimeResult.reliability.fallbackReasonCode}</code>
+                        : "None"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Source freshness</dt>
+                    <dd>
+                      {liveMarket && marketMetadata
+                        ? `Current market • ${evidenceTimestamp(marketMetadata.retrievedAt)}`
+                        : `Baseline snapshot • ${runtimeResult.reliability?.sourceUpdatedAt ?? selectedGame.sourceUpdatedAt}`}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Responsible use</dt>
+                    <dd>Enforced • educational analytics only</dd>
+                  </div>
+                </dl>
+                {runtimeResult.reliability?.requestId && (
+                  <p className="receipt-id">Request <code>{runtimeResult.reliability.requestId}</code></p>
+                )}
+              </section>
+            )}
           </article>
         </div>
       </section>
@@ -544,7 +678,7 @@ export default function Home() {
           <span className="section-number">03</span>
           <div>
             <span className="eyebrow">Model audit</span>
-            <h2>The market is a benchmark, not an oracle.</h2>
+            <h2>Measure the forecast against the market.</h2>
             <p>The baseline is tested walk-forward on a 2024 to 2025 holdout so each prediction uses only information available before that game.</p>
           </div>
         </div>

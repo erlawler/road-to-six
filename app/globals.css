@@ -231,6 +231,57 @@ button:disabled {
 .result-evidence { color: #aebed0; display: flex; flex-wrap: wrap; font-size: 0.66rem; gap: 6px 18px; margin-top: 15px; }
 .runtime-action { align-items: center; display: flex; gap: 16px; margin: 24px 0; }
 .runtime-action small { color: #9dafc2; line-height: 1.45; }
+.reliability-receipt {
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.13);
+  margin-top: 26px;
+  padding: 20px;
+}
+.reliability-heading { align-items: center; display: flex; gap: 18px; justify-content: space-between; }
+.reliability-heading h4 { font-size: 1.05rem; margin: 5px 0 0; }
+.validation-badge {
+  background: rgba(242,198,90,0.14);
+  border-radius: 999px;
+  color: var(--warning);
+  font-size: 0.61rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  padding: 8px 10px;
+  text-transform: uppercase;
+}
+.validation-badge.passed { background: rgba(97,214,138,0.15); color: var(--success); }
+.validation-badge.failed { background: rgba(255,143,143,0.15); color: #ffaaaa; }
+.reliability-grid {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 18px 0 0;
+}
+.reliability-grid div {
+  background: rgba(255,255,255,0.045);
+  min-width: 0;
+  padding: 13px;
+}
+.reliability-grid dt {
+  color: #9fb0c4;
+  font-size: 0.64rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.reliability-grid dd {
+  color: #ecf3fb;
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1.45;
+  margin: 5px 0 0;
+  overflow-wrap: anywhere;
+}
+.reliability-grid code, .receipt-id code {
+  color: var(--blue-300);
+  font: inherit;
+}
+.receipt-id { color: #9fb0c4; font-size: 0.62rem; margin: 13px 0 0; overflow-wrap: anywhere; }
 .players-section { background: #e8edf2; border-bottom: 1px solid #d2d9e0; border-top: 1px solid #d2d9e0; }
 .opponent-heading { align-items: end; display: flex; gap: 30px; justify-content: space-between; margin-bottom: 18px; }
 .opponent-heading h3, .cowboys-heading h3 { font-size: clamp(1.8rem, 3vw, 2.8rem); letter-spacing: -0.045em; margin: 7px 0 0; }
@@ -411,6 +462,8 @@ footer span, footer p { color: #91a3b7; font-size: 0.72rem; line-height: 1.6; ma
   .scenario-controls input { grid-column: 1 / -1; }
   .market-refresh, .runtime-action { align-items: stretch; flex-direction: column; }
   .result-header { flex-direction: column; }
+  .reliability-heading { align-items: flex-start; flex-direction: column; }
+  .reliability-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .player-grid { grid-template-columns: 1fr; }
   .opponent-grid { grid-template-columns: 1fr; }
   .opponent-heading { align-items: start; flex-direction: column; }

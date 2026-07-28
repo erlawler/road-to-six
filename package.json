@@ -1,6 +1,6 @@
 {
   "name": "road-to-six",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": ">=22.19.0"
@@ -11,6 +11,7 @@
     "build": "npm run clean && WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
     "data:snapshot": "node scripts/build-nfl-snapshot.mjs",
     "eval": "node scripts/run-ai-evals.mjs",
+    "eval:live": "node scripts/run-live-ai-scorecard.mjs",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build && node --test tests/*.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"

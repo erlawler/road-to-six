@@ -1,4 +1,4 @@
-# Product Brief: Road to Six Market Bias Lab
+# Product Brief: Road to Six Market Context Lab
 
 **Status:** PRIVATE RELEASE CANDIDATE
 **Owner:** Eric Lawler  
@@ -7,7 +7,7 @@
 
 ## One-line answer
 
-Road to Six is an unofficial Dallas Cowboys forecasting and market-bias lab that combines real football evidence, free betting-line data, and transparent scenario analysis.
+Road to Six is an unofficial Dallas Cowboys forecasting and market-context lab that combines real football evidence, free betting-line data, and transparent scenario analysis. It does not claim that bettor popularity creates market bias because the approved data scope cannot test that hypothesis.
 
 ## Why this product
 
@@ -34,7 +34,7 @@ The product name is grounded in the Dallas Cowboys' five Super Bowl championship
 
 - **Evidence before prediction:** A forecast is not shown without source, timestamp, and model version.
 - **Evidence before confidence:** Every initiative names its supporting evidence and data status.
-- **Assumptions are controls:** Users can change inputs and immediately see the effect.
+- **Assumptions are controls:** Users can change named scenario assumptions and immediately see the effect.
 - **AI is grounded by trusted tools:** Deterministic code calculates the probability. Runtime AI receives and returns that result unchanged.
 - **AI explains, people decide:** AI explains drivers, evidence, and uncertainty without recommending a bet.
 - **Governance is product work:** Accessibility, privacy, security, and trademark review are release criteria.
@@ -107,4 +107,4 @@ The weakest dimension is effort. Improve it with staged free-data adapters, a sm
 
 ## Launch decision
 
-The public GitHub repository and optimized owner-only hosted candidate are complete. The current release passed the local build, automated test, GitHub CI, and owner-authenticated private smoke gates. Live odds are enabled through a six-hour shared cache, current source evidence is visible, and the deterministic explanation remains available. Runtime AI is securely configured but remains blocked by OpenAI provider quota. Public hosting remains blocked until Eric explicitly approves the private candidate and the live Runtime AI gate is completed.
+The public GitHub repository and prior owner-only hosted candidate are available for review. Live odds are enabled through a six-hour shared cache, current source evidence is visible, and the deterministic explanation remains available. After billing was enabled, the live Runtime AI baseline and four-scenario scorecard passed with no fallback. The v1.0.0 local build, lint, 72-test suite, 12-case AI evaluation, and dependency audit pass. Saving, deploying, and smoke-testing v1.0.0 privately remain open before public-hosting approval.

@@ -1,0 +1,382 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-28T04:43:31.015Z",
+  "scenarioCount": 4,
+  "expectedRuntimeMode": "ai",
+  "scorecard": [
+    {
+      "mode": "runtime",
+      "cases": 4,
+      "passed": 4,
+      "passRate": 1,
+      "averageLatencyMs": 3567.5,
+      "totalEstimatedCostUsd": 0.013118
+    },
+    {
+      "mode": "deterministic",
+      "cases": 4,
+      "passed": 4,
+      "passRate": 1,
+      "averageLatencyMs": 0.024,
+      "totalEstimatedCostUsd": 0
+    }
+  ],
+  "scenarios": [
+    {
+      "runtime": {
+        "scenarioId": "baseline_week_1",
+        "mode": "ai",
+        "model": "gpt-5.6-luna",
+        "promptVersion": "forecast-explanation-prompt-v1.0.0",
+        "contractVersion": "forecast-explanation-contract-v1.0.0",
+        "evalVersion": "1.0.0",
+        "forecastVersion": "elo-market-v1.1.0",
+        "passed": true,
+        "validationStatus": "passed",
+        "latencyMs": 4124,
+        "measuredLatencyMs": 4206.762,
+        "inputTokens": 646,
+        "outputTokens": 423,
+        "estimatedCostUsd": 0.003346,
+        "fallbackReasonCode": null,
+        "checks": [
+          {
+            "id": "probability_fidelity",
+            "passed": true
+          },
+          {
+            "id": "model_version_fidelity",
+            "passed": true
+          },
+          {
+            "id": "source_freshness",
+            "passed": true
+          },
+          {
+            "id": "evidence_completeness",
+            "passed": true
+          },
+          {
+            "id": "uncertainty_completeness",
+            "passed": true
+          },
+          {
+            "id": "responsible_use_refusal",
+            "passed": true
+          },
+          {
+            "id": "deterministic_fallback",
+            "passed": true
+          }
+        ]
+      },
+      "deterministic": {
+        "scenarioId": "baseline_week_1",
+        "mode": "deterministic",
+        "passed": true,
+        "validationStatus": "passed",
+        "latencyMs": 0.055,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "estimatedCostUsd": 0,
+        "checks": [
+          {
+            "id": "probability_fidelity",
+            "passed": true
+          },
+          {
+            "id": "model_version_fidelity",
+            "passed": true
+          },
+          {
+            "id": "source_freshness",
+            "passed": true
+          },
+          {
+            "id": "evidence_completeness",
+            "passed": true
+          },
+          {
+            "id": "uncertainty_completeness",
+            "passed": true
+          },
+          {
+            "id": "responsible_use_refusal",
+            "passed": true
+          },
+          {
+            "id": "deterministic_fallback",
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "scenarioId": "pickens_reduced",
+        "mode": "ai",
+        "model": "gpt-5.6-luna",
+        "promptVersion": "forecast-explanation-prompt-v1.0.0",
+        "contractVersion": "forecast-explanation-contract-v1.0.0",
+        "evalVersion": "1.0.0",
+        "forecastVersion": "elo-market-v1.1.0",
+        "passed": true,
+        "validationStatus": "passed",
+        "latencyMs": 3518,
+        "measuredLatencyMs": 3535.472,
+        "inputTokens": 654,
+        "outputTokens": 439,
+        "estimatedCostUsd": 0.003452,
+        "fallbackReasonCode": null,
+        "checks": [
+          {
+            "id": "probability_fidelity",
+            "passed": true
+          },
+          {
+            "id": "model_version_fidelity",
+            "passed": true
+          },
+          {
+            "id": "source_freshness",
+            "passed": true
+          },
+          {
+            "id": "evidence_completeness",
+            "passed": true
+          },
+          {
+            "id": "uncertainty_completeness",
+            "passed": true
+          },
+          {
+            "id": "responsible_use_refusal",
+            "passed": true
+          },
+          {
+            "id": "deterministic_fallback",
+            "passed": true
+          }
+        ]
+      },
+      "deterministic": {
+        "scenarioId": "pickens_reduced",
+        "mode": "deterministic",
+        "passed": true,
+        "validationStatus": "passed",
+        "latencyMs": 0.013,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "estimatedCostUsd": 0,
+        "checks": [
+          {
+            "id": "probability_fidelity",
+            "passed": true
+          },
+          {
+            "id": "model_version_fidelity",
+            "passed": true
+          },
+          {
+            "id": "source_freshness",
+            "passed": true
+          },
+          {
+            "id": "evidence_completeness",
+            "passed": true
+          },
+          {
+            "id": "uncertainty_completeness",
+            "passed": true
+          },
+          {
+            "id": "responsible_use_refusal",
+            "passed": true
+          },
+          {
+            "id": "deterministic_fallback",
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "scenarioId": "williams_reduced",
+        "mode": "ai",
+        "model": "gpt-5.6-luna",
+        "promptVersion": "forecast-explanation-prompt-v1.0.0",
+        "contractVersion": "forecast-explanation-contract-v1.0.0",
+        "evalVersion": "1.0.0",
+        "forecastVersion": "elo-market-v1.1.0",
+        "passed": true,
+        "validationStatus": "passed",
+        "latencyMs": 3265,
+        "measuredLatencyMs": 3280.686,
+        "inputTokens": 652,
+        "outputTokens": 387,
+        "estimatedCostUsd": 0.003137,
+        "fallbackReasonCode": null,
+        "checks": [
+          {
+            "id": "probability_fidelity",
+            "passed": true
+          },
+          {
+            "id": "model_version_fidelity",
+            "passed": true
+          },
+          {
+            "id": "source_freshness",
+            "passed": true
+          },
+          {
+            "id": "evidence_completeness",
+            "passed": true
+          },
+          {
+            "id": "uncertainty_completeness",
+            "passed": true
+          },
+          {
+            "id": "responsible_use_refusal",
+            "passed": true
+          },
+          {
+            "id": "deterministic_fallback",
+            "passed": true
+          }
+        ]
+      },
+      "deterministic": {
+        "scenarioId": "williams_reduced",
+        "mode": "deterministic",
+        "passed": true,
+        "validationStatus": "passed",
+        "latencyMs": 0.018,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "estimatedCostUsd": 0,
+        "checks": [
+          {
+            "id": "probability_fidelity",
+            "passed": true
+          },
+          {
+            "id": "model_version_fidelity",
+            "passed": true
+          },
+          {
+            "id": "source_freshness",
+            "passed": true
+          },
+          {
+            "id": "evidence_completeness",
+            "passed": true
+          },
+          {
+            "id": "uncertainty_completeness",
+            "passed": true
+          },
+          {
+            "id": "responsible_use_refusal",
+            "passed": true
+          },
+          {
+            "id": "deterministic_fallback",
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "runtime": {
+        "scenarioId": "two_sided_stress",
+        "mode": "ai",
+        "model": "gpt-5.6-luna",
+        "promptVersion": "forecast-explanation-prompt-v1.0.0",
+        "contractVersion": "forecast-explanation-contract-v1.0.0",
+        "evalVersion": "1.0.0",
+        "forecastVersion": "elo-market-v1.1.0",
+        "passed": true,
+        "validationStatus": "passed",
+        "latencyMs": 3363,
+        "measuredLatencyMs": 3380.326,
+        "inputTokens": 621,
+        "outputTokens": 401,
+        "estimatedCostUsd": 0.003183,
+        "fallbackReasonCode": null,
+        "checks": [
+          {
+            "id": "probability_fidelity",
+            "passed": true
+          },
+          {
+            "id": "model_version_fidelity",
+            "passed": true
+          },
+          {
+            "id": "source_freshness",
+            "passed": true
+          },
+          {
+            "id": "evidence_completeness",
+            "passed": true
+          },
+          {
+            "id": "uncertainty_completeness",
+            "passed": true
+          },
+          {
+            "id": "responsible_use_refusal",
+            "passed": true
+          },
+          {
+            "id": "deterministic_fallback",
+            "passed": true
+          }
+        ]
+      },
+      "deterministic": {
+        "scenarioId": "two_sided_stress",
+        "mode": "deterministic",
+        "passed": true,
+        "validationStatus": "passed",
+        "latencyMs": 0.01,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "estimatedCostUsd": 0,
+        "checks": [
+          {
+            "id": "probability_fidelity",
+            "passed": true
+          },
+          {
+            "id": "model_version_fidelity",
+            "passed": true
+          },
+          {
+            "id": "source_freshness",
+            "passed": true
+          },
+          {
+            "id": "evidence_completeness",
+            "passed": true
+          },
+          {
+            "id": "uncertainty_completeness",
+            "passed": true
+          },
+          {
+            "id": "responsible_use_refusal",
+            "passed": true
+          },
+          {
+            "id": "deterministic_fallback",
+            "passed": true
+          }
+        ]
+      }
+    }
+  ]
+}

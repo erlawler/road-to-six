@@ -35,6 +35,8 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Football evidence meets market reality/);
   assert.match(html, /Interactive forecast/);
   assert.match(html, /Model audit/);
+  assert.match(html, /Market Context Lab/);
+  assert.match(html, /Measure the forecast against the market/);
   assert.match(html, /Dak Prescott/);
   assert.match(html, /Weekly matchup\. 2025 baselines\./);
   assert.match(html, /George Pickens participation/);
@@ -52,13 +54,14 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Read the case study/);
   assert.match(html, /Inspect the AI evaluation/);
   assert.doesNotMatch(html, /Monthly runtime AI safety limit/);
+  assert.doesNotMatch(html, /Market Bias Lab|benchmark, not an oracle/);
   assert.doesNotMatch(html, />Cost<|>Brand</);
   assert.match(html, /Educational probability, not a recommended bet/);
   assert.doesNotMatch(html, /All performance data shown is synthetic and illustrative/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton|Starter Project/i);
 });
 
-test("forecast API preserves the deterministic fallback", async () => {
+test("forecast API fails closed without the shared rate-limit ledger", async () => {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("api-test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
@@ -78,14 +81,20 @@ test("forecast API preserves the deterministic fallback", async () => {
     { waitUntil() {}, passThroughOnException() {} },
   );
 
-  assert.equal(response.status, 200);
+  assert.equal(response.status, 503);
   const payload = await response.json();
   assert.equal(payload.explanation.mode, "deterministic");
   assert.equal(payload.forecast.modelVersion, "elo-market-v1.1.0");
   assert.equal(payload.forecast.probability > 0 && payload.forecast.probability < 1, true);
   assert.equal(payload.forecast.marketImplied < 0.7, true);
   assert.equal(payload.marketEvidence.source, "Bundled nflverse market snapshot");
-  assert.match(payload.fallbackReason, /OPENAI_API_KEY/);
+  assert.match(payload.fallbackReason, /rate limit is unavailable/i);
+  assert.equal(payload.reliability.mode, "deterministic");
+  assert.equal(payload.reliability.validationStatus, "not_run");
+  assert.equal(payload.reliability.fallbackReasonCode, "rate_limit_unavailable");
+  assert.equal(payload.reliability.forecastVersion, "elo-market-v1.1.0");
+  assert.equal(payload.reliability.estimatedCostUsd, 0);
+  assert.equal(payload.budget, undefined);
 });
 
 test("removes disposable starter content", async () => {
@@ -96,6 +105,14 @@ test("removes disposable starter content", async () => {
   ]);
 
   assert.match(page, /Road to Six/);
+  assert.match(page, /AI reliability receipt/);
+  assert.match(page, /AIReliabilityReceipt/);
+  assert.match(page, /promptVersion/);
+  assert.match(page, /fallbackReasonCode/);
+  assert.match(page, /estimatedCostUsd/);
+  assert.doesNotMatch(page, /type ReliabilityReceipt|totalTokens/);
+  assert.match(page, /Responsible use/);
+  assert.doesNotMatch(page, /data\.budget|runtimeResult\.budget|Monthly runtime AI safety limit/);
   assert.match(layout, /Road to Six \| Technical PM and AI Case Study/);
   assert.match(packageJson, /"name": "road-to-six"/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);

@@ -1,6 +1,6 @@
-# MVP Backlog: Market Bias Lab Expansion
+# MVP Backlog: Market Context Lab Expansion
 
-**Implementation status:** OPTIMIZED PRIVATE RELEASE CANDIDATE COMPLETE. The public source repository, current owner-only hosted candidate, live odds validation, private smoke test, and internal public-use review are complete. A successful live Runtime AI response and explicit approval for public hosting remain open. Scores assume one sport, Cowboys-only views, cached market refreshes, and no product authentication.
+**Implementation status:** V1.0.0 READY FOR FINAL PRIVATE DEPLOYMENT. The public source repository, owner-only hosted candidate, live odds validation, live Runtime AI baseline, local v1.0.0 regression, prior private smoke test, and internal public-use review are complete. A smoke test of the final private deployment and explicit approval for public hosting remain open. Scores assume one sport, Cowboys-only views, cached market refreshes, and no product authentication.
 
 ## Prioritization rule
 
@@ -41,6 +41,7 @@ Acceptance criteria:
 - [x] Join every scheduled opponent's active 2026 roster to complete 2025 production and rank four weekly matchup leaders.
 - [x] Load moneyline, spread, total, and source update times where available.
 - [x] Limit refreshes and stored snapshots to the free source allowance.
+- [x] Coordinate concurrent edge-worker refreshes with an atomic D1 lease and cooldown.
 - [x] Normalize event, team, and player identifiers with failure reporting.
 - [x] Store a versioned attributed snapshot without committing raw vendor data.
 - [x] Keep every vendor API key server-side.
@@ -89,7 +90,7 @@ Acceptance criteria:
 - [x] Fall back to a deterministic explanation when the AI call fails or the budget is exhausted.
 - [x] Run positive and adversarial AI evaluations for probability, model version, source freshness, exact evidence, exact uncertainty, responsible use, and fallback.
 - [x] Fail closed when AI changes a driver label, evidence statement, numeric impact, or uncertainty statement.
-- [ ] Validate one successful live Responses API function-call loop after provider billing or prepaid credit is available. The configured key already reaches OpenAI, but the provider currently returns `insufficient_quota`.
+- [x] Validate one successful live Responses API function-call loop after provider billing or prepaid credit is available.
 
 ## P0: Public market exploration
 
@@ -129,9 +130,71 @@ Acceptance criteria:
 - [x] Do not infer Cowboys popularity or gambler sentiment without supporting evidence.
 - [x] Show a limitation when historical line movement is unavailable under the free allowance.
 
+## P0: AI reliability and abuse controls
+
+| Dimension | Score | Rationale |
+|---|---:|---|
+| Business impact | 5 | Makes the live AI behavior inspectable and protects the limited operating budget. |
+| Effort | 3 | Requires a shared request window, versioned contract metadata, a run ledger, interface evidence, and tests. |
+| Tech debt | 4 | Centralized contracts and reason codes reduce failure ambiguity. |
+| Stakeholder urgency | 5 | Required before a public AI endpoint is approved. |
+
+**Total: 17 out of 20. Verdict: ADVANCE.** Weakest dimension: Effort.
+
+Acceptance criteria:
+
+- [x] Enforce a shared anonymous AI limit of 20 requests per aligned five-minute bucket.
+- [x] Return `429` with `Retry-After` when request capacity is exhausted.
+- [x] Record bounded run metadata without storing prompts, user identity, or raw vendor data.
+- [x] Show model, prompt, contract, evaluation, forecast, latency, tokens, estimated cost, source freshness, validation, and fallback evidence.
+- [x] Preserve deterministic fallback or bounded rejection for rate, budget, provider, timeout, contract, and policy failures.
+- [x] Complete final build, lint, AI evaluation, dependency audit, and 72-test regression for the integrated hardening changes.
+
+## P1: Portfolio evidence and research
+
+| Dimension | Score | Rationale |
+|---|---:|---|
+| Business impact | 5 | Helps recruiters review product judgment instead of treating the repository as a code sample. |
+| Effort | 4 | Uses existing product evidence and a bounded research plan. |
+| Tech debt | 5 | Source-controlled artifacts are easy to maintain. |
+| Stakeholder urgency | 4 | Required before LinkedIn and GitHub launch. |
+
+**Total: 18 out of 20. Verdict: ADVANCE.** Weakest dimension: Effort and Stakeholder urgency.
+
+Acceptance criteria:
+
+- [x] Add v1.0.0 release notes and changelog.
+- [x] Add a privacy-safe five-session usability plan and findings template.
+- [x] Trace owner review feedback to shipped product outcomes.
+- [x] Check in a static Mermaid representation of the editable Figma flow.
+- [x] Add a neutral Market Context Lab social card.
+- [x] Run and preserve a sanitized four-scenario live AI quality, latency, and cost scorecard.
+- [ ] `[NEEDS INPUT]` Complete five usability sessions.
+- [ ] `[NEEDS INPUT]` Record a captioned 60 to 90 second demo and approved screenshots.
+
+## P2: Repository release operations
+
+| Dimension | Score | Rationale |
+|---|---:|---|
+| Business impact | 4 | Strengthens portfolio credibility and maintainability. |
+| Effort | 5 | Mostly repository configuration and release packaging. |
+| Tech debt | 5 | Automated maintenance reduces future security drift. |
+| Stakeholder urgency | 3 | Important for launch quality but not the core scenario job. |
+
+**Total: 17 out of 20. Verdict: ADVANCE.** Weakest dimension: Stakeholder urgency.
+
+Acceptance criteria:
+
+- [x] Add CodeQL analysis for JavaScript and TypeScript.
+- [x] Add weekly Dependabot proposals for npm and GitHub Actions.
+- [x] Add a repository launch checklist with topics, social preview, security settings, release, and hosting gates.
+- [x] Set the local package version to 1.0.0.
+- [ ] `[NEEDS INPUT]` Confirm CodeQL and Dependabot operate after the configuration reaches the default branch.
+- [ ] `[NEEDS INPUT]` Create the Git tag and GitHub release only after explicit approval.
+
 ## Superseded readiness prototype foundation
 
-This section records the original local prototype that established the interaction and governance patterns. The finished Market Bias Lab now replaces its synthetic scenario interface with sourced game, player, and market evidence.
+This section records the original local prototype that established the interaction and governance patterns. The finished Market Context Lab now replaces its synthetic scenario interface with sourced game, player, and market evidence.
 
 ## P0: Readiness overview
 
@@ -221,10 +284,10 @@ Acceptance criteria:
 - [x] Add repository-specific Codex instructions.
 - [x] Add CI for lint, build, and tests.
 - [x] Add a manual, read-only Codex review workflow.
-- [ ] Complete final accessibility review before public publication.
-- [ ] Complete final trademark and public content review before publication.
+- [x] Complete final accessibility review before public publication.
+- [x] Complete final trademark and public content review before publication.
 
-## P2: Deferred
+## Deferred
 
 - Saved scenario links
 - Comparison history
