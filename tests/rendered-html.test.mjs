@@ -25,6 +25,31 @@ async function render() {
   );
 }
 
+function relativeLuminance(hex) {
+  const channels = hex.match(/[0-9a-f]{2}/gi).map((channel) => Number.parseInt(channel, 16) / 255);
+  const [red, green, blue] = channels.map((channel) => (
+    channel <= 0.03928
+      ? channel / 12.92
+      : ((channel + 0.055) / 1.055) ** 2.4
+  ));
+  return (0.2126 * red) + (0.7152 * green) + (0.0722 * blue);
+}
+
+function contrastRatio(first, second) {
+  const firstLuminance = relativeLuminance(first);
+  const secondLuminance = relativeLuminance(second);
+  return (Math.max(firstLuminance, secondLuminance) + 0.05)
+    / (Math.min(firstLuminance, secondLuminance) + 0.05);
+}
+
+test("light and dark focus colors meet WCAG contrast thresholds", () => {
+  assert.ok(contrastRatio("0b56a8", "ffffff") >= 4.5);
+  assert.ok(contrastRatio("0b56a8", "e8edf2") >= 4.5);
+  assert.ok(contrastRatio("0b56a8", "f4f6f8") >= 4.5);
+  assert.ok(contrastRatio("83b9ff", "020813") >= 3);
+  assert.ok(contrastRatio("83b9ff", "061a35") >= 3);
+});
+
 test("server renders the Road to Six market lab", async () => {
   const response = await render();
   assert.equal(response.status, 200);
@@ -47,14 +72,18 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Uncertainty to keep in view/);
   assert.match(html, /The Odds API current markets/);
   assert.match(html, /Illustrative uncertainty band/);
+  assert.match(html, /Product strategy, architecture, risk, and release owned by Eric Lawler/);
   assert.match(html, /Product judgment, made inspectable/);
   assert.match(html, /12 of 12 expected outcomes detected/);
+  assert.match(html, /four-scenario live scorecard passed four of four Runtime AI/);
+  assert.match(html, /Reset scenario/);
   assert.match(html, /Binary checks/);
   assert.match(html, /AI explains but does not invent probability/);
   assert.match(html, /Read the case study/);
   assert.match(html, /Inspect the AI evaluation/);
   assert.doesNotMatch(html, /Monthly runtime AI safety limit/);
   assert.doesNotMatch(html, /Market Bias Lab|benchmark, not an oracle/);
+  assert.doesNotMatch(html, /live structured response remains a separate provider gate/i);
   assert.doesNotMatch(html, />Cost<|>Brand</);
   assert.match(html, /Educational probability, not a recommended bet/);
   assert.doesNotMatch(html, /All performance data shown is synthetic and illustrative/);

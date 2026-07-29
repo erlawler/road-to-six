@@ -200,6 +200,11 @@ export default function Home() {
   );
   const displayedForecast = runtimeResult?.key === scenarioKey ? runtimeResult.forecast : forecast;
   const displayedExplanation = runtimeResult?.key === scenarioKey ? runtimeResult.explanation : localExplanation;
+  const selectedMarketStatus = marketMetadata
+    ? liveMarket
+      ? `Current market applied to Week ${selectedGame.week}.`
+      : `No current market matched Week ${selectedGame.week}. Continuing with the ${snapshot.asOf} baseline.`
+    : null;
 
   function updateControl(key: keyof ScenarioControls, value: number) {
     setControls((current) => ({ ...current, [key]: value }));
@@ -372,6 +377,9 @@ export default function Home() {
             transparent win probabilities. Explore scenarios, inspect the model, and see how cost,
             safety, and release decisions are governed.
           </p>
+          <p className="ownership-line">
+            Product strategy, architecture, risk, and release owned by Eric Lawler. Implemented with Codex.
+          </p>
           <div className="hero-actions">
             <a className="primary-action" href="#forecast">Run the forecast</a>
             <a className="secondary-action" href="#case-study">Review the product case</a>
@@ -390,7 +398,10 @@ export default function Home() {
             <span>{selectedGame.venue.toUpperCase()}</span>
           </div>
           <h2>Dallas vs. {selectedGame.opponentName}</h2>
-          <ProbabilityRing value={displayedForecast.probability} label="Market aware" />
+          <ProbabilityRing
+            value={displayedForecast.probability}
+            label={displayedForecast.marketImplied === null ? "Football only" : "Market aware"}
+          />
           <div className="hero-comparison">
             <div><span>Football only</span><strong>{percent(displayedForecast.footballOnly)}</strong></div>
             <div><span>Market implied</span><strong>{percent(displayedForecast.marketImplied)}</strong></div>
@@ -468,10 +479,26 @@ export default function Home() {
               })}
             </fieldset>
 
+            <div className="scenario-tools">
+              <button
+                type="button"
+                className="scenario-reset"
+                onClick={() => {
+                  setControls(defaultControls);
+                  setRuntimeResult(null);
+                  setRuntimeStatus("Scenario reset. Generate a new explanation when ready.");
+                }}
+              >
+                Reset scenario
+              </button>
+              <small>Dallas assumptions stay in place when you change matchups until you reset them.</small>
+            </div>
+
             <div className="market-refresh">
               <div>
                 <strong>Market data</strong>
                 <small role="status">{marketStatus}</small>
+                {selectedMarketStatus ? <small className="selected-market-status">{selectedMarketStatus}</small> : null}
               </div>
               <button
                 type="button"
@@ -497,6 +524,9 @@ export default function Home() {
                 {displayedExplanation.mode === "ai" ? "Runtime AI" : "Deterministic"}
               </span>
             </div>
+            {displayedExplanation.mode === "ai" ? (
+              <p className="ai-boundary">Probability unchanged. Runtime AI explained the locked forecast.</p>
+            ) : null}
             <p className="explanation-summary">{displayedExplanation.summary}</p>
             <div className="driver-list">
               {displayedExplanation.drivers.slice(0, 3).map((driver) => (
@@ -747,7 +777,9 @@ export default function Home() {
             <h3 id="eval-proof-title">12 of 12 expected outcomes detected.</h3>
             <p>
               The offline suite verifies positive and adversarial behavior without spending API
-              budget. A live structured response remains a separate provider gate.
+              budget. The four-scenario live scorecard passed four of four Runtime AI and four of
+              four deterministic cases with no fallbacks. Runtime AI averaged 3,568 ms and an
+              estimated $0.0131 total.
             </p>
           </div>
           <dl>

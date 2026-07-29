@@ -6,6 +6,7 @@
   --navy-800: #0b2b55;
   --blue-500: #1d6fd1;
   --blue-300: #83b9ff;
+  --blue-on-light: #0b56a8;
   --silver-500: #aeb8c4;
   --silver-300: #dbe2e9;
   --paper: #f4f6f8;
@@ -53,9 +54,13 @@ main { min-height: 100vh; overflow: hidden; }
 .skip-link:focus { top: 16px; }
 
 button, select, a { -webkit-tap-highlight-color: transparent; }
-button:focus-visible, select:focus-visible, a:focus-visible, input:focus-visible {
-  outline: 3px solid var(--blue-300);
+button:focus-visible, select:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--blue-on-light);
   outline-offset: 3px;
+}
+:is(.site-header, .hero, .result-panel, .model-section, .eval-proof, .opponent-card, footer)
+  :is(button, select, a, input, [tabindex]):focus-visible {
+  outline-color: var(--blue-300);
 }
 
 .site-header {
@@ -73,7 +78,7 @@ button:focus-visible, select:focus-visible, a:focus-visible, input:focus-visible
 
 .brand { display: flex; flex-direction: column; width: fit-content; }
 .brand span { font-size: 1.12rem; font-weight: 950; letter-spacing: 0.1em; }
-.brand small { color: var(--blue-300); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; }
+.brand small { color: var(--blue-300); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; }
 nav { display: flex; gap: 24px; }
 nav a { color: #d7e1ed; font-size: 0.8rem; font-weight: 800; }
 nav a:hover { color: white; }
@@ -111,11 +116,14 @@ nav a:hover { color: white; }
 }
 .hero-copy, .hero-forecast { position: relative; z-index: 1; }
 .eyebrow {
-  color: var(--blue-300);
-  font-size: 0.68rem;
+  color: var(--blue-on-light);
+  font-size: 0.75rem;
   font-weight: 900;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+}
+.hero .eyebrow, .result-panel .eyebrow, .model-section .eyebrow, .eval-proof .eyebrow {
+  color: var(--blue-300);
 }
 .hero h1 {
   font-size: clamp(3.4rem, 7vw, 7rem);
@@ -125,6 +133,13 @@ nav a:hover { color: white; }
   max-width: 920px;
 }
 .hero-copy > p { color: #cad7e6; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.72; max-width: 700px; }
+.hero-copy > .ownership-line {
+  color: #9fb0c4;
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  margin: 16px 0 0;
+}
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
 .primary-action, .secondary-action, .text-button {
   border-radius: 3px;
@@ -185,7 +200,7 @@ button:disabled {
 .market-strip { background: white; border-bottom: 1px solid #d9dfe6; display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 clamp(22px, 5vw, 80px); }
 .market-strip div { border-right: 1px solid #e0e5ea; display: flex; flex-direction: column; gap: 5px; padding: 24px 28px; }
 .market-strip div:last-child { border: 0; }
-.market-strip span { color: var(--muted); font-size: 0.66rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
+.market-strip span { color: var(--muted); font-size: 0.72rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
 .market-strip strong { font-size: 1.35rem; }
 
 .forecast-section, .players-section, .model-section, .case-study-section, .trust-section { padding: 100px clamp(22px, 7vw, 110px); }
@@ -207,8 +222,22 @@ button:disabled {
 .scenario-controls small, .market-refresh small { color: var(--muted); font-size: 0.7rem; }
 .scenario-controls input { accent-color: var(--blue-500); width: 100%; }
 .scenario-controls output { font-size: 0.9rem; font-weight: 900; text-align: right; }
+.scenario-tools { align-items: center; display: flex; gap: 14px; justify-content: space-between; }
+.scenario-tools small { color: var(--muted); font-size: 0.68rem; line-height: 1.45; max-width: 310px; }
+.scenario-reset {
+  background: transparent;
+  border: 0;
+  color: var(--blue-600);
+  cursor: pointer;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  padding: 8px 0;
+  text-transform: uppercase;
+}
 .market-refresh { align-items: center; background: #f0f4f8; display: flex; gap: 18px; justify-content: space-between; margin-top: 22px; padding: 17px; }
 .market-refresh > div { display: flex; flex-direction: column; gap: 4px; }
+.market-refresh .selected-market-status { color: #24384e; font-weight: 750; }
 .text-button { background: white; border: 1px solid #c7d0da; color: var(--navy-900); flex: 0 0 auto; }
 
 .result-panel { background: var(--navy-950); color: white; padding: clamp(29px, 4vw, 48px); }
@@ -217,6 +246,15 @@ button:disabled {
 .mode-badge { border-radius: 999px; font-size: 0.62rem; font-weight: 900; letter-spacing: 0.08em; padding: 9px 11px; text-transform: uppercase; }
 .mode-badge.ai { background: rgba(97,214,138,0.15); color: var(--success); }
 .mode-badge.deterministic { background: rgba(242,198,90,0.14); color: var(--warning); }
+.ai-boundary {
+  border-left: 3px solid var(--success);
+  color: #c7e7d1;
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1.5;
+  margin: 20px 0 -8px;
+  padding-left: 12px;
+}
 .explanation-summary { color: #c7d3e0; line-height: 1.65; margin: 24px 0; }
 .driver-list { border-top: 1px solid rgba(255,255,255,0.12); }
 .driver-list > div { display: grid; gap: 5px 16px; grid-template-columns: 1fr auto; padding: 17px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -289,7 +327,7 @@ button:disabled {
 .opponent-grid { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); }
 .opponent-card { background: var(--navy-900); color: white; min-height: 250px; padding: 24px; }
 .opponent-card > div { align-items: center; display: flex; justify-content: space-between; }
-.opponent-card span, .opponent-card > small { color: var(--blue-300); font-size: 0.64rem; font-weight: 850; letter-spacing: 0.06em; text-transform: uppercase; }
+.opponent-card span, .opponent-card > small { color: var(--blue-300); font-size: 0.72rem; font-weight: 850; letter-spacing: 0.06em; text-transform: uppercase; }
 .opponent-card h3 { font-size: 1.2rem; margin: 24px 0 16px; }
 .opponent-card > strong { display: block; font-size: 2.8rem; letter-spacing: -0.06em; line-height: 1; }
 .opponent-card p { border-top: 1px solid rgba(255,255,255,0.14); color: #afbdcc; font-size: 0.72rem; line-height: 1.5; margin: 20px 0 0; padding-top: 16px; }
@@ -461,6 +499,7 @@ footer span, footer p { color: #91a3b7; font-size: 0.72rem; line-height: 1.6; ma
   .scenario-controls label { grid-template-columns: 1fr 45px; }
   .scenario-controls input { grid-column: 1 / -1; }
   .market-refresh, .runtime-action { align-items: stretch; flex-direction: column; }
+  .scenario-tools { align-items: flex-start; flex-direction: column; }
   .result-header { flex-direction: column; }
   .reliability-heading { align-items: flex-start; flex-direction: column; }
   .reliability-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
