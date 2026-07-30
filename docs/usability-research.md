@@ -6,6 +6,9 @@
 **Post-launch target:** Complete five privacy-safe moderated human sessions before making evidence-based claims about human comprehension, usability, or behavior.
 **Research owner:** Eric Lawler
 **Product version:** 1.0.0
+**Ready-to-run package:** [Moderated Usability Session Kit](usability-session-kit.md)
+
+The protocol, consent language, moderator guide, scoring rubric, session worksheet, and aggregate decision table are complete. Execution still requires five real participants, their consent, observed sessions, de-identified findings, at least one evidence-based product decision, and retesting of accepted P0 or P1 changes.
 
 ## Decision this study supports
 
@@ -47,6 +50,8 @@ Determine whether a first-time reviewer can understand the product's evidence, c
 5. Generate the grounded explanation and describe the role Runtime AI played.
 6. Find the model version, source freshness, and one uncertainty.
 7. Open the product case and describe one product tradeoff Eric made.
+
+The complete 25-minute moderator flow is maintained in the [Moderated Usability Session Kit](usability-session-kit.md).
 
 ## Measures
 

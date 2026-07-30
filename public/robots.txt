@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://road-to-six-erl.erlrickylre.chatgpt.site/sitemap.xml

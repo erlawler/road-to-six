@@ -24,6 +24,26 @@ interface ExecutionContext {
   passThroughOnException(): void;
 }
 
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'none'",
+  "base-uri 'none'",
+  "connect-src 'self'",
+  "font-src 'self'",
+  "form-action 'none'",
+  "frame-ancestors 'none'",
+  "frame-src 'none'",
+  "img-src 'self'",
+  "manifest-src 'self'",
+  "media-src 'none'",
+  "object-src 'none'",
+  "script-src 'self' 'unsafe-inline'",
+  "script-src-attr 'none'",
+  "style-src 'self'",
+  "style-src-elem 'self'",
+  "style-src-attr 'unsafe-inline'",
+  "worker-src 'none'",
+].join("; ");
+
 // Image security config. SVG sources with .svg extension auto-skip the
 // optimization endpoint on the client side (served directly, no proxy).
 // To route SVGs through the optimizer (with security headers), set
@@ -51,7 +71,7 @@ const worker = {
 
     const response = await handler.fetch(request, env, ctx);
     const headers = new Headers(response.headers);
-    headers.set("Content-Security-Policy", "default-src 'self'; base-uri 'self'; connect-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'");
+    headers.set("Content-Security-Policy", CONTENT_SECURITY_POLICY);
     headers.set("Cross-Origin-Opener-Policy", "same-origin");
     headers.set("Cross-Origin-Resource-Policy", "same-origin");
     headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
