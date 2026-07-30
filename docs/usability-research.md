@@ -1,14 +1,15 @@
 # Usability Research Plan and Findings
 
-**Study state:** Five AI proxy and expert pretests COMPLETE. No moderated human sessions have occurred.
+**Study state:** Five AI proxy and expert pretests COMPLETE. Five synthetic ideal-persona simulations COMPLETE. No moderated human sessions have occurred.
 **Release decision:** OWNER-APPROVED DEFERRAL for v1.0.0, recorded July 29, 2026.
 **Accepted limitation:** Eric Lawler approved moving the five moderated human sessions from the v1.0.0 pre-launch gate to post-launch validation. This decision allows release with incomplete human-usability evidence. It does not represent the product as human validated, and all human-participant findings remain `[NEEDS INPUT]`.
 **Post-launch target:** Complete five privacy-safe moderated human sessions before making evidence-based claims about human comprehension, usability, or behavior.
 **Research owner:** Eric Lawler
 **Product version:** 1.0.0
 **Ready-to-run package:** [Moderated Usability Session Kit](usability-session-kit.md)
+**Synthetic review:** [Synthetic Ideal-Persona Usability Simulations](synthetic-persona-sessions.md)
 
-The protocol, consent language, moderator guide, scoring rubric, session worksheet, and aggregate decision table are complete. Execution still requires five real participants, their consent, observed sessions, de-identified findings, at least one evidence-based product decision, and retesting of accepted P0 or P1 changes.
+The protocol, consent language, moderator guide, scoring rubric, session worksheet, and aggregate decision table are complete. A structured five-persona simulation added hypotheses about control-level contribution, fallback-copy placement, evidence density, mobile scanning, and model-metric interpretation. Those results remain AI proxy evidence. Execution still requires five real participants, their consent, observed sessions, de-identified findings, at least one evidence-based product decision, and retesting of accepted P0 or P1 changes.
 
 ## Decision this study supports
 
@@ -81,11 +82,24 @@ The complete 25-minute moderator flow is maintained in the [Moderated Usability 
 | Direct quote approved for publication | `[NEEDS INPUT]` |
 | Candidate product change | `[NEEDS INPUT]` |
 
-## Findings synthesis
+## Synthetic ideal-persona simulations
+
+Five AI-simulated target-profile walkthrough models were completed against the public Sites version 14 experience. The simulations modeled a portfolio recruiter, technical product manager, AI platform product leader, analytics product leader, and mobile recruiter with accessibility awareness.
+
+The simulations scored 52 of 60 modeled task points. That number is a design-risk indicator only. It is not a completion rate, usability measure, or human result. The full persona definitions, task matrix, prioritized hypotheses, and real-study bridge are recorded in [Synthetic Ideal-Persona Usability Simulations](synthetic-persona-sessions.md).
+
+The two highest-priority hypotheses for human validation are:
+
+1. Visitors may need a compact explanation of which changed control moved the probability.
+2. Visitors may need deterministic fallback behavior stated beside the Runtime AI action.
+
+No product change is accepted solely from synthetic evidence.
+
+## Prior proxy findings synthesis
 
 These sessions are AI proxy and expert pretests. They are useful for finding release friction, but they are not evidence of human behavior and do not satisfy the human-session completion rule.
 
-| Session | Proxy perspective | Result | Primary evidence |
+| Pretest | Proxy perspective | Result | Primary evidence |
 |---|---|---|---|
 | A | Nontechnical recruiter | PARTIAL PASS | Understood the product and responsible-use boundary; Eric's ownership and the AI boundary were initially too far below the first screen. |
 | B | Technical hiring manager | PARTIAL PASS | Found model, architecture, and governance evidence; detected a stale live-provider-gate claim. |

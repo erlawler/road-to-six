@@ -28,7 +28,7 @@ test("recruiter overview exposes the technical product management story", async 
   assert.match(readme, /## Verified outcomes/);
   assert.match(readme, /## Frontier AI product judgment/);
   assert.match(readme, /public\/og-market-context\.png/);
-  assert.match(readme, /Eighteen product and architecture decisions/);
+  assert.match(readme, /Nineteen product, architecture, and release-governance decisions/);
   assert.match(readme, /reliability receipt/i);
 });
 
@@ -59,6 +59,7 @@ test("portfolio evidence set is complete and free of prohibited dash characters"
     "docs/live-ai-scorecard.md",
     "docs/portfolio-case-study.md",
     "docs/repository-launch-checklist.md",
+    "docs/synthetic-persona-sessions.md",
     "docs/usability-research.md",
     "docs/usability-session-kit.md",
     "evals/live/2026-07-27-gpt-5.6-luna.json",
@@ -148,16 +149,22 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
 
 test("research and demo evidence keep proxy and human claims separate", async () => {
   const research = await readFile(resolve(root, "docs/usability-research.md"), "utf8");
+  const simulations = await readFile(resolve(root, "docs/synthetic-persona-sessions.md"), "utf8");
   const sessionKit = await readFile(resolve(root, "docs/usability-session-kit.md"), "utf8");
   const flow = await readFile(resolve(root, "docs/figma-flow.md"), "utf8");
   const launch = await readFile(resolve(root, "docs/repository-launch-checklist.md"), "utf8");
 
   assert.match(research, /Five AI proxy and expert pretests COMPLETE/);
+  assert.match(research, /Five synthetic ideal-persona simulations COMPLETE/);
   assert.match(research, /they are not evidence of human behavior/);
   assert.match(research, /No moderated human sessions have occurred/);
   assert.match(research, /OWNER-APPROVED DEFERRAL/);
   assert.match(research, /does not represent the product as human validated/);
   assert.match(research, /Owner review feedback to shipped outcome/);
+  assert.match(simulations, /SYNTHETIC PERSONA SIMULATION\. NOT HUMAN RESEARCH\./);
+  assert.match(simulations, /Human session count:\*\* 0 of 5/);
+  assert.match(simulations, /52 of 60/);
+  assert.match(simulations, /do not represent observed participant behavior/);
   assert.match(sessionKit, /Five real moderated sessions/);
   assert.match(sessionKit, /Notes consent: yes or no/);
   assert.match(sessionKit, /Runtime AI calculates or changes the probability/);

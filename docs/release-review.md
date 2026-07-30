@@ -14,7 +14,7 @@
 
 The release candidate passes the documented product, accessibility, security, privacy, responsible-use, data-rights, trademark, live-odds, live Runtime AI, build, lint, test, AI-evaluation, dependency-audit, and owner-authenticated hosted-smoke gates. Data-rights and trademark risks are accepted with documented limitations in the [Public Use Review](public-use-review.md); this acceptance is not legal clearance.
 
-Usability is accepted with deferred validation. Five labeled AI proxy and expert pretests are complete, but no moderated human sessions have occurred. On July 29, 2026, Eric Lawler approved deferring the five-session human study from the v1.0.0 launch gate to post-launch validation. This is a documented release-risk acceptance, not evidence of human usability or a claim that the product is human validated.
+Usability is accepted with deferred validation. Five labeled AI proxy and expert pretests and five synthetic ideal-persona simulations are complete, but no moderated human sessions have occurred. On July 29, 2026, Eric Lawler approved deferring the five-session human study from the v1.0.0 launch gate to post-launch validation. This is a documented release-risk acceptance, not evidence of human usability or a claim that the product is human validated.
 
 The final source is on GitHub `main`, CI and CodeQL pass, and the `v1.0.0` tag and GitHub release are published. Sites version 13 was built from the exact tagged commit, first validated owner-only, and then published at [road-to-six-erl.erlrickylre.chatgpt.site](https://road-to-six-erl.erlrickylre.chatgpt.site). Its authenticated smoke test confirmed client hydration, live odds for 11 schedule-matched games, selected-game freshness, matchup updates, deterministic forecast behavior, Runtime AI, a passed reliability receipt, source links, and zero browser-console errors. The release-smoke Runtime AI request used `gpt-5.6-luna`, completed with no fallback in 5,429 ms, used 646 input and 450 output tokens, and had an estimated cost of $0.0035.
 
@@ -36,8 +36,8 @@ Sites version 14 deployed the reviewed post-launch hardening commit `276a923b7fd
 | Security and privacy | COMPLETE WITH DOCUMENTED FRAMEWORK EXCEPTIONS | No credentials were found in the repository. Secrets remain server-side. Client-supplied market prices are ignored, request bytes are stream bounded, provider models are allowlisted, and anonymous AI request capacity is server enforced. The AI run ledger stores no prompt, user identity, wagering history, or raw vendor payload. `npm audit` found zero vulnerabilities after the July 27 dependency update. The CSP now denies unspecified sources, forms, frames, media, workers, inline event-handler scripts, and inline style elements. Compatibility testing confirmed that the current vinext output still requires inline bootstrap scripts and one dynamic probability-ring style attribute, so only those two allowances remain and are documented in ADR 018. |
 | Responsible use | COMPLETE | The interface provides probabilities and uncertainty without picks, stakes, payouts, affiliate links, sportsbook links, or wager placement. The server owns the summary and disclaimer and exposes only exact validated evidence fields from Runtime AI. |
 | Trademark and public content | ACCEPTED WITH LIMITATIONS | Official logos, player likenesses, uniforms, endorsement claims, and copied NFL content are excluded. Text references identify the subject, educational-use language appears beside the forecast, and the full non-affiliation statement appears in the footer. A rights holder could still object. |
-| Usability research | ACCEPTED WITH DEFERRED VALIDATION | Five AI proxy and expert pretests are complete. Zero of five moderated human sessions have occurred. Eric Lawler approved the v1.0.0 release with this limitation and moved human validation to post-launch research. Human findings remain `[NEEDS INPUT]`. |
-| GitHub | COMPLETE | The public [erlawler/road-to-six](https://github.com/erlawler/road-to-six) repository is current. The `v1.0.0` tag and GitHub release are published. CI and CodeQL pass on the release commit, and Dependabot update workflows are active. |
+| Usability research | ACCEPTED WITH DEFERRED VALIDATION | Five AI proxy and expert pretests plus five synthetic ideal-persona simulations are complete. The simulations generated hypotheses but do not represent observed behavior. Zero of five moderated human sessions have occurred. Eric Lawler approved the v1.0.0 release with this limitation and moved human validation to post-launch research. Human findings remain `[NEEDS INPUT]`. |
+| GitHub | COMPLETE | The public [erlawler/road-to-six](https://github.com/erlawler/road-to-six) repository is current. The `v1.0.0` tag and GitHub release are published. The active `Protect main` ruleset requires an up-to-date pull request, `validate`, CodeQL, resolved review threads, squash merge, and linear history while blocking force pushes and deletion. |
 | Private hosting | COMPLETE, HISTORICAL | Sites version 13 was first validated owner-only. Provider credentials remained hidden, and the owner-authenticated hosted smoke test passed before access changed. |
 | Public hosting | COMPLETE | The [public Road to Six site](https://road-to-six-erl.erlrickylre.chatgpt.site) returns HTTP 200 without authentication. Sites version 14 passed signed-out page, crawler-file, canonical-metadata, live-odds, Runtime AI, CSP, hydration, and browser-console checks. |
 
@@ -81,6 +81,8 @@ Sites version 14 deployed the reviewed post-launch hardening commit `276a923b7fd
 - Security headers verified on the rendered page and API routes
 - Current dependency audit returned zero vulnerabilities
 - Production build, lint, all 75 automated tests, the 12-case AI evaluation, and the dependency audit passed
+- Five synthetic ideal-persona walkthroughs produced 52 of 60 modeled task points and five prioritized hypotheses; the score is not reported as human evidence
+- GitHub ruleset `Protect main`, ruleset ID `20062181`, is active for `refs/heads/main` with no bypass actors
 
 ## Remaining checklist
 
@@ -94,6 +96,7 @@ Sites version 14 deployed the reviewed post-launch hardening commit `276a923b7fd
 - [x] Codex: complete the final v1.0.0 integrated regression and record the exact test count.
 - [x] Codex: save and deploy the final v1.0.0 private candidate and rerun the owner-authenticated smoke test.
 - [x] Codex: complete five labeled AI proxy and expert pretests and incorporate accepted P0 and P1 fixes.
+- [x] Codex: complete five synthetic ideal-persona simulations and preserve the zero-of-five human-session count.
 - [x] Codex: capture hosted screenshots, animated walkthrough, captions, and privacy review.
 - [x] Eric: accept deferred human validation as a documented v1.0.0 limitation.
 - [x] Codex: confirm CI, CodeQL, and Dependabot workflows after the configuration reached the default branch.
@@ -104,3 +107,4 @@ Sites version 14 deployed the reviewed post-launch hardening commit `276a923b7fd
 - [x] Codex: change hosting access to public and run the signed-out success-path production smoke test.
 - [x] Codex: deploy Sites version 14 from reviewed commit `276a923b7fd97969dce877c3e167f8e18a6baf6c`.
 - [x] Codex: verify canonical and social metadata, crawler files, tightened CSP compatibility, live odds, Runtime AI, hydration, and browser-console health on Sites version 14.
+- [x] Codex: protect `main` with an active no-bypass ruleset requiring pull requests, strict CI and CodeQL checks, resolved review threads, squash merges, and linear history.

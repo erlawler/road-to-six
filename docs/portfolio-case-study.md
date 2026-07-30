@@ -10,7 +10,7 @@ I designed the product around one question:
 
 I owned the product strategy, prioritization, data and AI boundaries, acceptance criteria, release governance, and go-live decision. I used Codex as an implementation and review partner. That operating model let me move quickly while preserving explicit human ownership of requirements, risk decisions, and publication approval.
 
-The result is a public v1.0.0 product and GitHub release with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, production smoke evidence, and a complete product artifact set. Sites version 13 contains the exact tagged commit and passed both the owner-authenticated review and signed-out production smoke test.
+The result is a public v1.0.0 product and GitHub release with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, production smoke evidence, and a complete product artifact set. Sites version 13 contains the exact tagged release commit and passed both the owner-authenticated review and signed-out production smoke test. Sites version 14 then deployed the reviewed metadata and CSP hardening commit and passed a fresh signed-out smoke test.
 
 ## Product context
 
@@ -275,7 +275,7 @@ This is the same product-management pattern I would use with an engineering team
 | Gate | Status |
 |---|---|
 | Product flow | COMPLETE |
-| Accessibility review | COMPLETE |
+| Automated and expert accessibility review | COMPLETE; human assistive-technology validation remains open |
 | Live odds | COMPLETE |
 | Security and privacy | COMPLETE |
 | Responsible use | COMPLETE |
@@ -311,7 +311,7 @@ This is the same product-management pattern I would use with an engineering team
 ## Current limitations and next decisions
 
 1. Product adoption targets remain unmeasured because analytics are not implemented.
-2. Five privacy-safe post-launch usability sessions and the resulting product decisions remain `[NEEDS INPUT]`. The v1.0.0 release is not human validated.
+2. Five privacy-safe post-launch human usability sessions and the resulting evidence-based product decisions remain `[NEEDS INPUT]`. Five synthetic ideal-persona simulations are complete, but the v1.0.0 release is not human validated.
 3. The forecast is a transparent portfolio baseline, not a production wagering model.
 4. Historical odds and bettor splits remain outside the free-data scope.
 5. Public hosting and the signed-out success-path smoke test were completed on July 30, 2026.
@@ -325,6 +325,7 @@ This is the same product-management pattern I would use with an engineering team
 - [Frontier AI architecture](frontier-ai-architecture.md)
 - [Runtime AI evaluation](ai-evaluation.md)
 - [Live AI scorecard](live-ai-scorecard.md)
+- [Synthetic ideal-persona simulations](synthetic-persona-sessions.md)
 - [Codex collaboration](codex-collaboration.md)
 - [MVP backlog](mvp-backlog.md)
 - [Measurement plan](measurement-plan.md)
