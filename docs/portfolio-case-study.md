@@ -10,7 +10,7 @@ I designed the product around one question:
 
 I owned the product strategy, prioritization, data and AI boundaries, acceptance criteria, release governance, and go-live decision. I used Codex as an implementation and review partner. That operating model let me move quickly while preserving explicit human ownership of requirements, risk decisions, and publication approval.
 
-The result is a locally validated v1.0.0 release candidate with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, and a complete product artifact set. The owner-only URL still contains the prior candidate until the final private deployment gate is completed.
+The result is an owner-only v1.0.0 release candidate with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, hosted smoke evidence, and a complete product artifact set. Public hosting, the final GitHub push, the version tag, and the GitHub release remain explicit owner approval gates.
 
 ## Product context
 
@@ -237,7 +237,7 @@ An accepted AI response must:
 
 The system uses a dedicated OpenAI project with a $10 monthly maximum. The application reserves estimated cost before a request, reconciles actual token use, stops AI calls at $9.50, and serves the deterministic explanation afterward.
 
-After billing was enabled, one live OpenAI response completed in AI mode with no fallback. It preserved probability `0.5531549573107291`, forecast model `elo-market-v1.1.0`, source date `2026-07-15`, three drivers, and three uncertainty items. The same seven-criterion evaluator passed all seven checks. The later four-scenario scorecard and 72-test regression also pass. Final private deployment remains a separate owner gate.
+After billing was enabled, one live OpenAI response completed in AI mode with no fallback. It preserved probability `0.5531549573107291`, forecast model `elo-market-v1.1.0`, source date `2026-07-15`, three drivers, and three uncertainty items. The same seven-criterion evaluator passed all seven checks. The later four-scenario scorecard and 73-test regression also pass. The owner-only deployment then passed current-odds and Runtime AI smoke checks.
 
 ## Data and model integrity
 
@@ -288,7 +288,7 @@ This is the same product-management pattern I would use with an engineering team
 ## Verified outcomes
 
 1. The production build and lint checks pass.
-2. All 72 automated tests pass.
+2. All 73 automated tests pass.
 3. The current dependency audit reports zero vulnerabilities.
 4. The private release candidate returned five current Dallas events from The Odds API.
 5. Successful six-hour cache persistence models 372 credits in a 31-day month, below the free allowance. Upstream and persistence failures remain monitored separately.

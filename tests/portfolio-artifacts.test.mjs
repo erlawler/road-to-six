@@ -52,6 +52,7 @@ test("portfolio evidence set is complete and free of prohibited dash characters"
     ".github/workflows/codeql.yml",
     "docs/ai-evaluation.md",
     "docs/codex-collaboration.md",
+    "docs/demo-media.md",
     "docs/figma-flow.md",
     "docs/frontier-ai-architecture.md",
     "docs/linkedin-launch-kit.md",
@@ -60,6 +61,12 @@ test("portfolio evidence set is complete and free of prohibited dash characters"
     "docs/repository-launch-checklist.md",
     "docs/usability-research.md",
     "evals/live/2026-07-27-gpt-5.6-luna.json",
+    "docs/media/01-owner-preview-hero.png",
+    "docs/media/02-runtime-ai-receipt.png",
+    "docs/media/03-weekly-opponent-evidence.png",
+    "docs/media/04-model-audit.png",
+    "docs/media/05-product-governance.png",
+    "docs/media/road-to-six-demo.webp",
     "public/og-market-context.png",
   ];
 
@@ -126,14 +133,17 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
   }
 });
 
-test("research and static flow are reviewable without fabricated findings or screenshots", async () => {
+test("research and demo evidence keep proxy and human claims separate", async () => {
   const research = await readFile(resolve(root, "docs/usability-research.md"), "utf8");
   const flow = await readFile(resolve(root, "docs/figma-flow.md"), "utf8");
   const launch = await readFile(resolve(root, "docs/repository-launch-checklist.md"), "utf8");
 
-  assert.match(research, /\[NEEDS INPUT\].*Sessions have not been completed/);
+  assert.match(research, /Five AI proxy and expert pretests COMPLETE/);
+  assert.match(research, /they are not evidence of human behavior/);
+  assert.match(research, /Five moderated human sessions remain `\[NEEDS INPUT\]`/);
   assert.match(research, /Owner review feedback to shipped outcome/);
   assert.match(flow, /flowchart TD/);
   assert.match(flow, /not presented as a Figma screenshot/);
-  assert.match(launch, /\[NEEDS INPUT\].*Record a 60 to 90 second product demo/);
+  assert.match(launch, /20-second animated hosted walkthrough/);
+  assert.match(launch, /\[NEEDS INPUT\].*optional 60 to 90 second narrated LinkedIn walkthrough/);
 });

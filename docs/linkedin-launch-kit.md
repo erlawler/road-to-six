@@ -127,7 +127,9 @@ End on the GitHub README or artifact index.
 
 ## Demo capture checklist
 
-- [ ] `[NEEDS INPUT]` Record the demo. No video is currently claimed as complete.
+- [x] Capture the authenticated hosted walkthrough as a 20-second silent animation.
+- [x] Add five clean hosted-product frames, captions, alt text, and a privacy review.
+- [ ] `[NEEDS INPUT]` Record Eric's optional 60 to 90 second narrated walkthrough before LinkedIn publication.
 - [ ] Record at 1440 by 900 or another clear 16:10 desktop resolution.
 - [ ] Use a clean browser window with no personal tabs or credentials visible.
 - [ ] Confirm the market source and retrieval time are current.
@@ -154,12 +156,15 @@ End on the GitHub README or artifact index.
 | Asset | Status |
 |---|---|
 | Market Context Lab social card | COMPLETE in `public/og-market-context.png` |
-| 60 to 90 second demo video | `[NEEDS INPUT]` |
-| Demo captions and transcript | `[NEEDS INPUT]` |
-| Approved hero screenshot | `[NEEDS INPUT]` |
-| Approved scenario screenshot | `[NEEDS INPUT]` |
-| Approved AI reliability receipt screenshot | `[NEEDS INPUT]` |
-| Approved model-audit screenshot | `[NEEDS INPUT]` |
+| 20-second animated hosted walkthrough | COMPLETE in `docs/media/road-to-six-demo.webp` |
+| Walkthrough captions and frame transcript | COMPLETE in `docs/demo-media.md` |
+| Hosted hero screenshot | COMPLETE in `docs/media/01-owner-preview-hero.png` |
+| Hosted scenario and market screenshot | COMPLETE in `docs/media/02-runtime-ai-receipt.png` |
+| Hosted AI reliability receipt screenshot | COMPLETE in `docs/media/02-runtime-ai-receipt.png` |
+| Hosted opponent-evidence screenshot | COMPLETE in `docs/media/03-weekly-opponent-evidence.png` |
+| Hosted model-audit screenshot | COMPLETE in `docs/media/04-model-audit.png` |
+| Hosted product-governance screenshot | COMPLETE in `docs/media/05-product-governance.png` |
+| Optional 60 to 90 second narrated walkthrough | `[NEEDS INPUT]` Eric records and approves |
 
 ## Social image alt text
 

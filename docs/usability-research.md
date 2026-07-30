@@ -1,7 +1,7 @@
 # Usability Research Plan and Findings
 
-**Study state:** `[NEEDS INPUT]` Sessions have not been completed.
-**Target:** Five moderated sessions before public launch
+**Study state:** Five AI proxy and expert pretests COMPLETE. Five moderated human sessions remain `[NEEDS INPUT]` before public launch.
+**Target:** Five moderated human sessions before public launch
 **Research owner:** Eric Lawler
 **Product version:** 1.0.0 private release candidate
 
@@ -76,9 +76,29 @@ Determine whether a first-time reviewer can understand the product's evidence, c
 
 ## Findings synthesis
 
-| Finding | Sessions | Severity | Evidence | Product decision | Validation |
-|---|---:|---|---|---|---|
-| `[NEEDS INPUT]` | `[NEEDS INPUT]` | `[NEEDS INPUT]` | `[NEEDS INPUT]` | `[NEEDS INPUT]` | `[NEEDS INPUT]` |
+These sessions are AI proxy and expert pretests. They are useful for finding release friction, but they are not evidence of human behavior and do not satisfy the human-session completion rule.
+
+| Session | Proxy perspective | Result | Primary evidence |
+|---|---|---|---|
+| A | Nontechnical recruiter | PARTIAL PASS | Understood the product and responsible-use boundary; Eric's ownership and the AI boundary were initially too far below the first screen. |
+| B | Technical hiring manager | PARTIAL PASS | Found model, architecture, and governance evidence; detected a stale live-provider-gate claim. |
+| C | Dallas football fan | PASS, 7 of 7 tasks | Changed Dallas and opponent assumptions, observed the probability move, generated Runtime AI, and found the receipt and uncertainty. |
+| D | Skeptical analytics reviewer | PASS, 5 of 5 tasks | Correctly concluded the model improves on football-only Elo but does not beat the market baseline. |
+| E | Accessibility expert | CONDITIONAL PASS | Keyboard and responsive flows passed; a P1 light-surface contrast issue was detected and corrected. |
+
+| Finding | Sessions | Severity | Product decision | Validation |
+|---|---:|---|---|---|
+| Live AI gate copy contradicted completed evidence | B | P0 | Replace the stale gate with the verified four-scenario live scorecard, latency, cost, and no-fallback outcome | Render test and authenticated hosted review passed |
+| Provider refresh could be confused with selected-game freshness | C, D | P0 | Show whether a current market is applied to the selected week or whether the dated baseline remains active | Hosted Week 1 baseline and Week 2 current states passed |
+| Light-blue text and focus outlines failed contrast on light surfaces | E | P1 | Split light-surface and dark-surface blue tokens and add automated contrast assertions | Ratios pass at 6.12 to 1 or better for light text and 8.57 to 1 or better for dark-surface focus |
+| Eric's product ownership was not visible early enough | A | P1 | Add an above-the-fold ownership line | Hosted hero screenshot and semantic tree passed |
+| No-market matchups still displayed a market-aware label | A | P1 | Label the forecast football-only when no market-implied probability exists | Implemented and covered by release review |
+| Runtime AI ownership was not explicit enough after generation | C | P1 | State that the probability stayed locked while Runtime AI explained it | Hosted Runtime AI receipt flow passed |
+| Scenario assumptions persisted across matchup changes without explanation | C | P1 | Add a reset action and a persistence note | Hosted reset returned the deterministic state and announced completion |
+| Six sliders create recruiter scan friction | A | P2 | Retain for v1.0.0, then evaluate presets or progressive disclosure with human participants | `[NEEDS INPUT]` Human validation |
+| Per-player effects are aggregated into one scenario contribution | C | P2 | Consider a compact contribution row in a future version | `[NEEDS INPUT]` Product prioritization |
+| Model score materiality needs more interpretation | D | P2 | Consider calibration visualization and confidence limits | `[NEEDS INPUT]` Product prioritization |
+| Screen-reader status changes may announce twice | E | P2 | Retest with VoiceOver and NVDA, then debounce or simplify announcements if confirmed | `[NEEDS INPUT]` Assistive-technology validation |
 
 ## Owner review feedback to shipped outcome
 
@@ -100,4 +120,4 @@ The entries below are documented owner-review changes, not participant-study fin
 
 ## Completion rule
 
-The usability gate is complete only when five sessions are documented, findings are de-identified, at least one product decision is tied to observed evidence, and the accepted changes are retested. Until then, all participant findings remain `[NEEDS INPUT]`.
+The human usability gate is complete only when five moderated human sessions are documented, findings are de-identified, at least one product decision is tied to observed human evidence, and accepted changes are retested. Proxy findings above remain labeled as pretests. Human participant findings remain `[NEEDS INPUT]`.

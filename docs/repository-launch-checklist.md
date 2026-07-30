@@ -1,7 +1,7 @@
 # Repository and Portfolio Launch Checklist
 
 **Package:** 1.0.0
-**Current state:** Prior owner-only hosted candidate, public source repository, and local v1.0.0 candidate
+**Current state:** Authenticated owner-only v1.0.0 preview, unpushed local release evidence, and public hosting blocked
 **Authority boundary:** Public hosting requires Eric Lawler's explicit approval
 
 ## Release evidence
@@ -10,8 +10,8 @@
 - [x] Validate one live odds response.
 - [x] Validate one live Runtime AI response against all seven criteria.
 - [x] Run the four-scenario live AI scorecard and record quality, latency, and estimated cost.
-- [ ] `[NEEDS INPUT]` Re-run the owner-authenticated private smoke test against the final saved version.
-- [x] Confirm the final automated test count of 72 in README, release review, and release notes.
+- [x] Re-run the owner-authenticated private smoke test against the final saved version.
+- [x] Confirm the final automated test count of 73 in README and release review. Update release notes only when the release is approved.
 - [x] Review the complete diff for secrets, personal data, unsupported claims, and unrelated files.
 
 ## GitHub repository presentation
@@ -36,15 +36,17 @@
 ## Portfolio media
 
 - [x] Add a neutral 1200 by 630 Market Context Lab social card without official team or league marks.
-- [ ] `[NEEDS INPUT]` Record a 60 to 90 second product demo.
-- [ ] `[NEEDS INPUT]` Add accurate captions and a transcript to the demo.
-- [ ] `[NEEDS INPUT]` Capture the approved hero, scenario, AI reliability receipt, and model-audit screenshots.
-- [ ] `[NEEDS INPUT]` Verify that media contains no credentials, browser identity, private URLs, notification content, or participant information.
-- [ ] `[NEEDS INPUT]` Add final media links to README and the LinkedIn launch kit. Do not add placeholder links.
+- [x] Create a 20-second animated hosted walkthrough.
+- [x] Add accurate frame captions and a transcript to the walkthrough.
+- [x] Capture the hosted hero, scenario, AI reliability receipt, opponent-evidence, model-audit, and product-governance screenshots.
+- [x] Verify that media contains no credentials, browser identity, private URLs, notification content, or participant information.
+- [x] Add final media links to README and the LinkedIn launch kit.
+- [ ] `[NEEDS INPUT]` Eric records and approves the optional 60 to 90 second narrated LinkedIn walkthrough.
 
 ## Research and product evidence
 
 - [x] Preserve owner-review feedback and shipped outcomes in [Usability Research](usability-research.md).
+- [x] Complete five labeled AI proxy and expert pretests without presenting them as human participant research.
 - [ ] `[NEEDS INPUT]` Complete five privacy-safe usability sessions.
 - [ ] `[NEEDS INPUT]` Document de-identified findings, product decisions, and validation results.
 - [ ] `[NEEDS INPUT]` Update the case study with observed outcomes. Do not present targets as results.

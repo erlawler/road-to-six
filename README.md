@@ -7,11 +7,13 @@
 
 ![Road to Six Market Context Lab social preview](public/og-market-context.png)
 
+![Animated Road to Six product walkthrough](docs/media/road-to-six-demo.webp)
+
 **Road to Six is a technical product management case study in evidence-grounded AI.** It turns Dallas Cowboys football data and betting-market context into an inspectable probability workflow without giving betting advice.
 
 The product demonstrates how I frame an ambiguous problem, choose the right boundary between deterministic software and frontier AI, integrate governed data sources, define measurable quality gates, and move a product from concept to a private release candidate.
 
-> **Current status:** Version 1.0.0 passes the local build, lint, 72-test, 12-case AI-evaluation, dependency-audit, and four-scenario live-scorecard gates. The current owner-only URL contains the prior candidate. Saving, deploying, and smoke-testing v1.0.0 privately remain open before my public-hosting approval. Live odds are validated, and all four live Runtime AI scorecard cases completed in AI mode with no fallback.
+> **Current status:** Version 1.0.0 passes the build, lint, 73-test, 12-case AI-evaluation, dependency-audit, and four-scenario live-scorecard gates. The owner-only preview is deployed and passed an authenticated hosted smoke test for hydration, matchup changes, selected-game market freshness, live odds, deterministic forecast, Runtime AI, reliability receipt, reset behavior, and browser errors. GitHub push, release creation, and public hosting remain blocked until my approval.
 
 ## Recruiter snapshot
 
@@ -23,7 +25,7 @@ The product demonstrates how I frame an ambiguous problem, choose the right boun
 | Core job | Inspect football and market evidence, change assumptions, and understand a traceable probability and its uncertainty |
 | Product scope | Real roster, schedule, player, game, and current market data; scenario modeling; model audit; runtime AI explanation |
 | Key constraint | $0 sports-data vendor spend and no more than $10 monthly runtime AI spend |
-| Current release | v1.0.0 local release candidate with a prior owner-only preview, validated live integrations, and documented launch gates |
+| Current release | v1.0.0 owner-only preview with validated live integrations, hosted smoke evidence, and documented public-launch gates |
 
 **Ownership:** I owned the product strategy, technical decisions, risk acceptance, and release approval. Codex accelerated implementation, testing, review, and documentation within the boundaries I defined.
 
@@ -80,13 +82,13 @@ These are implemented or validated outcomes, not portfolio targets.
 | Sourced football experience | Versioned 2026 roster and schedule snapshot with complete 2025 regular-season player baselines and weekly opponent leaders |
 | Transparent model evaluation | 2024 to 2025 walk-forward holdout: football-only Brier 0.220, market-aware Brier 0.207, market baseline Brier 0.206 |
 | Honest model conclusion | The market-aware baseline improved on football-only Elo but did not outperform the market baseline |
-| Live market integration | Five Dallas events returned in the private release review with source and retrieval time preserved |
+| Live market integration | Eleven current Cowboys games matched the schedule in the authenticated hosted review, with source, retrieval time, cache state, and selected-game applicability preserved |
 | Free-tier cost design | Successful six-hour cache persistence models 372 credits in a 31-day month, below the 500-credit allowance; failures remain monitored |
 | AI reliability controls | Offline evaluation passed 12 of 12 expected outcomes across seven criteria and 84 binary checks |
 | Live AI contract | One AI-mode response preserved the deterministic probability and passed all seven live checks |
 | Live AI scorecard | Four of four Runtime AI cases passed with 3,568 ms average latency and $0.013118 total estimated cost; four of four deterministic cases passed at $0 |
 | AI operations | A reliability receipt exposes version, latency, token, cost, validation, source, and fallback evidence |
-| Product quality | Production build, lint, 72 automated tests, 12-case AI evaluation, and dependency audit passed |
+| Product quality | Production build, lint, 73 automated tests, 12-case AI evaluation, and dependency audit passed |
 | Dependency security | Current audit returned zero vulnerabilities |
 | Release governance | Accessibility, security, privacy, responsible-use, data-rights, and trademark reviews are documented |
 
@@ -141,6 +143,8 @@ I also used Codex as a delivery system, not as an ungoverned author. Repository 
 | [Frontier AI architecture](docs/frontier-ai-architecture.md) | Deterministic and AI responsibilities, trust boundaries, runtime flow, and failure behavior |
 | [Runtime AI evaluation](docs/ai-evaluation.md) | Binary product criteria, positive cases, adversarial cases, and release gate |
 | [Live AI scorecard](docs/live-ai-scorecard.md) | Actual-response quality, latency, cost comparison, and bounded interpretation |
+| [Demo media](docs/demo-media.md) | Hosted screenshots, animated walkthrough, captions, and privacy review |
+| [Usability research](docs/usability-research.md) | Owner feedback, five proxy pretests, accepted changes, and the remaining human-session gate |
 | [Codex collaboration](docs/codex-collaboration.md) | Eric's ownership, Codex acceleration, governance, and human approval points |
 | [Decision log](docs/decision-log.md) | Seventeen product and architecture decisions with rationale |
 | [MVP backlog](docs/mvp-backlog.md) | Prioritization, sequencing, acceptance criteria, and delivery status |

@@ -31,7 +31,7 @@ Road to Six 1.0.0 is an evidence-grounded technical product management case stud
 - The same seven-criterion evaluator passed all seven live checks.
 - A four-scenario live scorecard passed four of four Runtime AI cases and four of four deterministic cases. Runtime AI averaged 3,568 ms and an estimated $0.013118 total across the bounded sample, with no fallbacks.
 - Offline AI evaluation passed 12 of 12 expected outcomes across 84 binary checks.
-- The production build, lint, 72 automated tests, and dependency audit passed.
+- The production build, lint, 73 automated tests, and dependency audit passed.
 - The product preserves deterministic forecast and explanation behavior when AI is unavailable.
 
 ## Important limitations

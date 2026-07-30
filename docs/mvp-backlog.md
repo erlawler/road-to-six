@@ -148,7 +148,7 @@ Acceptance criteria:
 - [x] Record bounded run metadata without storing prompts, user identity, or raw vendor data.
 - [x] Show model, prompt, contract, evaluation, forecast, latency, tokens, estimated cost, source freshness, validation, and fallback evidence.
 - [x] Preserve deterministic fallback or bounded rejection for rate, budget, provider, timeout, contract, and policy failures.
-- [x] Complete final build, lint, AI evaluation, dependency audit, and 72-test regression for the integrated hardening changes.
+- [x] Complete final build, lint, AI evaluation, dependency audit, and 73-test regression for the integrated hardening changes.
 
 ## P1: Portfolio evidence and research
 
@@ -169,8 +169,10 @@ Acceptance criteria:
 - [x] Check in a static Mermaid representation of the editable Figma flow.
 - [x] Add a neutral Market Context Lab social card.
 - [x] Run and preserve a sanitized four-scenario live AI quality, latency, and cost scorecard.
-- [ ] `[NEEDS INPUT]` Complete five usability sessions.
-- [ ] `[NEEDS INPUT]` Record a captioned 60 to 90 second demo and approved screenshots.
+- [x] Complete five labeled AI proxy and expert pretests.
+- [x] Capture hosted screenshots and a captioned 20-second animated walkthrough.
+- [ ] `[NEEDS INPUT]` Complete five moderated human usability sessions.
+- [ ] `[NEEDS INPUT]` Eric records and approves the optional 60 to 90 second narrated walkthrough.
 
 ## P2: Repository release operations
 
