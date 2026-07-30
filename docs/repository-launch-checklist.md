@@ -16,12 +16,12 @@
 
 ## GitHub repository presentation
 
-- [ ] `[NEEDS INPUT]` Set the repository description to: `Evidence-grounded football forecasting case study demonstrating technical product management, AI evaluation, cost controls, and release governance.`
-- [ ] `[NEEDS INPUT]` Add repository topics: `technical-product-management`, `product-management`, `frontier-ai`, `ai-evaluation`, `responsible-ai`, `explainable-ai`, `sports-analytics`, `nextjs`, `cloudflare-workers`, and `codex`.
+- [x] Set the repository description to: `Evidence-grounded football forecasting case study demonstrating technical product management, AI evaluation, cost controls, and release governance.`
+- [x] Add repository topics: `technical-product-management`, `product-management`, `frontier-ai`, `ai-evaluation`, `responsible-ai`, `explainable-ai`, `sports-analytics`, `nextjs`, `cloudflare-workers`, and `codex`.
 - [ ] `[NEEDS INPUT]` Upload `public/og-market-context.png` as the repository social preview.
 - [ ] `[NEEDS INPUT]` Confirm the README social card, badges, table of contents path, and local links render on GitHub.
 - [ ] `[NEEDS INPUT]` Pin the repository on Eric Lawler's GitHub profile.
-- [ ] `[NEEDS INPUT]` Confirm the repository visibility matches Eric's launch decision. Do not change visibility as part of this release preparation.
+- [x] Confirm the public repository visibility matches Eric's launch decision.
 
 ## GitHub security and maintenance
 
