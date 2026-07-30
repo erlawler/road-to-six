@@ -1,9 +1,11 @@
 # Usability Research Plan and Findings
 
-**Study state:** Five AI proxy and expert pretests COMPLETE. Five moderated human sessions remain `[NEEDS INPUT]` before public launch.
-**Target:** Five moderated human sessions before public launch
+**Study state:** Five AI proxy and expert pretests COMPLETE. No moderated human sessions have occurred.
+**Release decision:** OWNER-APPROVED DEFERRAL for v1.0.0, recorded July 29, 2026.
+**Accepted limitation:** Eric Lawler approved moving the five moderated human sessions from the v1.0.0 pre-launch gate to post-launch validation. This decision allows release with incomplete human-usability evidence. It does not represent the product as human validated, and all human-participant findings remain `[NEEDS INPUT]`.
+**Post-launch target:** Complete five privacy-safe moderated human sessions before making evidence-based claims about human comprehension, usability, or behavior.
 **Research owner:** Eric Lawler
-**Product version:** 1.0.0 private release candidate
+**Product version:** 1.0.0
 
 ## Decision this study supports
 
@@ -120,4 +122,4 @@ The entries below are documented owner-review changes, not participant-study fin
 
 ## Completion rule
 
-The human usability gate is complete only when five moderated human sessions are documented, findings are de-identified, at least one product decision is tied to observed human evidence, and accepted changes are retested. Proxy findings above remain labeled as pretests. Human participant findings remain `[NEEDS INPUT]`.
+The research completion rule remains unchanged. The owner-approved deferral removes the study as a blocking dependency for v1.0.0 only. It does not mark the study complete. The study is complete only when five moderated human sessions are documented, findings are de-identified, at least one product decision is tied to observed human evidence, and accepted changes are retested. Proxy findings above remain labeled as pretests. Human-session counts, findings, quotes, and outcomes remain `[NEEDS INPUT]` until actual moderated sessions occur.

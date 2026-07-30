@@ -1,8 +1,8 @@
 # Demo Media
 
-**Status:** COMPLETE for the owner-only v1.0.0 preview
+**Status:** COMPLETE for the v1.0.0 release
 
-The media below was captured from the authenticated hosted release candidate on July 29, 2026. It contains no browser chrome, credentials, private URLs, notification content, billing data, or participant information.
+The hero, opponent, model, and governance frames were refreshed from the final validated release candidate on July 29, 2026. The Runtime AI receipt frame is retained from the authenticated hosted smoke test because it demonstrates the live provider flow. The media contains no browser chrome, credentials, private URLs, notification content, billing data, or participant information.
 
 ## Animated walkthrough
 
@@ -10,14 +10,14 @@ The media below was captured from the authenticated hosted release candidate on 
 
 **Format:** 1280 by 720 animated WebP  
 **Length:** 20 seconds  
-**Frames:** Five hosted-product views  
+**Frames:** Five release-product views
 **Audio:** None
 
 ## Frame sequence and captions
 
 | Time | Frame | Caption |
 |---|---|---|
-| 0 to 3.5 seconds | [Owner preview hero](media/01-owner-preview-hero.png) | Road to Six joins sourced football evidence, current market context, and transparent probability. |
+| 0 to 3.5 seconds | [Release hero](media/01-owner-preview-hero.png) | Road to Six joins sourced football evidence, current market context, and transparent probability. |
 | 3.5 to 8 seconds | [Runtime AI receipt](media/02-runtime-ai-receipt.png) | Deterministic code locks the forecast. Runtime AI explains evidence and uncertainty with a reliability receipt. |
 | 8 to 11.5 seconds | [Weekly opponent evidence](media/03-weekly-opponent-evidence.png) | The selected matchup updates the opponent's four leading 2025 producers. |
 | 11.5 to 15.5 seconds | [Model audit](media/04-model-audit.png) | The model improves on football-only Elo but does not outperform the market baseline. |

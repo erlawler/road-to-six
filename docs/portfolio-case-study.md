@@ -10,7 +10,7 @@ I designed the product around one question:
 
 I owned the product strategy, prioritization, data and AI boundaries, acceptance criteria, release governance, and go-live decision. I used Codex as an implementation and review partner. That operating model let me move quickly while preserving explicit human ownership of requirements, risk decisions, and publication approval.
 
-The result is an owner-only v1.0.0 release candidate with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, hosted smoke evidence, and a complete product artifact set. Public hosting, the final GitHub push, the version tag, and the GitHub release remain explicit owner approval gates.
+The result is a v1.0.0 release with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, hosted smoke evidence, and a complete product artifact set. On July 29, 2026, I approved the public GitHub push, version tag and release, public hosting, and signed-out production smoke test.
 
 ## Product context
 
@@ -283,7 +283,7 @@ This is the same product-management pattern I would use with an engineering team
 | Trademark and public content | ACCEPTED WITH LIMITATIONS |
 | Runtime AI live response | COMPLETE for the live baseline |
 | v1.0.0 hardening regression | COMPLETE |
-| Public hosting | BLOCKED pending explicit approval |
+| Public hosting | APPROVED; publication in progress |
 
 ## Verified outcomes
 
@@ -311,10 +311,10 @@ This is the same product-management pattern I would use with an engineering team
 ## Current limitations and next decisions
 
 1. Product adoption targets remain unmeasured because analytics are not implemented.
-2. Five privacy-safe usability sessions and the resulting product decisions remain `[NEEDS INPUT]`.
+2. Five privacy-safe post-launch usability sessions and the resulting product decisions remain `[NEEDS INPUT]`. The v1.0.0 release is not human validated.
 3. The forecast is a transparent portfolio baseline, not a production wagering model.
 4. Historical odds and bettor splits remain outside the free-data scope.
-5. Public hosting requires explicit final approval and a production smoke test.
+5. Public hosting was approved on July 29, 2026 and requires a signed-out production smoke test.
 6. Data and trademark limitations remain accepted risks, not legal clearance.
 
 ## Artifact index

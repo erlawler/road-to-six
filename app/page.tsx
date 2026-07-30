@@ -378,11 +378,11 @@ export default function Home() {
             safety, and release decisions are governed.
           </p>
           <p className="ownership-line">
-            Product strategy, architecture, risk, and release owned by Eric Lawler. Implemented with Codex.
+            Product strategy, architecture, risk, and release owned by Eric Lawler. Implemented with Code.
           </p>
           <div className="hero-actions">
             <a className="primary-action" href="#forecast">Run the forecast</a>
-            <a className="secondary-action" href="#case-study">Review the product case</a>
+            <a className="secondary-action" href="#case-study">Review the case</a>
           </div>
           <div className="source-stamp">
             <span>Source</span>
@@ -659,8 +659,8 @@ export default function Home() {
           <span className="section-number">02</span>
           <div>
             <span className="eyebrow">Player evidence</span>
-            <h2>Weekly matchup. 2025 baselines.</h2>
-            <p>Compare featured Cowboys with the selected opponent&apos;s top four 2025 PPR producers from its active 2026 roster.</p>
+            <h2>Weekly matchup. Real baselines.</h2>
+            <p>Compare featured Cowboys with the selected opponent&apos;s top four stat producers from its active 2026 roster.</p>
           </div>
         </div>
         <div className="opponent-heading">
@@ -674,7 +674,7 @@ export default function Home() {
           {selectedOpponent.leaders.map((leader, index) => (
             <article className="opponent-card" key={leader.id}>
               <div>
-                <span>#{index + 1} PPR rank</span>
+                <span>#{index + 1} rank</span>
                 <small>{leader.position} {leader.jerseyNumber ? `#${leader.jerseyNumber}` : ""}</small>
               </div>
               <h3>{leader.name}</h3>
@@ -709,7 +709,11 @@ export default function Home() {
           <div>
             <span className="eyebrow">Model audit</span>
             <h2>Measure the forecast against the market.</h2>
-            <p>The baseline is tested walk-forward on a 2024 to 2025 holdout so each prediction uses only information available before that game.</p>
+            <p>
+              The baseline is tested walk-forward on a <span aria-hidden="true">2024-2025</span>
+              <span className="sr-only">2024 to 2025</span> holdout so each prediction uses only
+              information available before that game.
+            </p>
           </div>
         </div>
         <div className="model-grid">
@@ -761,7 +765,7 @@ export default function Home() {
           {[
             ["Opportunity", "Test whether football evidence and market prices tell the same story without claiming a wagering edge."],
             ["AI role", "Deterministic code owns the probability. Runtime AI explains named evidence, uncertainty, and source freshness."],
-            ["Operating model", "Free sports data, a six-hour odds cache, a $9.50 AI cutoff, and a deterministic fallback protect cost and reliability."],
+            ["Operating model", "Free sports data, a six-hour odds cache, an AI cutoff, and a deterministic fallback protect cost and reliability."],
             ["Launch governance", "Accessibility, security, data rights, trademark, responsible-use, and private-release gates are explicit."],
           ].map(([title, copy]) => (
             <article key={title}>
@@ -895,8 +899,8 @@ export default function Home() {
 
       <footer>
         <div>
-          <strong>Road to Six</strong>
-          <span>Product ownership and strategy by Eric Ryan Lawler. Implemented with Codex.</span>
+          <strong aria-label="Road to Super Bowl Six">Road to SB # Six</strong>
+          <span>Ownership and strategy by Eric Lawler. Implemented with Codex.</span>
         </div>
         <p>
           Unofficial educational analytics. Not affiliated with or endorsed by the Dallas Cowboys, the NFL, sportsbooks, or their partners. No betting recommendation is provided.

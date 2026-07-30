@@ -4,7 +4,7 @@ The editable FigJam user flow is available here:
 
 [Open the Road to Six MVP User Flow](https://www.figma.com/board/m4Jj2PH2pCWMjcyUFNibyS?utm_source=other&utm_content=edit_in_figjam&oai_id=v1%2FxUmyGVk5KOQTJRulUQKNwQe3yEmxEnoOxDP8Doq1z3TYSWL0h07UaA&request_id=ee641610-369e-4632-a92c-ff043a56fac1)
 
-The board contains the original readiness flow and the evolved **Market Context Lab** flow side by side so the product evolution remains visible. Market bias remains an unvalidated hypothesis because the approved data scope excludes bettor splits. The flow describes the intended anonymous public experience. The current hosted release candidate remains owner-only until final approval.
+The board contains the original readiness flow and the evolved **Market Context Lab** flow side by side so the product evolution remains visible. Market bias remains an unvalidated hypothesis because the approved data scope excludes bettor splits. The flow describes the anonymous public experience approved for release on July 29, 2026.
 
 ## Static repository flow
 

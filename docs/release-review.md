@@ -2,26 +2,28 @@
 
 **Review date:** July 29, 2026
 
-**Release candidate:** V1.0.0 DEPLOYED FOR OWNER-ONLY REVIEW
+**Release candidate:** V1.0.0 APPROVED FOR PUBLIC RELEASE
 
-**Public source repository:** EARLIER VERSION AVAILABLE; FINAL PUSH BLOCKED
+**Public source repository:** PUBLICATION AUTHORIZED
 
 **Private hosted candidate:** COMPLETE
 
-**Public hosting:** BLOCKED pending Eric Lawler's final approval
+**Public hosting:** AUTHORIZED; production deployment in progress
 
 ## Decision
 
-The release candidate passes the documented product, accessibility, security, privacy, responsible-use, data-rights, trademark, live-odds, live Runtime AI, build, lint, test, AI-evaluation, dependency-audit, and owner-authenticated hosted-smoke gates. Data-rights and trademark risks are accepted with documented limitations in the [Public Use Review](public-use-review.md); this acceptance is not legal clearance. Five AI proxy and expert pretests are complete, but they do not replace the five moderated human sessions in the research plan.
+The release candidate passes the documented product, accessibility, security, privacy, responsible-use, data-rights, trademark, live-odds, live Runtime AI, build, lint, test, AI-evaluation, dependency-audit, and owner-authenticated hosted-smoke gates. Data-rights and trademark risks are accepted with documented limitations in the [Public Use Review](public-use-review.md); this acceptance is not legal clearance.
 
-The v1.0.0 owner-only preview is saved and deployed with one allowed user and no groups. The authenticated smoke test confirmed client hydration, live odds, selected-game freshness, matchup updates, deterministic forecast behavior, Runtime AI, a passed reliability receipt, scenario reset, source links, and zero browser-console errors. The hosted Runtime AI request completed with no fallback in 5,087 ms at an estimated $0.0032. The smoke test also caught an incomplete client-asset archive in an intermediate private version; the complete `dist` archive was rebuilt, redeployed, and retested before handoff. Public hosting, the final GitHub push, a version tag, and a GitHub release remain outside the current approval.
+Usability is accepted with deferred validation. Five labeled AI proxy and expert pretests are complete, but no moderated human sessions have occurred. On July 29, 2026, Eric Lawler approved deferring the five-session human study from the v1.0.0 launch gate to post-launch validation. This is a documented release-risk acceptance, not evidence of human usability or a claim that the product is human validated.
+
+The v1.0.0 owner-only preview is saved and deployed with one allowed user and no groups. The authenticated smoke test confirmed client hydration, live odds, selected-game freshness, matchup updates, deterministic forecast behavior, Runtime AI, a passed reliability receipt, scenario reset, source links, and zero browser-console errors. The hosted Runtime AI request completed with no fallback in 5,087 ms at an estimated $0.0032. The smoke test also caught an incomplete client-asset archive in an intermediate private version; the complete `dist` archive was rebuilt, redeployed, and retested before handoff. Eric Lawler approved the final GitHub push, `v1.0.0` tag and release, public hosting, and signed-out production smoke test on July 29, 2026.
 
 ## Gate status
 
 | Gate | Status | Evidence and remaining action |
 |---|---|---|
 | Product flow | COMPLETE | Game, player, opponent, market, forecast, explanation, uncertainty, and model-audit flows are implemented. Refreshed market source and retrieval time remain visible with the forecast. |
-| Accessibility | COMPLETE FOR PRIVATE REVIEW | Semantic and expert proxy review confirmed ordered headings, mobile and desktop navigation, named controls, a scenario fieldset, scoped live statuses, skip navigation, keyboard operation, reduced motion, and responsive layouts. A P1 contrast issue was fixed with split light and dark tokens plus automated assertions. VoiceOver and NVDA human validation remains recommended before public launch. This is not an accessibility certification. |
+| Accessibility | ACCEPTED WITH DEFERRED HUMAN VALIDATION | Semantic and expert proxy review confirmed ordered headings, mobile and desktop navigation, named controls, a scenario fieldset, scoped live statuses, skip navigation, keyboard operation, reduced motion, and responsive layouts. A P1 contrast issue was fixed with split light and dark tokens plus automated assertions. VoiceOver and NVDA human validation remains a post-launch recommendation and is not a v1.0.0 gate. This is not an accessibility certification. |
 | Data rights | ACCEPTED WITH LIMITATIONS | nflverse attribution, source links, CC BY 4.0 license link, transformation notice, and underlying-rights limitation are documented in `NOTICE.md` and the Public Use Review. |
 | Live odds | COMPLETE | The authenticated hosted adapter returned a cached current response from The Odds API with 11 schedule-matched Cowboys games. Consensus probability is calculated within each contributing sportsbook before taking the median. A six-hour D1 cache and atomic refresh lease protect the free allowance, and the bundled snapshot remains the fallback. The interface now distinguishes provider refresh success from selected-game applicability. |
 | Runtime AI | COMPLETE | The offline contract gate passes 12 of 12 positive and adversarial cases across seven binary criteria. After billing was enabled, a live response returned HTTP 200 in AI mode with no fallback and passed all seven live checks. A four-scenario scorecard then passed four of four Runtime AI and four of four deterministic cases. Runtime AI averaged 3,568 ms and an estimated $0.013118 total with no fallbacks in this bounded sample. |
@@ -30,9 +32,10 @@ The v1.0.0 owner-only preview is saved and deployed with one allowed user and no
 | Security and privacy | COMPLETE | No credentials were found in the repository. Secrets remain server-side. Client-supplied market prices are ignored, request bytes are stream bounded, provider models are allowlisted, and anonymous AI request capacity is server enforced. The AI run ledger stores no prompt, user identity, wagering history, or raw vendor payload. `npm audit` found zero vulnerabilities after the July 27 dependency update. |
 | Responsible use | COMPLETE | The interface provides probabilities and uncertainty without picks, stakes, payouts, affiliate links, sportsbook links, or wager placement. The server owns the summary and disclaimer and exposes only exact validated evidence fields from Runtime AI. |
 | Trademark and public content | ACCEPTED WITH LIMITATIONS | Official logos, player likenesses, uniforms, endorsement claims, and copied NFL content are excluded. Text references identify the subject, educational-use language appears beside the forecast, and the full non-affiliation statement appears in the footer. A rights holder could still object. |
-| GitHub | CONFIGURED LOCALLY; FINAL PUSH BLOCKED | The public [erlawler/road-to-six](https://github.com/erlawler/road-to-six) repository contains earlier validated history. The final v1.0.0 changes, media, and evidence remain local until Eric approves a push. CodeQL and Dependabot configurations are included locally. `[NEEDS INPUT]` Confirm both operate after the final configuration reaches the default branch. |
+| Usability research | ACCEPTED WITH DEFERRED VALIDATION | Five AI proxy and expert pretests are complete. Zero of five moderated human sessions have occurred. Eric Lawler approved the v1.0.0 release with this limitation and moved human validation to post-launch research. Human findings remain `[NEEDS INPUT]`. |
+| GitHub | APPROVED FOR PUBLICATION | The public [erlawler/road-to-six](https://github.com/erlawler/road-to-six) repository contains earlier validated history. Eric approved the final push, `v1.0.0` tag, and GitHub release. CodeQL and Dependabot configurations are included locally. `[NEEDS INPUT]` Confirm both operate after the final configuration reaches the default branch. |
 | Private hosting | COMPLETE | The [owner-only Road to Six site](https://road-to-six-erl.erlrickylre.chatgpt.site) contains v1.0.0. One user and no groups have access, provider credentials remain hidden, and the owner-authenticated hosted smoke test passed. |
-| Public hosting | BLOCKER | Do not change access to public or deploy a public version until Eric Lawler approves the private candidate. |
+| Public hosting | AUTHORIZED | Eric approved public access and the signed-out production smoke test on July 29, 2026. Deployment execution and verification are in progress. |
 
 ## Validation evidence
 
@@ -74,8 +77,9 @@ The v1.0.0 owner-only preview is saved and deployed with one allowed user and no
 - [x] Codex: save and deploy the final v1.0.0 private candidate and rerun the owner-authenticated smoke test.
 - [x] Codex: complete five labeled AI proxy and expert pretests and incorporate accepted P0 and P1 fixes.
 - [x] Codex: capture hosted screenshots, animated walkthrough, captions, and privacy review.
+- [x] Eric: accept deferred human validation as a documented v1.0.0 limitation.
 - [ ] `[NEEDS INPUT]` Codex: confirm CodeQL and Dependabot after the configuration reaches the default branch.
-- [ ] `[NEEDS INPUT]` Eric: complete five moderated human sessions if maintaining the documented human-research launch gate.
-- [ ] `[NEEDS INPUT]` Eric: approve the final GitHub push, tag, and release.
-- [ ] Eric: approve public hosting.
-- [ ] Codex: change hosting access to public and run the production smoke test only after approval.
+- [ ] `[NEEDS INPUT]` Eric: complete five moderated human sessions as post-launch validation.
+- [x] Eric: approve the final GitHub push, tag, and release.
+- [x] Eric: approve public hosting.
+- [ ] Codex: change hosting access to public and run the signed-out production smoke test.

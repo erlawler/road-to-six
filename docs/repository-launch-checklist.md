@@ -1,8 +1,8 @@
 # Repository and Portfolio Launch Checklist
 
 **Package:** 1.0.0
-**Current state:** Authenticated owner-only v1.0.0 preview, unpushed local release evidence, and public hosting blocked
-**Authority boundary:** Public hosting requires Eric Lawler's explicit approval
+**Current state:** v1.0.0 approved for public release on July 29, 2026; publication execution in progress
+**Authority boundary:** Eric Lawler approved the GitHub push, v1.0.0 tag and release, public hosting, and signed-out production smoke test
 
 ## Release evidence
 
@@ -47,7 +47,9 @@
 
 - [x] Preserve owner-review feedback and shipped outcomes in [Usability Research](usability-research.md).
 - [x] Complete five labeled AI proxy and expert pretests without presenting them as human participant research.
-- [ ] `[NEEDS INPUT]` Complete five privacy-safe usability sessions.
+- [x] Record Eric Lawler's approval to defer the five-session human study from the v1.0.0 launch gate to post-launch validation.
+- [x] Preserve the limitation that v1.0.0 is not human validated.
+- [ ] `[NEEDS INPUT]` Complete five privacy-safe post-launch usability sessions.
 - [ ] `[NEEDS INPUT]` Document de-identified findings, product decisions, and validation results.
 - [ ] `[NEEDS INPUT]` Update the case study with observed outcomes. Do not present targets as results.
 
@@ -55,17 +57,17 @@
 
 - [x] Set the local package version to 1.0.0.
 - [x] Add [CHANGELOG](../CHANGELOG.md) and [release notes](../RELEASE_NOTES.md).
-- [ ] `[NEEDS INPUT]` Create the `v1.0.0` tag only after final approval.
-- [ ] `[NEEDS INPUT]` Create the GitHub release from `RELEASE_NOTES.md` only after final approval.
+- [x] Eric Lawler approved creation of the `v1.0.0` tag.
+- [x] Eric Lawler approved creation of the GitHub release from `RELEASE_NOTES.md`.
 - [ ] `[NEEDS INPUT]` Attach approved demo media only after privacy review.
 - [ ] `[NEEDS INPUT]` Verify release links after publication.
 
 ## Hosted launch
 
-- [ ] `[NEEDS INPUT]` Eric Lawler approves public hosting.
-- [ ] `[NEEDS INPUT]` Change hosting access only after approval.
+- [x] Eric Lawler approved public hosting on July 29, 2026.
+- [ ] Codex: change hosting access to public.
 - [ ] `[NEEDS INPUT]` Run the public production smoke test for page load, odds refresh, deterministic forecast, Runtime AI, fallback, rate limiting, accessibility, security headers, source links, and social metadata.
-- [ ] `[NEEDS INPUT]` Confirm the $10 provider budget and $9.50 application cutoff remain active.
+- [x] Confirm the $10 provider budget and $9.50 application cutoff remain active.
 - [ ] `[NEEDS INPUT]` Record the production version and smoke-test timestamp in the release review.
 
 ## Rollback

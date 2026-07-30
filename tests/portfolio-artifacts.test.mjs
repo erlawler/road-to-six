@@ -96,9 +96,9 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
 
   assert.equal(packageJson.version, "1.0.0");
   assert.equal(packageJson.scripts["eval:live"], "node scripts/run-live-ai-scorecard.mjs");
-  assert.match(releaseNotes, /Public hosting:.*Not approved/);
-  assert.match(releaseNotes, /Git tag and GitHub release:.*Not created/);
-  assert.match(changelog, /## \[1\.0\.0\] - 2026-07-27/);
+  assert.match(releaseNotes, /Public hosting:.*(?:Approved|Published)/);
+  assert.match(releaseNotes, /Git tag and GitHub release:.*(?:Authorized|Created)/);
+  assert.match(changelog, /## \[1\.0\.0\] - 2026-07-29/);
   const runtime = liveScorecard.scorecard.find((row) => row.mode === "runtime");
   const deterministic = liveScorecard.scorecard.find((row) => row.mode === "deterministic");
   assert.equal(runtime?.cases, 4);
@@ -140,7 +140,9 @@ test("research and demo evidence keep proxy and human claims separate", async ()
 
   assert.match(research, /Five AI proxy and expert pretests COMPLETE/);
   assert.match(research, /they are not evidence of human behavior/);
-  assert.match(research, /Five moderated human sessions remain `\[NEEDS INPUT\]`/);
+  assert.match(research, /No moderated human sessions have occurred/);
+  assert.match(research, /OWNER-APPROVED DEFERRAL/);
+  assert.match(research, /does not represent the product as human validated/);
   assert.match(research, /Owner review feedback to shipped outcome/);
   assert.match(flow, /flowchart TD/);
   assert.match(flow, /not presented as a Figma screenshot/);

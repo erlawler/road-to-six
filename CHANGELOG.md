@@ -8,11 +8,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Planned
 
-- Public hosting and the production smoke test remain blocked until Eric Lawler gives explicit approval.
-- Five privacy-safe usability sessions and the resulting product decisions remain `[NEEDS INPUT]`.
-- Captioned demo media and final GitHub release publication remain `[NEEDS INPUT]`.
+- Five privacy-safe post-launch usability sessions and the resulting product decisions remain `[NEEDS INPUT]`.
+- The optional narrated LinkedIn walkthrough remains `[NEEDS INPUT]`.
+- Product adoption analytics remain outside v1.0.0.
 
-## [1.0.0] - 2026-07-27
+## [1.0.0] - 2026-07-29
 
 ### Added
 
@@ -46,5 +46,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Release boundary
 
-- The source and private candidate can be reviewed.
-- No Git tag, GitHub release, public-hosting change, or production declaration is included in this local preparation.
+- Eric Lawler approved the final source push, `v1.0.0` tag and GitHub release, public hosting, and signed-out production smoke test on July 29, 2026.
+- Five moderated human sessions are deferred to post-launch validation. The release is not described as human validated.

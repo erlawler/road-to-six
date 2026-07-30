@@ -1,6 +1,6 @@
 # MVP Backlog: Market Context Lab Expansion
 
-**Implementation status:** V1.0.0 READY FOR FINAL PRIVATE DEPLOYMENT. The public source repository, owner-only hosted candidate, live odds validation, live Runtime AI baseline, local v1.0.0 regression, prior private smoke test, and internal public-use review are complete. A smoke test of the final private deployment and explicit approval for public hosting remain open. Scores assume one sport, Cowboys-only views, cached market refreshes, and no product authentication.
+**Implementation status:** V1.0.0 APPROVED FOR PUBLIC RELEASE. The public source repository, owner-only hosted candidate, live odds validation, live Runtime AI baseline, v1.0.0 regression, authenticated private smoke test, and public-use review are complete. Eric Lawler approved the final source push, tag and release, public hosting, and signed-out production smoke test on July 29, 2026. Scores assume one sport, Cowboys-only views, cached market refreshes, and no product authentication.
 
 ## Prioritization rule
 
@@ -192,7 +192,7 @@ Acceptance criteria:
 - [x] Add a repository launch checklist with topics, social preview, security settings, release, and hosting gates.
 - [x] Set the local package version to 1.0.0.
 - [ ] `[NEEDS INPUT]` Confirm CodeQL and Dependabot operate after the configuration reaches the default branch.
-- [ ] `[NEEDS INPUT]` Create the Git tag and GitHub release only after explicit approval.
+- [x] Eric Lawler approved creation of the Git tag and GitHub release on July 29, 2026.
 
 ## Superseded readiness prototype foundation
 

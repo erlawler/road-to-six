@@ -161,7 +161,7 @@ The displayed uncertainty range is an illustrative fixed-width sensitivity band,
 - During prolonged AI misconfiguration, one global request-window row can remain per five-minute bucket until the next budgeted AI outcome cleans expired rows, bounded to 288 rows daily.
 - The market-aware model is a documented portfolio baseline and does not establish a predictive edge.
 - Product KPI targets remain hypotheses because analytics and public-user measurement are not implemented.
-- Public hosting still requires Eric Lawler's explicit approval.
+- Eric Lawler approved public hosting and the signed-out production smoke test on July 29, 2026.
 
 ## Evidence map
 

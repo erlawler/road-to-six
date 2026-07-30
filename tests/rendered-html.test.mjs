@@ -63,7 +63,7 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Market Context Lab/);
   assert.match(html, /Measure the forecast against the market/);
   assert.match(html, /Dak Prescott/);
-  assert.match(html, /Weekly matchup\. 2025 baselines\./);
+  assert.match(html, /Weekly matchup\. Real baselines\./);
   assert.match(html, /George Pickens participation/);
   assert.match(html, /Javonte Williams participation/);
   assert.match(html, /New York Giants/);
@@ -72,7 +72,16 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Uncertainty to keep in view/);
   assert.match(html, /The Odds API current markets/);
   assert.match(html, /Illustrative uncertainty band/);
-  assert.match(html, /Product strategy, architecture, risk, and release owned by Eric Lawler/);
+  assert.match(html, /Product strategy, architecture, risk, and release owned by Eric Lawler\. Implemented with Code\./);
+  assert.match(html, /Review the case/);
+  assert.match(html, /top four stat producers from its active 2026 roster/);
+  assert.match(html, /#(?:<!-- -->)?1(?:<!-- -->)? rank/);
+  assert.match(html, /2024-2025/);
+  assert.match(html, /<span class="sr-only">2024 to 2025<\/span>/);
+  assert.match(html, /an AI cutoff/);
+  assert.match(html, /Road to SB # Six/);
+  assert.match(html, /aria-label="Road to Super Bowl Six"/);
+  assert.match(html, /Ownership and strategy by Eric Lawler\. Implemented with Codex\./);
   assert.match(html, /Product judgment, made inspectable/);
   assert.match(html, /12 of 12 expected outcomes detected/);
   assert.match(html, /four-scenario live scorecard passed four of four Runtime AI/);
@@ -82,7 +91,7 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Read the case study/);
   assert.match(html, /Inspect the AI evaluation/);
   assert.doesNotMatch(html, /Monthly runtime AI safety limit/);
-  assert.doesNotMatch(html, /Market Bias Lab|benchmark, not an oracle/);
+  assert.doesNotMatch(html, /Market Bias Lab|benchmark, not an oracle|PPR rank|Review the product case|Weekly matchup\. 2025 baselines/);
   assert.doesNotMatch(html, /live structured response remains a separate provider gate/i);
   assert.doesNotMatch(html, />Cost<|>Brand</);
   assert.match(html, /Educational probability, not a recommended bet/);

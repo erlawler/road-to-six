@@ -6,7 +6,7 @@
 
 ## Answer
 
-Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. The earlier public source repository and final owner-only v1.0.0 preview are available for review. The live Runtime AI scorecard, v1.0.0 regression, and authenticated hosted smoke test pass. This acceptance does not authorize the final GitHub push, a version tag, a GitHub release, or public hosting. Each still requires Eric Lawler's final approval.
+Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. The earlier public source repository and final owner-only v1.0.0 preview are available for review. The live Runtime AI scorecard, v1.0.0 regression, and authenticated hosted smoke test pass. On July 29, 2026, Eric Lawler authorized the final GitHub push, `v1.0.0` tag and release, public hosting, and signed-out production smoke test.
 
 This review documents product risk decisions. It is not legal advice or a guarantee that a third party will not object.
 
@@ -41,10 +41,10 @@ This review documents product risk decisions. It is not legal advice or a guaran
 4. Do not infer bettor popularity without a licensed bettor-split source.
 5. Keep the deterministic forecast available when live odds or runtime AI are unavailable.
 6. Stop Runtime AI through the application ledger before estimated monthly spend exceeds $9.50. Keep the separate OpenAI project budget at $10 while the live key is enabled.
-7. Keep the hosted candidate owner-only until Eric Lawler approves public access. After approval, run a production smoke test before declaring the site live.
+7. Keep the hosted candidate owner-only until Eric Lawler approves public access. Approval was recorded July 29, 2026. Run a production smoke test before declaring the site live.
 8. Keep educational-use language beside the forecast and the full non-affiliation statement in the footer.
 9. Keep the shared anonymous request limit and bounded run ledger active while public Runtime AI is available.
 
 ## Acceptance record
 
-Eric Lawler explicitly requested completion of the public-use review and acceptance of the documented limitations on July 15, 2026. The review was reconciled with the owner-only hosted candidate, successful live Runtime AI baseline, and local v1.0.0 regression on July 27, 2026. The public source repository and private candidate may remain available while final private deployment review and public-hosting approval remain open.
+Eric Lawler explicitly requested completion of the public-use review and acceptance of the documented limitations on July 15, 2026. The review was reconciled with the owner-only hosted candidate, successful live Runtime AI baseline, and local v1.0.0 regression on July 27, 2026. Eric approved the final source push, tag and release, public hosting, and signed-out production smoke test on July 29, 2026.
