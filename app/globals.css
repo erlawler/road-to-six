@@ -430,8 +430,8 @@ button:disabled {
 }
 .decision-table tbody th { color: var(--navy-900); width: 31%; }
 .decision-table td { color: var(--muted); }
-.portfolio-links { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); margin-top: 26px; }
-.portfolio-links a {
+.showcase-links { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); margin-top: 26px; }
+.showcase-links a {
   background: var(--navy-900);
   color: white;
   display: flex;
@@ -440,10 +440,10 @@ button:disabled {
   min-height: 122px;
   padding: 22px;
 }
-.portfolio-links a:hover { background: var(--blue-500); }
-.portfolio-links span { font-size: 0.82rem; font-weight: 900; }
-.portfolio-links small { color: #b8c6d5; font-size: 0.7rem; line-height: 1.5; }
-.portfolio-links a:hover small { color: white; }
+.showcase-links a:hover { background: var(--blue-500); }
+.showcase-links span { font-size: 0.82rem; font-weight: 900; }
+.showcase-links small { color: #b8c6d5; font-size: 0.7rem; line-height: 1.5; }
+.showcase-links a:hover small { color: white; }
 
 .trust-section { background: white; }
 .trust-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
@@ -466,7 +466,7 @@ footer span, footer p { color: #91a3b7; font-size: 0.72rem; line-height: 1.6; ma
   .model-grid { grid-template-columns: repeat(2, 1fr); }
   .case-pillars { grid-template-columns: repeat(2, 1fr); }
   .eval-proof { grid-template-columns: 1fr; }
-  .portfolio-links { grid-template-columns: 1fr; }
+  .showcase-links { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 920px) {

@@ -10,7 +10,7 @@ BETS uses Business impact, Effort, Tech debt, and Stakeholder urgency. Effort an
 
 | Dimension | Score | Rationale |
 |---|---:|---|
-| Business impact | 5 | Real data makes the portfolio artifact credible. |
+| Business impact | 5 | Real data makes the showcase credible. |
 | Effort | 3 | Source review and vendor confirmation require focused work. |
 | Tech debt | 5 | A license gate prevents unsupported feeds from entering the product. |
 | Stakeholder urgency | 5 | All forecast work depends on an approved data boundary. |
@@ -74,7 +74,7 @@ Acceptance criteria:
 | Business impact | 5 | Demonstrates grounded runtime AI and technical product judgment. |
 | Effort | 3 | Requires function calling, structured output, evaluation, and fallback behavior. |
 | Tech debt | 3 | Adds vendor cost and nondeterministic failure modes. |
-| Stakeholder urgency | 4 | Differentiates the portfolio after the probability function works. |
+| Stakeholder urgency | 4 | Differentiates the showcase after the probability function works. |
 
 **Total: 15 out of 20. Verdict: ADVANCE.** Weakest dimension: Effort and Tech debt.
 
@@ -96,10 +96,10 @@ Acceptance criteria:
 
 | Dimension | Score | Rationale |
 |---|---:|---|
-| Business impact | 5 | Lets recruiters and fans experience the product immediately. |
+| Business impact | 5 | Lets product peers and football fans experience the product immediately. |
 | Effort | 4 | Anonymous read-only exploration avoids account workflows. |
 | Tech debt | 5 | No identity store or authorization matrix is required. |
-| Stakeholder urgency | 5 | Public access is essential to the portfolio goal. |
+| Stakeholder urgency | 5 | Public access is essential to the showcase goal. |
 
 **Total: 19 out of 20. Verdict: ADVANCE.** Weakest dimension: Effort.
 
@@ -148,16 +148,16 @@ Acceptance criteria:
 - [x] Record bounded run metadata without storing prompts, user identity, or raw vendor data.
 - [x] Show model, prompt, contract, evaluation, forecast, latency, tokens, estimated cost, source freshness, validation, and fallback evidence.
 - [x] Preserve deterministic fallback or bounded rejection for rate, budget, provider, timeout, contract, and policy failures.
-- [x] Complete final build, lint, AI evaluation, dependency audit, and 73-test regression for the integrated hardening changes.
+- [x] Complete final build, lint, AI evaluation, dependency audit, and 76-test regression for the integrated hardening changes.
 
-## P1: Portfolio evidence and research
+## P1: Showcase evidence and research
 
 | Dimension | Score | Rationale |
 |---|---:|---|
-| Business impact | 5 | Helps recruiters review product judgment instead of treating the repository as a code sample. |
+| Business impact | 5 | Helps product, AI, engineering, and analytics practitioners inspect product judgment instead of treating the repository as a code sample. |
 | Effort | 4 | Uses existing product evidence and a bounded research plan. |
 | Tech debt | 5 | Source-controlled artifacts are easy to maintain. |
-| Stakeholder urgency | 4 | Required before LinkedIn and GitHub launch. |
+| Stakeholder urgency | 4 | Required before the public GitHub and product launch. |
 
 **Total: 18 out of 20. Verdict: ADVANCE.** Weakest dimension: Effort and Stakeholder urgency.
 
@@ -170,17 +170,17 @@ Acceptance criteria:
 - [x] Add a neutral Market Context Lab social card.
 - [x] Run and preserve a sanitized four-scenario live AI quality, latency, and cost scorecard.
 - [x] Complete five labeled AI proxy and expert pretests.
-- [x] Complete five transparent synthetic ideal-persona simulations and accept them as the portfolio evidence gate without claiming human testing.
+- [x] Complete five transparent synthetic ideal-persona simulations and accept them as the showcase evidence gate without claiming human testing.
 - [x] Capture hosted screenshots and a captioned 20-second animated walkthrough.
-- [ ] `[NEEDS INPUT]` Eric records and approves the optional 60 to 90 second narrated walkthrough.
+- [x] Adopt skills-first language and remove external social-post drafts and profile-publication tasks.
 
-**Optional future opportunity:** Moderated human research may test the synthetic hypotheses, but it is not an MVP, release, or portfolio completion dependency.
+**Optional future opportunity:** Moderated human research may test the synthetic hypotheses, but it is not an MVP, release, or showcase completion dependency.
 
 ## P2: Repository release operations
 
 | Dimension | Score | Rationale |
 |---|---:|---|
-| Business impact | 4 | Strengthens portfolio credibility and maintainability. |
+| Business impact | 4 | Strengthens showcase credibility and maintainability. |
 | Effort | 5 | Mostly repository configuration and release packaging. |
 | Tech debt | 5 | Automated maintenance reduces future security drift. |
 | Stakeholder urgency | 3 | Important for launch quality but not the core scenario job. |
@@ -205,7 +205,7 @@ This section records the original local prototype that established the interacti
 
 | Dimension | Score | Rationale |
 |---|---:|---|
-| Business impact | 5 | Communicates the portfolio value in the first viewport. |
+| Business impact | 5 | Communicates the showcase value in the first viewport. |
 | Effort | 4 | Used static prototype indicators and one responsive page. |
 | Tech debt | 5 | Adds no persistence or external dependency. |
 | Stakeholder urgency | 5 | Required for any usable demo. |
@@ -272,7 +272,7 @@ Acceptance criteria:
 - [x] Reflect the selected scenario and initiative in the brief.
 - [x] State the next action when a gate remains open.
 
-## P1: Public portfolio operations
+## P1: Public showcase operations
 
 | Dimension | Score | Rationale |
 |---|---:|---|

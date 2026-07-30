@@ -24,7 +24,7 @@
 2. Update and merge #1, #2, and #3 one at a time after fresh required checks.
 3. Test #4, #6, and #7 independently against the production build and hosting package.
 4. Rebase the next Dependabot branch after every merge so strict branch protection evaluates the current base.
-5. Do not batch dependency updates into the portfolio-completion pull request.
+5. Do not batch dependency updates into the showcase-completion pull request.
 
 ## Security configuration verified
 

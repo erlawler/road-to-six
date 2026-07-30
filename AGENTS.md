@@ -2,7 +2,7 @@
 
 ## Goal
 
-Build a public technical product management portfolio artifact that demonstrates evidence traceability, transparent prioritization, scenario planning, measurement, and release governance.
+Build a public technical product management and frontier AI skills showcase that demonstrates evidence traceability, transparent prioritization, scenario planning, measurement, and release governance.
 
 ## Product boundaries
 

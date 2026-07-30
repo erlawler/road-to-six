@@ -8,7 +8,7 @@
 
 **Method:** Five AI-simulated target-profile walkthroughs using the six tasks and scoring rubric in the [Moderated Usability Session Kit](usability-session-kit.md)
 
-**Portfolio gate status:** COMPLETE under the product-owner-approved AI persona evidence scope
+**Showcase gate status:** COMPLETE under the product-owner-approved AI persona evidence scope
 
 **Human testing:** Not conducted or claimed
 
@@ -29,11 +29,11 @@ The signed-out production evidence used for the simulations showed a 63% Dallas 
 
 ## Target-profile personas
 
-### SIM01: Portfolio recruiter
+### SIM01: Executive product stakeholder
 
-**Context:** Nontechnical recruiter performing a short desktop portfolio review.
+**Context:** Nontechnical stakeholder performing a short desktop review of the product showcase.
 
-**Job to be done:** Decide quickly whether the candidate demonstrates product ownership, technical fluency, and responsible AI judgment.
+**Job to be done:** Understand whether the product demonstrates clear ownership, technical fluency, and responsible AI judgment.
 
 **Likely pains:**
 
@@ -47,7 +47,7 @@ The signed-out production evidence used for the simulations showed a 63% Dallas 
 - A fast path from product value to inspectable proof
 - Plain-language evidence that AI is governed
 
-**Product fit hypothesis:** The hero and product case communicate ownership well, but distributed evidence and six controls can slow the first-pass review.
+**Product fit hypothesis:** The hero and product case communicate ownership well, but distributed evidence and six controls can slow the first-pass product review.
 
 ### SIM02: Technical product manager
 
@@ -109,11 +109,11 @@ The signed-out production evidence used for the simulations showed a 63% Dallas 
 
 **Product fit hypothesis:** The model audit earns trust by showing that the market-aware baseline does not beat the market itself. Control-level sensitivity and metric interpretation remain improvement opportunities.
 
-### SIM05: Mobile recruiter with accessibility awareness
+### SIM05: Mobile product practitioner with accessibility awareness
 
-**Context:** Recruiter conducting a first-pass review on a mobile device while checking basic accessibility signals.
+**Context:** Product practitioner exploring the showcase on a mobile device while checking basic accessibility signals.
 
-**Job to be done:** Understand the candidate story and complete the core flow without losing context in a long page.
+**Job to be done:** Understand the product story and complete the core flow without losing context in a long page.
 
 **Likely pains:**
 
@@ -127,7 +127,7 @@ The signed-out production evidence used for the simulations showed a 63% Dallas 
 - A compact product-proof path
 - Clear status messages after scenario and AI actions
 
-**Product fit hypothesis:** The semantic structure and responsive layout support the flow, but progressive disclosure may improve recruiter scanning. This simulation does not validate VoiceOver, NVDA, or human accessibility.
+**Product fit hypothesis:** The semantic structure and responsive layout support the flow, but progressive disclosure may improve mobile scanning. This simulation does not validate VoiceOver, NVDA, or human accessibility.
 
 ## Simulated task results
 
@@ -135,11 +135,11 @@ Each score adapts the session-kit scale: `2` models likely independent completio
 
 | Simulation | T1 | T2 | T3 | T4 | T5 | T6 | Total | Primary hypothesis |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
-| SIM01, portfolio recruiter | 2 | 1 | 1 | 2 | 1 | 2 | 9 of 12 | Predicted to understand value and ownership but require more effort to find distributed evidence. |
+| SIM01, executive product stakeholder | 2 | 1 | 1 | 2 | 1 | 2 | 9 of 12 | Predicted to understand value and ownership but require more effort to find distributed evidence. |
 | SIM02, technical product manager | 2 | 2 | 2 | 2 | 2 | 2 | 12 of 12 | Modeled as completing the flow and then seeking control-level probability contribution. |
 | SIM03, AI platform product leader | 2 | 2 | 2 | 1 | 2 | 2 | 11 of 12 | Modeled as understanding the AI boundary but seeking fallback copy beside the action. |
 | SIM04, analytics product leader | 2 | 2 | 1 | 2 | 2 | 2 | 11 of 12 | Predicted to trust the audit but seek more inspectable sensitivity evidence. |
-| SIM05, mobile recruiter | 2 | 1 | 1 | 2 | 1 | 2 | 9 of 12 | The simulation suggests the flow may remain usable while control and evidence density increase effort. |
+| SIM05, mobile product practitioner | 2 | 1 | 1 | 2 | 1 | 2 | 9 of 12 | The simulation suggests the flow may remain usable while control and evidence density increase effort. |
 | **Modeled total** | **10** | **8** | **7** | **9** | **8** | **10** | **52 of 60** | **Use as a prioritization signal only.** |
 
 ## Partial-score evidence
@@ -174,20 +174,20 @@ This table makes every modeled score of `1` traceable. No error, prompt, or reco
 | Individual assumption effects are difficult to inspect inside one scenario contribution. | SIM01, SIM02, SIM04, SIM05 | 4 of 5 | P1 | Test a compact `What moved` row that shows the last changed control and probability delta while preserving the canonical aggregate driver. | High |
 | Deterministic fallback behavior is not visible beside the Runtime AI action. | SIM03 | 1 of 5 | P1 | Test concise adjacent fallback copy without adding another technical panel. The severity reflects the critical AI-role boundary, not frequency. | High |
 | Market status, source time, model version, and uncertainty are visually distributed. | SIM01, SIM05 | 2 of 5 | P2 | Test one compact evidence summary near the result heading with links to full detail. | Medium |
-| Six sliders create recruiter and mobile scan fatigue. | SIM01, SIM05 | 2 of 5 | P2 | Test a `Key scenarios` preset layer with optional expanded controls. | Medium |
+| Six sliders create stakeholder and mobile scan fatigue. | SIM01, SIM05 | 2 of 5 | P2 | Test a `Key scenarios` preset layer with optional expanded controls. | Medium |
 | Brier and calibration values need more plain-language interpretation. | SIM02, SIM04 | 2 of 5 | P2 | Test one sentence explaining the score differences and the market-baseline limitation. | Medium |
 
-Synthetic evidence may support owner-led portfolio decisions when it is clearly labeled, checked against the production workflow, and validated through tests or smoke evidence. It does not support claims about human behavior. The two P1 hypotheses receive priority if optional future research is commissioned.
+Synthetic evidence may support owner-led showcase decisions when it is clearly labeled, checked against the production workflow, and validated through tests or smoke evidence. It does not support claims about human behavior. The two P1 hypotheses receive priority if optional future research is commissioned.
 
 ## Optional future human-research protocol
 
-No human study has been conducted or is required for the completed portfolio evidence gate. If Eric commissions optional future human research, recruit the same five target profiles:
+No human study has been conducted or is required for the completed showcase evidence gate. If Eric commissions optional future human research, include the same five target profiles:
 
-1. One nontechnical portfolio recruiter
+1. One nontechnical product stakeholder
 2. One technical product manager
 3. One AI platform product leader or engineering partner
 4. One analytics product leader
-5. One recruiter or hiring manager who reviews on mobile and can discuss accessibility expectations
+5. One product practitioner who reviews on mobile and can discuss accessibility expectations
 
 Any optional study should use these confirm-or-reject observations:
 

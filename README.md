@@ -9,21 +9,22 @@
 
 ![Animated Road to Six product walkthrough](docs/media/road-to-six-demo.webp)
 
-**Road to Six is a technical product management case study in evidence-grounded AI.** It turns Dallas Cowboys football data and betting-market context into an inspectable probability workflow without giving betting advice.
+**Road to Six is a technical product management and frontier AI skills showcase.** It turns Dallas Cowboys football data and betting-market context into an inspectable probability workflow without giving betting advice.
 
 **[Open the public Road to Six product](https://road-to-six-erl.erlrickylre.chatgpt.site)**
 
 The product demonstrates how I frame an ambiguous problem, choose the right boundary between deterministic software and frontier AI, integrate governed data sources, define measurable quality gates, and move a product from concept to a governed public release.
 
-> **Current status:** Version 1.0.0 is public on GitHub and Sites. The anonymous production smoke test passed on July 30, 2026 for page load, client hydration, live odds, matchup changes, deterministic forecast behavior, Runtime AI, structured reliability evidence, input rejection, accessibility markers, security headers, source links, social metadata, and browser errors. Build, lint, 76 tests, 12 AI evaluation cases, the four-scenario live scorecard, dependency audit, CI, and CodeQL also pass. The owner-approved portfolio evidence gate is complete through transparent AI persona validation. No human usability testing has been conducted or claimed.
+> **Current status:** Version 1.0.0 is public on GitHub and Sites. The anonymous production smoke test passed on July 30, 2026 for page load, client hydration, live odds, matchup changes, deterministic forecast behavior, Runtime AI, structured reliability evidence, input rejection, accessibility markers, security headers, source links, social metadata, and browser errors. Build, lint, 76 tests, 12 AI evaluation cases, the four-scenario live scorecard, dependency audit, CI, and CodeQL also pass. The owner-approved showcase evidence gate is complete through transparent AI persona validation. No human usability testing has been conducted or claimed.
 
-## Recruiter snapshot
+## Technical product management and frontier AI showcase
 
 | Area | Summary |
 |---|---|
 | My role | Technical product manager, product decision owner, and release approver |
 | Delivery model | I directed Codex as an implementation and review partner while retaining product, architecture, risk, and acceptance decisions |
-| Target user | Hiring managers and technical product leaders evaluating product judgment, plus football fans exploring forecast assumptions |
+| Showcase audience | Technical product managers, AI product leaders, platform and engineering partners, analytics practitioners, and product peers |
+| Product user | Football fans exploring how named assumptions and market evidence affect an educational forecast |
 | Core job | Inspect football and market evidence, change assumptions, and understand a traceable probability and its uncertainty |
 | Product scope | Real roster, schedule, player, game, and current market data; scenario modeling; model audit; runtime AI explanation |
 | Key constraint | $0 sports-data vendor spend and no more than $10 monthly runtime AI spend |
@@ -31,14 +32,14 @@ The product demonstrates how I frame an ambiguous problem, choose the right boun
 
 **Ownership:** I owned the product strategy, technical decisions, risk acceptance, and release approval. Codex accelerated implementation, testing, review, and documentation within the boundaries I defined.
 
-## Two-minute reviewer path
+## Two-minute showcase path
 
 1. **First 30 seconds:** Read [The problem](#the-problem) and [What I owned](#what-i-owned).
 2. **Next 30 seconds:** Scan the [key product decisions](#key-product-decisions-and-tradeoffs).
 3. **Next 30 seconds:** Review the [verified outcomes](#verified-outcomes), including the honest model conclusion.
-4. **Final 30 seconds:** Inspect the [architecture](#architecture), [frontier AI judgment](#frontier-ai-product-judgment), and [artifact set](#portfolio-artifacts).
+4. **Final 30 seconds:** Inspect the [architecture](#architecture), [frontier AI judgment](#frontier-ai-product-judgment), and [showcase evidence](#showcase-evidence).
 
-For the complete narrative, open the [portfolio case study](docs/portfolio-case-study.md).
+For the complete narrative, open the [showcase case study](docs/showcase-case-study.md).
 
 ## The problem
 
@@ -77,7 +78,7 @@ Road to Six makes the decision path visible:
 
 ## Verified outcomes
 
-These are implemented or validated outcomes, not portfolio targets.
+These are implemented or validated outcomes, not aspirational claims.
 
 | Outcome | Verified evidence |
 |---|---|
@@ -135,22 +136,28 @@ This project is intentionally not an LLM wrapper.
 
 I also used Codex as a delivery system, not as an ungoverned author. Repository instructions, scoped tasks, automated checks, specialist reviews, and explicit publication approval kept the work auditable.
 
-## Portfolio artifacts
+### Modern LLM portability
+
+The deployed runtime uses the OpenAI Responses API. The product patterns demonstrated here, including a deterministic source of truth, bounded tool contracts, structured outputs, evaluations, observability, cost controls, and deterministic fallback, are vendor-agnostic and transferable to modern LLM platforms such as OpenAI and Anthropic.
+
+Anthropic is not integrated in v1.0.0. Supporting it would require a separate adapter, approved-model allowlist, pricing rules, provider-specific contract tests, and a fresh release evaluation before public use.
+
+## Showcase evidence
 
 | Artifact | What it demonstrates |
 |---|---|
-| [Detailed portfolio case study](docs/portfolio-case-study.md) | Product narrative, ownership, tradeoffs, evidence, and lessons |
+| [Detailed showcase case study](docs/showcase-case-study.md) | Product narrative, ownership, tradeoffs, evidence, and lessons |
 | [Product brief](docs/product-brief.md) | Problem framing, users, scope, success measures, and launch decision |
 | [Architecture](docs/architecture.md) | Components, trust boundaries, data flow, and AI controls |
 | [Frontier AI architecture](docs/frontier-ai-architecture.md) | Deterministic and AI responsibilities, trust boundaries, runtime flow, and failure behavior |
 | [Runtime AI evaluation](docs/ai-evaluation.md) | Binary product criteria, positive cases, adversarial cases, and release gate |
 | [Live AI scorecard](docs/live-ai-scorecard.md) | Actual-response quality, latency, cost comparison, and bounded interpretation |
 | [Demo media](docs/demo-media.md) | Hosted screenshots, animated walkthrough, captions, and privacy review |
-| [AI persona validation and owner findings](docs/usability-research.md) | Owner feedback, proxy pretests, synthetic persona evidence, the completed portfolio gate, and the explicit no-human-testing boundary |
+| [AI persona validation and owner findings](docs/usability-research.md) | Owner feedback, proxy pretests, synthetic persona evidence, the completed showcase gate, and the explicit no-human-testing boundary |
 | [Synthetic persona simulations](docs/synthetic-persona-sessions.md) | Five target-profile simulations, modeled task evidence, prioritized hypotheses, and explicit AI evidence limits |
 | [Optional moderated research kit](docs/usability-session-kit.md) | Consent, task script, scoring, notes, and privacy controls if future human research is commissioned |
 | [Codex collaboration](docs/codex-collaboration.md) | Eric's ownership, Codex acceleration, governance, and human approval points |
-| [Decision log](docs/decision-log.md) | Twenty product, architecture, and release-governance decisions with rationale |
+| [Decision log](docs/decision-log.md) | Twenty-one product, architecture, positioning, and release-governance decisions with rationale |
 | [MVP backlog](docs/mvp-backlog.md) | Prioritization, sequencing, acceptance criteria, and delivery status |
 | [Measurement plan](docs/measurement-plan.md) | Vision, adoption, integrity, model, and platform measures |
 | [Data and licensing spike](docs/data-licensing-spike.md) | Source selection, cost model, rights review, and exit criteria |
@@ -160,7 +167,6 @@ I also used Codex as a delivery system, not as an ungoverned author. Repository 
 | [Static repository flow](docs/figma-flow.md) | Reviewable Mermaid representation when external Figma access is unavailable |
 | [Repository launch checklist](docs/repository-launch-checklist.md) | GitHub presentation, security, media, research, release, hosting, and rollback gates |
 | [Dependabot review](docs/dependabot-review-2026-07-30.md) | Seven dependency proposals, compatibility risk, security settings, and merge recommendations |
-| [LinkedIn launch kit](docs/linkedin-launch-kit.md) | Launch post, project summary, demo script, and publication checklist |
 | [v1.0.0 release notes](RELEASE_NOTES.md) | User-facing capabilities, improvements, evidence, and limitations |
 | [Changelog](CHANGELOG.md) | Versioned product and repository changes |
 
@@ -203,7 +209,7 @@ The snapshot builder uses nflverse release assets. Raw source files remain outsi
 
 ## Technology
 
-Next.js compatible React, TypeScript, vinext, Cloudflare Workers compatible output, D1 caching and budget ledger, OpenAI Responses API, Node test runner, ESLint, and GitHub Actions.
+Next.js compatible React, TypeScript, vinext, Cloudflare Workers compatible output, D1 caching and budget ledger, OpenAI Responses API, provider-portable LLM control patterns, Node test runner, ESLint, and GitHub Actions.
 
 ## Product boundaries
 
@@ -211,6 +217,7 @@ Next.js compatible React, TypeScript, vinext, Cloudflare Workers compatible outp
 - No official Dallas Cowboys or NFL logos, player likenesses, or uniform artwork
 - No paid sports-data feeds, bettor splits, or paid historical odds
 - No personalized betting advice, picks, stake sizes, payout claims, affiliate links, sportsbook links, or wager placement
+- No external social-posting or profile-update workflow
 - No affiliation with or endorsement by the Dallas Cowboys, the NFL, or their partners
 
 Original code and documentation are available under the [MIT License](LICENSE). Third-party data and rights are governed by the [Third Party Data and Rights Notice](NOTICE.md).

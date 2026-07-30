@@ -1,4 +1,4 @@
-# Repository and Portfolio Launch Checklist
+# Repository and Showcase Launch Checklist
 
 **Package:** 1.0.0
 **Current state:** v1.0.0 published on GitHub and publicly available through Sites
@@ -16,7 +16,7 @@
 
 ## GitHub repository presentation
 
-- [x] Set the repository description to: `Evidence-grounded football forecasting case study demonstrating technical product management, AI evaluation, cost controls, and release governance.`
+- [x] Set the repository description to: `Technical product management and frontier AI skills showcase with evidence-grounded forecasting, AI evaluation, cost controls, and release governance.`
 - [x] Add repository topics: `technical-product-management`, `product-management`, `frontier-ai`, `ai-evaluation`, `responsible-ai`, `explainable-ai`, `sports-analytics`, `nextjs`, `cloudflare-workers`, and `codex`.
 - [x] Upload the optimized `public/og-market-context.jpg` as the repository social preview and confirm GitHub serves the custom repository image.
 - [x] Confirm the README social card, badges, table of contents path, and local links render on GitHub.
@@ -35,22 +35,22 @@
 - [x] Confirm CodeQL completes successfully after the workflow reaches the default branch.
 - [x] Review the first seven Dependabot pull requests without merging. See [Dependabot Review, July 30, 2026](dependabot-review-2026-07-30.md).
 
-## Portfolio media
+## Showcase media
 
 - [x] Add a neutral 1200 by 630 Market Context Lab social card without official team or league marks.
 - [x] Create a 20-second animated hosted walkthrough.
 - [x] Add accurate frame captions and a transcript to the walkthrough.
 - [x] Capture the hosted hero, scenario, AI reliability receipt, opponent-evidence, model-audit, and product-governance screenshots.
 - [x] Verify that media contains no credentials, browser identity, private URLs, notification content, or participant information.
-- [x] Add final media links to README and the LinkedIn launch kit.
-- [ ] `[NEEDS INPUT]` Eric records and approves the optional 60 to 90 second narrated LinkedIn walkthrough.
+- [x] Add final media links to README and the showcase case study.
+- [x] Confirm no external social post, profile update, publishing draft, API, or posting automation is included or authorized.
 
 ## Research and product evidence
 
 - [x] Preserve owner-review feedback and shipped outcomes in [Usability Research](usability-research.md).
 - [x] Complete five labeled AI proxy and expert pretests without presenting them as human participant research.
 - [x] Complete five transparent [synthetic ideal-persona simulations](synthetic-persona-sessions.md).
-- [x] Record Eric Lawler's acceptance of the AI persona package as the completed portfolio evidence gate.
+- [x] Record Eric Lawler's acceptance of the AI persona package as the completed showcase evidence gate.
 - [x] State explicitly that no human usability testing occurred or is claimed.
 - [x] Retain the [optional moderated usability research kit](usability-session-kit.md) with consent, tasks, scoring, notes, and privacy controls for future use.
 

@@ -6,7 +6,7 @@
 
 ## Answer
 
-Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. The public GitHub repository, `v1.0.0` tag, GitHub release, and [public Sites release](https://road-to-six-erl.erlrickylre.chatgpt.site) are available. The live Runtime AI scorecard, v1.0.0 regression, authenticated hosted smoke test, and signed-out production smoke test pass. Eric Lawler authorized public hosting on July 29, 2026, and public access was completed on July 30, 2026.
+Road to Six is accepted as an unofficial educational skills-showcase project, subject to the controls and limitations below. The public GitHub repository, `v1.0.0` tag, GitHub release, and [public Sites release](https://road-to-six-erl.erlrickylre.chatgpt.site) are available. The live Runtime AI scorecard, v1.0.0 regression, authenticated hosted smoke test, and signed-out production smoke test pass. Eric Lawler authorized public hosting on July 29, 2026, and public access was completed on July 30, 2026.
 
 This review documents product risk decisions. It is not legal advice or a guarantee that a third party will not object.
 
@@ -21,7 +21,7 @@ This review documents product risk decisions. It is not legal advice or a guaran
 | Responsible use | ACCEPTED | The product calculates educational probabilities and uncertainty. It provides no picks, stakes, payouts, affiliate links, sportsbook links, wager placement, or personalized advice. |
 | Privacy | ACCEPTED | Public exploration is anonymous. No profile, wagering history, or personal information is collected. D1 stores an aggregate monthly AI cost ledger, shared request-window counts, cached normalized odds, and bounded AI-run metadata. It does not store prompts, user identity, wagering history, or raw vendor payloads. |
 | Runtime AI data | ACCEPTED WITH LIMITATIONS | OpenAI states that API data is not used for model training unless the customer opts in. Default abuse monitoring may retain customer content for up to 30 days. The app sends no personal data, uses a bounded scenario, and sets `store: false`. |
-| Accessibility | ACCEPTED | The browser semantic tree exposes one level-one heading, ordered section headings, a named navigation, named controls, a scenario fieldset, live statuses, and the probability graphic. A skip link, visible focus rules, reduced motion support, responsive layouts, and normal-text contrast of at least 4.5 to 1 are implemented. This is a portfolio review, not a formal accessibility certification. |
+| Accessibility | ACCEPTED | The browser semantic tree exposes one level-one heading, ordered section headings, a named navigation, named controls, a scenario fieldset, live statuses, and the probability graphic. A skip link, visible focus rules, reduced motion support, responsive layouts, and normal-text contrast of at least 4.5 to 1 are implemented. This is a showcase review, not a formal accessibility certification. |
 
 ## Primary sources
 

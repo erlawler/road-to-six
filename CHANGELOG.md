@@ -17,9 +17,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
-- Eric Lawler accepted the transparent AI persona evidence package as the completed portfolio gate. No human testing is claimed, and moderated human research is optional future work.
+- Eric Lawler accepted the transparent AI persona evidence package as the completed showcase gate. No human testing is claimed, and moderated human research is optional future work.
 - Pinned Road to Six on Eric Lawler's public GitHub profile.
 - Configured the optimized Market Context Lab image as the GitHub repository social preview.
+- Reframed the repository with skills-first language for technical product management and frontier AI practitioners.
+- Documented OpenAI as the deployed runtime and Anthropic as a provider-portability pattern that requires separate implementation and validation.
+- Removed the external social publishing kit and related tasks. No social post, profile update, API, or publishing automation is included or authorized.
 
 ### Security
 
@@ -30,7 +33,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Planned
 
-- The optional narrated LinkedIn walkthrough remains `[NEEDS INPUT]`.
 - Product adoption analytics remain outside v1.0.0.
 
 ## [1.0.0] - 2026-07-29
@@ -68,5 +70,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Release boundary
 
 - Eric Lawler approved the final source push, `v1.0.0` tag and GitHub release, public hosting, and signed-out production smoke test on July 29, 2026.
-- At initial release, moderated human research was deferred. The later owner decision recorded under Unreleased accepted transparent AI persona validation as the completed portfolio gate and retained human research as optional future work.
+- At initial release, moderated human research was deferred. The later owner decision recorded under Unreleased accepted transparent AI persona validation as the completed showcase gate and retained human research as optional future work.
 - The source, tag, GitHub release, and Sites version 13 are public. The signed-out production smoke test passed on July 30, 2026.

@@ -3,13 +3,13 @@ import "./globals.css";
 
 const SITE_URL = "https://road-to-six-erl.erlrickylre.chatgpt.site";
 const SOCIAL_IMAGE_ALT =
-  "Road to Six technical product management case study with football forecasting, market context, and governed Runtime AI.";
+  "Road to Six technical product management and frontier AI skills showcase with football forecasting, market context, and governed Runtime AI.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Road to Six | Technical PM and AI Case Study",
+  title: "Road to Six | Technical PM and Frontier AI Showcase",
   description:
-    "A technical product management case study combining sourced football evidence, transparent forecasting, responsible runtime AI, cost controls, and release governance.",
+    "A technical product management and frontier AI skills showcase combining sourced football evidence, transparent forecasting, responsible runtime AI, cost controls, and release governance.",
   alternates: {
     canonical: "/",
   },
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: "Road to Six",
-    title: "Road to Six: Frontier AI Product Case Study",
+    title: "Road to Six: Technical PM and Frontier AI Showcase",
     description: "Evidence-grounded forecasting with measurable AI, cost controls, and release governance.",
     images: [
       {
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Road to Six: Frontier AI Product Case Study",
+    title: "Road to Six: Technical PM and Frontier AI Showcase",
     description: "Evidence-grounded forecasting with measurable AI, cost controls, and release governance.",
     images: [
       {

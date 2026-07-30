@@ -10,18 +10,20 @@
 
 **Target if commissioned:** Five real participants
 
-**Status:** OPTIONAL FUTURE WORK. This protocol is not required for the completed portfolio evidence gate.
+**Status:** OPTIONAL FUTURE WORK. This protocol is not required for the completed showcase evidence gate.
 
 ## Purpose
 
 Determine whether a first-time reviewer can understand the product, complete the core scenario workflow, distinguish deterministic calculation from Runtime AI explanation, and find the evidence and uncertainty needed to evaluate the forecast.
 
-Five sessions provide directional evidence for portfolio decisions. They are not a statistically representative sample.
+Five sessions provide directional evidence for showcase decisions. They are not a statistically representative sample.
 
 ## Participant mix
 
-- Three technical product managers, product leaders, or engineering partners
-- Two recruiters or hiring managers who evaluate technical product talent
+- Two technical product managers or product leaders
+- One AI platform or engineering partner
+- One analytics or model-risk practitioner
+- One football fan who regularly uses analytical products
 - Prefer first-time users with no prior Road to Six exposure
 - Do not screen for or collect gambling behavior, financial information, medical information, credentials, or account data
 - Keep scheduling contact information outside this public repository and delete it when it is no longer needed
@@ -41,11 +43,11 @@ Five sessions provide directional evidence for portfolio decisions. They are not
 
 Read:
 
-> Thank you for reviewing Road to Six. We are testing the product, not you. This is a technical product management portfolio study, not betting research or advice. Please think aloud and use only what you see. I may wait before helping because I want to observe where the product is clear or confusing. You may stop at any time.
+> Thank you for reviewing Road to Six. We are testing the product, not you. This is a technical product management and frontier AI showcase study, not betting research or advice. Please think aloud and use only what you see. I may wait before helping because I want to observe where the product is clear or confusing. You may stop at any time.
 
 Read:
 
-> Participation is voluntary. Notes will use a session code instead of your name. We will not collect wagering history, financial information, medical information, credentials, or account data. De-identified findings may be summarized in a public portfolio repository. Recording is optional and requires separate consent. Declining recording does not prevent participation. You may decline publication of direct quotes or stop at any time. Any raw recording will be deleted after synthesis or by the agreed deletion date.
+> Participation is voluntary. Notes will use a session code instead of your name. We will not collect wagering history, financial information, medical information, credentials, or account data. De-identified findings may be summarized in a public showcase repository. Recording is optional and requires separate consent. Declining recording does not prevent participation. You may decline publication of direct quotes or stop at any time. Any raw recording will be deleted after synthesis or by the agreed deletion date.
 
 Record three separate decisions:
 
@@ -57,7 +59,7 @@ If notes consent is declined, stop the session.
 
 ## Warm-up, 3 to 5 minutes
 
-1. What is your role, and how do you normally evaluate a product or portfolio case?
+1. What is your role, and how do you normally evaluate a product or technical case?
 2. Walk me through the last time you reviewed a technical product or analytical tool. What did you look for first?
 3. What evidence helped you decide whether the work was credible?
 
@@ -171,7 +173,7 @@ Treat either of these as a P0 comprehension failure:
 | Evidence and uncertainty found | `[NEEDS INPUT]` |
 | Primary friction | `[NEEDS INPUT]` |
 | Approved de-identified quote | `[NEEDS INPUT]` |
-| Candidate change and severity | `[NEEDS INPUT]` |
+| Proposed change and severity | `[NEEDS INPUT]` |
 | Moderator confidence and limitations | `[NEEDS INPUT]` |
 
 ## Aggregate decision table
@@ -198,6 +200,6 @@ If this optional future study is commissioned, it may be described as complete o
 5. At least one product decision is tied to observed human evidence.
 6. Every accepted P0 or P1 change has retest evidence.
 7. Recording deletion or retention is confirmed when recordings were used.
-8. Participant count, recruitment bias, and evidence limits remain visible.
+8. Participant count, participant-sourcing bias, and evidence limits remain visible.
 
 Raw recordings, names, contact information, and identifiable notes must not be committed to this repository.

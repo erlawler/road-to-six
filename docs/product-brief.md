@@ -2,8 +2,8 @@
 
 **Status:** PUBLIC V1.0.0 RELEASE
 **Owner:** Eric Lawler  
-**Product type:** Public technical product management portfolio prototype  
-**Audience:** Hiring managers, technical product leaders, football fans, and product peers
+**Product type:** Public technical product management and frontier AI skills showcase
+**Audience:** Technical product managers, AI product leaders, platform and engineering partners, analytics practitioners, product peers, and football fans
 
 ## One-line answer
 
@@ -24,9 +24,9 @@ The product name is grounded in the Dallas Cowboys' five Super Bowl championship
 
 ## User and job to be done
 
-**Primary user:** A hiring manager or technical product leader evaluating product judgment.
+**Primary user:** A football fan who wants to explore how named assumptions affect a Cowboys forecast.
 
-**Secondary user:** A football fan who wants to explore how different assumptions affect priorities.
+**Showcase audience:** Product and engineering practitioners examining product judgment, systems thinking, delivery discipline, and responsible AI design.
 
 **Job to be done:** When I question a Cowboys forecast or market narrative, help me inspect the football evidence, lines, spreads, market movement, and assumptions so I can understand the probability and uncertainty without receiving betting advice.
 
@@ -37,6 +37,7 @@ The product name is grounded in the Dallas Cowboys' five Super Bowl championship
 - **Assumptions are controls:** Users can change named scenario assumptions and immediately see the effect.
 - **AI is grounded by trusted tools:** Deterministic code calculates the probability. Runtime AI receives and returns that result unchanged.
 - **AI explains, people decide:** AI explains drivers, evidence, and uncertainty without recommending a bet.
+- **LLM controls are provider adaptable:** OpenAI powers the deployed runtime. The deterministic source of truth, bounded contracts, evaluations, observability, cost controls, and fallback pattern can support an Anthropic adapter only after separate provider-specific validation.
 - **Governance is product work:** Accessibility, privacy, security, and trademark review are release criteria.
 
 ## MVP scope
@@ -75,10 +76,10 @@ The product name is grounded in the Dallas Cowboys' five Super Bowl championship
 | Data freshness labeling | 100% | Prevents stale lines or statistics from appearing current. |
 | Accessibility gate closure | 100% before public launch | Makes inclusion a release condition. |
 | Responsible-use notice | 100% of market-analysis views | Keeps the product educational. |
-| Sports-data cost | $0 per month | Preserves a sustainable portfolio operating model. |
+| Sports-data cost | $0 per month | Preserves a sustainable showcase operating model. |
 | Runtime AI cost | No more than $10 per month | Makes the public AI feature financially predictable. |
 
-Targets are hypotheses for a portfolio prototype. They are not measured results.
+Targets are hypotheses for a public showcase product. They are not measured results.
 
 ## BETS decision
 
@@ -87,7 +88,7 @@ Targets are hypotheses for a portfolio prototype. They are not measured results.
 | Business impact | 5 | Demonstrates the complete technical product management loop. |
 | Effort | 2 | Data integration, model validation, runtime AI, and licensing add meaningful work. |
 | Tech debt | 3 | External vendors and model operations require adapters, caching, and fallbacks. |
-| Stakeholder urgency | 5 | The approved expansion is the primary differentiator for the public portfolio. |
+| Stakeholder urgency | 5 | The approved expansion is the primary differentiator for the public showcase. |
 
 **Total: 15 out of 20. Verdict: ADVANCE.**
 
@@ -103,7 +104,7 @@ The weakest dimension is effort. Improve it with staged free-data adapters, a sm
 | Black box forecast | Publish feature definitions, model version, backtest, Brier score, and calibration. |
 | AI invents a probability or evidence | Require a probability-function tool call, validate exact forecast evidence and uncertainty through binary evaluations, and preserve a deterministic fallback. |
 | Betting advice perception | Use educational language and prohibit picks, stake sizes, payout claims, and wager links. |
-| Portfolio becomes a coding demo only | Keep PRD, metrics, decisions, backlog, and release gate first class. |
+| Showcase becomes a coding demo only | Keep PRD, metrics, decisions, backlog, and release gate first class. |
 
 ## Launch decision
 
