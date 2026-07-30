@@ -18,7 +18,7 @@
 
 - [x] Set the repository description to: `Evidence-grounded football forecasting case study demonstrating technical product management, AI evaluation, cost controls, and release governance.`
 - [x] Add repository topics: `technical-product-management`, `product-management`, `frontier-ai`, `ai-evaluation`, `responsible-ai`, `explainable-ai`, `sports-analytics`, `nextjs`, `cloudflare-workers`, and `codex`.
-- [ ] `[NEEDS INPUT]` Enable Chrome extension file-URL access, then upload the optimized `public/og-market-context.jpg` as the repository social preview.
+- [x] Upload the optimized `public/og-market-context.jpg` as the repository social preview and confirm GitHub serves the custom repository image.
 - [x] Confirm the README social card, badges, table of contents path, and local links render on GitHub.
 - [x] Pin the repository on Eric Lawler's GitHub profile.
 - [x] Confirm the public repository visibility matches Eric's launch decision.

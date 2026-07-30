@@ -151,15 +151,19 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
 
 test("GitHub completion evidence records security controls and dependency review", async () => {
   const launch = await readFile(resolve(root, "docs/repository-launch-checklist.md"), "utf8");
+  const releaseReview = await readFile(resolve(root, "docs/release-review.md"), "utf8");
   const dependabotReview = await readFile(
     resolve(root, "docs/dependabot-review-2026-07-30.md"),
     "utf8",
   );
 
   assert.match(launch, /\[x\] Pin the repository on Eric Lawler's GitHub profile/);
+  assert.match(launch, /\[x\] Upload the optimized .* as the repository social preview/);
   assert.match(launch, /\[x\] Enable Dependabot alerts and Dependabot security updates/);
   assert.match(launch, /\[x\] Enable secret scanning and push protection/);
   assert.match(launch, /\[x\] Review the first seven Dependabot pull requests without merging/);
+  assert.match(releaseReview, /\| GitHub \| COMPLETE \|/);
+  assert.match(releaseReview, /GitHub serves the custom Market Context Lab repository social preview/);
   assert.match(dependabotReview, /No dependency pull request was merged, closed, or modified/);
   assert.match(dependabotReview, /Open Dependabot vulnerability alerts \| 0/);
   assert.match(dependabotReview, /Open secret-scanning alerts \| 0/);
