@@ -6,7 +6,7 @@
 
 **Public source repository:** COMPLETE
 
-**Hosted release:** COMPLETE, SITES VERSION 13
+**Hosted release:** COMPLETE, SITES VERSION 14
 
 **Public hosting:** COMPLETE
 
@@ -20,6 +20,8 @@ The final source is on GitHub `main`, CI and CodeQL pass, and the `v1.0.0` tag a
 
 The signed-out production smoke test passed on July 30, 2026. An unauthenticated page request returned HTTP 200. The public odds endpoint returned 17 NFL events from The Odds API, with 11 Cowboys games matched in the interface. A Week 2 scenario applied current market data and returned a 63% Dallas probability against a 64% vig-adjusted market probability. Runtime AI returned a validated reliability receipt with no fallback, and an independent anonymous forecast request returned HTTP 200 in AI mode. Invalid game input returned HTTP 400 with zero AI cost. Accessibility markers, security headers, source links, social metadata, and zero browser-console errors were also verified.
 
+Sites version 14 deployed the reviewed post-launch hardening commit `276a923b7fd97969dce877c3e167f8e18a6baf6c` on July 30, 2026. A fresh unauthenticated smoke test returned HTTP 200 for the page, `robots.txt`, `sitemap.xml`, and live odds. Canonical, Open Graph, and Twitter metadata were present. The tightened CSP was active without hydration or browser-console errors. Runtime AI returned a passed reliability receipt with no fallback, 5,657 ms latency, 646 input tokens, 465 output tokens, and $0.0036 estimated cost.
+
 ## Gate status
 
 | Gate | Status | Evidence and remaining action |
@@ -31,13 +33,13 @@ The signed-out production smoke test passed on July 30, 2026. An unauthenticated
 | Runtime AI | COMPLETE | The offline contract gate passes 12 of 12 positive and adversarial cases across seven binary criteria. After billing was enabled, a live response returned HTTP 200 in AI mode with no fallback and passed all seven live checks. A four-scenario scorecard then passed four of four Runtime AI and four of four deterministic cases. The signed-out production receipt passed with model `gpt-5.6-luna`, 5,584 ms latency, 649 input tokens, 370 output tokens, $0.0030 estimated cost, and no fallback. |
 | AI operations | COMPLETE | The interface exposes an AI reliability receipt and states that Runtime AI explained the locked probability. One atomic server-side request check limits the anonymous AI path to 20 requests per shared aligned five-minute bucket before market reads, returns `429` with `Retry-After`, and keeps denied or pre-reservation outcomes out of the run ledger. The public budget posture is static and cacheable without D1 access. The integrated build, lint, 12-case AI evaluation, 75-test suite, and dependency audit pass. |
 | Cost | COMPLETE | The dedicated OpenAI project budget is confirmed at $10 and the application cutoff remains $9.50. GPT-5.6 Luna is the default. Pricing tests use current standard input and output rates. D1 reserves before each request and reconciles actual use. |
-| Security and privacy | COMPLETE WITH P2 HARDENING | No credentials were found in the repository. Secrets remain server-side. Client-supplied market prices are ignored, request bytes are stream bounded, provider models are allowlisted, and anonymous AI request capacity is server enforced. The AI run ledger stores no prompt, user identity, wagering history, or raw vendor payload. `npm audit` found zero vulnerabilities after the July 27 dependency update. The framework CSP remains limited to same-origin sources but permits inline scripts and styles. Removing those allowances is tracked as non-blocking hardening. |
+| Security and privacy | COMPLETE WITH DOCUMENTED FRAMEWORK EXCEPTIONS | No credentials were found in the repository. Secrets remain server-side. Client-supplied market prices are ignored, request bytes are stream bounded, provider models are allowlisted, and anonymous AI request capacity is server enforced. The AI run ledger stores no prompt, user identity, wagering history, or raw vendor payload. `npm audit` found zero vulnerabilities after the July 27 dependency update. The CSP now denies unspecified sources, forms, frames, media, workers, inline event-handler scripts, and inline style elements. Compatibility testing confirmed that the current vinext output still requires inline bootstrap scripts and one dynamic probability-ring style attribute, so only those two allowances remain and are documented in ADR 018. |
 | Responsible use | COMPLETE | The interface provides probabilities and uncertainty without picks, stakes, payouts, affiliate links, sportsbook links, or wager placement. The server owns the summary and disclaimer and exposes only exact validated evidence fields from Runtime AI. |
 | Trademark and public content | ACCEPTED WITH LIMITATIONS | Official logos, player likenesses, uniforms, endorsement claims, and copied NFL content are excluded. Text references identify the subject, educational-use language appears beside the forecast, and the full non-affiliation statement appears in the footer. A rights holder could still object. |
 | Usability research | ACCEPTED WITH DEFERRED VALIDATION | Five AI proxy and expert pretests are complete. Zero of five moderated human sessions have occurred. Eric Lawler approved the v1.0.0 release with this limitation and moved human validation to post-launch research. Human findings remain `[NEEDS INPUT]`. |
 | GitHub | COMPLETE | The public [erlawler/road-to-six](https://github.com/erlawler/road-to-six) repository is current. The `v1.0.0` tag and GitHub release are published. CI and CodeQL pass on the release commit, and Dependabot update workflows are active. |
 | Private hosting | COMPLETE, HISTORICAL | Sites version 13 was first validated owner-only. Provider credentials remained hidden, and the owner-authenticated hosted smoke test passed before access changed. |
-| Public hosting | COMPLETE | The [public Road to Six site](https://road-to-six-erl.erlrickylre.chatgpt.site) returns HTTP 200 without authentication. Signed-out page, live odds, forecast, Runtime AI, invalid-input, accessibility, security-header, source-link, social-metadata, and browser-console checks passed. |
+| Public hosting | COMPLETE | The [public Road to Six site](https://road-to-six-erl.erlrickylre.chatgpt.site) returns HTTP 200 without authentication. Sites version 14 passed signed-out page, crawler-file, canonical-metadata, live-odds, Runtime AI, CSP, hydration, and browser-console checks. |
 
 ## Validation evidence
 
@@ -69,7 +71,9 @@ The signed-out production smoke test passed on July 30, 2026. An unauthenticated
 - An independent signed-out forecast request returned HTTP 200 in AI mode with probability `0.5531549573107291`, forecast model `elo-market-v1.1.0`, passed validation, and no fallback
 - Invalid game input returned HTTP 400 in rejected mode with zero AI cost
 - Public security headers, source links, Open Graph image, social metadata, and zero browser-console errors were verified
-- The public release does not yet provide canonical, `og:type`, `og:url`, social-image alt, `robots.txt`, or `sitemap.xml` metadata. These are P2 discoverability improvements, not v1.0.0 functional or safety blockers.
+- Sites version 14 returned canonical, `og:type`, `og:url`, Open Graph image alt, Twitter image alt, `robots.txt`, and `sitemap.xml` evidence from an unauthenticated client
+- Sites version 14 served the tightened CSP without hydration or browser-console errors; ADR 018 records why the framework bootstrap script and dynamic probability-ring style allowances remain
+- Sites version 14 returned 17 current NFL events from The Odds API, exposed 11 schedule-matched games in the interface, and completed one governed Runtime AI explanation with a passed receipt and no fallback
 - GitHub CI and CodeQL passed on the release commit
 - An earlier public-access attempt was rejected by the workspace internet-publishing policy and returned HTTP 401. The setting was subsequently enabled, public access was applied, and the signed-out production smoke test passed.
 - An intermediate private deployment exposed a missing-client-assets packaging error; the full `dist` archive was rebuilt and the succeeding private version passed hydration and interaction checks
@@ -98,3 +102,5 @@ The signed-out production smoke test passed on July 30, 2026. An unauthenticated
 - [x] Eric: approve public hosting.
 - [x] Workspace administrator: enable internet publishing for Sites.
 - [x] Codex: change hosting access to public and run the signed-out success-path production smoke test.
+- [x] Codex: deploy Sites version 14 from reviewed commit `276a923b7fd97969dce877c3e167f8e18a6baf6c`.
+- [x] Codex: verify canonical and social metadata, crawler files, tightened CSP compatibility, live odds, Runtime AI, hydration, and browser-console health on Sites version 14.
