@@ -4,18 +4,37 @@ import test from "node:test";
 
 const templateRoot = new URL("../", import.meta.url);
 
-async function render() {
+async function serveBuiltAsset(request) {
+  const pathname = new URL(request.url).pathname;
+  const assetUrl = new URL(`../dist/client${pathname}`, import.meta.url);
+  const contentType = pathname.endsWith(".xml")
+    ? "application/xml; charset=utf-8"
+    : pathname.endsWith(".txt")
+      ? "text/plain; charset=utf-8"
+      : "application/octet-stream";
+
+  try {
+    return new Response(await readFile(assetUrl), {
+      status: 200,
+      headers: { "content-type": contentType },
+    });
+  } catch {
+    return new Response("Not found", { status: 404 });
+  }
+}
+
+async function render(pathname = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("http://localhost/", {
+    new Request(new URL(pathname, "http://localhost/"), {
       headers: { accept: "text/html" },
     }),
     {
       ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
+        fetch: serveBuiltAsset,
       },
     },
     {
@@ -97,6 +116,67 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Educational probability, not a recommended bet/);
   assert.doesNotMatch(html, /All performance data shown is synthetic and illustrative/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton|Starter Project/i);
+});
+
+test("publishes canonical metadata and a tightened content security policy", async () => {
+  const response = await render();
+  const csp = response.headers.get("content-security-policy") ?? "";
+  const html = await response.text();
+
+  assert.match(
+    html,
+    /<link rel="canonical" href="https:\/\/road-to-six-erl\.erlrickylre\.chatgpt\.site\/"\/>/i,
+  );
+  assert.match(html, /<meta property="og:type" content="website"\/>/i);
+  assert.match(
+    html,
+    /<meta property="og:url" content="https:\/\/road-to-six-erl\.erlrickylre\.chatgpt\.site\/"\/>/i,
+  );
+  assert.match(html, /<meta property="og:image:alt" content="Road to Six technical product management case study/i);
+  assert.match(html, /<meta name="twitter:image:alt" content="Road to Six technical product management case study/i);
+
+  assert.match(csp, /default-src 'none'/);
+  assert.match(csp, /base-uri 'none'/);
+  assert.match(csp, /form-action 'none'/);
+  assert.match(csp, /frame-src 'none'/);
+  assert.match(csp, /img-src 'self'/);
+  assert.match(csp, /media-src 'none'/);
+  assert.match(csp, /script-src-attr 'none'/);
+  assert.match(csp, /style-src 'self'/);
+  assert.match(csp, /style-src-elem 'self'/);
+  assert.match(csp, /style-src-attr 'unsafe-inline'/);
+  assert.match(csp, /worker-src 'none'/);
+  assert.doesNotMatch(csp, /img-src 'self' data:/);
+  assert.doesNotMatch(csp, /style-src 'self' 'unsafe-inline'/);
+});
+
+test("publishes search crawler directives without exposing API routes", async () => {
+  const [robotsResponse, sitemapResponse] = await Promise.all([
+    render("/robots.txt"),
+    render("/sitemap.xml"),
+  ]);
+  const [robots, sitemap] = await Promise.all([
+    robotsResponse.text(),
+    sitemapResponse.text(),
+  ]);
+
+  assert.equal(robotsResponse.status, 200);
+  assert.match(robotsResponse.headers.get("content-type") ?? "", /^text\/plain\b/i);
+  assert.equal(sitemapResponse.status, 200);
+  assert.match(sitemapResponse.headers.get("content-type") ?? "", /^(?:application|text)\/xml\b/i);
+
+  assert.match(robots, /^User-agent: \*$/m);
+  assert.match(robots, /^Allow: \/$/m);
+  assert.match(robots, /^Disallow: \/api\/$/m);
+  assert.match(
+    robots,
+    /^Sitemap: https:\/\/road-to-six-erl\.erlrickylre\.chatgpt\.site\/sitemap\.xml$/m,
+  );
+  assert.match(
+    sitemap,
+    /<loc>https:\/\/road-to-six-erl\.erlrickylre\.chatgpt\.site\/<\/loc>/,
+  );
+  assert.match(sitemap, /<lastmod>2026-07-30<\/lastmod>/);
 });
 
 test("forecast API fails closed without the shared rate-limit ledger", async () => {

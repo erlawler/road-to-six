@@ -135,3 +135,11 @@
 **Decision:** Protect the anonymous AI path with a shared limit of 20 requests per aligned five-minute bucket. Record bounded operational metadata for each run and display a reliability receipt containing model, prompt, contract, evaluation, forecast, latency, token, estimated-cost, source, validation, and fallback evidence. Do not store prompts, user identity, wagering history, or raw vendor data.
 
 **Why:** A public AI feature needs observable quality, failure, and cost controls. The shared limit protects the budget without expanding authentication or personal-data scope, while the receipt turns AI operations into reviewable product evidence.
+
+## ADR 018: Harden public discovery and browser policy after launch
+
+**Status:** DECIDED
+
+**Decision:** Publish canonical and social-link metadata, a crawler policy, and a one-page sitemap. Tighten the browser content security policy to deny all unspecified resources, inline event-handler scripts, forms, frames, media, workers, and inline style elements. Retain inline framework scripts and the probability ring's inline style attribute until the runtime supports a tested nonce path without weakening availability or cache behavior.
+
+**Why:** Public discovery metadata makes the portfolio easier to index and share, while an explicit compatibility-tested CSP reduces browser attack surface. Retaining only the two runtime-required allowances is safer than either leaving broad allowances in place or breaking hydration through an untested all-or-nothing policy.

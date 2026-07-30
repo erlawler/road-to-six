@@ -50,6 +50,7 @@
 - [x] Complete five labeled AI proxy and expert pretests without presenting them as human participant research.
 - [x] Record Eric Lawler's approval to defer the five-session human study from the v1.0.0 launch gate to post-launch validation.
 - [x] Preserve the limitation that v1.0.0 is not human validated.
+- [x] Prepare the [moderated usability session kit](usability-session-kit.md) with consent, tasks, scoring, notes, and completion criteria.
 - [ ] `[NEEDS INPUT]` Complete five privacy-safe post-launch usability sessions.
 - [ ] `[NEEDS INPUT]` Document de-identified findings, product decisions, and validation results.
 - [ ] `[NEEDS INPUT]` Update the case study with observed outcomes. Do not present targets as results.

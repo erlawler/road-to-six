@@ -28,7 +28,7 @@ test("recruiter overview exposes the technical product management story", async 
   assert.match(readme, /## Verified outcomes/);
   assert.match(readme, /## Frontier AI product judgment/);
   assert.match(readme, /public\/og-market-context\.png/);
-  assert.match(readme, /Seventeen product and architecture decisions/);
+  assert.match(readme, /Eighteen product and architecture decisions/);
   assert.match(readme, /reliability receipt/i);
 });
 
@@ -60,6 +60,7 @@ test("portfolio evidence set is complete and free of prohibited dash characters"
     "docs/portfolio-case-study.md",
     "docs/repository-launch-checklist.md",
     "docs/usability-research.md",
+    "docs/usability-session-kit.md",
     "evals/live/2026-07-27-gpt-5.6-luna.json",
     "docs/media/01-owner-preview-hero.png",
     "docs/media/02-runtime-ai-receipt.png",
@@ -147,6 +148,7 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
 
 test("research and demo evidence keep proxy and human claims separate", async () => {
   const research = await readFile(resolve(root, "docs/usability-research.md"), "utf8");
+  const sessionKit = await readFile(resolve(root, "docs/usability-session-kit.md"), "utf8");
   const flow = await readFile(resolve(root, "docs/figma-flow.md"), "utf8");
   const launch = await readFile(resolve(root, "docs/repository-launch-checklist.md"), "utf8");
 
@@ -156,6 +158,10 @@ test("research and demo evidence keep proxy and human claims separate", async ()
   assert.match(research, /OWNER-APPROVED DEFERRAL/);
   assert.match(research, /does not represent the product as human validated/);
   assert.match(research, /Owner review feedback to shipped outcome/);
+  assert.match(sessionKit, /Five real moderated sessions/);
+  assert.match(sessionKit, /Notes consent: yes or no/);
+  assert.match(sessionKit, /Runtime AI calculates or changes the probability/);
+  assert.match(sessionKit, /Raw recordings, names, contact information, and identifiable notes must not be committed/);
   assert.match(flow, /flowchart TD/);
   assert.match(flow, /not presented as a Figma screenshot/);
   assert.match(launch, /20-second animated hosted walkthrough/);

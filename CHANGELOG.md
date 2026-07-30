@@ -6,6 +6,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+
+- Canonical, Open Graph URL and type, and social-image alt metadata for public sharing and discovery.
+- Public `robots.txt` and one-page `sitemap.xml` files that keep application APIs out of crawler scope.
+- A ready-to-run moderated usability session kit with privacy-safe consent, tasks, scoring, notes, and completion evidence.
+
+### Security
+
+- Tightened the page content security policy to deny unspecified sources, forms, frames, media, workers, inline event-handler scripts, and inline style elements.
+- Retained only the framework inline-script allowance and the dynamic probability-ring style attribute required by the current runtime, with the tradeoff documented in ADR 018.
+
 ### Planned
 
 - Five privacy-safe post-launch usability sessions and the resulting product decisions remain `[NEEDS INPUT]`.

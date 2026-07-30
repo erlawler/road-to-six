@@ -15,7 +15,7 @@
 
 The product demonstrates how I frame an ambiguous problem, choose the right boundary between deterministic software and frontier AI, integrate governed data sources, define measurable quality gates, and move a product from concept to a governed public release.
 
-> **Current status:** Version 1.0.0 is public on GitHub and Sites. The anonymous production smoke test passed on July 30, 2026 for page load, client hydration, live odds, matchup changes, deterministic forecast behavior, Runtime AI, structured reliability evidence, input rejection, accessibility markers, security headers, source links, social metadata, and browser errors. Build, lint, 73 tests, 12 AI evaluation cases, the four-scenario live scorecard, dependency audit, CI, and CodeQL also pass.
+> **Current status:** Version 1.0.0 is public on GitHub and Sites. The anonymous production smoke test passed on July 30, 2026 for page load, client hydration, live odds, matchup changes, deterministic forecast behavior, Runtime AI, structured reliability evidence, input rejection, accessibility markers, security headers, source links, social metadata, and browser errors. Build, lint, 75 tests, 12 AI evaluation cases, the four-scenario live scorecard, dependency audit, CI, and CodeQL also pass.
 
 ## Recruiter snapshot
 
@@ -90,7 +90,7 @@ These are implemented or validated outcomes, not portfolio targets.
 | Live AI contract | One AI-mode response preserved the deterministic probability and passed all seven live checks |
 | Live AI scorecard | Four of four Runtime AI cases passed with 3,568 ms average latency and $0.013118 total estimated cost; four of four deterministic cases passed at $0 |
 | AI operations | A reliability receipt exposes version, latency, token, cost, validation, source, and fallback evidence |
-| Product quality | Production build, lint, 73 automated tests, 12-case AI evaluation, and dependency audit passed |
+| Product quality | Production build, lint, 75 automated tests, 12-case AI evaluation, and dependency audit passed |
 | Dependency security | Current audit returned zero vulnerabilities |
 | Release governance | Accessibility, security, privacy, responsible-use, data-rights, and trademark reviews are documented |
 
@@ -147,8 +147,9 @@ I also used Codex as a delivery system, not as an ungoverned author. Repository 
 | [Live AI scorecard](docs/live-ai-scorecard.md) | Actual-response quality, latency, cost comparison, and bounded interpretation |
 | [Demo media](docs/demo-media.md) | Hosted screenshots, animated walkthrough, captions, and privacy review |
 | [Usability research](docs/usability-research.md) | Owner feedback, five proxy pretests, accepted changes, and the deferred post-launch human study |
+| [Moderated usability session kit](docs/usability-session-kit.md) | Participant profile, consent, task script, scoring rubric, notes, and completion evidence |
 | [Codex collaboration](docs/codex-collaboration.md) | Eric's ownership, Codex acceleration, governance, and human approval points |
-| [Decision log](docs/decision-log.md) | Seventeen product and architecture decisions with rationale |
+| [Decision log](docs/decision-log.md) | Eighteen product and architecture decisions with rationale |
 | [MVP backlog](docs/mvp-backlog.md) | Prioritization, sequencing, acceptance criteria, and delivery status |
 | [Measurement plan](docs/measurement-plan.md) | Vision, adoption, integrity, model, and platform measures |
 | [Data and licensing spike](docs/data-licensing-spike.md) | Source selection, cost model, rights review, and exit criteria |
@@ -156,7 +157,6 @@ I also used Codex as a delivery system, not as an ungoverned author. Repository 
 | [Public-use review](docs/public-use-review.md) | Responsible use, privacy, data rights, trademark, and accepted limitations |
 | [Editable Figma user flow](https://www.figma.com/board/m4Jj2PH2pCWMjcyUFNibyS?utm_source=other&utm_content=edit_in_figjam&oai_id=v1%2FxUmyGVk5KOQTJRulUQKNwQe3yEmxEnoOxDP8Doq1z3TYSWL0h07UaA&request_id=ee641610-369e-4632-a92c-ff043a56fac1) | End-to-end experience and product evolution |
 | [Static repository flow](docs/figma-flow.md) | Reviewable Mermaid representation when external Figma access is unavailable |
-| [Usability research](docs/usability-research.md) | Privacy-safe test plan, findings template, and feedback-to-outcome traceability |
 | [Repository launch checklist](docs/repository-launch-checklist.md) | GitHub presentation, security, media, research, release, hosting, and rollback gates |
 | [LinkedIn launch kit](docs/linkedin-launch-kit.md) | Launch post, project summary, demo script, and publication checklist |
 | [v1.0.0 release notes](RELEASE_NOTES.md) | User-facing capabilities, improvements, evidence, and limitations |
