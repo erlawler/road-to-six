@@ -147,9 +147,10 @@ I also used Codex as a delivery system, not as an ungoverned author. Repository 
 | [Live AI scorecard](docs/live-ai-scorecard.md) | Actual-response quality, latency, cost comparison, and bounded interpretation |
 | [Demo media](docs/demo-media.md) | Hosted screenshots, animated walkthrough, captions, and privacy review |
 | [Usability research](docs/usability-research.md) | Owner feedback, five proxy pretests, accepted changes, and the deferred post-launch human study |
+| [Synthetic persona simulations](docs/synthetic-persona-sessions.md) | Five target-profile walkthroughs, modeled task scores, prioritized hypotheses, and the human-research boundary |
 | [Moderated usability session kit](docs/usability-session-kit.md) | Participant profile, consent, task script, scoring rubric, notes, and completion evidence |
 | [Codex collaboration](docs/codex-collaboration.md) | Eric's ownership, Codex acceleration, governance, and human approval points |
-| [Decision log](docs/decision-log.md) | Eighteen product and architecture decisions with rationale |
+| [Decision log](docs/decision-log.md) | Nineteen product, architecture, and release-governance decisions with rationale |
 | [MVP backlog](docs/mvp-backlog.md) | Prioritization, sequencing, acceptance criteria, and delivery status |
 | [Measurement plan](docs/measurement-plan.md) | Vision, adoption, integrity, model, and platform measures |
 | [Data and licensing spike](docs/data-licensing-spike.md) | Source selection, cost model, rights review, and exit criteria |

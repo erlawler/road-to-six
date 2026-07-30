@@ -29,6 +29,7 @@
 - [x] Add continuous integration for audit, lint, AI evaluation, build, and tests.
 - [x] Add CodeQL analysis for JavaScript and TypeScript.
 - [x] Add weekly Dependabot proposals for npm and GitHub Actions.
+- [x] Protect `main` with pull requests, strict CI and CodeQL checks, resolved review threads, squash merges, linear history, and blocked force pushes and deletion.
 - [ ] `[NEEDS INPUT]` Enable Dependabot alerts and Dependabot security updates in repository settings.
 - [ ] `[NEEDS INPUT]` Enable secret scanning and push protection in repository settings.
 - [x] Confirm CodeQL completes successfully after the workflow reaches the default branch.
@@ -48,6 +49,7 @@
 
 - [x] Preserve owner-review feedback and shipped outcomes in [Usability Research](usability-research.md).
 - [x] Complete five labeled AI proxy and expert pretests without presenting them as human participant research.
+- [x] Complete five [synthetic ideal-persona simulations](synthetic-persona-sessions.md) as hypothesis-generating pretests without incrementing the human-session count.
 - [x] Record Eric Lawler's approval to defer the five-session human study from the v1.0.0 launch gate to post-launch validation.
 - [x] Preserve the limitation that v1.0.0 is not human validated.
 - [x] Prepare the [moderated usability session kit](usability-session-kit.md) with consent, tasks, scoring, notes, and completion criteria.

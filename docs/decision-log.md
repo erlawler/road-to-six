@@ -143,3 +143,11 @@
 **Decision:** Publish canonical and social-link metadata, a crawler policy, and a one-page sitemap. Tighten the browser content security policy to deny all unspecified resources, inline event-handler scripts, forms, frames, media, workers, and inline style elements. Retain inline framework scripts and the probability ring's inline style attribute until the runtime supports a tested nonce path without weakening availability or cache behavior.
 
 **Why:** Public discovery metadata makes the portfolio easier to index and share, while an explicit compatibility-tested CSP reduces browser attack surface. Retaining only the two runtime-required allowances is safer than either leaving broad allowances in place or breaking hydration through an untested all-or-nothing policy.
+
+## ADR 019: Protect the public default branch
+
+**Status:** DECIDED
+
+**Decision:** Protect `refs/heads/main` with an active GitHub repository ruleset and no bypass actors. Require an up-to-date pull request, the `validate` and `Analyze JavaScript and TypeScript` checks, resolved review threads, squash merge, and linear history. Block deletion and non-fast-forward updates. Keep required approvals at zero for the solo-maintainer workflow.
+
+**Why:** A public portfolio should make its release controls inspectable after launch. The ruleset prevents direct or destructive changes to the published source while preserving a practical feature-branch and automated-check workflow for a solo owner.
