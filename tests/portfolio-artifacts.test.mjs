@@ -28,7 +28,7 @@ test("recruiter overview exposes the technical product management story", async 
   assert.match(readme, /## Verified outcomes/);
   assert.match(readme, /## Frontier AI product judgment/);
   assert.match(readme, /public\/og-market-context\.png/);
-  assert.match(readme, /Nineteen product, architecture, and release-governance decisions/);
+  assert.match(readme, /Twenty product, architecture, and release-governance decisions/);
   assert.match(readme, /reliability receipt/i);
 });
 
@@ -53,6 +53,7 @@ test("portfolio evidence set is complete and free of prohibited dash characters"
     "docs/ai-evaluation.md",
     "docs/codex-collaboration.md",
     "docs/demo-media.md",
+    "docs/dependabot-review-2026-07-30.md",
     "docs/figma-flow.md",
     "docs/frontier-ai-architecture.md",
     "docs/linkedin-launch-kit.md",
@@ -70,6 +71,7 @@ test("portfolio evidence set is complete and free of prohibited dash characters"
     "docs/media/05-product-governance.png",
     "docs/media/road-to-six-demo.webp",
     "public/og-market-context.png",
+    "public/og-market-context.jpg",
   ];
 
   for (const artifact of requiredArtifacts) {
@@ -147,24 +149,42 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
   }
 });
 
-test("research and demo evidence keep proxy and human claims separate", async () => {
+test("GitHub completion evidence records security controls and dependency review", async () => {
+  const launch = await readFile(resolve(root, "docs/repository-launch-checklist.md"), "utf8");
+  const dependabotReview = await readFile(
+    resolve(root, "docs/dependabot-review-2026-07-30.md"),
+    "utf8",
+  );
+
+  assert.match(launch, /\[x\] Pin the repository on Eric Lawler's GitHub profile/);
+  assert.match(launch, /\[x\] Enable Dependabot alerts and Dependabot security updates/);
+  assert.match(launch, /\[x\] Enable secret scanning and push protection/);
+  assert.match(launch, /\[x\] Review the first seven Dependabot pull requests without merging/);
+  assert.match(dependabotReview, /No dependency pull request was merged, closed, or modified/);
+  assert.match(dependabotReview, /Open Dependabot vulnerability alerts \| 0/);
+  assert.match(dependabotReview, /Open secret-scanning alerts \| 0/);
+  assert.match(dependabotReview, /TypeScript 5\.9\.3 to 7\.0\.2/);
+  assert.match(dependabotReview, /Defer until the lint toolchain supports TypeScript 7/);
+});
+
+test("AI persona validation is complete without claiming human research", async () => {
   const research = await readFile(resolve(root, "docs/usability-research.md"), "utf8");
   const simulations = await readFile(resolve(root, "docs/synthetic-persona-sessions.md"), "utf8");
   const sessionKit = await readFile(resolve(root, "docs/usability-session-kit.md"), "utf8");
   const flow = await readFile(resolve(root, "docs/figma-flow.md"), "utf8");
   const launch = await readFile(resolve(root, "docs/repository-launch-checklist.md"), "utf8");
 
-  assert.match(research, /Five AI proxy and expert pretests COMPLETE/);
-  assert.match(research, /Five synthetic ideal-persona simulations COMPLETE/);
-  assert.match(research, /they are not evidence of human behavior/);
-  assert.match(research, /No moderated human sessions have occurred/);
-  assert.match(research, /OWNER-APPROVED DEFERRAL/);
-  assert.match(research, /does not represent the product as human validated/);
+  assert.match(research, /Portfolio evidence gate:\*\* COMPLETE/);
+  assert.match(research, /No human usability testing has been conducted or claimed/);
+  assert.match(research, /Moderated human research may be pursued later, but it is not required/);
+  assert.match(research, /do not support claims of human usability testing/);
   assert.match(research, /Owner review feedback to shipped outcome/);
   assert.match(simulations, /SYNTHETIC PERSONA SIMULATION\. NOT HUMAN RESEARCH\./);
-  assert.match(simulations, /Human session count:\*\* 0 of 5/);
+  assert.match(simulations, /Portfolio gate status:\*\* COMPLETE/);
+  assert.match(simulations, /Human testing:\*\* Not conducted or claimed/);
   assert.match(simulations, /52 of 60/);
   assert.match(simulations, /do not represent observed participant behavior/);
+  assert.match(sessionKit, /OPTIONAL FUTURE WORK/);
   assert.match(sessionKit, /Five real moderated sessions/);
   assert.match(sessionKit, /Notes consent: yes or no/);
   assert.match(sessionKit, /Runtime AI calculates or changes the probability/);
@@ -173,4 +193,6 @@ test("research and demo evidence keep proxy and human claims separate", async ()
   assert.match(flow, /not presented as a Figma screenshot/);
   assert.match(launch, /20-second animated hosted walkthrough/);
   assert.match(launch, /\[NEEDS INPUT\].*optional 60 to 90 second narrated LinkedIn walkthrough/);
+  assert.doesNotMatch(research, /\[NEEDS INPUT\].*(human|moderated|participant)/i);
+  assert.doesNotMatch(launch, /\[NEEDS INPUT\].*(human|moderated|usability session)/i);
 });

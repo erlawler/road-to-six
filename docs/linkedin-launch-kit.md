@@ -149,7 +149,7 @@ End on the GitHub README or artifact index.
 
 | Asset | Status |
 |---|---|
-| Market Context Lab social card | COMPLETE in `public/og-market-context.png` |
+| Market Context Lab social card | COMPLETE in `public/og-market-context.png`; optimized GitHub upload in `public/og-market-context.jpg` |
 | 20-second animated hosted walkthrough | COMPLETE in `docs/media/road-to-six-demo.webp` |
 | Walkthrough captions and frame transcript | COMPLETE in `docs/demo-media.md` |
 | Hosted hero screenshot | COMPLETE in `docs/media/01-owner-preview-hero.png` |
@@ -184,7 +184,7 @@ I treated Codex as a delivery and review system. I supplied product boundaries, 
 
 ### What would you do next?
 
-I would complete five privacy-safe usability sessions, instrument privacy-preserving funnel events, and evaluate whether users understand the evidence and uncertainty within five minutes.
+Optional future work could include moderated human research and privacy-preserving funnel analytics. The current portfolio gate uses transparent AI persona validation and makes no claim of human testing.
 
 ## Final launch checklist
 

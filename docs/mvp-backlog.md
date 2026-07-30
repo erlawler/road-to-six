@@ -170,9 +170,11 @@ Acceptance criteria:
 - [x] Add a neutral Market Context Lab social card.
 - [x] Run and preserve a sanitized four-scenario live AI quality, latency, and cost scorecard.
 - [x] Complete five labeled AI proxy and expert pretests.
+- [x] Complete five transparent synthetic ideal-persona simulations and accept them as the portfolio evidence gate without claiming human testing.
 - [x] Capture hosted screenshots and a captioned 20-second animated walkthrough.
-- [ ] `[NEEDS INPUT]` Complete five moderated human usability sessions.
 - [ ] `[NEEDS INPUT]` Eric records and approves the optional 60 to 90 second narrated walkthrough.
+
+**Optional future opportunity:** Moderated human research may test the synthetic hypotheses, but it is not an MVP, release, or portfolio completion dependency.
 
 ## P2: Repository release operations
 
@@ -191,7 +193,8 @@ Acceptance criteria:
 - [x] Add weekly Dependabot proposals for npm and GitHub Actions.
 - [x] Add a repository launch checklist with topics, social preview, security settings, release, and hosting gates.
 - [x] Set the local package version to 1.0.0.
-- [ ] `[NEEDS INPUT]` Confirm CodeQL and Dependabot operate after the configuration reaches the default branch.
+- [x] Confirm CodeQL, Dependabot version updates, Dependabot alerts, and Dependabot security updates operate after the configuration reaches the default branch.
+- [x] Review the first seven Dependabot pull requests and document merge recommendations without merging them.
 - [x] Eric Lawler approved creation of the Git tag and GitHub release on July 29, 2026.
 
 ## Superseded readiness prototype foundation

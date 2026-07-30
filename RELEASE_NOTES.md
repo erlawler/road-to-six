@@ -31,7 +31,7 @@ Road to Six 1.0.0 is an evidence-grounded technical product management case stud
 - The same seven-criterion evaluator passed all seven live checks.
 - A four-scenario live scorecard passed four of four Runtime AI cases and four of four deterministic cases. Runtime AI averaged 3,568 ms and an estimated $0.013118 total across the bounded sample, with no fallbacks.
 - Offline AI evaluation passed 12 of 12 expected outcomes across 84 binary checks.
-- The production build, lint, 73 automated tests, and dependency audit passed.
+- The production build, lint, 76 automated tests, and dependency audit passed.
 - The product preserves deterministic forecast and explanation behavior when AI is unavailable.
 - The July 30 signed-out production smoke test returned HTTP 200 without authentication, refreshed 17 current events from The Odds API, matched 11 Cowboys games, applied the current Week 2 market, and completed a validated Runtime AI explanation with no fallback.
 - The public Runtime AI receipt passed with `gpt-5.6-luna`, 5,584 ms latency, 649 input tokens, 370 output tokens, and an estimated request cost of $0.0030.
@@ -44,8 +44,8 @@ Road to Six 1.0.0 is an evidence-grounded technical product management case stud
 - Free data constraints limit historical market depth and refresh frequency.
 - Runtime AI quality is bounded by the supplied evidence and evaluation contract.
 - Data-rights and trademark review records accepted product limitations, not legal clearance.
-- Five AI proxy and expert pretests are complete, but no moderated human usability sessions have occurred. Eric Lawler approved deferring the five-session study to post-launch validation for v1.0.0. This release must not be described as human validated.
-- Sites version 13 contains the exact `v1.0.0` release commit and is publicly available. The signed-out production smoke test passed. Public access does not change the documented data-rights, trademark, responsible-use, model, or deferred human-validation limitations.
+- The portfolio evidence gate is complete through five labeled AI proxy and expert pretests, five transparent synthetic ideal-persona simulations, owner review, and repository validation. These artifacts are not human research, and the release makes no claim of human usability testing or validation. Moderated human research is optional future work.
+- Sites version 13 contains the exact `v1.0.0` release commit and is publicly available. The signed-out production smoke test passed. Public access does not change the documented data-rights, trademark, responsible-use, model, or AI-evidence boundaries.
 
 ## Review path
 

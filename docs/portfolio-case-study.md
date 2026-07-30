@@ -237,7 +237,7 @@ An accepted AI response must:
 
 The system uses a dedicated OpenAI project with a $10 monthly maximum. The application reserves estimated cost before a request, reconciles actual token use, stops AI calls at $9.50, and serves the deterministic explanation afterward.
 
-After billing was enabled, one live OpenAI response completed in AI mode with no fallback. It preserved probability `0.5531549573107291`, forecast model `elo-market-v1.1.0`, source date `2026-07-15`, three drivers, and three uncertainty items. The same seven-criterion evaluator passed all seven checks. The later four-scenario scorecard and 75-test regression also pass. The public deployment then passed signed-out current-odds and Runtime AI smoke checks.
+After billing was enabled, one live OpenAI response completed in AI mode with no fallback. It preserved probability `0.5531549573107291`, forecast model `elo-market-v1.1.0`, source date `2026-07-15`, three drivers, and three uncertainty items. The same seven-criterion evaluator passed all seven checks. The later four-scenario scorecard and 76-test regression also pass. The public deployment then passed signed-out current-odds and Runtime AI smoke checks.
 
 ## Data and model integrity
 
@@ -275,7 +275,8 @@ This is the same product-management pattern I would use with an engineering team
 | Gate | Status |
 |---|---|
 | Product flow | COMPLETE |
-| Automated and expert accessibility review | COMPLETE; human assistive-technology validation remains open |
+| Automated and expert accessibility review | COMPLETE with an explicit no-human-testing boundary |
+| AI persona portfolio validation | COMPLETE; transparent synthetic evidence, not human research |
 | Live odds | COMPLETE |
 | Security and privacy | COMPLETE |
 | Responsible use | COMPLETE |
@@ -288,7 +289,7 @@ This is the same product-management pattern I would use with an engineering team
 ## Verified outcomes
 
 1. The production build and lint checks pass.
-2. All 75 automated tests pass.
+2. All 76 automated tests pass.
 3. The current dependency audit reports zero vulnerabilities.
 4. The authenticated release candidate returned five current Dallas events from The Odds API during its pre-publication review. The signed-out production endpoint later returned 17 current NFL events and the interface matched 11 Cowboys games.
 5. Successful six-hour cache persistence models 372 credits in a 31-day month, below the free allowance. Upstream and persistence failures remain monitored separately.
@@ -311,7 +312,7 @@ This is the same product-management pattern I would use with an engineering team
 ## Current limitations and next decisions
 
 1. Product adoption targets remain unmeasured because analytics are not implemented.
-2. Five privacy-safe post-launch human usability sessions and the resulting evidence-based product decisions remain `[NEEDS INPUT]`. Five synthetic ideal-persona simulations are complete, but the v1.0.0 release is not human validated.
+2. The portfolio evidence gate is complete through owner-reviewed AI proxy pretests and transparent synthetic persona simulations. No human usability testing has been conducted or claimed. Optional future moderated research could add observed behavioral evidence.
 3. The forecast is a transparent portfolio baseline, not a production wagering model.
 4. Historical odds and bettor splits remain outside the free-data scope.
 5. Public hosting and the signed-out success-path smoke test were completed on July 30, 2026.
@@ -333,6 +334,7 @@ This is the same product-management pattern I would use with an engineering team
 - [Data and licensing spike](data-licensing-spike.md)
 - [Public-use review](public-use-review.md)
 - [Release review](release-review.md)
+- [Dependabot review](dependabot-review-2026-07-30.md)
 - [Figma flow](figma-flow.md)
 - [LinkedIn launch kit](linkedin-launch-kit.md)
 - [Usability research](usability-research.md)
