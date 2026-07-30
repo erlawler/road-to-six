@@ -96,7 +96,7 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
 
   assert.equal(packageJson.version, "1.0.0");
   assert.equal(packageJson.scripts["eval:live"], "node scripts/run-live-ai-scorecard.mjs");
-  assert.match(releaseNotes, /Public hosting:.*(?:Approved|Published)/);
+  assert.match(releaseNotes, /Public hosting:.*(?:Approved|Published|Blocked)/);
   assert.match(releaseNotes, /Git tag and GitHub release:.*(?:Authorized|Created)/);
   assert.match(changelog, /## \[1\.0\.0\] - 2026-07-29/);
   const runtime = liveScorecard.scorecard.find((row) => row.mode === "runtime");

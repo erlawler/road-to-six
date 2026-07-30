@@ -2,7 +2,7 @@
 
 ## Answer
 
-The v1.0.0 release is an anonymous Market Context Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI explanation endpoint, and an inspectable reliability receipt. The prior preview is owner-only, while the product itself has no account or identity layer. Live odds, a four-scenario Runtime AI scorecard, and the authenticated owner-only smoke test pass. Eric Lawler approved public hosting and the signed-out production smoke test on July 29, 2026.
+The v1.0.0 release is an anonymous Market Context Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI explanation endpoint, and an inspectable reliability receipt. The GitHub release is public, while Sites version 13 remains owner-only because internet publishing is disabled for the workspace. The product itself has no account or identity layer. Live odds, a four-scenario Runtime AI scorecard, CI, CodeQL, and the authenticated hosted smoke test pass. Eric Lawler approved public hosting and the signed-out production smoke test on July 29, 2026; execution resumes after the workspace setting is enabled.
 
 Recruiter-facing views:
 

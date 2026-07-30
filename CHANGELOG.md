@@ -48,3 +48,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - Eric Lawler approved the final source push, `v1.0.0` tag and GitHub release, public hosting, and signed-out production smoke test on July 29, 2026.
 - Five moderated human sessions are deferred to post-launch validation. The release is not described as human validated.
+- The source, tag, and GitHub release are published. Sites version 13 contains the tagged release and remains owner-only because internet publishing is disabled for the workspace.

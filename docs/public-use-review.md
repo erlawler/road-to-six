@@ -6,7 +6,7 @@
 
 ## Answer
 
-Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. The earlier public source repository and final owner-only v1.0.0 preview are available for review. The live Runtime AI scorecard, v1.0.0 regression, and authenticated hosted smoke test pass. On July 29, 2026, Eric Lawler authorized the final GitHub push, `v1.0.0` tag and release, public hosting, and signed-out production smoke test.
+Road to Six is accepted as an unofficial educational portfolio project, subject to the controls and limitations below. The public GitHub repository, `v1.0.0` tag, GitHub release, and owner-only Sites version 13 are available for review. The live Runtime AI scorecard, v1.0.0 regression, and authenticated hosted smoke test pass. On July 29, 2026, Eric Lawler authorized public hosting and the signed-out production smoke test. The access change is currently blocked because internet publishing is disabled for the Sites workspace.
 
 This review documents product risk decisions. It is not legal advice or a guarantee that a third party will not object.
 

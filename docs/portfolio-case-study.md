@@ -10,7 +10,7 @@ I designed the product around one question:
 
 I owned the product strategy, prioritization, data and AI boundaries, acceptance criteria, release governance, and go-live decision. I used Codex as an implementation and review partner. That operating model let me move quickly while preserving explicit human ownership of requirements, risk decisions, and publication approval.
 
-The result is a v1.0.0 release with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, hosted smoke evidence, and a complete product artifact set. On July 29, 2026, I approved the public GitHub push, version tag and release, public hosting, and signed-out production smoke test.
+The result is a v1.0.0 GitHub release with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, hosted smoke evidence, and a complete product artifact set. Sites version 13 contains the exact tagged commit and passed an owner-authenticated hosted smoke test. Public site access is pending because internet publishing is disabled for the workspace.
 
 ## Product context
 
@@ -49,7 +49,7 @@ I served as the technical product manager and decision owner.
 | Vendor and cost management | $0 sports-data target, free-tier odds plan, $10 OpenAI project limit, and $9.50 application cutoff |
 | Risk and governance | Accessibility, security, privacy, responsible use, data rights, trademark, and release review |
 | Delivery management | Acceptance criteria, Codex task direction, specialist reviews, test gates, documentation, and private deployment approval |
-| Release ownership | Kept public hosting blocked pending explicit final approval, validated the live Runtime AI baseline, and completed final regression as a separate gate |
+| Release ownership | Used an owner-only preview and blocked public hosting until explicit final approval, validated the live Runtime AI baseline, and completed final regression as a separate gate |
 
 I did not represent Codex-generated implementation as unsupervised product work. I established repository rules, reviewed outputs, challenged assumptions, requested corrections, and accepted or rejected release gates.
 
@@ -283,7 +283,7 @@ This is the same product-management pattern I would use with an engineering team
 | Trademark and public content | ACCEPTED WITH LIMITATIONS |
 | Runtime AI live response | COMPLETE for the live baseline |
 | v1.0.0 hardening regression | COMPLETE |
-| Public hosting | APPROVED; publication in progress |
+| Public hosting | BLOCKED BY WORKSPACE POLICY |
 
 ## Verified outcomes
 
@@ -314,7 +314,7 @@ This is the same product-management pattern I would use with an engineering team
 2. Five privacy-safe post-launch usability sessions and the resulting product decisions remain `[NEEDS INPUT]`. The v1.0.0 release is not human validated.
 3. The forecast is a transparent portfolio baseline, not a production wagering model.
 4. Historical odds and bettor splits remain outside the free-data scope.
-5. Public hosting was approved on July 29, 2026 and requires a signed-out production smoke test.
+5. Public hosting was approved on July 29, 2026 but is blocked until internet publishing is enabled for the Sites workspace. The signed-out success-path smoke test follows that change.
 6. Data and trademark limitations remain accepted risks, not legal clearance.
 
 ## Artifact index

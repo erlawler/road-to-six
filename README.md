@@ -13,7 +13,7 @@
 
 The product demonstrates how I frame an ambiguous problem, choose the right boundary between deterministic software and frontier AI, integrate governed data sources, define measurable quality gates, and move a product from concept to a private release candidate.
 
-> **Current status:** Version 1.0.0 passes the build, lint, 73-test, 12-case AI-evaluation, dependency-audit, and four-scenario live-scorecard gates. The owner-only preview passed an authenticated hosted smoke test for hydration, matchup changes, selected-game market freshness, live odds, deterministic forecast, Runtime AI, reliability receipt, reset behavior, and browser errors. Public publication was approved on July 29, 2026 and is in progress.
+> **Current status:** Version 1.0.0 is published on GitHub and passes the build, lint, 73-test, 12-case AI-evaluation, dependency-audit, four-scenario live-scorecard, CI, and CodeQL gates. Sites version 13 contains the exact release commit and passed an owner-authenticated smoke test for hydration, matchup changes, live odds, deterministic forecast, Runtime AI, reliability receipt, and browser errors. Public site access is blocked by the workspace internet-publishing policy; an unauthenticated request returns HTTP 401 until that setting is enabled.
 
 ## Recruiter snapshot
 
@@ -25,7 +25,7 @@ The product demonstrates how I frame an ambiguous problem, choose the right boun
 | Core job | Inspect football and market evidence, change assumptions, and understand a traceable probability and its uncertainty |
 | Product scope | Real roster, schedule, player, game, and current market data; scenario modeling; model audit; runtime AI explanation |
 | Key constraint | $0 sports-data vendor spend and no more than $10 monthly runtime AI spend |
-| Current release | v1.0.0 approved for public release with validated live integrations, hosted smoke evidence, and documented risk acceptance |
+| Current release | v1.0.0 GitHub release with validated live integrations, owner-only Sites version 13, hosted smoke evidence, and one workspace-policy blocker to public access |
 
 **Ownership:** I owned the product strategy, technical decisions, risk acceptance, and release approval. Codex accelerated implementation, testing, review, and documentation within the boundaries I defined.
 

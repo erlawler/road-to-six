@@ -1,9 +1,9 @@
 # Road to Six 1.0.0
 
 **Prepared:** July 27, 2026
-**Release state:** Approved for public release on July 29, 2026
-**Public hosting:** Approved, publication in progress
-**Git tag and GitHub release:** Authorized, publication in progress
+**Release state:** GitHub release published; hosted v1.0.0 remains owner-only
+**Public hosting:** Blocked by the Sites workspace internet-publishing policy
+**Git tag and GitHub release:** Created
 
 Road to Six 1.0.0 is an evidence-grounded technical product management case study. It combines actual football evidence, current market context, a transparent forecast, and governed Runtime AI without turning the experience into betting advice.
 
@@ -42,6 +42,7 @@ Road to Six 1.0.0 is an evidence-grounded technical product management case stud
 - Runtime AI quality is bounded by the supplied evidence and evaluation contract.
 - Data-rights and trademark review records accepted product limitations, not legal clearance.
 - Five AI proxy and expert pretests are complete, but no moderated human usability sessions have occurred. Eric Lawler approved deferring the five-session study to post-launch validation for v1.0.0. This release must not be described as human validated.
+- Sites version 13 contains the exact `v1.0.0` release commit and passed an owner-authenticated hosted smoke test. The workspace currently blocks internet publishing, so public access and the signed-out success-path smoke test remain pending. An unauthenticated request correctly returned HTTP 401 while owner-only access remained active.
 
 ## Review path
 

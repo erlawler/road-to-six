@@ -1,6 +1,6 @@
 # MVP Backlog: Market Context Lab Expansion
 
-**Implementation status:** V1.0.0 APPROVED FOR PUBLIC RELEASE. The public source repository, owner-only hosted candidate, live odds validation, live Runtime AI baseline, v1.0.0 regression, authenticated private smoke test, and public-use review are complete. Eric Lawler approved the final source push, tag and release, public hosting, and signed-out production smoke test on July 29, 2026. Scores assume one sport, Cowboys-only views, cached market refreshes, and no product authentication.
+**Implementation status:** V1.0.0 RELEASED ON GITHUB. The public source repository, tag and GitHub release, owner-only Sites version 13, live odds validation, live Runtime AI baseline, v1.0.0 regression, authenticated hosted smoke test, CI, CodeQL, and public-use review are complete. The Sites workspace currently blocks internet publishing, so public hosted access and the signed-out success-path smoke test remain open. Scores assume one sport, Cowboys-only views, cached market refreshes, and no product authentication.
 
 ## Prioritization rule
 

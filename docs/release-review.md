@@ -2,13 +2,13 @@
 
 **Review date:** July 29, 2026
 
-**Release candidate:** V1.0.0 APPROVED FOR PUBLIC RELEASE
+**Release candidate:** V1.0.0 RELEASED ON GITHUB
 
-**Public source repository:** PUBLICATION AUTHORIZED
+**Public source repository:** COMPLETE
 
-**Private hosted candidate:** COMPLETE
+**Private hosted candidate:** COMPLETE, SITES VERSION 13
 
-**Public hosting:** AUTHORIZED; production deployment in progress
+**Public hosting:** BLOCKED BY WORKSPACE POLICY
 
 ## Decision
 
@@ -16,7 +16,9 @@ The release candidate passes the documented product, accessibility, security, pr
 
 Usability is accepted with deferred validation. Five labeled AI proxy and expert pretests are complete, but no moderated human sessions have occurred. On July 29, 2026, Eric Lawler approved deferring the five-session human study from the v1.0.0 launch gate to post-launch validation. This is a documented release-risk acceptance, not evidence of human usability or a claim that the product is human validated.
 
-The v1.0.0 owner-only preview is saved and deployed with one allowed user and no groups. The authenticated smoke test confirmed client hydration, live odds, selected-game freshness, matchup updates, deterministic forecast behavior, Runtime AI, a passed reliability receipt, scenario reset, source links, and zero browser-console errors. The hosted Runtime AI request completed with no fallback in 5,087 ms at an estimated $0.0032. The smoke test also caught an incomplete client-asset archive in an intermediate private version; the complete `dist` archive was rebuilt, redeployed, and retested before handoff. Eric Lawler approved the final GitHub push, `v1.0.0` tag and release, public hosting, and signed-out production smoke test on July 29, 2026.
+The final source is on GitHub `main`, CI and CodeQL pass, and the `v1.0.0` tag and GitHub release are published. Sites version 13 was built from the exact tagged commit and deployed owner-only. Its authenticated smoke test confirmed client hydration, live odds for 11 schedule-matched games, selected-game freshness, matchup updates, deterministic forecast behavior, Runtime AI, a passed reliability receipt, source links, and zero browser-console errors. The release-smoke Runtime AI request used `gpt-5.6-luna`, completed with no fallback in 5,429 ms, used 646 input and 450 output tokens, and had an estimated cost of $0.0035.
+
+The approved public-access change could not be applied because internet publishing is disabled for the Sites workspace. Access remains owner-only and an unauthenticated request returned HTTP 401. This is a workspace configuration blocker, not an application failure. The signed-out success-path production smoke test remains open until an administrator enables internet publishing.
 
 ## Gate status
 
@@ -33,9 +35,9 @@ The v1.0.0 owner-only preview is saved and deployed with one allowed user and no
 | Responsible use | COMPLETE | The interface provides probabilities and uncertainty without picks, stakes, payouts, affiliate links, sportsbook links, or wager placement. The server owns the summary and disclaimer and exposes only exact validated evidence fields from Runtime AI. |
 | Trademark and public content | ACCEPTED WITH LIMITATIONS | Official logos, player likenesses, uniforms, endorsement claims, and copied NFL content are excluded. Text references identify the subject, educational-use language appears beside the forecast, and the full non-affiliation statement appears in the footer. A rights holder could still object. |
 | Usability research | ACCEPTED WITH DEFERRED VALIDATION | Five AI proxy and expert pretests are complete. Zero of five moderated human sessions have occurred. Eric Lawler approved the v1.0.0 release with this limitation and moved human validation to post-launch research. Human findings remain `[NEEDS INPUT]`. |
-| GitHub | APPROVED FOR PUBLICATION | The public [erlawler/road-to-six](https://github.com/erlawler/road-to-six) repository contains earlier validated history. Eric approved the final push, `v1.0.0` tag, and GitHub release. CodeQL and Dependabot configurations are included locally. `[NEEDS INPUT]` Confirm both operate after the final configuration reaches the default branch. |
-| Private hosting | COMPLETE | The [owner-only Road to Six site](https://road-to-six-erl.erlrickylre.chatgpt.site) contains v1.0.0. One user and no groups have access, provider credentials remain hidden, and the owner-authenticated hosted smoke test passed. |
-| Public hosting | AUTHORIZED | Eric approved public access and the signed-out production smoke test on July 29, 2026. Deployment execution and verification are in progress. |
+| GitHub | COMPLETE | The public [erlawler/road-to-six](https://github.com/erlawler/road-to-six) repository is current. The `v1.0.0` tag and GitHub release are published. CI and CodeQL pass on the release commit, and Dependabot update workflows are active. |
+| Private hosting | COMPLETE | The [owner-only Road to Six site](https://road-to-six-erl.erlrickylre.chatgpt.site) contains Sites version 13 built from the exact release commit. Provider credentials remain hidden, and the owner-authenticated hosted smoke test passed. |
+| Public hosting | BLOCKER | The workspace rejected the approved access change because internet publishing is disabled. Enable that workspace setting, change access to public, and run the signed-out success-path smoke test. Until then, an unauthenticated request returns HTTP 401. |
 
 ## Validation evidence
 
@@ -58,6 +60,10 @@ The v1.0.0 owner-only preview is saved and deployed with one allowed user and no
 - The server enforces a shared anonymous limit of 20 AI requests per aligned five-minute bucket and returns `429` with `Retry-After` after exhaustion
 - The current owner-authenticated smoke test verified the technical product case, ownership line, visible uncertainty, selected-game freshness, current cached odds source, retrieval timestamp, 11 matched games, scenario reset, and zero browser-console errors
 - One current hosted Runtime AI request passed with no fallback, 5,087 ms latency, 649 input tokens, 397 output tokens, and an estimated $0.0032 request cost
+- Sites version 13 passed the release smoke test with current odds for 11 schedule-matched games, Week 2 matchup switching, a 63% updated Dallas probability, and zero browser-console errors
+- The release-smoke Runtime AI request passed with no fallback, 5,429 ms latency, 646 input tokens, 450 output tokens, and an estimated $0.0035 request cost
+- GitHub CI and CodeQL passed on the release commit
+- The approved public-access change was rejected by the workspace internet-publishing policy; owner-only access remained intact and an unauthenticated request returned HTTP 401
 - An intermediate private deployment exposed a missing-client-assets packaging error; the full `dist` archive was rebuilt and the succeeding private version passed hydration and interaction checks
 - Browser semantic tree and status announcements verified on the updated release candidate
 - Security headers verified on the rendered page and API routes
@@ -78,8 +84,9 @@ The v1.0.0 owner-only preview is saved and deployed with one allowed user and no
 - [x] Codex: complete five labeled AI proxy and expert pretests and incorporate accepted P0 and P1 fixes.
 - [x] Codex: capture hosted screenshots, animated walkthrough, captions, and privacy review.
 - [x] Eric: accept deferred human validation as a documented v1.0.0 limitation.
-- [ ] `[NEEDS INPUT]` Codex: confirm CodeQL and Dependabot after the configuration reaches the default branch.
+- [x] Codex: confirm CI, CodeQL, and Dependabot workflows after the configuration reached the default branch.
 - [ ] `[NEEDS INPUT]` Eric: complete five moderated human sessions as post-launch validation.
 - [x] Eric: approve the final GitHub push, tag, and release.
 - [x] Eric: approve public hosting.
-- [ ] Codex: change hosting access to public and run the signed-out production smoke test.
+- [ ] `[BLOCKER]` Workspace administrator: enable internet publishing for Sites.
+- [ ] Codex: change hosting access to public and run the signed-out success-path production smoke test after the workspace setting is enabled.

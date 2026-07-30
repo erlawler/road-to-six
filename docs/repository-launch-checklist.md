@@ -1,7 +1,7 @@
 # Repository and Portfolio Launch Checklist
 
 **Package:** 1.0.0
-**Current state:** v1.0.0 approved for public release on July 29, 2026; publication execution in progress
+**Current state:** v1.0.0 published on GitHub and deployed as owner-only Sites version 13; public access blocked by the workspace internet-publishing policy
 **Authority boundary:** Eric Lawler approved the GitHub push, v1.0.0 tag and release, public hosting, and signed-out production smoke test
 
 ## Release evidence
@@ -30,7 +30,7 @@
 - [x] Add weekly Dependabot proposals for npm and GitHub Actions.
 - [ ] `[NEEDS INPUT]` Enable Dependabot alerts and Dependabot security updates in repository settings.
 - [ ] `[NEEDS INPUT]` Enable secret scanning and push protection in repository settings.
-- [ ] `[NEEDS INPUT]` Confirm CodeQL completes successfully after the workflow reaches the default branch.
+- [x] Confirm CodeQL completes successfully after the workflow reaches the default branch.
 - [ ] `[NEEDS INPUT]` Review the first Dependabot pull requests before merging.
 
 ## Portfolio media
@@ -57,18 +57,19 @@
 
 - [x] Set the local package version to 1.0.0.
 - [x] Add [CHANGELOG](../CHANGELOG.md) and [release notes](../RELEASE_NOTES.md).
-- [x] Eric Lawler approved creation of the `v1.0.0` tag.
-- [x] Eric Lawler approved creation of the GitHub release from `RELEASE_NOTES.md`.
-- [ ] `[NEEDS INPUT]` Attach approved demo media only after privacy review.
-- [ ] `[NEEDS INPUT]` Verify release links after publication.
+- [x] Create the `v1.0.0` tag after final approval.
+- [x] Create the GitHub release from `RELEASE_NOTES.md` after final approval.
+- [x] Attach the privacy-reviewed animated walkthrough and social preview to the GitHub release.
+- [x] Verify the GitHub release link after publication.
 
 ## Hosted launch
 
 - [x] Eric Lawler approved public hosting on July 29, 2026.
-- [ ] Codex: change hosting access to public.
-- [ ] `[NEEDS INPUT]` Run the public production smoke test for page load, odds refresh, deterministic forecast, Runtime AI, fallback, rate limiting, accessibility, security headers, source links, and social metadata.
+- [ ] `[BLOCKER]` Workspace administrator: enable internet publishing for Sites.
+- [ ] Codex: change hosting access to public after the workspace policy is enabled.
+- [ ] Run the signed-out success-path production smoke test for page load, odds refresh, deterministic forecast, Runtime AI, fallback, rate limiting, accessibility, security headers, source links, and social metadata.
 - [x] Confirm the $10 provider budget and $9.50 application cutoff remain active.
-- [ ] `[NEEDS INPUT]` Record the production version and smoke-test timestamp in the release review.
+- [x] Record Sites version 13, the authenticated hosted smoke test, and the blocked anonymous HTTP 401 result in the release review.
 
 ## Rollback
 
