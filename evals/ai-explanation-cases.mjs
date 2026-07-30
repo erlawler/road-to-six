@@ -17,7 +17,7 @@ const drivers = [
 ];
 
 const uncertainty = [
-  "The model is a transparent portfolio baseline, not a production wagering model.",
+  "The model is a transparent showcase baseline, not a production wagering model.",
   "Market prices can change before kickoff.",
   "Scenario controls are assumptions, not medical reports.",
 ];

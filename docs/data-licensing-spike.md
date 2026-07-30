@@ -30,7 +30,7 @@ Advance with this cost-bounded data strategy:
 |---|---:|---|
 | Football and market data | $0 | nflverse data plus current odds, spreads, totals, and daily line snapshots within the free quota |
 | Runtime AI | $0 to $10 | Grounded explanations until the monthly safety cutoff is reached |
-| Hosting | $0 target | Cloudflare Workers Free for portfolio traffic; paid tier is not required for the public portfolio release |
+| Hosting | $0 target | Cloudflare Workers Free for showcase traffic; paid tier is not required for the public showcase release |
 
 Runtime AI cost varies with prompt size and model selection. The application defaults to GPT-5.6 Luna. The D1 ledger reserves cost before each request using the configured model's standard rates and reconciles actual input and output token use afterward, so the application does not depend on a traffic estimate to enforce the cutoff.
 

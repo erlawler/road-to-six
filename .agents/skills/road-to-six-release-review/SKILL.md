@@ -1,6 +1,6 @@
 ---
 name: road-to-six-release-review
-description: Review a Road to Six feature or release for data integrity, forecast governance, AI quality, accessibility, public content safety, trademark boundaries, and portfolio completeness.
+description: Review a Road to Six feature or release for data integrity, forecast governance, AI quality, accessibility, public content safety, trademark boundaries, and showcase completeness.
 ---
 
 # Road to Six Release Review
@@ -15,5 +15,5 @@ description: Review a Road to Six feature or release for data integrity, forecas
 8. Check keyboard access, visible labels, heading order, focus states, contrast, and reduced motion behavior.
 9. Run `npm run lint`, `npm run build`, and `npm test`.
 10. Scan the repository for em dash and en dash characters.
-11. Confirm every portfolio claim is supported by implementation, test, or evaluation evidence.
+11. Confirm every showcase claim is supported by implementation, test, or evaluation evidence.
 12. Return findings by severity, followed by the release recommendation and any open gate owner.

@@ -75,7 +75,8 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>Road to Six \| Technical PM and AI Case Study<\/title>/i);
+  assert.match(html, /<title>Road to Six \| Technical PM and Frontier AI Showcase<\/title>/i);
+  assert.match(html, /Frontier AI skills showcase/);
   assert.match(html, /Football evidence meets market reality/);
   assert.match(html, /Interactive forecast/);
   assert.match(html, /Model audit/);
@@ -93,6 +94,8 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Illustrative uncertainty band/);
   assert.match(html, /Product strategy, architecture, risk, and release owned by Eric Lawler\. Implemented with Code\./);
   assert.match(html, /Review the case/);
+  assert.match(html, /OpenAI explains evidence today/);
+  assert.match(html, /governed path to Anthropic/);
   assert.match(html, /top four stat producers from its active 2026 roster/);
   assert.match(html, /#(?:<!-- -->)?1(?:<!-- -->)? rank/);
   assert.match(html, /2024-2025/);
@@ -132,8 +135,8 @@ test("publishes canonical metadata and a tightened content security policy", asy
     html,
     /<meta property="og:url" content="https:\/\/road-to-six-erl\.erlrickylre\.chatgpt\.site\/"\/>/i,
   );
-  assert.match(html, /<meta property="og:image:alt" content="Road to Six technical product management case study/i);
-  assert.match(html, /<meta name="twitter:image:alt" content="Road to Six technical product management case study/i);
+  assert.match(html, /<meta property="og:image:alt" content="Road to Six technical product management and frontier AI skills showcase/i);
+  assert.match(html, /<meta name="twitter:image:alt" content="Road to Six technical product management and frontier AI skills showcase/i);
 
   assert.match(csp, /default-src 'none'/);
   assert.match(csp, /base-uri 'none'/);
@@ -231,7 +234,7 @@ test("removes disposable starter content", async () => {
   assert.doesNotMatch(page, /type ReliabilityReceipt|totalTokens/);
   assert.match(page, /Responsible use/);
   assert.doesNotMatch(page, /data\.budget|runtimeResult\.budget|Monthly runtime AI safety limit/);
-  assert.match(layout, /Road to Six \| Technical PM and AI Case Study/);
+  assert.match(layout, /Road to Six \| Technical PM and Frontier AI Showcase/);
   assert.match(packageJson, /"name": "road-to-six"/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   await assert.rejects(access(new URL("../app\/_sites-preview", templateRoot)));

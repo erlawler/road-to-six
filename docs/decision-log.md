@@ -1,6 +1,6 @@
 # Decision Log
 
-## ADR 001: Use Road to Six as the portfolio concept
+## ADR 001: Use Road to Six as the skills-showcase concept
 
 **Status:** DECIDED
 
@@ -38,7 +38,7 @@
 
 **Decision:** Keep the MVP anonymous with no user accounts or saved user state. Permit only an aggregate monthly AI-cost ledger.
 
-**Why:** Accounts do not improve the core portfolio job and would add privacy, security, and maintenance cost.
+**Why:** Accounts do not improve the core showcase job and would add privacy, security, and maintenance cost.
 
 ## ADR 006: Keep publication separate from local completion
 
@@ -54,7 +54,7 @@
 
 **Historical decision:** The first expansion proposal included licensed bettor-split data. ADR 011 replaced that proposal with a $0 sports-data boundary and explicitly excluded bettor splits.
 
-**Why:** Real data materially improves portfolio credibility and makes the relationship between football evidence and market prices inspectable. The later $0 data decision means Cowboys popularity and market bias are not testable in this release. Every feed still requires source attribution, freshness metadata, and public-display approval.
+**Why:** Real data materially improves showcase credibility and makes the relationship between football evidence and market prices inspectable. The later $0 data decision means Cowboys popularity and market bias are not testable in this release. Every feed still requires source attribution, freshness metadata, and public-display approval.
 
 ## ADR 008: Add runtime AI with a probability tool
 
@@ -78,7 +78,7 @@
 
 **Decision:** Do not require authentication for the Market Context Lab MVP.
 
-**Why:** Immediate public exploration serves the portfolio job, avoids collecting personal or wagering data, and preserves implementation focus for data quality and forecast governance.
+**Why:** Immediate public exploration serves the showcase job, avoids collecting personal or wagering data, and preserves implementation focus for data quality and forecast governance.
 
 ## ADR 011: Cap AI cost and use only free sports data
 
@@ -86,7 +86,7 @@
 
 **Decision:** Keep sports-data vendor cost at $0, exclude bettor splits and paid historical odds, and cap runtime AI at $10 per month. Use a dedicated OpenAI project with a $10 maximum, stop application AI at $9.50, and serve the deterministic explanation after the cutoff.
 
-**Why:** The free data path preserves the portfolio value while making Eric's personal operating cost predictable. The application remains available even when the AI budget is exhausted.
+**Why:** The free data path preserves the showcase value while making Eric's personal operating cost predictable. The application remains available even when the AI budget is exhausted.
 
 ## ADR 012: Ship a transparent baseline before a complex model
 
@@ -118,7 +118,7 @@
 
 **Decision:** Lead the repository and product experience with the problem, Eric's ownership, key tradeoffs, verified evidence, Codex collaboration model, and current limitations. Keep adoption targets separate from observed outcomes.
 
-**Why:** A technical product management portfolio should demonstrate judgment and accountability, not only implementation breadth. Clear ownership and honest limitations make the evidence easier for recruiters and product leaders to evaluate.
+**Why:** A technical product management and frontier AI showcase should demonstrate judgment and accountability, not only implementation breadth. Clear ownership and honest limitations make the evidence easier for product, AI, engineering, and analytics practitioners to evaluate.
 
 ## ADR 016: Position the product as Market Context Lab
 
@@ -142,7 +142,7 @@
 
 **Decision:** Publish canonical and social-link metadata, a crawler policy, and a one-page sitemap. Tighten the browser content security policy to deny all unspecified resources, inline event-handler scripts, forms, frames, media, workers, and inline style elements. Retain inline framework scripts and the probability ring's inline style attribute until the runtime supports a tested nonce path without weakening availability or cache behavior.
 
-**Why:** Public discovery metadata makes the portfolio easier to index and share, while an explicit compatibility-tested CSP reduces browser attack surface. Retaining only the two runtime-required allowances is safer than either leaving broad allowances in place or breaking hydration through an untested all-or-nothing policy.
+**Why:** Public discovery metadata makes the showcase easier to index and share, while an explicit compatibility-tested CSP reduces browser attack surface. Retaining only the two runtime-required allowances is safer than either leaving broad allowances in place or breaking hydration through an untested all-or-nothing policy.
 
 ## ADR 019: Protect the public default branch
 
@@ -150,12 +150,22 @@
 
 **Decision:** Protect `refs/heads/main` with an active GitHub repository ruleset and no bypass actors. Require an up-to-date pull request, the `validate` and `Analyze JavaScript and TypeScript` checks, resolved review threads, squash merge, and linear history. Block deletion and non-fast-forward updates. Keep required approvals at zero for the solo-maintainer workflow.
 
-**Why:** A public portfolio should make its release controls inspectable after launch. The ruleset prevents direct or destructive changes to the published source while preserving a practical feature-branch and automated-check workflow for a solo owner.
+**Why:** A public showcase should make its release controls inspectable after launch. The ruleset prevents direct or destructive changes to the published source while preserving a practical feature-branch and automated-check workflow for a solo owner.
 
-## ADR 020: Accept transparent AI persona validation as the portfolio gate
+## ADR 020: Accept transparent AI persona validation as the showcase gate
 
 **Status:** DECIDED
 
-**Decision:** Treat five labeled AI proxy and expert pretests plus five transparent synthetic ideal-persona simulations as the completed portfolio evidence gate. Preserve their task evidence, score traceability, owner decisions, and automated or hosted validation. Do not describe the work as human research, observed behavior, accessibility certification, or human usability validation. Keep the moderated research protocol as optional future work rather than a release or portfolio completion dependency.
+**Decision:** Treat five labeled AI proxy and expert pretests plus five transparent synthetic ideal-persona simulations as the completed showcase evidence gate. Preserve their task evidence, score traceability, owner decisions, and automated or hosted validation. Do not describe the work as human research, observed behavior, accessibility certification, or human usability validation. Keep the moderated research protocol as optional future work rather than a release or showcase completion dependency.
 
-**Why:** The portfolio job is to demonstrate product judgment, evidence discipline, AI governance, and release ownership. A clearly bounded AI persona evaluation supports that job without fabricating participants or leaving the project indefinitely incomplete. The explicit claim boundary protects credibility while retaining a safe protocol if observed human evidence becomes valuable later.
+**Why:** The showcase job is to demonstrate product judgment, evidence discipline, AI governance, and release ownership. A clearly bounded AI persona evaluation supports that job without fabricating participants or leaving the project indefinitely incomplete. The explicit claim boundary protects credibility while retaining a safe protocol if observed human evidence becomes valuable later.
+
+## ADR 021: Position Road to Six as a skills showcase
+
+**Status:** DECIDED
+
+**Decision:** Use skills-first framing throughout. Position the public repository for technical product management, AI product, platform, engineering, analytics, and football-product peers. Remove social-post drafts and publication tasks. Keep external social posting and profile updates outside the repository and outside the authorized product workflow.
+
+Document OpenAI as the deployed Runtime AI provider. Present Anthropic only as an example of a modern LLM platform to which the contract-first controls could transfer after separate implementation, pricing, evaluation, and release approval.
+
+**Why:** The owner is presenting completed product work and capabilities. Skills-first positioning keeps the evidence useful to peers and practitioners while preserving truthful provider boundaries and preventing an unapproved social-publication path.

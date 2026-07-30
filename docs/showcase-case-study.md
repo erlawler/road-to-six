@@ -1,8 +1,8 @@
-# Portfolio Case Study: Road to Six
+# Skills Showcase Case Study: Road to Six
 
 ## Executive summary
 
-Road to Six is an unofficial Dallas Cowboys forecasting and market-context lab that demonstrates end-to-end technical product management for an evidence-grounded AI product. Market bias remains an unvalidated hypothesis because the approved scope excludes bettor-split data.
+Road to Six is an unofficial Dallas Cowboys forecasting and market-context lab that demonstrates end-to-end technical product management and frontier AI product judgment. Market bias remains an unvalidated hypothesis because the approved scope excludes bettor-split data.
 
 I designed the product around one question:
 
@@ -27,11 +27,11 @@ Many sports forecasts hide the path between evidence and prediction. A user sees
 
 This is a trust and product-design problem. A more sophisticated model would not fix it on its own.
 
-### Target users
+### Product user and showcase audience
 
-**Primary user:** A hiring manager or technical product leader evaluating product judgment, systems thinking, delivery discipline, and responsible AI design.
+**Product user:** A football fan who wants to explore how named assumptions affect a Cowboys forecast.
 
-**Secondary user:** A football fan who wants to explore how named assumptions affect a Cowboys forecast.
+**Showcase audience:** Technical product managers, AI product leaders, platform and engineering partners, analytics practitioners, and product peers examining the decisions, controls, and evidence behind the product.
 
 ### Job to be done
 
@@ -66,7 +66,7 @@ I did not represent Codex-generated implementation as unsupervised product work.
 
 ### Success model
 
-The measurement plan separates portfolio hypotheses from verified engineering and model evidence.
+The measurement plan separates showcase hypotheses from verified engineering and model evidence.
 
 | Layer | Measure | MVP target |
 |---|---|---:|
@@ -153,7 +153,7 @@ Accounts and saved scenarios remain out of scope.
 
 The product uses nflverse and The Odds API free tier. Bettor splits were rejected.
 
-**Why:** The $0 boundary keeps the portfolio sustainable and avoids inferring Cowboys popularity without licensed evidence.
+**Why:** The $0 boundary keeps the showcase sustainable and avoids inferring Cowboys popularity without licensed evidence.
 
 **Tradeoff:** The product can compare football and market probabilities, but it cannot claim bettor sentiment explains the difference.
 
@@ -276,7 +276,7 @@ This is the same product-management pattern I would use with an engineering team
 |---|---|
 | Product flow | COMPLETE |
 | Automated and expert accessibility review | COMPLETE with an explicit no-human-testing boundary |
-| AI persona portfolio validation | COMPLETE; transparent synthetic evidence, not human research |
+| AI persona showcase validation | COMPLETE; transparent synthetic evidence, not human research |
 | Live odds | COMPLETE |
 | Security and privacy | COMPLETE |
 | Responsible use | COMPLETE |
@@ -298,7 +298,7 @@ This is the same product-management pattern I would use with an engineering team
 8. The Runtime AI suite passes 12 of 12 expected outcomes across seven criteria and 84 binary checks, including exact evidence, exact uncertainty, and prohibited-advice cases.
 9. A four-scenario live scorecard passed four of four Runtime AI and four of four deterministic cases. Runtime AI averaged 3,568 ms and an estimated $0.013118 total with no fallbacks in this bounded sample.
 10. The product remains usable through bundled odds and deterministic explanation when an external dependency fails.
-11. Desktop and mobile accessibility and overflow checks pass the documented portfolio review.
+11. Desktop and mobile accessibility and overflow checks pass the documented showcase review.
 
 ## What I learned
 
@@ -308,19 +308,20 @@ This is the same product-management pattern I would use with an engineering team
 4. **Vendor constraints shape product design.** Caching, source selection, and scope decisions made the $0 data target achievable.
 5. **A negative model conclusion is still a successful product outcome.** Reporting that the prototype did not beat the market demonstrates integrity.
 6. **Frontier AI accelerates delivery only when product ownership stays explicit.** Clear constraints, tests, and approvals converted speed into reliable evidence.
+7. **Provider portability starts with contracts, not duplicated integrations.** OpenAI powers the deployed explanation path. The deterministic source of truth, bounded tools, structured outputs, evaluations, observability, cost controls, and fallback pattern can transfer to Anthropic or another modern LLM provider after a separate adapter and provider-specific validation.
 
 ## Current limitations and next decisions
 
 1. Product adoption targets remain unmeasured because analytics are not implemented.
-2. The portfolio evidence gate is complete through owner-reviewed AI proxy pretests and transparent synthetic persona simulations. No human usability testing has been conducted or claimed. Optional future moderated research could add observed behavioral evidence.
-3. The forecast is a transparent portfolio baseline, not a production wagering model.
+2. The showcase evidence gate is complete through owner-reviewed AI proxy pretests and transparent synthetic persona simulations. No human usability testing has been conducted or claimed. Optional future moderated research could add observed behavioral evidence.
+3. The forecast is a transparent showcase baseline, not a production wagering model.
 4. Historical odds and bettor splits remain outside the free-data scope.
 5. Public hosting and the signed-out success-path smoke test were completed on July 30, 2026.
 6. Data and trademark limitations remain accepted risks, not legal clearance.
 
 ## Artifact index
 
-- [Recruiter overview](../README.md)
+- [Showcase overview](../README.md)
 - [Product brief](product-brief.md)
 - [Architecture](architecture.md)
 - [Frontier AI architecture](frontier-ai-architecture.md)
@@ -336,7 +337,6 @@ This is the same product-management pattern I would use with an engineering team
 - [Release review](release-review.md)
 - [Dependabot review](dependabot-review-2026-07-30.md)
 - [Figma flow](figma-flow.md)
-- [LinkedIn launch kit](linkedin-launch-kit.md)
 - [Usability research](usability-research.md)
 - [Moderated usability session kit](usability-session-kit.md)
 - [Repository launch checklist](repository-launch-checklist.md)

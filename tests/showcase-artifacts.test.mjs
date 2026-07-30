@@ -18,17 +18,19 @@ function localTargets(markdown) {
     .map((target) => decodeURIComponent(target.split("#")[0]));
 }
 
-test("recruiter overview exposes the technical product management story", async () => {
+test("showcase overview exposes the technical product management story", async () => {
   const readme = await readFile(resolve(root, "README.md"), "utf8");
 
-  assert.match(readme, /## Recruiter snapshot/);
-  assert.match(readme, /## Two-minute reviewer path/);
+  assert.match(readme, /## Technical product management and frontier AI showcase/);
+  assert.match(readme, /## Two-minute showcase path/);
   assert.match(readme, /## What I owned/);
   assert.match(readme, /## Key product decisions and tradeoffs/);
   assert.match(readme, /## Verified outcomes/);
   assert.match(readme, /## Frontier AI product judgment/);
   assert.match(readme, /public\/og-market-context\.png/);
-  assert.match(readme, /Twenty product, architecture, and release-governance decisions/);
+  assert.match(readme, /Twenty-one product, architecture, positioning, and release-governance decisions/);
+  assert.match(readme, /deployed runtime uses the OpenAI Responses API/);
+  assert.match(readme, /Anthropic is not integrated in v1\.0\.0/);
   assert.match(readme, /reliability receipt/i);
 });
 
@@ -44,7 +46,7 @@ test("every local README link and image resolves", async () => {
   }
 });
 
-test("portfolio evidence set is complete and free of prohibited dash characters", async () => {
+test("showcase evidence set is complete and free of prohibited dash characters", async () => {
   const requiredArtifacts = [
     "CHANGELOG.md",
     "RELEASE_NOTES.md",
@@ -56,9 +58,8 @@ test("portfolio evidence set is complete and free of prohibited dash characters"
     "docs/dependabot-review-2026-07-30.md",
     "docs/figma-flow.md",
     "docs/frontier-ai-architecture.md",
-    "docs/linkedin-launch-kit.md",
     "docs/live-ai-scorecard.md",
-    "docs/portfolio-case-study.md",
+    "docs/showcase-case-study.md",
     "docs/repository-launch-checklist.md",
     "docs/synthetic-persona-sessions.md",
     "docs/usability-research.md",
@@ -75,16 +76,49 @@ test("portfolio evidence set is complete and free of prohibited dash characters"
   ];
 
   for (const artifact of requiredArtifacts) {
-    await assert.doesNotReject(access(resolve(root, artifact)), `Missing portfolio artifact: ${artifact}`);
+    await assert.doesNotReject(access(resolve(root, artifact)), `Missing showcase artifact: ${artifact}`);
   }
 
   const docs = (await readdir(resolve(root, "docs")))
     .filter((name) => name.endsWith(".md"))
     .map((name) => `docs/${name}`);
-  for (const relativePath of ["README.md", "CHANGELOG.md", "RELEASE_NOTES.md", ...docs]) {
+  const presentationFiles = [
+    "README.md",
+    "CHANGELOG.md",
+    "RELEASE_NOTES.md",
+    "app/layout.tsx",
+    "app/page.tsx",
+    ...docs,
+  ];
+  const excludedPositioning = [
+    ["recr", "uiter"].join(""),
+    ["hir", "ing"].join(""),
+    ["job", "-seeking"].join(""),
+    ["job", " search"].join(""),
+    ["care", "er-seeking"].join(""),
+    ["re", "sume"].join(""),
+    ["inter", "view talking"].join(""),
+    ["Link", "edIn"].join(""),
+  ];
+
+  for (const relativePath of presentationFiles) {
     const content = await readFile(resolve(root, relativePath), "utf8");
     assert.doesNotMatch(content, /[\u2013\u2014]/, `${relativePath} contains a prohibited dash character`);
+    for (const phrase of excludedPositioning) {
+      assert.doesNotMatch(
+        content,
+        new RegExp(phrase, "i"),
+        `${relativePath} contains excluded employment or social-publishing positioning`,
+      );
+    }
   }
+
+  const removedPublishingKit = resolve(
+    root,
+    "docs",
+    `${["link", "edin"].join("")}-launch-kit.md`,
+  );
+  await assert.rejects(access(removedPublishingKit));
 });
 
 test("v1 release package keeps claims and launch authority bounded", async () => {
@@ -96,6 +130,10 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
   const changelog = await readFile(resolve(root, "CHANGELOG.md"), "utf8");
   const productBrief = await readFile(resolve(root, "docs/product-brief.md"), "utf8");
   const architecture = await readFile(resolve(root, "docs/architecture.md"), "utf8");
+  const frontierArchitecture = await readFile(
+    resolve(root, "docs/frontier-ai-architecture.md"),
+    "utf8",
+  );
   const backlog = await readFile(resolve(root, "docs/mvp-backlog.md"), "utf8");
 
   assert.equal(packageJson.version, "1.0.0");
@@ -120,6 +158,7 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
   );
   assert.equal(deterministic?.passed, 4);
   assert.equal(deterministic?.totalEstimatedCostUsd, 0);
+  assert.match(frontierArchitecture, /Anthropic is not integrated or tested in v1\.0\.0/);
   assert.equal(
     liveScorecard.scenarios.every((scenario) => (
       scenario.runtime.mode === "ai"
@@ -178,13 +217,13 @@ test("AI persona validation is complete without claiming human research", async 
   const flow = await readFile(resolve(root, "docs/figma-flow.md"), "utf8");
   const launch = await readFile(resolve(root, "docs/repository-launch-checklist.md"), "utf8");
 
-  assert.match(research, /Portfolio evidence gate:\*\* COMPLETE/);
+  assert.match(research, /Showcase evidence gate:\*\* COMPLETE/);
   assert.match(research, /No human usability testing has been conducted or claimed/);
   assert.match(research, /Moderated human research may be pursued later, but it is not required/);
   assert.match(research, /do not support claims of human usability testing/);
   assert.match(research, /Owner review feedback to shipped outcome/);
   assert.match(simulations, /SYNTHETIC PERSONA SIMULATION\. NOT HUMAN RESEARCH\./);
-  assert.match(simulations, /Portfolio gate status:\*\* COMPLETE/);
+  assert.match(simulations, /Showcase gate status:\*\* COMPLETE/);
   assert.match(simulations, /Human testing:\*\* Not conducted or claimed/);
   assert.match(simulations, /52 of 60/);
   assert.match(simulations, /do not represent observed participant behavior/);
@@ -196,7 +235,10 @@ test("AI persona validation is complete without claiming human research", async 
   assert.match(flow, /flowchart TD/);
   assert.match(flow, /not presented as a Figma screenshot/);
   assert.match(launch, /20-second animated hosted walkthrough/);
-  assert.match(launch, /\[NEEDS INPUT\].*optional 60 to 90 second narrated LinkedIn walkthrough/);
+  assert.match(
+    launch,
+    /\[x\] Confirm no external social post, profile update, publishing draft, API, or posting automation is included or authorized/,
+  );
   assert.doesNotMatch(research, /\[NEEDS INPUT\].*(human|moderated|participant)/i);
   assert.doesNotMatch(launch, /\[NEEDS INPUT\].*(human|moderated|usability session)/i);
 });

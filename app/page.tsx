@@ -370,7 +370,7 @@ export default function Home() {
 
       <section className="hero" id="top">
         <div className="hero-copy">
-          <span className="eyebrow">Frontier AI product case study</span>
+          <span className="eyebrow">Frontier AI skills showcase</span>
           <h1>Football evidence meets market reality.</h1>
           <p>
             An evidence-grounded product that joins actual players, games, and market lines with
@@ -755,7 +755,7 @@ export default function Home() {
             <span className="eyebrow">Technical product management</span>
             <h2>Product judgment, made inspectable.</h2>
             <p>
-              The portfolio proof is not the forecast alone. It is the set of product decisions
+              The showcase evidence is not the forecast alone. It is the set of product decisions
               that makes the experience useful, measurable, affordable, and safe to release.
             </p>
           </div>
@@ -764,7 +764,7 @@ export default function Home() {
         <div className="case-pillars">
           {[
             ["Opportunity", "Test whether football evidence and market prices tell the same story without claiming a wagering edge."],
-            ["AI role", "Deterministic code owns the probability. Runtime AI explains named evidence, uncertainty, and source freshness."],
+            ["AI role", "Deterministic code owns the probability. OpenAI explains evidence today, while contract-first controls preserve a governed path to Anthropic and other modern LLMs."],
             ["Operating model", "Free sports data, a six-hour odds cache, an AI cutoff, and a deterministic fallback protect cost and reliability."],
             ["Launch governance", "Accessibility, security, data rights, trademark, responsible-use, and private-release gates are explicit."],
           ].map(([title, copy]) => (
@@ -822,21 +822,21 @@ export default function Home() {
               </tr>
               <tr>
                 <th scope="row">Free data and bounded runtime cost</th>
-                <td>Lower market depth, predictable portfolio operating cost</td>
+                <td>Lower market depth, predictable showcase operating cost</td>
                 <td>Normalized consensus cache, budget ledger, and fallback path</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div className="portfolio-links" aria-label="Portfolio documentation">
+        <div className="showcase-links" aria-label="Showcase documentation">
           <a
-            href="https://github.com/erlawler/road-to-six/blob/main/docs/portfolio-case-study.md"
+            href="https://github.com/erlawler/road-to-six/blob/main/docs/showcase-case-study.md"
             target="_blank"
             rel="noreferrer"
           >
             <span>Read the case study</span>
-            <small>Problem, ownership, tradeoffs, outcomes, and next bets</small>
+            <small>Problem, ownership, tradeoffs, outcomes, and next decisions</small>
           </a>
           <a
             href="https://github.com/erlawler/road-to-six/blob/main/docs/ai-evaluation.md"

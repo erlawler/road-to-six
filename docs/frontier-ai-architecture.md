@@ -1,10 +1,16 @@
 # Frontier AI Architecture
 
-## Recruiter answer
+## Showcase summary
 
 Road to Six demonstrates a production-minded AI pattern: deterministic software calculates the forecast, and runtime AI explains that result under an enforceable contract. The model cannot invent or change the probability. The application also remains useful when the AI provider, market-data provider, or monthly AI budget is unavailable.
 
 This separation is the central technical product decision. It uses AI where language adds value while keeping calculation, evidence, cost, and release risk under product control.
+
+## Cross-provider applicability
+
+The deployed integration uses the OpenAI Responses API. The governed product pattern is provider adaptable: deterministic source of truth, bounded context, required tool contracts, structured outputs, semantic validation, observability, budget controls, and deterministic fallback.
+
+Anthropic is not integrated or tested in v1.0.0. Supporting an Anthropic model would require a separate provider adapter, approved-model allowlist, pricing and reservation rules, contract tests, adversarial evaluations, and a live scorecard before release. This distinction demonstrates modern LLM platform judgment without claiming unimplemented provider parity.
 
 ## System view
 
@@ -147,8 +153,8 @@ The displayed uncertainty range is an illustrative fixed-width sensitivity band,
 | Decision | Benefit | Cost or limitation | Why it was selected |
 |---|---|---|---|
 | AI explains but does not calculate | Prevents a language model from becoming the source of numerical truth. | The AI experience is intentionally narrower. | Trust and auditability are more valuable than open-ended generation for this job. |
-| Anonymous exploration | Removes sign-up friction and avoids personal-data collection. | Saved scenarios and user-level controls are deferred. | Authentication did not improve the core portfolio use case. |
-| Transparent baseline | Makes assumptions, weights, and backtest results inspectable. | It is not positioned as a production wagering model. | The portfolio is intended to demonstrate judgment, not claim a betting edge. |
+| Anonymous exploration | Removes sign-up friction and avoids personal-data collection. | Saved scenarios and user-level controls are deferred. | Authentication did not improve the core showcase use case. |
+| Transparent baseline | Makes assumptions, weights, and backtest results inspectable. | It is not positioned as a production wagering model. | The showcase is intended to demonstrate judgment, not claim a betting edge. |
 | Free data boundary | Keeps the operating model sustainable. | Bettor splits and paid historical odds are excluded. | A $0 sports-data target was an explicit product constraint. |
 | Aggregate monthly AI ledger and shared rate limit | Enforces cost and request capacity without collecting identity. | One visitor can consume shared capacity, and no per-user abuse history exists. | The release remains privacy-minimal while total exposure stays bounded. |
 | Deterministic fallback | Preserves the user journey during AI failure. | Generated explanations may not always be available. | Reliability is a product requirement, not a provider assumption. |
@@ -159,7 +165,7 @@ The displayed uncertainty range is an illustrative fixed-width sensitivity band,
 - Runtime AI is intentionally closed-set: the server owns the summary and disclaimer, and only exact validated drivers, uncertainty, probability, model version, and source date can reach the interface.
 - The shared anonymous request limit protects cost but is not identity-based and does not provide per-user fairness.
 - During prolonged AI misconfiguration, one global request-window row can remain per five-minute bucket until the next budgeted AI outcome cleans expired rows, bounded to 288 rows daily.
-- The market-aware model is a documented portfolio baseline and does not establish a predictive edge.
+- The market-aware model is a documented showcase baseline and does not establish a predictive edge.
 - Product KPI targets remain hypotheses because analytics and public-user measurement are not implemented.
 - Eric Lawler approved public hosting and the signed-out production smoke test on July 29, 2026. Sites version 13 became public on July 30, 2026, and the signed-out success-path check passed.
 

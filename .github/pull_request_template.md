@@ -1,6 +1,6 @@
 ## Product outcome
 
-What user or portfolio outcome does this change improve?
+What user or showcase outcome does this change improve?
 
 ## Evidence
 

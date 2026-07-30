@@ -5,7 +5,7 @@
 **Public hosting:** Published at [Road to Six](https://road-to-six-erl.erlrickylre.chatgpt.site)
 **Git tag and GitHub release:** Created
 
-Road to Six 1.0.0 is an evidence-grounded technical product management case study. It combines actual football evidence, current market context, a transparent forecast, and governed Runtime AI without turning the experience into betting advice.
+Road to Six 1.0.0 is an evidence-grounded technical product management and frontier AI skills showcase. It combines actual football evidence, current market context, a transparent forecast, and governed Runtime AI without turning the experience into betting advice.
 
 ## New capabilities
 
@@ -21,7 +21,7 @@ Road to Six 1.0.0 is an evidence-grounded technical product management case stud
 - **More accurate positioning:** Market Context Lab replaces Market Bias Lab. Bias remains an unvalidated hypothesis because bettor-split data is intentionally excluded.
 - **Clearer model language:** The audit now describes what is measured without using a contrast-template headline.
 - **Safer operations:** External calls are bounded by one atomic pre-work request check, payload validation, an atomic D1 odds-refresh lease, an approved-model allowlist, the $9.50 AI cutoff, closed-set explanation output, and deterministic fallback.
-- **Stronger portfolio evidence:** Release notes, usability research structure, owner-feedback traceability, a static repository user flow, and a launch checklist make product decisions easier to review.
+- **Stronger showcase evidence:** Release notes, usability research structure, owner-feedback traceability, a static repository user flow, and a launch checklist make product decisions easier to review.
 
 ## Verified release evidence
 
@@ -44,12 +44,12 @@ Road to Six 1.0.0 is an evidence-grounded technical product management case stud
 - Free data constraints limit historical market depth and refresh frequency.
 - Runtime AI quality is bounded by the supplied evidence and evaluation contract.
 - Data-rights and trademark review records accepted product limitations, not legal clearance.
-- The portfolio evidence gate is complete through five labeled AI proxy and expert pretests, five transparent synthetic ideal-persona simulations, owner review, and repository validation. These artifacts are not human research, and the release makes no claim of human usability testing or validation. Moderated human research is optional future work.
+- The showcase evidence gate is complete through five labeled AI proxy and expert pretests, five transparent synthetic ideal-persona simulations, owner review, and repository validation. These artifacts are not human research, and the release makes no claim of human usability testing or validation. Moderated human research is optional future work.
 - Sites version 13 contains the exact `v1.0.0` release commit and is publicly available. The signed-out production smoke test passed. Public access does not change the documented data-rights, trademark, responsible-use, model, or AI-evidence boundaries.
 
 ## Review path
 
-1. Read the [portfolio case study](docs/portfolio-case-study.md).
+1. Read the [showcase case study](docs/showcase-case-study.md).
 2. Run the scenario and inspect the AI reliability receipt.
 3. Review the [model and AI evaluation](docs/ai-evaluation.md).
 4. Inspect the [decision log](docs/decision-log.md) and [release review](docs/release-review.md).

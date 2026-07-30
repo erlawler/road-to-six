@@ -4,7 +4,7 @@
 
 The v1.0.0 release is an anonymous Market Context Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI explanation endpoint, and an inspectable reliability receipt. The GitHub release and Sites version 13 are public, and the product has no account or identity layer. Live odds, a four-scenario Runtime AI scorecard, CI, CodeQL, the authenticated hosted review, and the signed-out production smoke test pass.
 
-Recruiter-facing views:
+Showcase evidence:
 
 - [Frontier AI architecture](frontier-ai-architecture.md)
 - [Runtime AI evaluation](ai-evaluation.md)
@@ -64,7 +64,7 @@ flowchart LR
 | Runtime AI endpoint | Call the probability function and explain drivers, evidence, and uncertainty | Demonstrates function calling and grounded product AI. |
 | AI run ledger and reliability receipt | Record bounded operational metadata and show model, prompt, contract, evaluation, latency, tokens, cost, source, validation, and fallback state | Makes AI operations and failure evidence inspectable without exposing prompts or personal data. |
 | Deterministic fallback | Return the probability and templated explanation if AI is unavailable | Protects reliability and cost limits. |
-| Public React interface | Explore games, players, lines, spreads, scenarios, and forecast results | Keeps the portfolio immediately accessible without sign-in. |
+| Public React interface | Explore games, players, lines, spreads, scenarios, and forecast results | Keeps the showcase immediately accessible without sign-in. |
 | CI and evaluation suite | Test joins, probability bounds, model calibration, schema fidelity, and content policy | Makes quality and governance observable. |
 
 ## Data flow
@@ -91,6 +91,10 @@ flowchart LR
 - Headshots, logos, and official uniform artwork are excluded.
 - A feed cannot be enabled publicly until its display rights are documented.
 - Every forecast displays source timestamps, model version, and educational-use language.
+
+## Modern LLM provider boundary
+
+The deployed Runtime AI path uses the OpenAI Responses API. Anthropic is not connected in v1.0.0. The architecture demonstrates provider-adaptable product controls, including a deterministic calculation authority, bounded context, tool and output contracts, semantic validation, observability, rate and cost controls, and deterministic fallback. An Anthropic implementation would require a separate adapter, approved-model allowlist, pricing rules, contract tests, and live provider evaluation before release.
 
 ## Forecast and AI controls
 

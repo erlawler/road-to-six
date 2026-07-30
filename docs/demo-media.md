@@ -29,4 +29,4 @@ The hero, opponent, model, and governance frames were refreshed from the final v
 - Each static frame has a descriptive link and can be reviewed independently.
 - The visual sequence does not imply a betting recommendation.
 - The Runtime AI frame shows only coarse usage and reliability evidence. It exposes no key, prompt payload, user identifier, or provider account information.
-- A narrated 60 to 90 second personal walkthrough remains optional for LinkedIn. If recorded, Eric should use the script in [LinkedIn Launch Kit](linkedin-launch-kit.md) and approve the final recording before publication.
+- The hosted screenshots and walkthrough remain repository and product-site evidence. No external social post, profile update, or publishing workflow is included or authorized.

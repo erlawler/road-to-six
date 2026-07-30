@@ -2,7 +2,7 @@
 
 ## Supported version
 
-The latest commit on the default branch is the supported portfolio version.
+The latest commit on the default branch is the supported showcase version.
 
 ## Reporting a vulnerability
 
