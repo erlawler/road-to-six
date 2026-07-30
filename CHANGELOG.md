@@ -19,6 +19,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - Eric Lawler accepted the transparent AI persona evidence package as the completed portfolio gate. No human testing is claimed, and moderated human research is optional future work.
 - Pinned Road to Six on Eric Lawler's public GitHub profile.
+- Configured the optimized Market Context Lab image as the GitHub repository social preview.
 
 ### Security
 
@@ -30,7 +31,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Planned
 
 - The optional narrated LinkedIn walkthrough remains `[NEEDS INPUT]`.
-- The custom GitHub social-preview upload remains `[NEEDS INPUT]` until browser file access is enabled.
 - Product adoption analytics remain outside v1.0.0.
 
 ## [1.0.0] - 2026-07-29
