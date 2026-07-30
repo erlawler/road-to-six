@@ -2,15 +2,9 @@
 
 ## Publication boundary
 
-**DO NOT PUBLISH YET.**
+**SITE LIVE. LINKEDIN POST AWAITS ERIC'S SEPARATE APPROVAL.**
 
-The hosted release candidate remains private. Replace every `[ADD PUBLIC URL AFTER APPROVAL]` placeholder only after:
-
-1. Eric explicitly approves public hosting.
-2. The final v1.0.0 regression and private-candidate review pass.
-3. Codex makes hosting public.
-4. The production smoke test passes.
-5. The final URL works in a signed-out browser.
+The approved v1.0.0 site is public and passed its signed-out production smoke test on July 30, 2026. This kit is prepared for use, but no LinkedIn post or profile change is authorized by the hosting approval.
 
 ## Recommended project positioning
 
@@ -41,7 +35,7 @@ The most important AI decision was what the model should not do:
 
 The transparent holdout result matters too. The market-aware model improved on football-only Elo, with a Brier score of **0.207 versus 0.220**, but it did not beat the **0.206 market baseline**. The product reports that limitation rather than turning it into a marketing claim.
 
-Explore the project: [ADD PUBLIC URL AFTER APPROVAL]
+Explore the project: https://road-to-six-erl.erlrickylre.chatgpt.site
 
 Review the code and case study: https://github.com/erlawler/road-to-six
 
@@ -55,7 +49,7 @@ The product combines sourced football data, current market context, a transparen
 
 Verified holdout result: the market-aware model improved on football-only Elo, with a Brier score of **0.207 versus 0.220**, but did not beat the **0.206 market baseline**.
 
-Live product: [ADD PUBLIC URL AFTER APPROVAL]
+Live product: https://road-to-six-erl.erlrickylre.chatgpt.site
 
 Code and case study: https://github.com/erlawler/road-to-six
 
@@ -65,7 +59,7 @@ Code and case study: https://github.com/erlawler/road-to-six
 
 Road to Six is an unofficial Dallas Cowboys forecasting lab and technical product management case study. It demonstrates product strategy, data-source governance, transparent modeling, tool-bounded Runtime AI, cost controls, deterministic fallback, accessibility, security, and release management.
 
-**Link:** [ADD PUBLIC URL AFTER APPROVAL]
+**Link:** https://road-to-six-erl.erlrickylre.chatgpt.site
 
 ## LinkedIn project entry
 
@@ -81,7 +75,7 @@ Road to Six is an unofficial Dallas Cowboys forecasting lab and technical produc
 - Established a $10 monthly AI maximum, a $9.50 application cutoff, schema and semantic validation, and prohibited-advice controls.
 - Directed Codex-assisted implementation and specialist review through documented requirements, automated tests, release gates, and explicit go-live approval.
 
-**Project URL:** [ADD PUBLIC URL AFTER APPROVAL]
+**Project URL:** https://road-to-six-erl.erlrickylre.chatgpt.site
 
 **Repository:** https://github.com/erlawler/road-to-six
 
@@ -190,17 +184,17 @@ I treated Codex as a delivery and review system. I supplied product boundaries, 
 
 ### What would you do next?
 
-I would complete five privacy-safe usability sessions, run the public production smoke test after approval, instrument privacy-preserving funnel events, and evaluate whether users understand the evidence and uncertainty within five minutes.
+I would complete five privacy-safe usability sessions, instrument privacy-preserving funnel events, and evaluate whether users understand the evidence and uncertainty within five minutes.
 
 ## Final launch checklist
 
-- [ ] Replace `[ADD PUBLIC URL AFTER APPROVAL]` in this file.
-- [ ] Confirm Runtime AI status and describe fallback accurately.
-- [ ] Confirm the GitHub repository is public and the default branch is current.
-- [ ] Confirm the social image renders from `public/og-market-context.png`.
-- [ ] Run lint, tests, production build, and dependency audit.
-- [ ] Run desktop, mobile, keyboard, and signed-out smoke tests.
-- [ ] Verify source timestamps, non-affiliation notice, and responsible-use language.
-- [ ] Verify no secret, personal information, browser tab, or billing screen appears in media.
+- [x] Add the public product URL to this file.
+- [x] Confirm Runtime AI status and describe fallback accurately.
+- [x] Confirm the GitHub repository is public and the default branch is current.
+- [x] Confirm the social image renders from `public/og-market-context.png`.
+- [x] Run lint, tests, production build, and dependency audit.
+- [x] Run desktop, mobile, keyboard, and signed-out smoke tests.
+- [x] Verify source timestamps, non-affiliation notice, and responsible-use language.
+- [x] Verify no secret, personal information, browser tab, or billing screen appears in media.
 - [ ] Add the public site to LinkedIn Featured.
 - [ ] Publish the selected LinkedIn post only after explicit approval.

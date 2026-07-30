@@ -10,7 +10,7 @@ I designed the product around one question:
 
 I owned the product strategy, prioritization, data and AI boundaries, acceptance criteria, release governance, and go-live decision. I used Codex as an implementation and review partner. That operating model let me move quickly while preserving explicit human ownership of requirements, risk decisions, and publication approval.
 
-The result is a v1.0.0 GitHub release with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, hosted smoke evidence, and a complete product artifact set. Sites version 13 contains the exact tagged commit and passed an owner-authenticated hosted smoke test. Public site access is pending because internet publishing is disabled for the workspace.
+The result is a public v1.0.0 product and GitHub release with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, production smoke evidence, and a complete product artifact set. Sites version 13 contains the exact tagged commit and passed both the owner-authenticated review and signed-out production smoke test.
 
 ## Product context
 
@@ -237,7 +237,7 @@ An accepted AI response must:
 
 The system uses a dedicated OpenAI project with a $10 monthly maximum. The application reserves estimated cost before a request, reconciles actual token use, stops AI calls at $9.50, and serves the deterministic explanation afterward.
 
-After billing was enabled, one live OpenAI response completed in AI mode with no fallback. It preserved probability `0.5531549573107291`, forecast model `elo-market-v1.1.0`, source date `2026-07-15`, three drivers, and three uncertainty items. The same seven-criterion evaluator passed all seven checks. The later four-scenario scorecard and 73-test regression also pass. The owner-only deployment then passed current-odds and Runtime AI smoke checks.
+After billing was enabled, one live OpenAI response completed in AI mode with no fallback. It preserved probability `0.5531549573107291`, forecast model `elo-market-v1.1.0`, source date `2026-07-15`, three drivers, and three uncertainty items. The same seven-criterion evaluator passed all seven checks. The later four-scenario scorecard and 73-test regression also pass. The public deployment then passed signed-out current-odds and Runtime AI smoke checks.
 
 ## Data and model integrity
 
@@ -283,14 +283,14 @@ This is the same product-management pattern I would use with an engineering team
 | Trademark and public content | ACCEPTED WITH LIMITATIONS |
 | Runtime AI live response | COMPLETE for the live baseline |
 | v1.0.0 hardening regression | COMPLETE |
-| Public hosting | BLOCKED BY WORKSPACE POLICY |
+| Public hosting | COMPLETE |
 
 ## Verified outcomes
 
 1. The production build and lint checks pass.
 2. All 73 automated tests pass.
 3. The current dependency audit reports zero vulnerabilities.
-4. The private release candidate returned five current Dallas events from The Odds API.
+4. The authenticated release candidate returned five current Dallas events from The Odds API during its pre-publication review. The signed-out production endpoint later returned 17 current NFL events and the interface matched 11 Cowboys games.
 5. Successful six-hour cache persistence models 372 credits in a 31-day month, below the free allowance. Upstream and persistence failures remain monitored separately.
 6. Market probability is calculated after removing vig within each sportsbook.
 7. The 2024 to 2025 holdout reports all three Brier scores in the interface.
@@ -314,7 +314,7 @@ This is the same product-management pattern I would use with an engineering team
 2. Five privacy-safe post-launch usability sessions and the resulting product decisions remain `[NEEDS INPUT]`. The v1.0.0 release is not human validated.
 3. The forecast is a transparent portfolio baseline, not a production wagering model.
 4. Historical odds and bettor splits remain outside the free-data scope.
-5. Public hosting was approved on July 29, 2026 but is blocked until internet publishing is enabled for the Sites workspace. The signed-out success-path smoke test follows that change.
+5. Public hosting and the signed-out success-path smoke test were completed on July 30, 2026.
 6. Data and trademark limitations remain accepted risks, not legal clearance.
 
 ## Artifact index

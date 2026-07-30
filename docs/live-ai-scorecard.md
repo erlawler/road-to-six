@@ -45,7 +45,7 @@ The sanitized evidence is checked in at [`evals/live/2026-07-27-gpt-5.6-luna.jso
 
 ## Run the scorecard
 
-Start the private candidate locally with valid server-side credentials, then run:
+Start the application locally with valid server-side credentials, then run:
 
 ```bash
 LIVE_EVAL_BASE_URL=http://localhost:3000 \

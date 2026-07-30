@@ -1,6 +1,6 @@
 # Product Brief: Road to Six Market Context Lab
 
-**Status:** PRIVATE RELEASE CANDIDATE
+**Status:** PUBLIC V1.0.0 RELEASE
 **Owner:** Eric Lawler  
 **Product type:** Public technical product management portfolio prototype  
 **Audience:** Hiring managers, technical product leaders, football fans, and product peers
@@ -107,4 +107,4 @@ The weakest dimension is effort. Improve it with staged free-data adapters, a sm
 
 ## Launch decision
 
-The public GitHub repository, `v1.0.0` tag, and GitHub release are available for review. Live odds are enabled through a six-hour shared cache, selected-game applicability is visible, and the deterministic explanation remains available. After billing was enabled, the live Runtime AI baseline and four-scenario scorecard passed with no fallback. The v1.0.0 build, lint, 73-test suite, 12-case AI evaluation, dependency audit, CI, CodeQL, and authenticated hosted smoke test pass. Sites version 13 contains the exact release commit but remains owner-only because internet publishing is disabled for the workspace. Public access and the signed-out success-path smoke test resume after that setting is enabled.
+The public GitHub repository, `v1.0.0` tag, GitHub release, and [public product](https://road-to-six-erl.erlrickylre.chatgpt.site) are available for review. Live odds are enabled through a six-hour shared cache, selected-game applicability is visible, and the deterministic explanation remains available. After billing was enabled, the live Runtime AI baseline and four-scenario scorecard passed with no fallback. The v1.0.0 build, lint, 73-test suite, 12-case AI evaluation, dependency audit, CI, CodeQL, authenticated hosted review, and signed-out production smoke test pass.

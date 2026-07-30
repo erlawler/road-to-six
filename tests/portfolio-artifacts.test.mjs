@@ -96,7 +96,7 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
 
   assert.equal(packageJson.version, "1.0.0");
   assert.equal(packageJson.scripts["eval:live"], "node scripts/run-live-ai-scorecard.mjs");
-  assert.match(releaseNotes, /Public hosting:.*(?:Approved|Published|Blocked)/);
+  assert.match(releaseNotes, /Public hosting:.*Published/);
   assert.match(releaseNotes, /Git tag and GitHub release:.*(?:Authorized|Created)/);
   assert.match(changelog, /## \[1\.0\.0\] - 2026-07-29/);
   const runtime = liveScorecard.scorecard.find((row) => row.mode === "runtime");
@@ -130,6 +130,18 @@ test("v1 release package keeps claims and launch authority bounded", async () =>
     ["backlog", backlog],
   ]) {
     assert.doesNotMatch(content, /Market Bias Lab/, `${name} contains stale Market Bias Lab positioning`);
+  }
+  for (const [name, content] of [
+    ["release notes", releaseNotes],
+    ["product brief", productBrief],
+    ["architecture", architecture],
+    ["backlog", backlog],
+  ]) {
+    assert.doesNotMatch(
+      content,
+      /(?:public hosting|public access).*(?:blocked|pending)/i,
+      `${name} contains stale public launch status`,
+    );
   }
 });
 

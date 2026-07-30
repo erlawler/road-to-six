@@ -2,7 +2,7 @@
 
 ## Recruiter answer
 
-Road to Six is Eric Lawler's technical product management case study, built with Codex as an implementation and review accelerator. Eric retained ownership of the problem, product boundaries, tradeoffs, cost envelope, risk acceptance, and release approval. Codex helped translate those decisions into working software, tests, documentation, and a reviewable private release candidate.
+Road to Six is Eric Lawler's technical product management case study, built with Codex as an implementation and review accelerator. Eric retained ownership of the problem, product boundaries, tradeoffs, cost envelope, risk acceptance, and release approval. Codex helped translate those decisions into working software, tests, documentation, and a public v1.0.0 release.
 
 The honest claim is not that Eric manually authored every line. The stronger claim is that he directed an AI-assisted product delivery system with explicit requirements, governance, validation, and human approval gates.
 
@@ -15,8 +15,8 @@ The honest claim is not that Eric manually authored every line. The stronger cla
 | Boundaries | Set a $0 sports-data target, excluded bettor splits, kept exploration anonymous, and prohibited betting advice. | Encoded those boundaries in application rules, tests, release checks, and public documentation. |
 | AI strategy | Chose grounded explanation, visible evidence, uncertainty, and a $10 monthly maximum with a $9.50 application cutoff. | Implemented tool calling, structured output, budget reservation, validation, and deterministic fallback. |
 | Experience | Reviewed private previews and requested specific content, scenario, opponent, and interface changes. | Applied scoped revisions and returned an updated preview for review. |
-| Risk acceptance | Accepted documented data-rights and trademark limitations while withholding public-hosting approval. | Performed accessibility, security, responsible-use, data-rights, and release reviews with explicit limitations. |
-| Release | Retains the final decision to make hosting public. | Prepared the repository, CI, private deployment, and production smoke-test plan. |
+| Risk acceptance | Accepted documented data-rights and trademark limitations before authorizing public hosting. | Performed accessibility, security, responsible-use, data-rights, and release reviews with explicit limitations. |
+| Release | Retained the final decision and explicitly approved public hosting. | Prepared the repository and CI, published the approved release, and completed the signed-out production smoke test. |
 
 ## Collaboration loop
 

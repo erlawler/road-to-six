@@ -11,9 +11,11 @@
 
 **Road to Six is a technical product management case study in evidence-grounded AI.** It turns Dallas Cowboys football data and betting-market context into an inspectable probability workflow without giving betting advice.
 
-The product demonstrates how I frame an ambiguous problem, choose the right boundary between deterministic software and frontier AI, integrate governed data sources, define measurable quality gates, and move a product from concept to a private release candidate.
+**[Open the public Road to Six product](https://road-to-six-erl.erlrickylre.chatgpt.site)**
 
-> **Current status:** Version 1.0.0 is published on GitHub and passes the build, lint, 73-test, 12-case AI-evaluation, dependency-audit, four-scenario live-scorecard, CI, and CodeQL gates. Sites version 13 contains the exact release commit and passed an owner-authenticated smoke test for hydration, matchup changes, live odds, deterministic forecast, Runtime AI, reliability receipt, and browser errors. Public site access is blocked by the workspace internet-publishing policy; an unauthenticated request returns HTTP 401 until that setting is enabled.
+The product demonstrates how I frame an ambiguous problem, choose the right boundary between deterministic software and frontier AI, integrate governed data sources, define measurable quality gates, and move a product from concept to a governed public release.
+
+> **Current status:** Version 1.0.0 is public on GitHub and Sites. The anonymous production smoke test passed on July 30, 2026 for page load, client hydration, live odds, matchup changes, deterministic forecast behavior, Runtime AI, structured reliability evidence, input rejection, accessibility markers, security headers, source links, social metadata, and browser errors. Build, lint, 73 tests, 12 AI evaluation cases, the four-scenario live scorecard, dependency audit, CI, and CodeQL also pass.
 
 ## Recruiter snapshot
 
@@ -25,7 +27,7 @@ The product demonstrates how I frame an ambiguous problem, choose the right boun
 | Core job | Inspect football and market evidence, change assumptions, and understand a traceable probability and its uncertainty |
 | Product scope | Real roster, schedule, player, game, and current market data; scenario modeling; model audit; runtime AI explanation |
 | Key constraint | $0 sports-data vendor spend and no more than $10 monthly runtime AI spend |
-| Current release | v1.0.0 GitHub release with validated live integrations, owner-only Sites version 13, hosted smoke evidence, and one workspace-policy blocker to public access |
+| Current release | [Public v1.0.0 product](https://road-to-six-erl.erlrickylre.chatgpt.site) and GitHub release with validated live integrations, AI evaluation, cost controls, and production smoke evidence |
 
 **Ownership:** I owned the product strategy, technical decisions, risk acceptance, and release approval. Codex accelerated implementation, testing, review, and documentation within the boundaries I defined.
 
@@ -82,7 +84,7 @@ These are implemented or validated outcomes, not portfolio targets.
 | Sourced football experience | Versioned 2026 roster and schedule snapshot with complete 2025 regular-season player baselines and weekly opponent leaders |
 | Transparent model evaluation | 2024 to 2025 walk-forward holdout: football-only Brier 0.220, market-aware Brier 0.207, market baseline Brier 0.206 |
 | Honest model conclusion | The market-aware baseline improved on football-only Elo but did not outperform the market baseline |
-| Live market integration | Eleven current Cowboys games matched the schedule in the authenticated hosted review, with source, retrieval time, cache state, and selected-game applicability preserved |
+| Live market integration | The anonymous production refresh returned 17 events from The Odds API, matched 11 Cowboys games, and applied a current Week 2 market with source, retrieval time, cache state, and selected-game applicability preserved |
 | Free-tier cost design | Successful six-hour cache persistence models 372 credits in a 31-day month, below the 500-credit allowance; failures remain monitored |
 | AI reliability controls | Offline evaluation passed 12 of 12 expected outcomes across seven criteria and 84 binary checks |
 | Live AI contract | One AI-mode response preserved the deterministic probability and passed all seven live checks |

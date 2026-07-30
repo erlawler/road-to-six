@@ -49,4 +49,4 @@ Can a visitor inspect football and market evidence, change assumptions, and unde
 - Do not send raw vendor payloads to analytics or runtime AI.
 - Report targets and actuals separately.
 
-No product analytics are implemented in the owner-only release candidate. The targets above remain hypotheses, not observed outcomes.
+No product analytics are implemented in the public v1.0.0 release. The targets above remain hypotheses, not observed outcomes.

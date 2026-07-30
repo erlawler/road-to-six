@@ -1,8 +1,8 @@
 # Road to Six 1.0.0
 
 **Prepared:** July 27, 2026
-**Release state:** GitHub release published; hosted v1.0.0 remains owner-only
-**Public hosting:** Blocked by the Sites workspace internet-publishing policy
+**Release state:** Public on GitHub and Sites
+**Public hosting:** Published at [Road to Six](https://road-to-six-erl.erlrickylre.chatgpt.site)
 **Git tag and GitHub release:** Created
 
 Road to Six 1.0.0 is an evidence-grounded technical product management case study. It combines actual football evidence, current market context, a transparent forecast, and governed Runtime AI without turning the experience into betting advice.
@@ -33,6 +33,9 @@ Road to Six 1.0.0 is an evidence-grounded technical product management case stud
 - Offline AI evaluation passed 12 of 12 expected outcomes across 84 binary checks.
 - The production build, lint, 73 automated tests, and dependency audit passed.
 - The product preserves deterministic forecast and explanation behavior when AI is unavailable.
+- The July 30 signed-out production smoke test returned HTTP 200 without authentication, refreshed 17 current events from The Odds API, matched 11 Cowboys games, applied the current Week 2 market, and completed a validated Runtime AI explanation with no fallback.
+- The public Runtime AI receipt passed with `gpt-5.6-luna`, 5,584 ms latency, 649 input tokens, 370 output tokens, and an estimated request cost of $0.0030.
+- Public security headers, source links, social metadata, input rejection, and zero browser-console errors were verified.
 
 ## Important limitations
 
@@ -42,7 +45,7 @@ Road to Six 1.0.0 is an evidence-grounded technical product management case stud
 - Runtime AI quality is bounded by the supplied evidence and evaluation contract.
 - Data-rights and trademark review records accepted product limitations, not legal clearance.
 - Five AI proxy and expert pretests are complete, but no moderated human usability sessions have occurred. Eric Lawler approved deferring the five-session study to post-launch validation for v1.0.0. This release must not be described as human validated.
-- Sites version 13 contains the exact `v1.0.0` release commit and passed an owner-authenticated hosted smoke test. The workspace currently blocks internet publishing, so public access and the signed-out success-path smoke test remain pending. An unauthenticated request correctly returned HTTP 401 while owner-only access remained active.
+- Sites version 13 contains the exact `v1.0.0` release commit and is publicly available. The signed-out production smoke test passed. Public access does not change the documented data-rights, trademark, responsible-use, model, or deferred human-validation limitations.
 
 ## Review path
 
@@ -50,4 +53,4 @@ Road to Six 1.0.0 is an evidence-grounded technical product management case stud
 2. Run the scenario and inspect the AI reliability receipt.
 3. Review the [model and AI evaluation](docs/ai-evaluation.md).
 4. Inspect the [decision log](docs/decision-log.md) and [release review](docs/release-review.md).
-5. Use the [repository launch checklist](docs/repository-launch-checklist.md) before publication.
+5. Review the [repository launch checklist](docs/repository-launch-checklist.md) for publication evidence and remaining post-launch work.

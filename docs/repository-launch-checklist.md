@@ -1,7 +1,7 @@
 # Repository and Portfolio Launch Checklist
 
 **Package:** 1.0.0
-**Current state:** v1.0.0 published on GitHub and deployed as owner-only Sites version 13; public access blocked by the workspace internet-publishing policy
+**Current state:** v1.0.0 published on GitHub and publicly available through Sites
 **Authority boundary:** Eric Lawler approved the GitHub push, v1.0.0 tag and release, public hosting, and signed-out production smoke test
 
 ## Release evidence
@@ -22,6 +22,7 @@
 - [ ] `[NEEDS INPUT]` Confirm the README social card, badges, table of contents path, and local links render on GitHub.
 - [ ] `[NEEDS INPUT]` Pin the repository on Eric Lawler's GitHub profile.
 - [x] Confirm the public repository visibility matches Eric's launch decision.
+- [x] Add the public product URL to the GitHub repository homepage and README.
 
 ## GitHub security and maintenance
 
@@ -65,12 +66,18 @@
 ## Hosted launch
 
 - [x] Eric Lawler approved public hosting on July 29, 2026.
-- [ ] `[BLOCKER]` Workspace administrator: enable internet publishing for Sites.
-- [ ] Codex: change hosting access to public after the workspace policy is enabled.
-- [ ] Run the signed-out success-path production smoke test for page load, odds refresh, deterministic forecast, Runtime AI, fallback, rate limiting, accessibility, security headers, source links, and social metadata.
+- [x] Internet publishing was enabled for Sites.
+- [x] Codex changed Road to Six access to Anyone on the internet.
+- [x] Run the signed-out success-path production smoke test for page load, odds refresh, deterministic forecast, Runtime AI, input rejection, accessibility, security headers, source links, and social metadata.
 - [x] Confirm the $10 provider budget and $9.50 application cutoff remain active.
-- [x] Record Sites version 13, the authenticated hosted smoke test, and the blocked anonymous HTTP 401 result in the release review.
+- [x] Record Sites version 13, the authenticated hosted smoke test, the public HTTP 200 result, and the signed-out production evidence in the release review.
 
 ## Rollback
 
-If the production smoke test fails, restore owner-only access, keep deterministic fallback active, and document the failing gate before any new release declaration.
+If a future production smoke test fails, restore owner-only access, keep deterministic fallback active, and document the failing gate before any new release declaration.
+
+## Post-launch P2 hardening
+
+- [ ] Add canonical, `og:type`, `og:url`, and social-image alt metadata.
+- [ ] Add `robots.txt` and `sitemap.xml`.
+- [ ] Evaluate removing inline script and style allowances from the framework CSP without breaking hydration.

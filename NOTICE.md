@@ -20,6 +20,6 @@ The live adapter uses The Odds API. Current market data is normalized into conse
 
 Dallas Cowboys, NFL, Super Bowl, team names, player names, and related marks belong to their respective owners. Road to Six is an unofficial educational portfolio project. It does not use official logos, player images, uniform artwork, or endorsement claims.
 
-The product places educational-use language beside forecast results and the full non-affiliation statement in the footer. The owner approved public hosting on July 29, 2026, subject to the production smoke test and rollback controls.
+The product places educational-use language beside forecast results and the full non-affiliation statement in the footer. The owner approved public hosting on July 29, 2026. Public access and the signed-out production smoke test were completed on July 30, 2026, with rollback controls retained.
 
 This notice documents product controls and accepted release limitations. It is not legal advice or confirmation that all underlying third party rights have been cleared.
