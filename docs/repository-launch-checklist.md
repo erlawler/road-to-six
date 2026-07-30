@@ -79,6 +79,6 @@ If a future production smoke test fails, restore owner-only access, keep determi
 
 ## Post-launch P2 hardening
 
-- [ ] Add canonical, `og:type`, `og:url`, and social-image alt metadata.
-- [ ] Add `robots.txt` and `sitemap.xml`.
-- [ ] Evaluate removing inline script and style allowances from the framework CSP without breaking hydration.
+- [x] Add canonical, `og:type`, `og:url`, and social-image alt metadata.
+- [x] Add `robots.txt` and `sitemap.xml`.
+- [x] Evaluate removing inline script and style allowances from the framework CSP without breaking hydration. Sites version 14 blocks inline event-handler scripts and inline style elements. ADR 018 documents the two compatibility allowances retained for vinext bootstrap scripts and the dynamic probability ring.
