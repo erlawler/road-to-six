@@ -1,103 +1,57 @@
-# Usability Research Plan and Findings
+# AI Persona Validation and Owner Findings
 
-**Study state:** Five AI proxy and expert pretests COMPLETE. Five synthetic ideal-persona simulations COMPLETE. No moderated human sessions have occurred.
-**Release decision:** OWNER-APPROVED DEFERRAL for v1.0.0, recorded July 29, 2026.
-**Accepted limitation:** Eric Lawler approved moving the five moderated human sessions from the v1.0.0 pre-launch gate to post-launch validation. This decision allows release with incomplete human-usability evidence. It does not represent the product as human validated, and all human-participant findings remain `[NEEDS INPUT]`.
-**Post-launch target:** Complete five privacy-safe moderated human sessions before making evidence-based claims about human comprehension, usability, or behavior.
-**Research owner:** Eric Lawler
-**Product version:** 1.0.0
-**Ready-to-run package:** [Moderated Usability Session Kit](usability-session-kit.md)
-**Synthetic review:** [Synthetic Ideal-Persona Usability Simulations](synthetic-persona-sessions.md)
+**Portfolio evidence gate:** COMPLETE
 
-The protocol, consent language, moderator guide, scoring rubric, session worksheet, and aggregate decision table are complete. A structured five-persona simulation added hypotheses about control-level contribution, fallback-copy placement, evidence density, mobile scanning, and model-metric interpretation. Those results remain AI proxy evidence. Execution still requires five real participants, their consent, observed sessions, de-identified findings, at least one evidence-based product decision, and retesting of accepted P0 or P1 changes.
+**Accepted evidence:** Five labeled AI proxy and expert pretests plus five transparent synthetic ideal-persona simulations
 
-## Decision this study supports
+**Owner decision:** Eric Lawler accepted the transparent AI persona evidence package as the completed portfolio validation scope on July 30, 2026.
 
-Determine whether a first-time reviewer can understand the product's evidence, change a scenario, distinguish calculated probability from AI explanation, and identify uncertainty within five minutes.
+**Evidence boundary:** This is AI-assisted design evaluation, not human research. No human usability testing has been conducted or claimed. The findings do not represent observed human behavior, adoption, or accessibility certification.
 
-## Research questions
+**Optional future work:** Moderated human research may be pursued later, but it is not required for release or portfolio completion.
 
-1. Can a reviewer explain what Road to Six does after reading the hero section?
-2. Can a reviewer select a matchup and find the relevant Dallas and opponent evidence?
-3. Does the reviewer understand that participation controls are assumptions rather than injury reports?
-4. Can the reviewer distinguish football-only, market-implied, and market-aware probabilities?
-5. Does the reviewer understand that Runtime AI explains but does not calculate or recommend?
-6. Can the reviewer identify at least one uncertainty and one source-freshness indicator?
-7. Does the portfolio case make Eric's product ownership and Codex's implementation role clear?
+**Product version:** Public Road to Six v1.0.0
 
-## Participant profile
+**AI persona evidence:** [Synthetic Ideal-Persona Usability Simulations](synthetic-persona-sessions.md)
 
-- Three technical product managers, product leaders, or engineering partners
-- Two recruiters or hiring managers who evaluate technical product talent
-- No gambling history, medical information, account data, or other sensitive attributes are required
-- Participants may use initials or a session code instead of a name
+**Optional future protocol:** [Optional Moderated Usability Research Kit](usability-session-kit.md)
 
-## Privacy and consent
+## Decision supported
 
-1. Explain that this is a portfolio usability study, not betting research.
-2. Ask for consent before recording audio, video, or the screen.
-3. If recording is declined, keep only de-identified notes.
-4. Do not collect email addresses, wagering behavior, financial information, or account credentials in the research artifact.
-5. Store findings by session code, such as `P01`.
-6. Remove direct quotes that could identify a participant unless the participant explicitly approves publication.
-7. Delete raw recordings after synthesis or by a date agreed with the participant.
+Evaluate whether the portfolio experience makes its product purpose, scenario flow, Runtime AI boundary, evidence, uncertainty, responsible-use policy, and product ownership inspectable for the target reviewer profiles.
 
-## Five-minute task script
+The completed portfolio gate provides:
 
-1. Without prompting, describe what you believe this product does.
-2. Select a matchup and identify one Dallas player and one opponent player that could influence the scenario.
-3. Change one Dallas assumption and one opponent assumption.
-4. Explain what changed in the probability and what did not.
-5. Generate the grounded explanation and describe the role Runtime AI played.
-6. Find the model version, source freshness, and one uncertainty.
-7. Open the product case and describe one product tradeoff Eric made.
+- Five transparent target-profile simulations
+- Six task-level modeled checks for each profile
+- Traceability for every modeled partial score
+- Explicit Runtime AI and responsible-use comprehension checks
+- Five prioritized design hypotheses
+- Owner-reviewed product decisions
+- Automated and hosted validation for accepted changes
 
-The complete 25-minute moderator flow is maintained in the [Moderated Usability Session Kit](usability-session-kit.md).
+## AI persona validation method
 
-## Measures
+The simulations used the same production workflow and task rubric across five ideal reviewer profiles:
 
-| Measure | Target | Collection method |
-|---|---:|---|
-| Scenario task completion | At least 4 of 5 participants | Moderator observation |
-| AI role comprehension | At least 4 of 5 state that AI explains but does not calculate | Post-task question |
-| Responsible-use comprehension | 5 of 5 state that the product does not recommend a bet | Post-task question |
-| Evidence discovery | At least 4 of 5 find model version and source freshness | Moderator observation |
-| Uncertainty discovery | At least 4 of 5 identify one uncertainty | Moderator observation |
-| Five-minute value comprehension | At least 4 of 5 explain the product and one tradeoff | Timed task |
+1. Portfolio recruiter
+2. Technical product manager
+3. AI platform product leader
+4. Analytics product leader
+5. Mobile recruiter with accessibility awareness
 
-## Session notes template
+The simulations produced 52 of 60 modeled task points. This is a design-risk indicator, not a completion rate or human usability measure. Full persona definitions, score evidence, prompts, limitations, and optional future research criteria are documented in [Synthetic Ideal-Persona Usability Simulations](synthetic-persona-sessions.md).
 
-| Field | Entry |
-|---|---|
-| Session code | `[NEEDS INPUT]` |
-| Participant profile | `[NEEDS INPUT]` |
-| Date | `[NEEDS INPUT]` |
-| Recording consent | `[NEEDS INPUT]` Yes, no, or notes only |
-| Scenario completion | `[NEEDS INPUT]` |
-| AI role explanation | `[NEEDS INPUT]` |
-| Responsible-use explanation | `[NEEDS INPUT]` |
-| Evidence found | `[NEEDS INPUT]` |
-| Uncertainty found | `[NEEDS INPUT]` |
-| Friction observed | `[NEEDS INPUT]` |
-| Direct quote approved for publication | `[NEEDS INPUT]` |
-| Candidate product change | `[NEEDS INPUT]` |
-
-## Synthetic ideal-persona simulations
-
-Five AI-simulated target-profile walkthrough models were completed against the public Sites version 14 experience. The simulations modeled a portfolio recruiter, technical product manager, AI platform product leader, analytics product leader, and mobile recruiter with accessibility awareness.
-
-The simulations scored 52 of 60 modeled task points. That number is a design-risk indicator only. It is not a completion rate, usability measure, or human result. The full persona definitions, task matrix, prioritized hypotheses, and real-study bridge are recorded in [Synthetic Ideal-Persona Usability Simulations](synthetic-persona-sessions.md).
-
-The two highest-priority hypotheses for human validation are:
+The two highest-priority hypotheses for owner review or optional future research are:
 
 1. Visitors may need a compact explanation of which changed control moved the probability.
 2. Visitors may need deterministic fallback behavior stated beside the Runtime AI action.
 
-No product change is accepted solely from synthetic evidence.
+Synthetic findings may support owner-led portfolio decisions only when they stay labeled, are grounded in the production workflow, and are validated through code, tests, or hosted evidence. They cannot support claims about actual user behavior.
 
 ## Prior proxy findings synthesis
 
-These sessions are AI proxy and expert pretests. They are useful for finding release friction, but they are not evidence of human behavior and do not satisfy the human-session completion rule.
+These AI proxy pretests and synthetic simulations satisfy the owner-approved portfolio evidence gate. They remain explicitly distinct from observed human behavior and do not support claims of human usability testing.
 
 | Pretest | Proxy perspective | Result | Primary evidence |
 |---|---|---|---|
@@ -107,7 +61,7 @@ These sessions are AI proxy and expert pretests. They are useful for finding rel
 | D | Skeptical analytics reviewer | PASS, 5 of 5 tasks | Correctly concluded the model improves on football-only Elo but does not beat the market baseline. |
 | E | Accessibility expert | CONDITIONAL PASS | Keyboard and responsive flows passed; a P1 light-surface contrast issue was detected and corrected. |
 
-| Finding | Sessions | Severity | Product decision | Validation |
+| Finding | Pretests | Severity | Product decision | Validation |
 |---|---:|---|---|---|
 | Live AI gate copy contradicted completed evidence | B | P0 | Replace the stale gate with the verified four-scenario live scorecard, latency, cost, and no-fallback outcome | Render test and authenticated hosted review passed |
 | Provider refresh could be confused with selected-game freshness | C, D | P0 | Show whether a current market is applied to the selected week or whether the dated baseline remains active | Hosted Week 1 baseline and Week 2 current states passed |
@@ -116,10 +70,10 @@ These sessions are AI proxy and expert pretests. They are useful for finding rel
 | No-market matchups still displayed a market-aware label | A | P1 | Label the forecast football-only when no market-implied probability exists | Implemented and covered by release review |
 | Runtime AI ownership was not explicit enough after generation | C | P1 | State that the probability stayed locked while Runtime AI explained it | Hosted Runtime AI receipt flow passed |
 | Scenario assumptions persisted across matchup changes without explanation | C | P1 | Add a reset action and a persistence note | Hosted reset returned the deterministic state and announced completion |
-| Six sliders create recruiter scan friction | A | P2 | Retain for v1.0.0, then evaluate presets or progressive disclosure with human participants | `[NEEDS INPUT]` Human validation |
-| Per-player effects are aggregated into one scenario contribution | C | P2 | Consider a compact contribution row in a future version | `[NEEDS INPUT]` Product prioritization |
-| Model score materiality needs more interpretation | D | P2 | Consider calibration visualization and confidence limits | `[NEEDS INPUT]` Product prioritization |
-| Screen-reader status changes may announce twice | E | P2 | Retest with VoiceOver and NVDA, then debounce or simplify announcements if confirmed | `[NEEDS INPUT]` Assistive-technology validation |
+| Six sliders may create recruiter scan friction | A, SIM01, SIM05 | P2 | Retain for v1.0.0 and consider presets or progressive disclosure | Optional future research opportunity |
+| Per-player effects are aggregated into one scenario contribution | C, SIM01, SIM02, SIM04 | P2 | Consider a compact contribution row in a future version | Product prioritization opportunity |
+| Model score materiality may need more interpretation | D, SIM02, SIM04 | P2 | Consider calibration visualization and confidence limits | Product prioritization opportunity |
+| Screen-reader status changes may announce twice | E | P2 | Consider optional VoiceOver and NVDA review before making assistive-technology claims | No human assistive-technology claim |
 
 ## Owner review feedback to shipped outcome
 
@@ -141,4 +95,4 @@ The entries below are documented owner-review changes, not participant-study fin
 
 ## Completion rule
 
-The research completion rule remains unchanged. The owner-approved deferral removes the study as a blocking dependency for v1.0.0 only. It does not mark the study complete. The study is complete only when five moderated human sessions are documented, findings are de-identified, at least one product decision is tied to observed human evidence, and accepted changes are retested. Proxy findings above remain labeled as pretests. Human-session counts, findings, quotes, and outcomes remain `[NEEDS INPUT]` until actual moderated sessions occur.
+The portfolio evidence gate is complete through labeled AI proxy review, transparent synthetic persona simulation, owner decision-making, and product validation. No human study has been run or claimed. If optional moderated research is commissioned later, its participant evidence, consent, findings, and limitations must remain separate from this completed AI evidence package.

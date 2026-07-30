@@ -11,16 +11,16 @@
 - [x] Validate one live Runtime AI response against all seven criteria.
 - [x] Run the four-scenario live AI scorecard and record quality, latency, and estimated cost.
 - [x] Re-run the owner-authenticated private smoke test against the final saved version.
-- [x] Confirm the final automated test count of 73 in README and release review. Update release notes only when the release is approved.
+- [x] Confirm the final automated test count of 76 in README and release review.
 - [x] Review the complete diff for secrets, personal data, unsupported claims, and unrelated files.
 
 ## GitHub repository presentation
 
 - [x] Set the repository description to: `Evidence-grounded football forecasting case study demonstrating technical product management, AI evaluation, cost controls, and release governance.`
 - [x] Add repository topics: `technical-product-management`, `product-management`, `frontier-ai`, `ai-evaluation`, `responsible-ai`, `explainable-ai`, `sports-analytics`, `nextjs`, `cloudflare-workers`, and `codex`.
-- [ ] `[NEEDS INPUT]` Upload `public/og-market-context.png` as the repository social preview.
-- [ ] `[NEEDS INPUT]` Confirm the README social card, badges, table of contents path, and local links render on GitHub.
-- [ ] `[NEEDS INPUT]` Pin the repository on Eric Lawler's GitHub profile.
+- [ ] `[NEEDS INPUT]` Enable Chrome extension file-URL access, then upload the optimized `public/og-market-context.jpg` as the repository social preview.
+- [x] Confirm the README social card, badges, table of contents path, and local links render on GitHub.
+- [x] Pin the repository on Eric Lawler's GitHub profile.
 - [x] Confirm the public repository visibility matches Eric's launch decision.
 - [x] Add the public product URL to the GitHub repository homepage and README.
 
@@ -30,10 +30,10 @@
 - [x] Add CodeQL analysis for JavaScript and TypeScript.
 - [x] Add weekly Dependabot proposals for npm and GitHub Actions.
 - [x] Protect `main` with pull requests, strict CI and CodeQL checks, resolved review threads, squash merges, linear history, and blocked force pushes and deletion.
-- [ ] `[NEEDS INPUT]` Enable Dependabot alerts and Dependabot security updates in repository settings.
-- [ ] `[NEEDS INPUT]` Enable secret scanning and push protection in repository settings.
+- [x] Enable Dependabot alerts and Dependabot security updates in repository settings.
+- [x] Enable secret scanning and push protection in repository settings.
 - [x] Confirm CodeQL completes successfully after the workflow reaches the default branch.
-- [ ] `[NEEDS INPUT]` Review the first Dependabot pull requests before merging.
+- [x] Review the first seven Dependabot pull requests without merging. See [Dependabot Review, July 30, 2026](dependabot-review-2026-07-30.md).
 
 ## Portfolio media
 
@@ -49,13 +49,10 @@
 
 - [x] Preserve owner-review feedback and shipped outcomes in [Usability Research](usability-research.md).
 - [x] Complete five labeled AI proxy and expert pretests without presenting them as human participant research.
-- [x] Complete five [synthetic ideal-persona simulations](synthetic-persona-sessions.md) as hypothesis-generating pretests without incrementing the human-session count.
-- [x] Record Eric Lawler's approval to defer the five-session human study from the v1.0.0 launch gate to post-launch validation.
-- [x] Preserve the limitation that v1.0.0 is not human validated.
-- [x] Prepare the [moderated usability session kit](usability-session-kit.md) with consent, tasks, scoring, notes, and completion criteria.
-- [ ] `[NEEDS INPUT]` Complete five privacy-safe post-launch usability sessions.
-- [ ] `[NEEDS INPUT]` Document de-identified findings, product decisions, and validation results.
-- [ ] `[NEEDS INPUT]` Update the case study with observed outcomes. Do not present targets as results.
+- [x] Complete five transparent [synthetic ideal-persona simulations](synthetic-persona-sessions.md).
+- [x] Record Eric Lawler's acceptance of the AI persona package as the completed portfolio evidence gate.
+- [x] State explicitly that no human usability testing occurred or is claimed.
+- [x] Retain the [optional moderated usability research kit](usability-session-kit.md) with consent, tasks, scoring, notes, and privacy controls for future use.
 
 ## v1.0.0 publication
 

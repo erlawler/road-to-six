@@ -10,19 +10,27 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - Canonical, Open Graph URL and type, and social-image alt metadata for public sharing and discovery.
 - Public `robots.txt` and one-page `sitemap.xml` files that keep application APIs out of crawler scope.
-- A ready-to-run moderated usability session kit with privacy-safe consent, tasks, scoring, notes, and completion evidence.
-- Five synthetic ideal-persona usability simulations with modeled task scores, prioritized hypotheses, and an explicit zero-of-five human-session boundary.
+- An optional moderated usability research kit with privacy-safe consent, tasks, scoring, notes, and completion evidence.
+- Five synthetic ideal-persona usability simulations with modeled task scores, prioritized hypotheses, and an explicit no-human-research-claim boundary.
+- A seven-pull-request Dependabot review with compatibility risk and merge recommendations.
+- An optimized 1200 by 630 JPEG social-preview asset.
+
+### Changed
+
+- Eric Lawler accepted the transparent AI persona evidence package as the completed portfolio gate. No human testing is claimed, and moderated human research is optional future work.
+- Pinned Road to Six on Eric Lawler's public GitHub profile.
 
 ### Security
 
 - Tightened the page content security policy to deny unspecified sources, forms, frames, media, workers, inline event-handler scripts, and inline style elements.
 - Retained only the framework inline-script allowance and the dynamic probability-ring style attribute required by the current runtime, with the tradeoff documented in ADR 018.
 - Protected `main` with an active no-bypass GitHub ruleset requiring pull requests, strict CI and CodeQL checks, resolved review threads, squash merges, and linear history while blocking force pushes and deletion.
+- Enabled Dependabot vulnerability alerts and security-update proposals. Confirmed secret scanning and push protection remain enabled, with zero open dependency or secret alerts.
 
 ### Planned
 
-- Five privacy-safe post-launch usability sessions and the resulting product decisions remain `[NEEDS INPUT]`.
 - The optional narrated LinkedIn walkthrough remains `[NEEDS INPUT]`.
+- The custom GitHub social-preview upload remains `[NEEDS INPUT]` until browser file access is enabled.
 - Product adoption analytics remain outside v1.0.0.
 
 ## [1.0.0] - 2026-07-29
@@ -60,5 +68,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Release boundary
 
 - Eric Lawler approved the final source push, `v1.0.0` tag and GitHub release, public hosting, and signed-out production smoke test on July 29, 2026.
-- Five moderated human sessions are deferred to post-launch validation. The release is not described as human validated.
+- At initial release, moderated human research was deferred. The later owner decision recorded under Unreleased accepted transparent AI persona validation as the completed portfolio gate and retained human research as optional future work.
 - The source, tag, GitHub release, and Sites version 13 are public. The signed-out production smoke test passed on July 30, 2026.

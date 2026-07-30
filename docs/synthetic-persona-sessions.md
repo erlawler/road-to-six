@@ -1,6 +1,6 @@
 # Synthetic Ideal-Persona Usability Simulations
 
-> **SYNTHETIC PERSONA SIMULATION. NOT HUMAN RESEARCH.** These scenarios model plausible first-time behavior against the public v1.0.0 workflow. They identify hypotheses for real moderated sessions and do not represent observed participant behavior.
+> **SYNTHETIC PERSONA SIMULATION. NOT HUMAN RESEARCH.** These scenarios model plausible first-time behavior against the public v1.0.0 workflow. They identify hypotheses for owner review and optional future moderated research. They do not represent observed participant behavior.
 
 **Review date:** July 30, 2026
 
@@ -8,7 +8,9 @@
 
 **Method:** Five AI-simulated target-profile walkthroughs using the six tasks and scoring rubric in the [Moderated Usability Session Kit](usability-session-kit.md)
 
-**Human session count:** 0 of 5
+**Portfolio gate status:** COMPLETE under the product-owner-approved AI persona evidence scope
+
+**Human testing:** Not conducted or claimed
 
 **Evidence boundary:** Simulation scores are design-risk indicators. They do not populate the human aggregate table, establish adoption, validate accessibility, or support claims about actual user behavior.
 
@@ -167,19 +169,19 @@ This table makes every modeled score of `1` traceable. No error, prompt, or reco
 
 ## Prioritized hypotheses
 
-| Hypothesis | Supporting simulations | Signal | Severity | Proposed experiment | Human validation required |
+| Hypothesis | Supporting simulations | Signal | Severity | Proposed experiment | Optional future research value |
 |---|---|---:|---:|---|---|
-| Individual assumption effects are difficult to inspect inside one scenario contribution. | SIM01, SIM02, SIM04, SIM05 | 4 of 5 | P1 | Test a compact `What moved` row that shows the last changed control and probability delta while preserving the canonical aggregate driver. | Yes |
-| Deterministic fallback behavior is not visible beside the Runtime AI action. | SIM03 | 1 of 5 | P1 | Test concise adjacent fallback copy without adding another technical panel. The severity reflects the critical AI-role boundary, not frequency. | Yes |
-| Market status, source time, model version, and uncertainty are visually distributed. | SIM01, SIM05 | 2 of 5 | P2 | Test one compact evidence summary near the result heading with links to full detail. | Yes |
-| Six sliders create recruiter and mobile scan fatigue. | SIM01, SIM05 | 2 of 5 | P2 | Test a `Key scenarios` preset layer with optional expanded controls. | Yes |
-| Brier and calibration values need more plain-language interpretation. | SIM02, SIM04 | 2 of 5 | P2 | Test one sentence explaining the score differences and the market-baseline limitation. | Yes |
+| Individual assumption effects are difficult to inspect inside one scenario contribution. | SIM01, SIM02, SIM04, SIM05 | 4 of 5 | P1 | Test a compact `What moved` row that shows the last changed control and probability delta while preserving the canonical aggregate driver. | High |
+| Deterministic fallback behavior is not visible beside the Runtime AI action. | SIM03 | 1 of 5 | P1 | Test concise adjacent fallback copy without adding another technical panel. The severity reflects the critical AI-role boundary, not frequency. | High |
+| Market status, source time, model version, and uncertainty are visually distributed. | SIM01, SIM05 | 2 of 5 | P2 | Test one compact evidence summary near the result heading with links to full detail. | Medium |
+| Six sliders create recruiter and mobile scan fatigue. | SIM01, SIM05 | 2 of 5 | P2 | Test a `Key scenarios` preset layer with optional expanded controls. | Medium |
+| Brier and calibration values need more plain-language interpretation. | SIM02, SIM04 | 2 of 5 | P2 | Test one sentence explaining the score differences and the market-baseline limitation. | Medium |
 
-No product change is accepted solely from these simulations. The two P1 hypotheses receive priority in the real moderated study.
+Synthetic evidence may support owner-led portfolio decisions when it is clearly labeled, checked against the production workflow, and validated through tests or smoke evidence. It does not support claims about human behavior. The two P1 hypotheses receive priority if optional future research is commissioned.
 
-## Real-study bridge
+## Optional future human-research protocol
 
-Recruit the same five target profiles:
+No human study has been conducted or is required for the completed portfolio evidence gate. If Eric commissions optional future human research, recruit the same five target profiles:
 
 1. One nontechnical portfolio recruiter
 2. One technical product manager
@@ -187,7 +189,7 @@ Recruit the same five target profiles:
 4. One analytics product leader
 5. One recruiter or hiring manager who reviews on mobile and can discuss accessibility expectations
 
-The real study should use these confirm-or-reject observations:
+Any optional study should use these confirm-or-reject observations:
 
 | Hypothesis | Confirming observation | Rejecting observation |
 |---|---|---|
@@ -197,4 +199,4 @@ The real study should use these confirm-or-reject observations:
 | Six controls create scan fatigue. | At least 2 of 5 show repeated scrolling, more than 60 seconds of delay, abandonment, or moderator intervention during T3. | At least 4 of 5 complete T3 independently without repeated search behavior. |
 | Model metrics need interpretation. | Either technical reviewer misinterprets the Brier comparison or describes the result as beating the market. | Both technical reviewers explain that lower is better and that the market-aware model still does not beat the market baseline. |
 
-The moderated-study actuals remain `[NEEDS INPUT]` until five real participants complete the protocol with consent and de-identified evidence.
+Any future human-study actuals must remain separate from this completed AI persona evidence package and require consent, de-identified evidence, and explicit human-research limitations.

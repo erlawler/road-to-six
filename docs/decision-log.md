@@ -151,3 +151,11 @@
 **Decision:** Protect `refs/heads/main` with an active GitHub repository ruleset and no bypass actors. Require an up-to-date pull request, the `validate` and `Analyze JavaScript and TypeScript` checks, resolved review threads, squash merge, and linear history. Block deletion and non-fast-forward updates. Keep required approvals at zero for the solo-maintainer workflow.
 
 **Why:** A public portfolio should make its release controls inspectable after launch. The ruleset prevents direct or destructive changes to the published source while preserving a practical feature-branch and automated-check workflow for a solo owner.
+
+## ADR 020: Accept transparent AI persona validation as the portfolio gate
+
+**Status:** DECIDED
+
+**Decision:** Treat five labeled AI proxy and expert pretests plus five transparent synthetic ideal-persona simulations as the completed portfolio evidence gate. Preserve their task evidence, score traceability, owner decisions, and automated or hosted validation. Do not describe the work as human research, observed behavior, accessibility certification, or human usability validation. Keep the moderated research protocol as optional future work rather than a release or portfolio completion dependency.
+
+**Why:** The portfolio job is to demonstrate product judgment, evidence discipline, AI governance, and release ownership. A clearly bounded AI persona evaluation supports that job without fabricating participants or leaving the project indefinitely incomplete. The explicit claim boundary protects credibility while retaining a safe protocol if observed human evidence becomes valuable later.

@@ -1,6 +1,6 @@
-# Moderated Usability Session Kit
+# Optional Moderated Usability Research Kit
 
-**Study:** Road to Six post-launch comprehension and usability validation
+**Study if commissioned:** Road to Six comprehension and usability research
 
 **Research owner:** Eric Lawler
 
@@ -8,9 +8,9 @@
 
 **Session length:** 25 minutes
 
-**Target:** Five real participants
+**Target if commissioned:** Five real participants
 
-**Current execution status:** `[NEEDS INPUT]` Participant recruitment and completed sessions
+**Status:** OPTIONAL FUTURE WORK. This protocol is not required for the completed portfolio evidence gate.
 
 ## Purpose
 
@@ -187,9 +187,9 @@ Complete only after all five sessions:
 | Uncertainty discovery | At least 4 of 5 | `[NEEDS INPUT]` | `[NEEDS INPUT]` |
 | Product and tradeoff comprehension within five minutes | At least 4 of 5 | `[NEEDS INPUT]` | `[NEEDS INPUT]` |
 
-## Completion evidence
+## Completion evidence if commissioned
 
-The study is complete only when:
+If this optional future study is commissioned, it may be described as complete only when:
 
 1. Five real moderated sessions are documented with de-identified records or a privacy-safe aggregate register.
 2. Actual results are compared with every target.
