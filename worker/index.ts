@@ -10,6 +10,7 @@ interface Env {
   OPENAI_API_KEY?: string;
   OPENAI_MODEL?: string;
   AI_MONTHLY_BUDGET_USD?: string;
+  BUDGET_STATUS_TOKEN?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -56,6 +57,16 @@ const worker = {
 
     if (url.pathname.startsWith("/api/")) {
       return handleApiRequest(request, env);
+    }
+
+    if (url.pathname === "/favicon.ico" && (request.method === "GET" || request.method === "HEAD")) {
+      return new Response(null, {
+        status: 308,
+        headers: {
+          "Cache-Control": "public, max-age=86400",
+          "Location": new URL("/icon.svg", request.url).toString(),
+        },
+      });
     }
 
     if (url.pathname === "/_vinext/image") {

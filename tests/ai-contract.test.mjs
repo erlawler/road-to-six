@@ -44,7 +44,7 @@ const forecast = {
 test("versions the prompt, structured contract, and evaluation independently", () => {
   assert.equal(AI_PROMPT_VERSION, "forecast-explanation-prompt-v1.0.0");
   assert.equal(AI_CONTRACT_VERSION, "forecast-explanation-contract-v1.0.0");
-  assert.equal(AI_EVAL_VERSION, "1.0.0");
+  assert.equal(AI_EVAL_VERSION, "1.0.1");
   assert.deepEqual(APPROVED_OPENAI_MODELS, [
     "gpt-5.6-luna",
     "gpt-5.6-terra",

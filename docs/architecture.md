@@ -60,6 +60,7 @@ flowchart LR
 | Probability function | Return probability, confidence band, and model metadata | Provides a testable forecast rather than an LLM guess. |
 | Odds refresh control | Coordinate edge-worker refreshes through an atomic D1 lease and cooldown | Prevents concurrent isolates from multiplying vendor usage. |
 | Monthly AI budget gate | Stop application AI at $9.50 against a $10 project maximum | Keeps the personal operating cost predictable and preserves a safety margin. |
+| Operator budget status | Return aggregate D1 spend and smoke-test eligibility only after bearer-token authentication | Lets scheduled production checks enforce the pre-call cost gate without exposing spend publicly. |
 | Anonymous AI rate limit | Limit the shared public AI path to 20 requests per aligned five-minute bucket through one atomic D1 statement | Protects the budget without collecting identity, avoids request-path schema work, and denies excess traffic before market reads. |
 | Runtime AI endpoint | Call the probability function and explain drivers, evidence, and uncertainty | Demonstrates function calling and grounded product AI. |
 | AI run ledger and reliability receipt | Record bounded operational metadata and show model, prompt, contract, evaluation, latency, tokens, cost, source, validation, and fallback state | Makes AI operations and failure evidence inspectable without exposing prompts or personal data. |
@@ -83,6 +84,7 @@ flowchart LR
 ## Trust boundaries
 
 - Vendor and OpenAI API keys remain server-side in environment variables.
+- The operator budget token remains server-side, requires at least 32 characters, and protects only aggregate cost telemetry. It does not create visitor accounts or access to product data.
 - No account, profile, or wagering-history data is collected.
 - No browser data is persisted.
 - OpenAI receives a bounded scenario payload and cited evidence, not raw vendor responses or personal data.
@@ -125,4 +127,4 @@ The repository uses:
 
 ## Implementation boundary
 
-Authentication and saved scenarios remain out of scope. Persistence is limited to normalized odds cache data, refresh controls, aggregate AI cost, anonymous request buckets, and bounded AI run metadata. None contains user identity, wagering history, prompts, or raw provider responses. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).
+Visitor authentication and saved scenarios remain out of scope. A separate operator bearer token protects the aggregate budget status used by production monitoring. Persistence is limited to normalized odds cache data, refresh controls, aggregate AI cost, anonymous request buckets, and bounded AI run metadata. None contains user identity, wagering history, prompts, or raw provider responses. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).

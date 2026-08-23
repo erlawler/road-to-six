@@ -46,6 +46,20 @@ test("every local README link and image resolves", async () => {
   }
 });
 
+test("NFL snapshot exposes explicit and consistent freshness metadata", async () => {
+  const snapshot = JSON.parse(
+    await readFile(resolve(root, "app/data/nfl-snapshot.json"), "utf8"),
+  );
+
+  assert.match(snapshot.asOf, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(Number.isNaN(Date.parse(`${snapshot.asOf}T00:00:00Z`)), false);
+  assert.equal(snapshot.schedule.length, 17);
+  assert.equal(
+    snapshot.schedule.every((game) => game.sourceUpdatedAt === snapshot.asOf),
+    true,
+  );
+});
+
 test("showcase evidence set is complete and free of prohibited dash characters", async () => {
   const requiredArtifacts = [
     "CHANGELOG.md",

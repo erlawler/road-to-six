@@ -15,8 +15,12 @@ import {
   type ScenarioControls,
 } from "../lib/forecast.mjs";
 import {
+  applyLiveMarket,
+  findCowboysScheduleGame,
+  marketFromOddsEvent,
+} from "../lib/odds-market.mjs";
+import {
   estimateTokenCostMicros,
-  PROMPT_CACHE_WRITE_INPUT_MULTIPLIER,
   requestReservationMicros,
 } from "../lib/ai-budget.mjs";
 import { assertAIOutput } from "../lib/ai-evaluation.mjs";
@@ -39,6 +43,16 @@ type RuntimeEnv = {
   OPENAI_API_KEY?: string;
   OPENAI_MODEL?: string;
   AI_MONTHLY_BUDGET_USD?: string;
+  BUDGET_STATUS_TOKEN?: string;
+};
+
+type AIBudgetStatusRow = {
+  month: string;
+  estimated_spend_micros: number;
+  request_count: number;
+  input_tokens: number;
+  output_tokens: number;
+  updated_at: string;
 };
 
 type SnapshotGame = (typeof snapshot.schedule)[number];
@@ -66,6 +80,7 @@ type RateLimitResult =
 
 type RuntimeUsage = {
   inputTokens: number;
+  cachedInputTokens: number;
   outputTokens: number;
   usageUncertain: boolean;
 };
@@ -116,6 +131,9 @@ type MarketEvidence = {
 };
 
 const MAX_APPLICATION_BUDGET_USD = 9.5;
+const MAX_PROJECT_BUDGET_USD = 10;
+const STANDARD_SMOKE_TEST_THRESHOLD_USD = 9.4;
+const MIN_OPERATOR_TOKEN_LENGTH = 32;
 const DEFAULT_OPENAI_MODEL = "gpt-5.6-luna";
 const MAX_FORECAST_BODY_BYTES = 8_192;
 const ODDS_CACHE_KEY = "nfl-us-h2h-spreads-totals";
@@ -586,9 +604,8 @@ async function reconcileBudget(
   const knownUsageMicros = estimateTokenCostMicros({
     model: env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL,
     inputTokens: usage.inputTokens,
+    cachedInputTokens: usage.cachedInputTokens,
     outputTokens: usage.outputTokens,
-    // This is conservative for reads and covers the maximum cache-write rate.
-    inputRateMultiplier: PROMPT_CACHE_WRITE_INPUT_MULTIPLIER,
   });
   const reconciledMicros = usage.usageUncertain
     ? Math.max(reservedMicros, knownUsageMicros)
@@ -652,17 +669,6 @@ function getGame(gameId: unknown) {
   return snapshot.schedule.find((game) => game.id === gameId) ?? null;
 }
 
-function safeMarketNumber(value: unknown, fallback: number | null) {
-  if (value === null || value === undefined || value === "") return fallback;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) && Math.abs(parsed) <= 10_000 ? parsed : fallback;
-}
-
-function safeProbability(value: unknown) {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) && parsed > 0 && parsed < 1 ? parsed : null;
-}
-
 function bundledMarketContext(game: SnapshotGame): {
   game: SnapshotGame & { marketImpliedProbability?: number | null };
   evidence: MarketEvidence;
@@ -691,29 +697,18 @@ async function resolveTrustedMarket(env: RuntimeEnv, game: SnapshotGame): Promis
   evidence: MarketEvidence;
 }> {
   const cached = await readOddsCache(env);
-  const event = cached?.events.find((candidate) => {
-    const eventDate = String(candidate.commenceTime ?? "").slice(0, 10);
-    const homeTeam = String(candidate.homeTeam ?? "");
-    const awayTeam = String(candidate.awayTeam ?? "");
-    const opponentName = homeTeam === "Dallas Cowboys" ? awayTeam : homeTeam;
-    return eventDate === game.date && opponentName === game.opponentName;
-  });
+  const event = cached?.events.find(
+    (candidate) => findCowboysScheduleGame(snapshot.schedule, candidate)?.id === game.id,
+  );
 
   if (!cached || !event) {
     return bundledMarketContext(game);
   }
 
-  const market = {
-    cowboysMoneyline: safeMarketNumber(event.cowboysMoneyline, game.cowboysMoneyline),
-    opponentMoneyline: safeMarketNumber(event.opponentMoneyline, game.opponentMoneyline),
-    cowboysSpread: safeMarketNumber(event.cowboysSpread, game.cowboysSpread),
-    totalLine: safeMarketNumber(event.total, game.totalLine),
-    marketImpliedProbability: safeProbability(event.cowboysConsensusProbability),
-    sportsbookCount: Math.max(0, Number(event.sportsbookCount) || 0),
-  };
+  const market = marketFromOddsEvent(event, game);
 
   return {
-    game: { ...game, ...market },
+    game: applyLiveMarket(game, market),
     evidence: {
       source: cached.source,
       fetchedAt: cached.fetchedAt,
@@ -766,8 +761,20 @@ function responseUsage(response: Record<string, unknown>) {
   );
   const inputValid = validTokenCount(usage?.input_tokens);
   const outputValid = validTokenCount(usage?.output_tokens);
+  const inputDetails = usage?.input_tokens_details
+    && typeof usage.input_tokens_details === "object"
+    && !Array.isArray(usage.input_tokens_details)
+    ? usage.input_tokens_details as Record<string, unknown>
+    : null;
+  const cachedInputCandidate = inputDetails?.cached_tokens;
+  const cachedInputTokens = inputValid
+    && validTokenCount(cachedInputCandidate)
+    && cachedInputCandidate <= usage.input_tokens
+    ? cachedInputCandidate
+    : 0;
   return {
     inputTokens: inputValid ? Number(usage?.input_tokens) : 0,
+    cachedInputTokens,
     outputTokens: outputValid ? Number(usage?.output_tokens) : 0,
     valid: inputValid && outputValid,
   };
@@ -822,6 +829,7 @@ async function createAIExplanation(
   }));
   const firstUsage = responseUsage(first);
   usage.inputTokens += firstUsage.inputTokens;
+  usage.cachedInputTokens += firstUsage.cachedInputTokens;
   usage.outputTokens += firstUsage.outputTokens;
   usage.usageUncertain = usage.usageUncertain || !firstUsage.valid;
   const firstOutput = Array.isArray(first.output) ? first.output : [];
@@ -868,6 +876,7 @@ async function createAIExplanation(
   }));
   const secondUsage = responseUsage(second);
   usage.inputTokens += secondUsage.inputTokens;
+  usage.cachedInputTokens += secondUsage.cachedInputTokens;
   usage.outputTokens += secondUsage.outputTokens;
   usage.usageUncertain = usage.usageUncertain || !secondUsage.valid;
 
@@ -1101,6 +1110,7 @@ async function forecastResponse(request: Request, env: RuntimeEnv) {
 
   const usage: RuntimeUsage = {
     inputTokens: 0,
+    cachedInputTokens: 0,
     outputTokens: 0,
     usageUncertain: false,
   };
@@ -1166,7 +1176,125 @@ async function publicBudgetStatus(env: RuntimeEnv) {
 function publicBudgetHeaders() {
   return {
     "Cache-Control": "public, max-age=300, s-maxage=3600",
+    "Vary": "Authorization",
   };
+}
+
+function operatorBudgetHeaders() {
+  return {
+    "Cache-Control": "private, no-store",
+    "Vary": "Authorization",
+  };
+}
+
+function bearerToken(request: Request) {
+  const authorization = request.headers.get("Authorization");
+  if (!authorization?.startsWith("Bearer ")) return null;
+  const token = authorization.slice("Bearer ".length).trim();
+  return token || null;
+}
+
+async function tokensMatch(left: string, right: string) {
+  const encoder = new TextEncoder();
+  const [leftHash, rightHash] = await Promise.all([
+    crypto.subtle.digest("SHA-256", encoder.encode(left)),
+    crypto.subtle.digest("SHA-256", encoder.encode(right)),
+  ]);
+  const leftBytes = new Uint8Array(leftHash);
+  const rightBytes = new Uint8Array(rightHash);
+  let difference = leftBytes.length ^ rightBytes.length;
+  for (let index = 0; index < leftBytes.length; index += 1) {
+    difference |= leftBytes[index] ^ rightBytes[index];
+  }
+  return difference === 0;
+}
+
+async function operatorBudgetStatus(env: RuntimeEnv) {
+  if (!env.DB) throw new Error("Budget ledger unavailable");
+  await ensureBudgetTable(env.DB);
+  const month = monthKey();
+  const row = await env.DB
+    .prepare(`
+      SELECT
+        month,
+        estimated_spend_micros,
+        request_count,
+        input_tokens,
+        output_tokens,
+        updated_at
+      FROM ai_monthly_budget
+      WHERE month = ?
+    `)
+    .bind(month)
+    .first<AIBudgetStatusRow>();
+  const model = env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL;
+  const estimatedSpendMicros = Math.max(0, row?.estimated_spend_micros ?? 0);
+  const applicationCutoffMicros = budgetLimitMicros(env);
+  const smokeTestThresholdMicros = Math.round(STANDARD_SMOKE_TEST_THRESHOLD_USD * 1_000_000);
+  const standardForecastReservationMicros = requestReservationMicros(model);
+  const runtimeConfigured = isApprovedOpenAIModel(model) && Boolean(env.OPENAI_API_KEY);
+  const standardSmokeTestAllowed = runtimeConfigured
+    && estimatedSpendMicros < smokeTestThresholdMicros
+    && estimatedSpendMicros + standardForecastReservationMicros <= applicationCutoffMicros;
+
+  return {
+    status: runtimeConfigured ? "managed" : "unavailable",
+    scope: "application_metered",
+    month,
+    estimatedSpendUsd: estimatedSpendMicros / 1_000_000,
+    applicationCutoffUsd: applicationCutoffMicros / 1_000_000,
+    projectBudgetUsd: MAX_PROJECT_BUDGET_USD,
+    smokeTestThresholdUsd: smokeTestThresholdMicros / 1_000_000,
+    standardForecastReservationUsd: standardForecastReservationMicros / 1_000_000,
+    remainingToCutoffUsd: Math.max(0, applicationCutoffMicros - estimatedSpendMicros) / 1_000_000,
+    requestCount: Math.max(0, row?.request_count ?? 0),
+    inputTokens: Math.max(0, row?.input_tokens ?? 0),
+    outputTokens: Math.max(0, row?.output_tokens ?? 0),
+    updatedAt: row?.updated_at ?? null,
+    standardSmokeTestAllowed,
+  };
+}
+
+async function budgetStatusResponse(request: Request, env: RuntimeEnv) {
+  const authorization = request.headers.get("Authorization");
+  if (!authorization) {
+    return jsonResponse(
+      await publicBudgetStatus(env),
+      200,
+      publicBudgetHeaders(),
+    );
+  }
+
+  const configuredToken = env.BUDGET_STATUS_TOKEN?.trim() ?? "";
+  if (configuredToken.length < MIN_OPERATOR_TOKEN_LENGTH) {
+    return jsonResponse({
+      status: "unavailable",
+      reasonCode: "operator_budget_status_unavailable",
+    }, 503, operatorBudgetHeaders());
+  }
+
+  const suppliedToken = bearerToken(request);
+  if (!suppliedToken || !(await tokensMatch(suppliedToken, configuredToken))) {
+    return jsonResponse({
+      status: "unauthorized",
+    }, 401, {
+      ...operatorBudgetHeaders(),
+      "WWW-Authenticate": 'Bearer realm="Road to Six budget status"',
+    });
+  }
+
+  try {
+    return jsonResponse(
+      await operatorBudgetStatus(env),
+      200,
+      operatorBudgetHeaders(),
+    );
+  } catch {
+    return jsonResponse({
+      status: "unavailable",
+      reasonCode: "budget_ledger_unavailable",
+    }, 503, operatorBudgetHeaders());
+  }
 }
 
 function median(values: number[]) {
@@ -1361,11 +1489,7 @@ export async function handleApiRequest(request: Request, env: RuntimeEnv) {
     return oddsResponse(env);
   }
   if (url.pathname === "/api/budget" && request.method === "GET") {
-    return jsonResponse(
-      await publicBudgetStatus(env),
-      200,
-      publicBudgetHeaders(),
-    );
+    return budgetStatusResponse(request, env);
   }
   return jsonResponse({ error: "Not found" }, 404);
 }

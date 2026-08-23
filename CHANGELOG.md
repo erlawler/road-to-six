@@ -8,6 +8,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 
+- A shared odds-market normalizer that matches NFL event timestamps to the Cowboys schedule in Central time and keeps client and server forecast inputs identical.
+- An authenticated operator budget view for application-metered spend and smoke-test eligibility.
+- Regression coverage for night-game UTC rollover, strict AI field types, cached-token pricing, snapshot freshness, favicon routing, and text contrast.
 - Canonical, Open Graph URL and type, and social-image alt metadata for public sharing and discovery.
 - Public `robots.txt` and one-page `sitemap.xml` files that keep application APIs out of crawler scope.
 - An optional moderated usability research kit with privacy-safe consent, tasks, scoring, notes, and completion evidence.
@@ -17,6 +20,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
+- Updated GPT-5.6 Luna, Terra, and Sol rates to current official pricing while preserving the $9.50 application cutoff and conservative request reservation.
+- Made the snapshot builder require an explicit source-validation date and derive its holdout label from completed evaluation seasons.
+- Corrected small-text contrast and removed an undefined color-token reference.
+- Reclassified stored demo media as historical release evidence when frames predate the current interface.
 - Eric Lawler accepted the transparent AI persona evidence package as the completed showcase gate. No human testing is claimed, and moderated human research is optional future work.
 - Pinned Road to Six on Eric Lawler's public GitHub profile.
 - Configured the optimized Market Context Lab image as the GitHub repository social preview.
@@ -26,6 +33,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Security
 
+- Upgraded vinext and Cloudflare development dependencies to remove all current npm audit findings.
+- Tightened Runtime AI validation so numeric strings and other invalid JSON field types fail closed to the deterministic response.
 - Tightened the page content security policy to deny unspecified sources, forms, frames, media, workers, inline event-handler scripts, and inline style elements.
 - Retained only the framework inline-script allowance and the dynamic probability-ring style attribute required by the current runtime, with the tradeoff documented in ADR 018.
 - Protected `main` with an active no-bypass GitHub ruleset requiring pull requests, strict CI and CodeQL checks, resolved review threads, squash merges, and linear history while blocking force pushes and deletion.

@@ -206,7 +206,7 @@ button:disabled {
 .forecast-section, .players-section, .model-section, .case-study-section, .trust-section { padding: 100px clamp(22px, 7vw, 110px); }
 .section-heading { display: flex; gap: 24px; margin-bottom: 46px; }
 .section-heading.compact { max-width: 900px; }
-.section-number { color: var(--blue-500); font-size: 0.7rem; font-weight: 900; padding-top: 6px; }
+.section-number { color: var(--blue-on-light); font-size: 0.7rem; font-weight: 900; padding-top: 6px; }
 .section-heading h2 { font-size: clamp(2.4rem, 5vw, 4.8rem); letter-spacing: -0.058em; line-height: 0.96; margin: 10px 0 16px; }
 .section-heading p { color: var(--muted); line-height: 1.7; margin: 0; max-width: 700px; }
 
@@ -227,7 +227,7 @@ button:disabled {
 .scenario-reset {
   background: transparent;
   border: 0;
-  color: var(--blue-600);
+  color: var(--blue-on-light);
   cursor: pointer;
   font-size: 0.68rem;
   font-weight: 900;
@@ -342,6 +342,7 @@ button:disabled {
 .player-card > small { border-top: 1px solid #e1e6eb; color: #566575; font-size: 0.65rem; grid-column: 1 / -1; padding-top: 13px; text-transform: uppercase; }
 
 .model-section { background: var(--navy-900); color: white; }
+.section-heading.inverse .section-number { color: var(--blue-300); }
 .section-heading.inverse p { color: #a9b9cb; }
 .model-grid { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); }
 .model-grid article { background: rgba(255,255,255,0.055); border: 1px solid rgba(255,255,255,0.12); display: flex; flex-direction: column; padding: 28px; }

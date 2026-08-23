@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-07-15",
+  "asOf": "2026-08-03",
   "schedule": [
     {
       "id": "2026_01_DAL_NYG",
@@ -9,12 +9,12 @@
       "opponent": "NYG",
       "opponentName": "New York Giants",
       "venue": "away",
-      "cowboysMoneyline": -135,
-      "opponentMoneyline": 114,
+      "cowboysMoneyline": -148,
+      "opponentMoneyline": 124,
       "cowboysSpread": -2.5,
       "totalLine": 48.5,
       "stadium": "MetLife Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_02_WAS_DAL",
@@ -29,7 +29,7 @@
       "cowboysSpread": -4.5,
       "totalLine": 51.5,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_03_BAL_DAL",
@@ -40,11 +40,11 @@
       "opponentName": "Baltimore Ravens",
       "venue": "neutral",
       "cowboysMoneyline": 114,
-      "opponentMoneyline": null,
+      "opponentMoneyline": -135,
       "cowboysSpread": 2.5,
       "totalLine": 51.5,
       "stadium": "Maracana Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_04_DAL_HOU",
@@ -54,12 +54,12 @@
       "opponent": "HOU",
       "opponentName": "Houston Texans",
       "venue": "away",
-      "cowboysMoneyline": 114,
-      "opponentMoneyline": -135,
-      "cowboysSpread": 2.5,
-      "totalLine": 47.5,
+      "cowboysMoneyline": null,
+      "opponentMoneyline": null,
+      "cowboysSpread": null,
+      "totalLine": null,
       "stadium": "Reliant Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_05_TB_DAL",
@@ -69,12 +69,12 @@
       "opponent": "TB",
       "opponentName": "Tampa Bay Buccaneers",
       "venue": "home",
-      "cowboysMoneyline": -192,
-      "opponentMoneyline": 160,
-      "cowboysSpread": -3.5,
-      "totalLine": 52.5,
+      "cowboysMoneyline": null,
+      "opponentMoneyline": null,
+      "cowboysSpread": null,
+      "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_06_DAL_GB",
@@ -89,7 +89,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lambeau Field",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_07_DAL_PHI",
@@ -104,7 +104,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lincoln Financial Field",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_08_ARI_DAL",
@@ -119,7 +119,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_09_DAL_IND",
@@ -134,7 +134,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lucas Oil Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_10_SF_DAL",
@@ -149,7 +149,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_11_TEN_DAL",
@@ -164,7 +164,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_12_PHI_DAL",
@@ -179,7 +179,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_13_DAL_SEA",
@@ -194,7 +194,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lumen Field",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_15_DAL_LA",
@@ -209,7 +209,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "SoFi Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_16_JAX_DAL",
@@ -224,7 +224,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_17_NYG_DAL",
@@ -239,7 +239,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     },
     {
       "id": "2026_18_DAL_WAS",
@@ -254,7 +254,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Northwest Stadium",
-      "sourceUpdatedAt": "2026-07-15"
+      "sourceUpdatedAt": "2026-08-03"
     }
   ],
   "players": [
