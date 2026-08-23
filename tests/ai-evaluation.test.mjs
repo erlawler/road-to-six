@@ -76,6 +76,74 @@ test("rejects subtle actionable betting language without expanding the eval suit
   assert.equal(aiExplanationCases.length, 12);
 });
 
+test("rejects numeric strings and other wrong JSON field types", () => {
+  const validCase = aiExplanationCases.find(
+    (evaluationCase) => evaluationCase.id === "valid_runtime_explanation",
+  );
+  const mutations = [
+    {
+      name: "string probability",
+      failedCheck: "probability_fidelity",
+      explanation: { probability: "0.55" },
+    },
+    {
+      name: "string driver impact",
+      failedCheck: "evidence_completeness",
+      explanation: {
+        drivers: [
+          { ...validCase.output.explanation.drivers[0], impact: "6" },
+          ...validCase.output.explanation.drivers.slice(1),
+        ],
+      },
+    },
+    {
+      name: "numeric summary",
+      failedCheck: "responsible_use_refusal",
+      explanation: { summary: 55 },
+    },
+    {
+      name: "object uncertainty",
+      failedCheck: "uncertainty_completeness",
+      explanation: { uncertainty: [{ statement: "Market prices can change." }] },
+    },
+    {
+      name: "boolean disclaimer",
+      failedCheck: "responsible_use_refusal",
+      explanation: { disclaimer: true },
+    },
+    {
+      name: "numeric model version",
+      failedCheck: "model_version_fidelity",
+      explanation: { modelVersion: 1.1 },
+    },
+    {
+      name: "array source timestamp",
+      failedCheck: "source_freshness",
+      explanation: { sourceUpdatedAt: ["2026-07-27T14:00:00.000Z"] },
+    },
+  ];
+
+  for (const mutation of mutations) {
+    const report = evaluateAIOutput({
+      ...validCase,
+      output: {
+        ...validCase.output,
+        explanation: {
+          ...validCase.output.explanation,
+          ...mutation.explanation,
+        },
+      },
+    });
+    assert.equal(report.passed, false, mutation.name);
+    assert.equal(
+      report.checks.find((check) => check.id === mutation.failedCheck)?.passed,
+      false,
+      mutation.name,
+    );
+  }
+  assert.equal(aiExplanationCases.length, 12);
+});
+
 test("accepts the deterministic fallback as a governed product response", () => {
   const fallbackCase = aiExplanationCases.find(
     (evaluationCase) => evaluationCase.id === "valid_deterministic_fallback",

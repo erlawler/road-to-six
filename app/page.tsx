@@ -8,18 +8,16 @@ import {
   type ForecastResult,
   type ScenarioControls,
 } from "@/lib/forecast.mjs";
+import {
+  applyLiveMarket,
+  findCowboysScheduleGame,
+  forecastMarketEvidenceAction,
+  marketFromOddsEvent,
+  type LiveMarket,
+} from "@/lib/odds-market.mjs";
 import type { AIReliabilityReceipt } from "@/lib/ai-contract.mjs";
 
 type Player = (typeof snapshot.players)[number];
-
-type LiveMarket = {
-  cowboysMoneyline: number | null;
-  opponentMoneyline: number | null;
-  cowboysSpread: number | null;
-  totalLine: number | null;
-  marketImpliedProbability: number | null;
-  sportsbookCount: number;
-};
 
 type MarketMetadata = {
   source: string;
@@ -165,13 +163,7 @@ export default function Home() {
   const opponentLeader = selectedOpponent?.leaders[0];
   const liveMarket = markets[selectedGame.id];
   const effectiveGame = useMemo(
-    () => liveMarket ? {
-      ...selectedGame,
-      cowboysMoneyline: liveMarket.cowboysMoneyline,
-      opponentMoneyline: liveMarket.opponentMoneyline,
-      cowboysSpread: liveMarket.cowboysSpread,
-      totalLine: liveMarket.totalLine,
-    } : selectedGame,
+    () => applyLiveMarket(selectedGame, liveMarket),
     [liveMarket, selectedGame],
   );
   const forecast = useMemo(
@@ -225,6 +217,20 @@ export default function Home() {
         }),
       });
       const data = await response.json();
+      const marketAction = forecastMarketEvidenceAction(data.marketEvidence);
+      if (marketAction.action === "apply") {
+        setMarkets((current) => ({
+          ...current,
+          [selectedGame.id]: marketAction.market,
+        }));
+        setMarketMetadata({
+          ...marketAction.metadata,
+          retrievedAt: marketAction.metadata.retrievedAt ?? new Date().toISOString(),
+        });
+      } else if (marketAction.action === "clear") {
+        setMarkets({});
+        setMarketMetadata(null);
+      }
       if (!response.ok) {
         if (data.reliability) {
           setRuntimeResult({
@@ -240,25 +246,6 @@ export default function Home() {
           return;
         }
         throw new Error(data.error ?? "Forecast unavailable");
-      }
-      if (data.marketEvidence?.source === "The Odds API" && data.marketEvidence.market) {
-        const evidenceSource = typeof data.marketEvidence.source === "string"
-          ? data.marketEvidence.source
-          : "The Odds API";
-        const evidenceRetrievedAt = typeof data.marketEvidence.retrievedAt === "string"
-          ? data.marketEvidence.retrievedAt
-          : typeof data.marketEvidence.fetchedAt === "string"
-            ? data.marketEvidence.fetchedAt
-            : new Date().toISOString();
-        setMarkets((current) => ({
-          ...current,
-          [selectedGame.id]: data.marketEvidence.market,
-        }));
-        setMarketMetadata({
-          source: evidenceSource,
-          retrievedAt: evidenceRetrievedAt,
-          cached: Boolean(data.marketEvidence.cached),
-        });
       }
       setRuntimeResult({
         key: scenarioKey,
@@ -305,20 +292,9 @@ export default function Home() {
         : null;
       const nextMarkets: Record<string, LiveMarket> = {};
       for (const event of data.events ?? []) {
-        const opponentName = event.homeTeam === "Dallas Cowboys" ? event.awayTeam : event.homeTeam;
-        const eventDate = String(event.commenceTime ?? "").slice(0, 10);
-        const game = snapshot.schedule.find(
-          (candidate) => candidate.date === eventDate && candidate.opponentName === opponentName,
-        );
+        const game = findCowboysScheduleGame(snapshot.schedule, event);
         if (!game) continue;
-        nextMarkets[game.id] = {
-          cowboysMoneyline: event.cowboysMoneyline,
-          opponentMoneyline: event.opponentMoneyline,
-          cowboysSpread: event.cowboysSpread,
-          totalLine: event.total,
-          marketImpliedProbability: event.cowboysConsensusProbability,
-          sportsbookCount: event.sportsbookCount,
-        };
+        nextMarkets[game.id] = marketFromOddsEvent(event, game);
       }
       setMarkets(nextMarkets);
       setRuntimeResult(null);

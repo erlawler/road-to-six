@@ -4,6 +4,13 @@ import test from "node:test";
 
 const templateRoot = new URL("../", import.meta.url);
 
+function customProperties(css) {
+  return new Map(
+    [...css.matchAll(/--([a-z0-9-]+)\s*:\s*([^;]+);/gi)]
+      .map(([, name, value]) => [name, value.trim()]),
+  );
+}
+
 async function serveBuiltAsset(request) {
   const pathname = new URL(request.url).pathname;
   const assetUrl = new URL(`../dist/client${pathname}`, import.meta.url);
@@ -61,12 +68,51 @@ function contrastRatio(first, second) {
     / (Math.min(firstLuminance, secondLuminance) + 0.05);
 }
 
-test("light and dark focus colors meet WCAG contrast thresholds", () => {
-  assert.ok(contrastRatio("0b56a8", "ffffff") >= 4.5);
-  assert.ok(contrastRatio("0b56a8", "e8edf2") >= 4.5);
-  assert.ok(contrastRatio("0b56a8", "f4f6f8") >= 4.5);
-  assert.ok(contrastRatio("83b9ff", "020813") >= 3);
-  assert.ok(contrastRatio("83b9ff", "061a35") >= 3);
+test("light and dark focus colors meet WCAG contrast thresholds", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const properties = customProperties(css);
+  const lightFocus = properties.get("blue-on-light");
+  const darkFocus = properties.get("blue-300");
+
+  assert.match(lightFocus ?? "", /^#[0-9a-f]{6}$/i);
+  assert.match(darkFocus ?? "", /^#[0-9a-f]{6}$/i);
+  assert.match(css, /:focus-visible\s*\{[^}]*outline:\s*3px solid var\(--blue-on-light\)/s);
+  assert.match(css, /\.site-header,[^}]+:focus-visible\s*\{[^}]*outline-color:\s*var\(--blue-300\)/s);
+  assert.ok(contrastRatio(lightFocus, "ffffff") >= 4.5);
+  assert.ok(contrastRatio(lightFocus, "e8edf2") >= 4.5);
+  assert.ok(contrastRatio(lightFocus, "f4f6f8") >= 4.5);
+  assert.ok(contrastRatio(darkFocus, "020813") >= 3);
+  assert.ok(contrastRatio(darkFocus, "061a35") >= 3);
+});
+
+test("small section labels meet WCAG normal-text contrast thresholds", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const properties = customProperties(css);
+  const lightLabel = properties.get("blue-on-light");
+  const darkLabel = properties.get("blue-300");
+
+  assert.match(css, /\.section-number\s*\{[^}]*color:\s*var\(--blue-on-light\)/s);
+  assert.match(css, /\.section-heading\.inverse \.section-number\s*\{[^}]*color:\s*var\(--blue-300\)/s);
+  assert.ok(contrastRatio(lightLabel, "ffffff") >= 4.5);
+  assert.ok(contrastRatio(lightLabel, "e8edf2") >= 4.5);
+  assert.ok(contrastRatio(lightLabel, "f4f6f8") >= 4.5);
+  assert.ok(contrastRatio(darkLabel, "061a35") >= 4.5);
+});
+
+test("stylesheet custom-property references resolve", async () => {
+  const [css, page] = await Promise.all([
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+  ]);
+  const definitions = new Set(customProperties(css).keys());
+  const externallyAssigned = new Set(["probability"]);
+  const references = [...css.matchAll(/var\(\s*--([a-z0-9-]+)/gi)]
+    .map(([, name]) => name);
+  const unresolved = [...new Set(references)]
+    .filter((name) => !definitions.has(name) && !externallyAssigned.has(name));
+
+  assert.match(page, /"--probability":/);
+  assert.deepEqual(unresolved, []);
 });
 
 test("server renders the Road to Six market lab", async () => {
@@ -128,12 +174,12 @@ test("publishes canonical metadata and a tightened content security policy", asy
 
   assert.match(
     html,
-    /<link rel="canonical" href="https:\/\/road-to-six-erl\.erlrickylre\.chatgpt\.site\/"\/>/i,
+    /<link rel="canonical" href="https:\/\/road-to-six-erl\.erlrickylre\.chatgpt\.site\/?"\/>/i,
   );
   assert.match(html, /<meta property="og:type" content="website"\/>/i);
   assert.match(
     html,
-    /<meta property="og:url" content="https:\/\/road-to-six-erl\.erlrickylre\.chatgpt\.site\/"\/>/i,
+    /<meta property="og:url" content="https:\/\/road-to-six-erl\.erlrickylre\.chatgpt\.site\/?"\/>/i,
   );
   assert.match(html, /<meta property="og:image:alt" content="Road to Six technical product management and frontier AI skills showcase/i);
   assert.match(html, /<meta name="twitter:image:alt" content="Road to Six technical product management and frontier AI skills showcase/i);

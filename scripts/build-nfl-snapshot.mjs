@@ -15,6 +15,17 @@ const gamesPath = args.games ?? "/tmp/road-to-six-games.csv";
 const rosterPath = args.roster ?? "/tmp/road-to-six-roster.csv";
 const statsPath = args.stats ?? "/tmp/road-to-six-player-stats-2025.csv";
 const outputPath = resolve(root, args.output ?? "app/data/nfl-snapshot.json");
+const snapshotAsOf = args["as-of"];
+
+function isValidDateOnly(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value ?? "")) return false;
+  const parsed = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(parsed.valueOf()) && parsed.toISOString().slice(0, 10) === value;
+}
+
+if (!isValidDateOnly(snapshotAsOf)) {
+  throw new Error("Provide the source validation date with --as-of=YYYY-MM-DD");
+}
 
 function parseCsv(text) {
   const rows = [];
@@ -128,7 +139,7 @@ for (const game of completedGames) {
   const marketProbability = homeRaw === null || awayRaw === null ? null : homeRaw / (homeRaw + awayRaw);
 
   if (currentSeason >= 2024) {
-    evaluation.push({ footballProbability, marketProbability, outcome });
+    evaluation.push({ season: currentSeason, footballProbability, marketProbability, outcome });
   }
 
   const marginMultiplier = Math.min(2.2, Math.max(1, Math.log(Math.abs(homeScore - awayScore) + 1)));
@@ -136,6 +147,17 @@ for (const game of completedGames) {
   ratings[game.home_team] = homeRating + change;
   ratings[game.away_team] = awayRating - change;
 }
+
+const evaluatedSeasons = [...new Set(evaluation.map((record) => record.season))]
+  .sort((left, right) => left - right);
+if (!evaluatedSeasons.length) {
+  throw new Error("No completed regular-season games are available for the backtest window");
+}
+const firstEvaluatedSeason = evaluatedSeasons[0];
+const lastEvaluatedSeason = evaluatedSeasons.at(-1);
+const evaluatedSeasonRange = firstEvaluatedSeason === lastEvaluatedSeason
+  ? String(firstEvaluatedSeason)
+  : `${firstEvaluatedSeason} to ${lastEvaluatedSeason}`;
 
 function brierScore(records, probabilityKey) {
   const eligible = records.filter((record) => record[probabilityKey] !== null);
@@ -184,7 +206,7 @@ const schedule = allGames
       cowboysSpread: spreadLine === null ? null : cowboysHome ? -spreadLine : spreadLine,
       totalLine: numberOrNull(game.total_line),
       stadium: game.stadium,
-      sourceUpdatedAt: "2026-07-15",
+      sourceUpdatedAt: snapshotAsOf,
     };
   });
 
@@ -303,13 +325,13 @@ const opponents = Object.fromEntries(opponentCodes.map((team) => {
 }));
 
 const snapshot = {
-  asOf: "2026-07-15",
+  asOf: snapshotAsOf,
   schedule,
   players,
   opponents,
   ratings,
   backtest: {
-    seasons: "2024 to 2025 holdout",
+    seasons: `${evaluatedSeasonRange} holdout`,
     games: evaluation.length,
     footballOnlyBrier: Number(brierScore(evaluation, "footballProbability").toFixed(3)),
     marketAwareBrier: Number(brierScore(blended, "blendedProbability").toFixed(3)),

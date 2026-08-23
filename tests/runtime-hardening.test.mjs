@@ -55,11 +55,12 @@ function createD1(options = {}) {
           }
           if (sql.includes("FROM ai_monthly_budget")) {
             return {
-              month: "2026-07",
+              month: values[0] ?? "2026-07",
               estimated_spend_micros: state.spentMicros,
               request_count: 1,
               input_tokens: 0,
               output_tokens: 0,
+              updated_at: "2026-08-03T09:12:39.000Z",
             };
           }
           return null;
@@ -399,8 +400,20 @@ test("returns a validated AI reliability receipt and privacy-safe ledger row", a
     aiCalls += 1;
     const requestBody = JSON.parse(init.body);
     return aiCalls === 1
-      ? firstAIResponse()
-      : groundedAIResponse(requestBody);
+      ? firstAIResponse({
+        usage: {
+          input_tokens: 100,
+          input_tokens_details: { cached_tokens: 40 },
+          output_tokens: 20,
+        },
+      })
+      : groundedAIResponse(requestBody, {
+        usage: {
+          input_tokens: 200,
+          input_tokens_details: { cached_tokens: 100 },
+          output_tokens: 40,
+        },
+      });
   };
 
   try {
@@ -424,7 +437,7 @@ test("returns a validated AI reliability receipt and privacy-safe ledger row", a
     assert.equal(payload.explanation.mode, "ai");
     assert.equal(
       payload.explanation.summary,
-      "The governed forecast assigns Dallas a 55% win probability against New York Giants.",
+      `The governed forecast assigns Dallas a ${Math.round(payload.forecast.probability * 100)}% win probability against New York Giants.`,
     );
     assert.equal(
       payload.explanation.disclaimer,
@@ -456,9 +469,9 @@ test("returns a validated AI reliability receipt and privacy-safe ledger row", a
     assert.equal(payload.reliability.fallbackReasonCode, null);
     assert.equal(payload.reliability.inputTokens, 300);
     assert.equal(payload.reliability.outputTokens, 60);
-    assert.equal(payload.reliability.estimatedCostUsd, 0.000735);
+    assert.equal(payload.reliability.estimatedCostUsd, 0.000107);
     assert.equal(payload.reliability.forecastVersion, "elo-market-v1.1.0");
-    assert.equal(payload.reliability.sourceUpdatedAt, "2026-07-15");
+    assert.equal(payload.reliability.sourceUpdatedAt, "2026-08-03");
     assert.equal(aiCalls, 2);
     assert.equal(d1.reconciliations.length, 1);
     assert.equal(d1.ledgerRows.length, 1);
@@ -479,6 +492,50 @@ test("returns a validated AI reliability receipt and privacy-safe ledger row", a
       d1.calls.some((call) => /(?:ip_address|client_ip|user_agent|prompt_text|response_body)/i.test(call.sql)),
       false,
     );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("rejects a numeric string from the provider response", async () => {
+  const originalFetch = globalThis.fetch;
+  const d1 = createD1();
+  let aiCalls = 0;
+  globalThis.fetch = async (input, init) => {
+    if (!String(input).startsWith("https://api.openai.com/")) {
+      return originalFetch(input, init);
+    }
+    aiCalls += 1;
+    const requestBody = JSON.parse(init.body);
+    return aiCalls === 1
+      ? firstAIResponse()
+      : groundedAIResponse(requestBody, {
+        extraOutput: { probability: "0.55" },
+      });
+  };
+
+  try {
+    const worker = await loadWorker("reject-provider-numeric-string");
+    const response = await worker.fetch(
+      forecastRequest(),
+      {
+        ...env,
+        DB: d1.db,
+        OPENAI_API_KEY: "server-side-test-key",
+        OPENAI_MODEL: "gpt-5.6-luna",
+      },
+      ctx,
+    );
+    const payload = await response.json();
+
+    assert.equal(response.status, 200);
+    assert.equal(payload.explanation.mode, "deterministic");
+    assert.equal(payload.reliability.validationStatus, "failed");
+    assert.equal(payload.reliability.fallbackReasonCode, "output_validation_failed");
+    assert.equal(payload.reliability.estimatedCostUsd, 0.000132);
+    assert.equal(aiCalls, 2);
+    assert.equal(d1.reconciliations.length, 1);
+    assert.equal(d1.ledgerRows.length, 1);
   } finally {
     globalThis.fetch = originalFetch;
   }
@@ -531,7 +588,7 @@ test("replaces provider-authored betting language with canonical server copy", a
         assert.equal(payload.explanation.mode, "ai");
         assert.equal(
           payload.explanation.summary,
-          "The governed forecast assigns Dallas a 55% win probability against New York Giants.",
+          `The governed forecast assigns Dallas a ${Math.round(payload.forecast.probability * 100)}% win probability against New York Giants.`,
         );
         assert.equal(payload.explanation.summary.includes(providerSummary), false);
         assert.equal(JSON.stringify(payload.explanation).includes(providerSummary), false);
@@ -988,7 +1045,135 @@ test("serves a static cacheable public budget posture without reading D1", async
   assert.equal(JSON.stringify(payload).includes("spent"), false);
   assert.equal(JSON.stringify(payload).includes("requestCount"), false);
   assert.match(response.headers.get("cache-control") ?? "", /public/);
+  assert.equal(response.headers.get("vary"), "Authorization");
   assert.equal(d1.calls.length, 0);
+});
+
+test("serves aggregate budget details to an authenticated operator", async () => {
+  const worker = await loadWorker("operator-budget-status");
+  const d1 = createD1({ spentMicros: 9_300_000 });
+  const operatorToken = "operator-budget-token-value-1234567890";
+  const response = await worker.fetch(
+    new Request("http://localhost/api/budget", {
+      headers: { Authorization: `Bearer ${operatorToken}` },
+    }),
+    {
+      ...env,
+      DB: d1.db,
+      OPENAI_API_KEY: "server-side-test-key",
+      OPENAI_MODEL: "gpt-5.6-luna",
+      AI_MONTHLY_BUDGET_USD: "9.50",
+      BUDGET_STATUS_TOKEN: operatorToken,
+    },
+    ctx,
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.equal(payload.status, "managed");
+  assert.equal(payload.scope, "application_metered");
+  assert.equal(payload.month, new Date().toISOString().slice(0, 7));
+  assert.equal(payload.estimatedSpendUsd, 9.3);
+  assert.equal(payload.applicationCutoffUsd, 9.5);
+  assert.equal(payload.projectBudgetUsd, 10);
+  assert.equal(payload.smokeTestThresholdUsd, 9.4);
+  assert.equal(payload.standardForecastReservationUsd, 0.025);
+  assert.equal(payload.remainingToCutoffUsd, 0.2);
+  assert.equal(payload.requestCount, 1);
+  assert.equal(payload.standardSmokeTestAllowed, true);
+  assert.match(response.headers.get("cache-control") ?? "", /private/);
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/);
+  assert.equal(response.headers.get("vary"), "Authorization");
+  assert.equal(
+    d1.calls.some((call) => call.sql.includes("FROM ai_monthly_budget")),
+    true,
+  );
+});
+
+test("blocks a standard smoke test at the operator threshold", async () => {
+  const worker = await loadWorker("operator-budget-threshold");
+  const d1 = createD1({ spentMicros: 9_400_000 });
+  const operatorToken = "operator-budget-token-value-1234567890";
+  const response = await worker.fetch(
+    new Request("http://localhost/api/budget", {
+      headers: { Authorization: `Bearer ${operatorToken}` },
+    }),
+    {
+      ...env,
+      DB: d1.db,
+      OPENAI_API_KEY: "server-side-test-key",
+      BUDGET_STATUS_TOKEN: operatorToken,
+    },
+    ctx,
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.equal(payload.estimatedSpendUsd, 9.4);
+  assert.equal(payload.standardSmokeTestAllowed, false);
+});
+
+test("rejects an invalid operator budget token without reading D1", async () => {
+  const worker = await loadWorker("invalid-operator-budget-token");
+  const d1 = createD1({ spentMicros: 1_000_000 });
+  const response = await worker.fetch(
+    new Request("http://localhost/api/budget", {
+      headers: { Authorization: "Bearer invalid-operator-token-value-12345" },
+    }),
+    {
+      ...env,
+      DB: d1.db,
+      BUDGET_STATUS_TOKEN: "operator-budget-token-value-1234567890",
+    },
+    ctx,
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 401);
+  assert.deepEqual(payload, { status: "unauthorized" });
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/);
+  assert.equal(d1.calls.length, 0);
+});
+
+test("fails closed when operator budget authentication is not configured", async () => {
+  const worker = await loadWorker("missing-operator-budget-token");
+  const d1 = createD1({ spentMicros: 1_000_000 });
+  const response = await worker.fetch(
+    new Request("http://localhost/api/budget", {
+      headers: { Authorization: "Bearer operator-budget-token-value-1234567890" },
+    }),
+    {
+      ...env,
+      DB: d1.db,
+    },
+    ctx,
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 503);
+  assert.equal(payload.reasonCode, "operator_budget_status_unavailable");
+  assert.equal(d1.calls.length, 0);
+});
+
+test("fails closed when the authenticated budget ledger is unavailable", async () => {
+  const worker = await loadWorker("missing-operator-budget-ledger");
+  const operatorToken = "operator-budget-token-value-1234567890";
+  const response = await worker.fetch(
+    new Request("http://localhost/api/budget", {
+      headers: { Authorization: `Bearer ${operatorToken}` },
+    }),
+    {
+      ...env,
+      OPENAI_API_KEY: "server-side-test-key",
+      BUDGET_STATUS_TOKEN: operatorToken,
+    },
+    ctx,
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 503);
+  assert.equal(payload.reasonCode, "budget_ledger_unavailable");
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/);
 });
 
 test("reports coarse budget unavailability for an unsupported model", async () => {
@@ -1008,4 +1193,17 @@ test("reports coarse budget unavailability for an unsupported model", async () =
   assert.deepEqual(payload, { status: "unavailable" });
   assert.match(response.headers.get("cache-control") ?? "", /public/);
   assert.equal(d1.calls.length, 0);
+});
+
+test("redirects favicon requests to the existing SVG icon", async () => {
+  const worker = await loadWorker("favicon-redirect");
+  const response = await worker.fetch(
+    new Request("https://road-to-six.example/favicon.ico"),
+    env,
+    ctx,
+  );
+
+  assert.equal(response.status, 308);
+  assert.equal(response.headers.get("location"), "https://road-to-six.example/icon.svg");
+  assert.match(response.headers.get("cache-control") ?? "", /max-age=86400/);
 });

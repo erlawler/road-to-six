@@ -61,7 +61,7 @@ Road to Six makes the decision path visible:
 3. **Data product design:** Selected attributed nflverse data and free-tier odds, defined normalization and freshness requirements, and rejected paid bettor-split data.
 4. **Forecast governance:** Chose a transparent walk-forward Elo baseline and a predeclared market blend before considering a more complex model.
 5. **Frontier AI design:** Assigned probability calculation to a versioned deterministic function and AI to structured explanation, evidence, and uncertainty.
-6. **Platform controls:** Defined server-side secrets, an atomic odds-refresh lease, request limits, an approved-model allowlist, schema validation, a six-hour odds cache, a $9.50 AI cutoff, and deterministic fallback.
+6. **Platform controls:** Defined server-side secrets, an atomic odds-refresh lease, request limits, an approved-model allowlist, schema validation, a six-hour odds cache, a $9.50 AI cutoff, an authenticated aggregate spend view, and deterministic fallback.
 7. **Release management:** Made accessibility, security, privacy, data rights, responsible use, and trademark review explicit launch gates.
 
 ## Key product decisions and tradeoffs
@@ -199,13 +199,15 @@ LIVE_EVAL_OUTPUT=/tmp/road-to-six-live-ai-scorecard.json \
 npm run eval:live
 ```
 
-Rebuild the attributed football snapshot after downloading current nflverse source files:
+Rebuild the attributed football snapshot after downloading current nflverse source files. Pass the date when those source files were validated so freshness cannot silently retain an older hard-coded value:
 
 ```bash
-npm run data:snapshot
+npm run data:snapshot -- --as-of=YYYY-MM-DD
 ```
 
 The snapshot builder uses nflverse release assets. Raw source files remain outside the repository.
+
+The public budget endpoint exposes only the coarse runtime posture. Operators can send `Authorization: Bearer $BUDGET_STATUS_TOKEN` to the same endpoint to read the application-metered D1 spend, $9.50 application cutoff, $10 project budget, smoke-test threshold, and whether one standard forecast smoke test is allowed. Configure `BUDGET_STATUS_TOKEN` as a server-side secret with at least 32 characters. Authenticated responses are private and never cached. The scope field distinguishes this ledger from provider-level billing, which requires separate verification.
 
 ## Technology
 
