@@ -1,205 +1,93 @@
-# Optional Moderated Usability Research Kit
+# Five-session comprehension comparison protocol
 
-**Study if commissioned:** Road to Six comprehension and usability research
-
+**Prepared:** September 7, 2026
 **Research owner:** Eric Lawler
+**State:** PREPARED ONLY. No recruitment, sessions, consent collection, or human results have occurred.
+**Scope:** Five voluntary sessions, approximately 30 minutes each, if commissioned.
+**Build:** Exact candidate commit and stimulus source `[NEEDS INPUT]` before any session.
 
-**Product version:** Public v1.0.0 or the exact commit recorded for each session
+This prospective protocol does not reopen the completed July owner-approved synthetic showcase gate. It adds a way to obtain observed evidence for a new product decision. It does not authorize recruitment, external messages, paid calls, publication of participant material, analytics, or personal-data persistence.
 
-**Session length:** 25 minutes
+## Decision and comparison
 
-**Target if commissioned:** Five real participants
+Determine whether experimental AI selection of relevant what-changed facts helps people explain a scenario more accurately than a deterministic default selection from the same evidence.
 
-**Status:** OPTIONAL FUTURE WORK. This protocol is not required for the completed showcase evidence gate.
+- **Condition A, deterministic context:** The calculated baseline, scenario probability, final percentage-point delta, source labels, uncertainty, and deterministic default selection of canonical facts.
+- **Condition B, AI-selected context:** The same calculated result and evidence inventory, with 1 to 3 canonical fact cards selected and ordered through the bounded AI contract.
 
-## Purpose
+The AI may choose approved evidence IDs. It does not create prose, add a fact, alter a probability, or change a source record. This study evaluates relevance, comprehension, and the need for the selection step. It does not evaluate free-form writing, model prediction accuracy, live provider reliability, or an adoption rate.
 
-Determine whether a first-time reviewer can understand the product, complete the core scenario workflow, distinguish deterministic calculation from Runtime AI explanation, and find the evidence and uncertainty needed to evaluate the forecast.
+Use the same number of displayed cards for both conditions where possible, equal access to the full evidence, and identical typography and controls. Record any unavoidable display difference as a confound.
 
-Five sessions provide directional evidence for showcase decisions. They are not a statistically representative sample.
+## Participants and privacy
 
-## Participant mix
+Proposed mix: two football fans, one technical PM, one AI or engineering practitioner, and one analytics practitioner. Prefer first-time Road to Six reviewers. Five volunteers provide directional qualitative evidence, not a representative sample or a statistical treatment effect.
 
-- Two technical product managers or product leaders
-- One AI platform or engineering partner
-- One analytics or model-risk practitioner
-- One football fan who regularly uses analytical products
-- Prefer first-time users with no prior Road to Six exposure
-- Do not screen for or collect gambling behavior, financial information, medical information, credentials, or account data
-- Keep scheduling contact information outside this public repository and delete it when it is no longer needed
+Use codes `P01` through `P05`; collect only role category, prior exposure, and voluntarily disclosed accessibility needs relevant to the session. Do not collect wagering behavior, finances, medical information, credentials, names, employer details, or contact information in study artifacts. Scheduling and contact handling, if later authorized, remain outside this repository.
 
-## Moderator preparation
+Participation is voluntary. Obtain separate consent for de-identified notes, recording, and publication of a direct quote. Recording is optional; use notes by default. Stop if notes consent is declined. Raw recordings or identifiable records must not enter this repository. Agree any recording deletion date before capture.
 
-1. Open the [public product](https://road-to-six-erl.erlrickylre.chatgpt.site) in a clean browser.
-2. Record the product commit or hosted version used for the session.
-3. Assign a session code from `P01` through `P05`.
-4. Confirm that no participant name, email address, or contact detail will enter the public research record.
-5. Ask separately for notes, recording, and direct-quote consent.
-6. Start with the default scenario and do not demonstrate the workflow.
-7. Provide a neutral prompt only after approximately 60 seconds without progress.
-8. Record every moderator intervention.
+## Preparation and evidence control
 
-## Opening and consent, 0 to 3 minutes
+1. Record the candidate commit, model version, source-manifest version, validation date, device/browser, and stimulus mode before sessions.
+2. Fix the matchup, market snapshot, baseline controls, and two scenario changes for the comparison. Do not allow changing live odds to alter one condition during a session.
+3. Use one reduced Dallas-signal scenario and one matched scenario of comparable interaction complexity. Select exact controls and retain calculated answer keys before sessions.
+4. Prepare both methods for both scenarios. Condition B requires version-matched validated AI-selection evidence from an already authorized candidate run. No paid call is authorized by this protocol.
+5. If actual candidate AI evidence is unavailable, a controlled prototype may test the design, but label its selection as synthetic. Its findings cannot support a claim about Runtime AI performance or live AI-selected relevance.
+6. Verify identical deterministic numbers, source times, canonical evidence inventory, and uncertainty across the two methods for each scenario. Review each selected ID against the allowlist and record any fallback.
+7. Use neutral labels during the timed comparison to reduce brand preference. Tell participants at consent that the study compares deterministic and AI-selected context, and reveal each condition in the debrief. Never conceal material source or safety limitations.
+8. Make the core journey keyboard accessible. Assistive-technology observations are descriptive and do not establish certification.
 
-Read:
+Preassign order to reduce learning and scenario effects. With five people perfect balance is impossible; retain the actual sequence and report that limitation.
 
-> Thank you for reviewing Road to Six. We are testing the product, not you. This is a technical product management and frontier AI showcase study, not betting research or advice. Please think aloud and use only what you see. I may wait before helping because I want to observe where the product is clear or confusing. You may stop at any time.
+| Session | First condition and task | Second condition and task |
+|---|---|---|
+| P01 | A, scenario 1 | B, scenario 2 |
+| P02 | B, scenario 1 | A, scenario 2 |
+| P03 | A, scenario 2 | B, scenario 1 |
+| P04 | B, scenario 2 | A, scenario 1 |
+| P05 | A, scenario 1 | B, scenario 2 |
 
-Read:
+## Session flow
 
-> Participation is voluntary. Notes will use a session code instead of your name. We will not collect wagering history, financial information, medical information, credentials, or account data. De-identified findings may be summarized in a public showcase repository. Recording is optional and requires separate consent. Declining recording does not prevent participation. You may decline publication of direct quotes or stop at any time. Any raw recording will be deleted after synthesis or by the agreed deletion date.
-
-Record three separate decisions:
-
-- Notes consent: yes or no
-- Audio, video, or screen-recording consent: yes or no
-- De-identified direct-quote publication consent: yes or no
-
-If notes consent is declined, stop the session.
-
-## Warm-up, 3 to 5 minutes
-
-1. What is your role, and how do you normally evaluate a product or technical case?
-2. Walk me through the last time you reviewed a technical product or analytical tool. What did you look for first?
-3. What evidence helped you decide whether the work was credible?
-
-The moderator should ask about past behavior and avoid describing Road to Six.
-
-## Core tasks, 5 to 20 minutes
-
-### Task 1: First impression
-
-Review the first screen without scrolling guidance. Explain:
-
-- What the product does
-- Who it appears to be for
-- Whether it recommends a bet
-
-### Task 2: Matchup evidence
-
-Select a matchup. Identify:
-
-- One Cowboys player who may influence the scenario
-- One opponent player who may influence the scenario
-
-### Task 3: Scenario change
-
-Change either George Pickens or Javonte Williams and the selected opponent's top-player assumption. Explain:
-
-- What changed in the probability
-- What did not change
-
-### Task 4: Runtime AI boundary
-
-Generate the grounded explanation. Explain:
-
-- What Runtime AI did
-- Whether Runtime AI calculated the probability
-- What would happen if Runtime AI were unavailable
-
-### Task 5: Evidence and uncertainty
-
-Find:
-
-- Market-data status
-- Source freshness
-- Model version
-- One uncertainty
-
-### Task 6: Product ownership
-
-Open the product case. Identify:
-
-- One product tradeoff
-- Who owned the product strategy and release decision
-
-## Debrief, 20 to 25 minutes
-
-1. What was the hardest part of the workflow?
-2. Where did you hesitate or need to reread something?
-3. What evidence increased or reduced your trust?
-4. What did you expect to happen that did not happen?
-5. If you could change one part of the experience, what would it be?
-6. Is there anything important that I did not ask?
-
-Do not pitch planned features or ask whether the participant would use a hypothetical solution.
-
-## Neutral prompts
-
-Use only when needed:
-
-- Tell me what you are looking for.
-- What would you try next?
-- What do you think this label means?
-- Can you give me a specific example?
-- What happened next?
-
-Do not point to the correct control or explain the intended answer during the task.
-
-## Task scoring
-
-Score every task:
-
-| Score | Definition |
-|---:|---|
-| 2 | Completed independently and explained correctly |
-| 1 | Completed with one neutral prompt or explained only partially |
-| 0 | Not completed, completed incorrectly, or required direct instruction |
-
-Treat either of these as a P0 comprehension failure:
-
-- The participant believes the product recommends a bet
-- The participant believes Runtime AI calculates or changes the probability
-
-## Session worksheet
-
-| Field | Entry |
+| Time | Procedure |
 |---|---|
-| Session code | `[NEEDS INPUT]` |
-| Date and duration | `[NEEDS INPUT]` |
-| Participant category | `[NEEDS INPUT]` |
-| Prior Road to Six exposure | `[NEEDS INPUT]` |
-| Product version or commit | `[NEEDS INPUT]` |
-| Browser and voluntarily disclosed assistive technology | `[NEEDS INPUT]` |
-| Notes consent | `[NEEDS INPUT]` |
-| Recording consent | `[NEEDS INPUT]` |
-| Quote-publication consent | `[NEEDS INPUT]` |
-| Selected matchup and source timestamp | `[NEEDS INPUT]` |
-| Task scores, T1 to T6 | `[NEEDS INPUT]` |
-| Moderator prompts required | `[NEEDS INPUT]` |
-| Observed errors and recovery | `[NEEDS INPUT]` |
-| AI-role explanation | `[NEEDS INPUT]` |
-| Responsible-use explanation | `[NEEDS INPUT]` |
-| Evidence and uncertainty found | `[NEEDS INPUT]` |
-| Primary friction | `[NEEDS INPUT]` |
-| Approved de-identified quote | `[NEEDS INPUT]` |
-| Proposed change and severity | `[NEEDS INPUT]` |
-| Moderator confidence and limitations | `[NEEDS INPUT]` |
+| 0 to 3 minutes | Explain voluntary participation and the non-wagering scope; record separate consent decisions. |
+| 3 to 6 minutes | First impression: ask what the product does, who it is for, and whether it recommends a bet. Ask the participant to locate one source date without guidance. |
+| 6 to 13 minutes | First assigned condition: ask the participant to change the specified assumption and explain the final probability change using what is visible. |
+| 13 to 20 minutes | Second assigned condition using the other scenario and identical task wording. |
+| 20 to 25 minutes | Reveal condition identities. Ask what AI did, whether it calculated the probability, and what happens if AI is unavailable. Find one product tradeoff and identify the decision owner. |
+| 25 to 30 minutes | Ask which context helped, which fact was unnecessary or missing, and what remained confusing. Record reasons and concrete examples rather than only preference. |
 
-## Aggregate decision table
+Use this task prompt for both conditions: “Change the specified participation assumption. Explain what happened to the final Dallas probability, how much it changed, what caused the change, and what limits your confidence in that explanation.” Do not introduce the correct answer. Start elapsed time at the first task action and stop at the participant's completed explanation.
 
-Complete only after all five sessions:
+After 60 seconds without progress, a moderator may ask “What would you try next?” Record every intervention. Direct instruction makes the task assisted. Do not coach a misconception until its outcome has been recorded; stop immediately if continuing would cause discomfort.
 
-| Measure | Target | Actual | Decision |
-|---|---:|---:|---|
-| Scenario completion | At least 4 of 5 | `[NEEDS INPUT]` | `[NEEDS INPUT]` |
-| AI-role comprehension | At least 4 of 5 | `[NEEDS INPUT]` | `[NEEDS INPUT]` |
-| Responsible-use comprehension | 5 of 5 | `[NEEDS INPUT]` | `[NEEDS INPUT]` |
-| Evidence discovery | At least 4 of 5 | `[NEEDS INPUT]` | `[NEEDS INPUT]` |
-| Uncertainty discovery | At least 4 of 5 | `[NEEDS INPUT]` | `[NEEDS INPUT]` |
-| Product and tradeoff comprehension within five minutes | At least 4 of 5 | `[NEEDS INPUT]` | `[NEEDS INPUT]` |
+## Scoring and success hypotheses
 
-## Completion evidence if commissioned
+For each condition, score five dimensions independently: direction of the final change, magnitude in percentage points, supported causal interpretation of the sensitivity scenario and market blend, a material source/coverage limitation, and correct distinction between assumption and observed player fact. Award 1 only for a correct independent explanation; otherwise award 0 and record the error. This gives a comprehension score from 0 to 5. Keep raw answers and moderator assistance separate from the score.
 
-If this optional future study is commissioned, it may be described as complete only when:
+| Proposed criterion | Hypothesis for a product decision | Actual |
+|---|---|---|
+| Core workflow | At least 4 of 5 independently complete a scenario and explain its direction and final magnitude. | `[NEEDS INPUT]` |
+| Incremental comprehension | At least 3 of 5 score higher with AI-selected context; nobody introduces an unsupported factual claim because of that context. | `[NEEDS INPUT]` |
+| Necessary added value | If both methods already score 5, report the ceiling. Preference alone does not justify the paid selection step; consider keeping deterministic context as default. | `[NEEDS INPUT]` |
+| AI boundary | All 5 identify code as the calculation authority and AI as selecting supplied context after condition identities are revealed. | `[NEEDS INPUT]` |
+| Responsible use | All 5 understand that this is educational analysis and provides no betting recommendation. | `[NEEDS INPUT]` |
+| Evidence discovery | At least 4 of 5 independently find the source date and one relevant limitation. | `[NEEDS INPUT]` |
+| Showcase ownership | At least 4 of 5 identify Eric's decision ownership and one documented product tradeoff within 5 minutes of entering the product case. | `[NEEDS INPUT]` |
 
-1. Five real moderated sessions are documented with de-identified records or a privacy-safe aggregate register.
-2. Actual results are compared with every target.
-3. Human findings remain separate from the AI proxy pretests.
-4. Every finding includes frequency, severity, and evidence.
-5. At least one product decision is tied to observed human evidence.
-6. Every accepted P0 or P1 change has retest evidence.
-7. Recording deletion or retention is confirmed when recordings were used.
-8. Participant count, participant-sourcing bias, and evidence limits remain visible.
+These thresholds are predeclared hypotheses, not observed outcomes or statistically powered success criteria. Report each participant's paired scores, elapsed times, prompts, condition order, and disagreements. Do not present five sessions as a percentage adoption or retention metric.
 
-Raw recordings, names, contact information, and identifiable notes must not be committed to this repository.
+## Stop, revise, and retain rules
+
+- Any selected evidence ID outside the approved inventory, altered numerical result, contradictory source date, or prohibited advice stops that candidate condition and triggers implementation review.
+- Any participant believing AI changes the number or the product recommends a wager triggers a product-copy review and retest before making a comprehension claim.
+- If AI-selected context does not improve understanding, retain deterministic context as the default and record the decision. A negative result is valid flagship evidence.
+- If a benefit appears, connect it to specific facts, observed confusion, and a bounded follow-up iteration. Five sessions alone do not establish production generalization.
+
+## De-identified session record
+
+Record session code; date and duration; role category; prior product exposure; consent flags; browser and optional assistive-technology category; exact build and source versions; live, previously captured, or synthetic stimulus mode; condition sequence; scenario controls; evidence IDs; paired dimension scores; elapsed times; prompts; mistakes; recovery; boundary comprehension; concrete debrief reasons; and limitations. Include a direct quote only with separate publication consent and after checking that it cannot identify the person.
+
+No results should be filled in until actual sessions occur. Completed study reporting must include all five sessions or explicitly state the smaller count, the recruitment and order limitations, at least one evidence-backed product decision, and any retest. Human findings remain separate from [synthetic persona evidence](synthetic-persona-sessions.md).

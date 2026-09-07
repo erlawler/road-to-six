@@ -20,6 +20,8 @@ export type ForecastGame = {
 
 export type ForecastResult = {
   probability: number;
+  baselineProbability: number;
+  scenarioDelta: number;
   footballOnly: number;
   marketImplied: number | null;
   confidenceLow: number;
@@ -31,6 +33,12 @@ export type ForecastResult = {
 
 export const MODEL_VERSION: string;
 export const FOOTBALL_WEIGHT_WITH_MARKET: number;
+export const MODEL_PARAMETERS: Readonly<{ footballWeightWithMarket: number; preseasonRetention: number; homeFieldElo: number; eloScale: number; eloK: number; maxMarginMultiplier: number }>;
+export const DEFAULT_CONTROLS: Readonly<ScenarioControls>;
+export function advanceRatingsSeason(ratings: Record<string, number>, fromSeason: number, toSeason: number): Record<string, number>;
+export function calculateProbabilities(input: { footballBaseline: number; scenarioAdjustment?: number; marketImplied?: number | null }): {
+  baseFootball: number; footballOnly: number; marketImplied: number | null; baselineProbability: number; probability: number; scenarioDelta: number;
+};
 export function clampProbability(value: number): number;
 export function moneylineToImplied(moneyline: number | null): number | null;
 export function removeVig(cowboysMoneyline: number | null, opponentMoneyline: number | null): number | null;

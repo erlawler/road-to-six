@@ -4,7 +4,7 @@
 
 Road to Six demonstrates a production-minded AI pattern: deterministic software calculates the forecast, and runtime AI explains that result under an enforceable contract. The model cannot invent or change the probability. The application also remains useful when the AI provider, market-data provider, or monthly AI budget is unavailable.
 
-This separation is the central technical product decision. It uses AI where language adds value while keeping calculation, evidence, cost, and release risk under product control.
+This separation is the central technical product decision. The deployed closed-set pathway demonstrates tool orchestration and contract enforcement. Whether an additional AI selection of relevant evidence improves human comprehension is a hypothesis for the September candidate and its [comparison protocol](usability-session-kit.md), not an established benefit. Production remains Sites version 16 at main commit `57b170f`; candidate changes are undeployed.
 
 ## Cross-provider applicability
 
@@ -102,7 +102,7 @@ sequenceDiagram
 |---|---|---|
 | Win probability | Calculates football-only and market-aware probabilities with `elo-market-v1.1.0`. | Must reproduce the returned probability unchanged. |
 | Market signal | Removes vig within each sportsbook and uses the median sportsbook probability. | Explains the relationship between the model and market evidence. |
-| Scenario effects | Applies documented participation adjustments for Cowboys and opponent signals. | Translates those effects into concise, reader-facing language. |
+| Scenario effects | Applies documented participation adjustments for Cowboys and opponent signals. | Production reproduces exact evidence. The candidate tests selection and ordering of 1 to 3 approved evidence IDs. The application renders canonical fact cards and retains the deterministic factual contract. |
 | Evidence | Selects the source snapshot, trusted market record, model version, and timestamp. | Names evidence supplied by the application. |
 | Uncertainty | Returns an illustrative bounded range and explicit limitations. | Explains uncertainty and missing context. |
 | Responsible use | Blocks client market overrides and prohibits betting actions in the product contract. | Must not recommend a bet, stake, payout, sportsbook, or action. |
@@ -128,7 +128,7 @@ sequenceDiagram
 5. Only explicitly priced GPT-5.6 model configurations may reach the provider. Unsupported configuration serves the deterministic fallback.
 6. The AI path reserves cost in D1 before a provider call and reconciles actual token usage after success.
 7. The application limit cannot exceed $9.50, leaving a $0.50 margin beneath the separately configured $10 OpenAI project maximum.
-8. Input context and output tokens are bounded. The two AI responses are limited to 300 and 500 output tokens.
+8. Input context and output tokens are bounded. Production v16 limits the two responses to 300 and 500 output tokens. The September candidate allows 300 and 1,200 so the expanded exact-evidence contract can fit, and derives the conservative reservation from both configured limits. Luna retains its $0.025 minimum reservation; Terra reserves $0.0305 and Sol or the GPT-5.6 alias reserves $0.055 under the existing input allowance.
 9. Failed AI calls and missing or invalid provider usage retain the conservative reservation instead of understating possible spend.
 10. Missing credentials, unsupported models, exhausted request capacity, exhausted budget, provider timeout, malformed output, policy failure, or quota failure all return the deterministic explanation or a bounded rejection with a reason code.
 11. Only post-reservation AI outcomes record bounded operational metadata for model, version, validation, latency, tokens, estimated cost, source freshness, and fallback reason.
@@ -144,7 +144,7 @@ The baseline is intentionally transparent:
 2. A predeclared blend uses 20 percent football probability and 80 percent vig-adjusted market probability when a trusted market is available.
 3. Spread, total, and line status remain visible evidence, but they are not counted again in the probability.
 4. The 2024 to 2025 holdout contains 544 games. The football-only Brier score is 0.220, the market-aware score is 0.207, and the market baseline is 0.206.
-5. The result supports a narrow claim: the market-aware baseline improves on football-only Elo, but it does not outperform the market.
+5. The result supports a retrospective historical-price comparison: the blend improves on football-only Elo but does not outperform the market. Elo ratings are walk-forward; the historical market CSV has no archived quote timestamps proving availability at a fixed pregame lead time. See the [model card](model-card.md).
 
 The displayed uncertainty range is an illustrative fixed-width sensitivity band, not a statistically estimated confidence interval. Labeling it this way avoids presenting false precision.
 

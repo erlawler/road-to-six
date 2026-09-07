@@ -1,7 +1,12 @@
 # Live AI Scorecard
 
 **Purpose:** Compare quality, latency, and estimated cost for actual Runtime AI responses against the deterministic explanation baseline.
-**Current state:** Four-scenario Runtime AI and deterministic comparison complete
+**Evidence date:** July 27, 2026
+**State:** Historical four-scenario Runtime AI and deterministic comparison complete. This sample does not validate the September candidate or its proposed selection of what-changed evidence.
+
+## September candidate runner
+
+The current runner recomputes the visible forecast from the checked-in snapshot, controls, and returned market inputs. It checks the full forecast, contract versions, mode, validation, fallback, usage, cost bounds, and market coverage. Returned live market inputs remain observed API evidence; this is not an independent provider-source audit. Offline tests reject self-consistent but wrong answers and incomplete receipts. No new candidate live scorecard has been run. `LIVE_EVAL_EXPECTED_MODEL` defaults to `gpt-5.6-luna` and must match the approved target configuration.
 
 ## Product decision
 

@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { MODEL_VERSION } from "../lib/forecast.mjs";
+
+const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
 
 const env = {
   THE_ODDS_API_KEY: "test-key",
@@ -18,6 +22,7 @@ function createD1(options = {}) {
   const calls = [];
   const ledgerRows = [];
   const reconciliations = [];
+  const balances = new Map(Object.entries(options.budgetBalances ?? {}));
   const state = {
     rateAllowed: options.rateAllowed ?? true,
     reserveAllowed: options.reserveAllowed ?? true,
@@ -51,7 +56,9 @@ function createD1(options = {}) {
             };
           }
           if (sql.includes("INSERT INTO ai_monthly_budget")) {
-            return state.reserveAllowed ? { month: "2026-07" } : null;
+            if (!state.reserveAllowed) return null;
+            balances.set(values[0], (balances.get(values[0]) ?? 0) + values[1]);
+            return { month: values[0] };
           }
           if (sql.includes("FROM ai_monthly_budget")) {
             return {
@@ -72,6 +79,11 @@ function createD1(options = {}) {
           }
           if (sql.includes("UPDATE ai_monthly_budget")) {
             reconciliations.push(values);
+            const changes = options.reconcileChanges ?? (balances.has(values[4]) ? 1 : 0);
+            if (changes === 1) {
+              balances.set(values[4], Math.max(0, balances.get(values[4]) + values[0]));
+            }
+            return { success: true, meta: { changes } };
           }
           if (sql.includes("INSERT INTO ai_run_ledger")) {
             ledgerRows.push(values);
@@ -83,7 +95,7 @@ function createD1(options = {}) {
     },
   };
 
-  return { db, calls, ledgerRows, reconciliations };
+  return { db, calls, ledgerRows, reconciliations, balances };
 }
 
 function forecastRequest(headers = {}) {
@@ -140,6 +152,7 @@ function groundedAIResponse(requestBody, options = {}) {
     probability: contract.forecast.probability,
     modelVersion: contract.forecast.modelVersion,
     sourceUpdatedAt: contract.sourceUpdatedAt,
+    comparisonEvidenceIds: ["baseline_change"],
   };
   if (options.extraOutput) Object.assign(explanation, options.extraOutput);
   const payload = {
@@ -159,6 +172,113 @@ function groundedAIResponse(requestBody, options = {}) {
   }
   return Response.json(payload);
 }
+
+test("reconciles a request to its reserved month when the provider finishes after UTC rollover", async (t) => {
+  const originalFetch = globalThis.fetch;
+  t.mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-09-30T23:59:59Z") });
+  const d1 = createD1({ budgetBalances: { "2026-10": 200_000 } });
+  let providerCalls = 0;
+  globalThis.fetch = async (_input, init) => {
+    providerCalls += 1;
+    if (providerCalls === 1) return firstAIResponse();
+    t.mock.timers.setTime(Date.parse("2026-10-01T00:00:01Z"));
+    return groundedAIResponse(JSON.parse(init.body));
+  };
+  try {
+    const worker = await loadWorker("month-rollover");
+    const response = await worker.fetch(forecastRequest(), {
+      ...env, DB: d1.db, OPENAI_API_KEY: "test-key",
+    }, ctx);
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(payload.reliability.mode, "ai");
+    assert.equal(providerCalls, 2);
+    assert.equal(d1.reconciliations[0][4], "2026-09");
+    assert.equal(d1.balances.get("2026-09"), 132);
+    assert.equal(d1.balances.get("2026-10"), 200_000);
+    assert.equal(payload.reliability.estimatedCostUsd, 0.000132);
+  } finally {
+    globalThis.fetch = originalFetch;
+    t.mock.timers.reset();
+  }
+});
+
+test("keeps the conservative reservation in the receipt when reconciliation changes no row", async () => {
+  const originalFetch = globalThis.fetch;
+  const d1 = createD1({ reconcileChanges: 0 });
+  let providerCalls = 0;
+  globalThis.fetch = async (_input, init) => {
+    providerCalls += 1;
+    return providerCalls === 1 ? firstAIResponse() : groundedAIResponse(JSON.parse(init.body));
+  };
+  try {
+    const worker = await loadWorker("zero-row-reconciliation");
+    const response = await worker.fetch(forecastRequest(), {
+      ...env, DB: d1.db, OPENAI_API_KEY: "test-key",
+    }, ctx);
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(payload.reliability.mode, "ai");
+    assert.equal(payload.reliability.estimatedCostUsd, 0.025);
+    assert.equal(d1.balances.get(d1.reconciliations[0][4]), 25_000);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("rejects malformed controls before rate, budget, market, or provider work", async (t) => {
+  const originalFetch = globalThis.fetch;
+  let providerCalls = 0;
+  globalThis.fetch = async () => { providerCalls += 1; throw new Error("Unexpected provider call"); };
+  try {
+    const worker = await loadWorker("invalid-control-types");
+    for (const controls of [
+      null, [], "100", 100,
+      { quarterback: { toString: null } },
+      { quarterback: [] },
+      { quarterback: null },
+      { quarterback: "50" },
+      { quarterback: true },
+      { lamb: {}, receiver: 100 },
+    ]) {
+      await t.test(JSON.stringify(controls), async () => {
+        const d1 = createD1();
+        const request = new Request("http://localhost/api/forecast", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ gameId: "2026_01_DAL_NYG", controls }),
+        });
+        const response = await worker.fetch(request, { ...env, DB: d1.db, OPENAI_API_KEY: "test-key" }, ctx);
+        const payload = await response.json();
+        assert.equal(response.status, 400);
+        assert.equal(payload.reliability.mode, "rejected");
+        assert.equal(payload.reliability.fallbackReasonCode, "invalid_controls");
+        assert.equal(payload.reliability.estimatedCostUsd, 0);
+        assert.equal(d1.calls.length, 0);
+      });
+    }
+    assert.equal(providerCalls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("defaults omitted controls and clamps finite numeric scenario values", async () => {
+  const worker = await loadWorker("numeric-control-bounds");
+  for (const controls of [undefined, { quarterback: -20, lamb: 120, defense: 25.5 }]) {
+    const response = await worker.fetch(new Request("http://localhost/api/forecast", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gameId: "2026_01_DAL_NYG", controls }),
+    }), { ...env, DB: createD1().db }, ctx);
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    const evidence = payload.forecast.drivers.find((driver) => driver.label === "Scenario contribution").evidence;
+    assert.match(evidence, controls ? /Dak Prescott 0%/ : /Dak Prescott 100%/);
+    assert.match(evidence, /CeeDee Lamb 100%/);
+    assert.match(evidence, controls ? /defensive core 25\.5%/ : /defensive core 100%/);
+  }
+});
 
 test("fails closed without shared D1 odds refresh control", async () => {
   const originalFetch = globalThis.fetch;
@@ -470,8 +590,8 @@ test("returns a validated AI reliability receipt and privacy-safe ledger row", a
     assert.equal(payload.reliability.inputTokens, 300);
     assert.equal(payload.reliability.outputTokens, 60);
     assert.equal(payload.reliability.estimatedCostUsd, 0.000107);
-    assert.equal(payload.reliability.forecastVersion, "elo-market-v1.1.0");
-    assert.equal(payload.reliability.sourceUpdatedAt, "2026-08-03");
+    assert.equal(payload.reliability.forecastVersion, MODEL_VERSION);
+    assert.equal(payload.reliability.sourceUpdatedAt, snapshot.schedule.find((game) => game.id === "2026_01_DAL_NYG").sourceUpdatedAt);
     assert.equal(aiCalls, 2);
     assert.equal(d1.reconciliations.length, 1);
     assert.equal(d1.ledgerRows.length, 1);

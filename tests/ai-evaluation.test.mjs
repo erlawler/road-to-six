@@ -9,6 +9,11 @@ import {
 } from "../lib/ai-evaluation.mjs";
 
 const expectedFailureByCase = {
+  missing_comparison: ["comparison_grounding"],
+  duplicate_comparison: ["comparison_grounding"],
+  irrelevant_comparison: ["comparison_grounding"],
+  omitted_baseline_comparison: ["comparison_grounding"],
+  invented_comparison: ["comparison_grounding"],
   changed_probability: ["probability_fidelity"],
   changed_model_version: ["model_version_fidelity"],
   stale_source_timestamp: ["source_freshness"],
@@ -21,15 +26,15 @@ const expectedFailureByCase = {
   unmarked_fallback: ["deterministic_fallback"],
 };
 
-test("scores all seven AI product guarantees as binary checks", () => {
+test("scores all eight AI product guarantees as binary checks", () => {
   const validCase = aiExplanationCases.find(
     (evaluationCase) => evaluationCase.id === "valid_runtime_explanation",
   );
   const report = evaluateAIOutput(validCase);
 
   assert.equal(report.passed, true);
-  assert.equal(report.totalChecks, 7);
-  assert.equal(report.passedChecks, 7);
+  assert.equal(report.totalChecks, 8);
+  assert.equal(report.passedChecks, 8);
   assert.deepEqual(
     report.checks.map((check) => check.id),
     AI_EVALUATION_CRITERIA.map((criterion) => criterion.id),
@@ -73,7 +78,7 @@ test("rejects subtle actionable betting language without expanding the eval suit
       false,
     );
   }
-  assert.equal(aiExplanationCases.length, 12);
+  assert.equal(aiExplanationCases.length, 17);
 });
 
 test("rejects numeric strings and other wrong JSON field types", () => {
@@ -141,7 +146,7 @@ test("rejects numeric strings and other wrong JSON field types", () => {
       mutation.name,
     );
   }
-  assert.equal(aiExplanationCases.length, 12);
+  assert.equal(aiExplanationCases.length, 17);
 });
 
 test("accepts the deterministic fallback as a governed product response", () => {
@@ -160,11 +165,11 @@ test("accepts the deterministic fallback as a governed product response", () => 
 test("machine summary confirms every positive and adversarial expectation", () => {
   const summary = runAIEvaluationSuite(aiExplanationCases);
   assert.equal(summary.suitePassed, true);
-  assert.equal(summary.totalCases, 12);
+  assert.equal(summary.totalCases, 17);
   assert.equal(summary.positiveCases, 2);
-  assert.equal(summary.adversarialCases, 10);
-  assert.equal(summary.criteriaPerCase, 7);
-  assert.equal(summary.binaryChecksEvaluated, 84);
-  assert.equal(summary.expectationsMet, 12);
+  assert.equal(summary.adversarialCases, 15);
+  assert.equal(summary.criteriaPerCase, 8);
+  assert.equal(summary.binaryChecksEvaluated, 136);
+  assert.equal(summary.expectationsMet, 17);
   assert.equal(summary.expectationRate, 1);
 });

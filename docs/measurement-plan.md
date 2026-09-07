@@ -18,9 +18,9 @@ Can a visitor inspect football and market evidence, change assumptions, and unde
 | Platform | Runtime AI cost | Monthly OpenAI API spend for the public product. | No more than $10 | Stop application AI at $9.50 and use deterministic fallback. |
 | Platform | AI reliability receipt completeness | Every AI or fallback response includes model, version, latency, token, cost, source, validation, and reason evidence when applicable. | 100% | Missing operational evidence triggers review. |
 | Platform | Anonymous request-limit enforcement | Requests beyond 20 in the shared aligned five-minute bucket are rejected with `429` and `Retry-After`. | 100% | Rate-limit failure blocks public launch. |
-| Platform | Live Runtime AI latency | End-to-end provider latency for accepted AI responses. | `[NEEDS INPUT]` target; four-case sample averaged 3,568 ms | Do not treat the bounded sample as a production distribution. |
+| Platform | Live Runtime AI latency | Elapsed time from forecast request to usable explanation, including application work. | Proposed p95 at or below 12 seconds across at least 30 eligible completed requests | The July four-case provider sample is historical and uses a different timing boundary; no current p95 is claimed. Do not spend additional budget solely to manufacture sample size. |
 | Integrity | Evidence traceability | Every driver references a source record and timestamp. | 100% | Missing or stale evidence produces a visible limitation. |
-| Integrity | Data freshness | Every football and market record shows its as-of time. | 100% | Stale lines cannot appear current. |
+| Integrity | Data freshness | Every source category exposes its validation or retrieval date, age policy, and applicable coverage. | 100% labeled; source-specific thresholds in the freshness policy | Source validation time does not imply upstream publication time. Stale or thin evidence must remain visibly limited. |
 | Integrity | Prohibited advice | Forecasts contain no picks, stake sizes, payout claims, or sportsbook links. | 100% | A violation blocks public release. |
 | Integrity | Grounded explanation fidelity | AI preserves the trusted model version, source time, drivers, evidence, impacts, and uncertainty. | 100% | Any changed contract field triggers deterministic fallback. |
 | Integrity | Accessibility gate | Required accessibility checks closed before public launch. | 100% | An open gate blocks publication. |
@@ -49,4 +49,10 @@ Can a visitor inspect football and market evidence, change assumptions, and unde
 - Do not send raw vendor payloads to analytics or runtime AI.
 - Report targets and actuals separately.
 
-No product analytics are implemented in the public v1.0.0 release. The targets above remain hypotheses, not observed outcomes.
+No product analytics are implemented in the public v1.0.0 release or authorized by this candidate. The targets above remain hypotheses, not observed outcomes. See the [source freshness policy](data-freshness-policy.md) and [five-session comparison protocol](usability-session-kit.md).
+
+## Candidate user-value hypotheses
+
+The primary comparison is correct explanation of the final probability change using deterministic evidence alone versus the same evidence plus a bounded AI selection of what-changed fact cards. Assess direction, magnitude, supported cause, source limitation, and AI responsibility separately. The protocol predeclares scoring, sequence assignment, and stop/revise criteria; five volunteers can support a qualitative product decision, not a statistical treatment effect or adoption rate.
+
+Proposed gates are at least four of five participants independently completing the core scenario, all five correctly distinguishing AI from calculation and betting advice, and at least three improving comprehension with AI-selected context without any increased unsupported claim. Actuals are `[NEEDS INPUT]`. If the baseline already yields full comprehension, report that ceiling and test whether AI selection is necessary before expanding AI.

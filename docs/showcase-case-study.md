@@ -10,7 +10,7 @@ I designed the product around one question:
 
 I owned the product strategy, prioritization, data and AI boundaries, acceptance criteria, release governance, and go-live decision. I used Codex as an implementation and review partner. That operating model let me move quickly while preserving explicit human ownership of requirements, risk decisions, and publication approval.
 
-The result is a public v1.0.0 product and GitHub release with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, automated quality gates, production smoke evidence, and a complete product artifact set. Sites version 13 contains the exact tagged release commit and passed both the owner-authenticated review and signed-out production smoke test. Sites version 14 then deployed the reviewed metadata and CSP hardening commit and passed a fresh signed-out smoke test.
+The result is a public v1.0.0 product and GitHub release with real football data, current odds integration, a transparent probability baseline, a structured Runtime AI pathway, deterministic fallback, quality gates, and production smoke evidence. The July launch sequence validated Sites versions 13 and 14. As of September 7, 2026, production remains Sites version 16 at main commit `57b170f`; the flagship reliability work in this branch is an undeployed candidate. See the [candidate review](flagship-candidate-2026-09-07.md) for current validation and the [90-second guide](flagship-reviewer-guide.md) for a compact demonstration.
 
 ## Product context
 
@@ -129,7 +129,7 @@ The model removes vig within each sportsbook before taking the median Dallas pro
 
 The Runtime AI contract requires the versioned probability result, model version, source time, evidence, uncertainty, and educational notice. Semantic validation rejects a changed probability, unsupported evidence, or actionable betting language.
 
-**Why:** AI is valuable for synthesis but should not become an untestable source of truth.
+**Why:** AI can select relevant supplied context while deterministic code remains the source of truth. Whether this improves comprehension is still a user-value hypothesis.
 
 **Tradeoff:** More outputs fail closed, but every accepted explanation preserves the product contract.
 
@@ -201,7 +201,7 @@ flowchart LR
 - Odds responses are normalized and cached, not exposed as a standalone feed.
 - Request payloads, prompts, output tokens, and timeouts are bounded.
 - The AI receives a bounded scenario and cited evidence, not personal data or raw vendor payloads.
-- Aggregate monthly AI spend is the only persisted application record.
+- D1 persists normalized odds cache data, refresh coordination, aggregate monthly AI spend, shared request-window counts, and bounded AI-run metadata. It does not store visitor identity, prompts, wagering history, or raw provider payloads.
 - Public exploration collects no profile, wagering history, or personal information.
 
 See the full [architecture](architecture.md) for components and data flow.
@@ -210,7 +210,7 @@ See the full [architecture](architecture.md) for components and data flow.
 
 ### Why use AI
 
-Forecast evidence can be technically accurate but difficult to interpret. Runtime AI can make a structured result more accessible by explaining:
+Forecast evidence can be technically accurate but difficult to interpret. This is the intended AI value hypothesis, not an observed user outcome. The deployed closed-set integration reproduces trusted evidence and uses an application-owned summary; it demonstrates contract enforcement. The candidate explores a bounded AI selection of what-changed evidence, with a [comparison protocol](usability-session-kit.md) to test whether it improves understanding of:
 
 - What moved the probability
 - Which evidence supports each driver
@@ -237,13 +237,13 @@ An accepted AI response must:
 
 The system uses a dedicated OpenAI project with a $10 monthly maximum. The application reserves estimated cost before a request, reconciles actual token use, stops AI calls at $9.50, and serves the deterministic explanation afterward.
 
-After billing was enabled, one live OpenAI response completed in AI mode with no fallback. It preserved probability `0.5531549573107291`, forecast model `elo-market-v1.1.0`, source date `2026-07-15`, three drivers, and three uncertainty items. The same seven-criterion evaluator passed all seven checks. The later four-scenario scorecard and 76-test regression also pass. The public deployment then passed signed-out current-odds and Runtime AI smoke checks.
+After billing was enabled, one live OpenAI response completed in AI mode with no fallback. It preserved probability `0.5531549573107291`, forecast model `elo-market-v1.1.0`, source date `2026-07-15`, three drivers, and three uncertainty items. The same seven-criterion evaluator passed all seven checks. The later July four-scenario scorecard and 76-test regression also passed. The public deployment then passed signed-out current-odds and Runtime AI smoke checks.
 
 ## Data and model integrity
 
 ### Data lineage
 
-Every normalized record includes a source, source identifier, season and week, source update time, ingestion time, license label, snapshot version or checksum, and validation status.
+The football snapshot inherits source URLs, attribution, and license labels at the snapshot level. Schedule records carry a validation as-of date; player records do not individually carry the complete provenance schema described in the original data spike. A source validation date is not proof of upstream publication time. Candidate source manifests record upstream evidence, retrieval windows, checksums, and validation results with explicit inheritance. See [data provenance](data-provenance.md), the [model card](model-card.md), and the [data freshness policy](data-freshness-policy.md); do not infer per-record provenance fields that are absent from the artifact.
 
 ### Model evidence
 
@@ -253,7 +253,7 @@ Every normalized record includes a source, source identifier, season and week, s
 | Market-aware blend | 0.207 | Improved on football-only Elo |
 | Market baseline | 0.206 | Remained marginally stronger than the blend |
 
-The result supports a disciplined conclusion: market context improved the football baseline, but this prototype did not beat the market. The product makes that limitation visible and does not claim predictive advantage.
+The result supports a narrow retrospective conclusion: market context improved the football baseline in these historical rows, but this prototype did not beat the market. Elo is updated walk-forward from completed results. The historical CSV does not preserve archived quote timestamps, so it cannot prove that every market input was available at a fixed pregame lead time. This comparison is not a prospective performance test. See the [model card](model-card.md) for warm-up, development, holdout, and sensitivity boundaries.
 
 ## Delivery and governance
 
@@ -286,19 +286,21 @@ This is the same product-management pattern I would use with an engineering team
 | v1.0.0 hardening regression | COMPLETE |
 | Public hosting | COMPLETE |
 
-## Verified outcomes
+## Historical July release outcomes
 
-1. The production build and lint checks pass.
-2. All 76 automated tests pass.
-3. The current dependency audit reports zero vulnerabilities.
+These results belong to the July release evidence. They do not assert that a later branch or dependency audit passed.
+
+1. The release build and lint checks passed.
+2. All 76 release automated tests passed.
+3. The July dependency audit reported zero vulnerabilities. The September health check subsequently identified high and moderate findings; follow the candidate review for their current disposition.
 4. The authenticated release candidate returned five current Dallas events from The Odds API during its pre-publication review. The signed-out production endpoint later returned 17 current NFL events and the interface matched 11 Cowboys games.
 5. Successful six-hour cache persistence models 372 credits in a 31-day month, below the free allowance. Upstream and persistence failures remain monitored separately.
 6. Market probability is calculated after removing vig within each sportsbook.
 7. The 2024 to 2025 holdout reports all three Brier scores in the interface.
-8. The Runtime AI suite passes 12 of 12 expected outcomes across seven criteria and 84 binary checks, including exact evidence, exact uncertainty, and prohibited-advice cases.
+8. The July Runtime AI suite passed 12 of 12 expected outcomes across seven criteria and 84 binary checks, including exact evidence, exact uncertainty, and prohibited-advice cases.
 9. A four-scenario live scorecard passed four of four Runtime AI and four of four deterministic cases. Runtime AI averaged 3,568 ms and an estimated $0.013118 total with no fallbacks in this bounded sample.
 10. The product remains usable through bundled odds and deterministic explanation when an external dependency fails.
-11. Desktop and mobile accessibility and overflow checks pass the documented showcase review.
+11. Desktop and mobile accessibility and overflow checks passed the documented July showcase review.
 
 ## What I learned
 
@@ -312,8 +314,8 @@ This is the same product-management pattern I would use with an engineering team
 
 ## Current limitations and next decisions
 
-1. Product adoption targets remain unmeasured because analytics are not implemented.
-2. The showcase evidence gate is complete through owner-reviewed AI proxy pretests and transparent synthetic persona simulations. No human usability testing has been conducted or claimed. Optional future moderated research could add observed behavioral evidence.
+1. Product adoption targets remain unmeasured because analytics are not implemented. The next flagship evidence opportunity is the five-session voluntary comparison protocol, not an adoption claim.
+2. The original owner-approved showcase evidence gate remains complete through AI proxy pretests and transparent synthetic simulations. No human usability testing has been conducted or claimed. The new candidate research protocol is prepared only; no recruitment or sessions have occurred.
 3. The forecast is a transparent showcase baseline, not a production wagering model.
 4. Historical odds and bettor splits remain outside the free-data scope.
 5. Public hosting and the signed-out success-path smoke test were completed on July 30, 2026.

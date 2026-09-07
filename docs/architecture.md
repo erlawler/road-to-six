@@ -2,7 +2,7 @@
 
 ## Answer
 
-The v1.0.0 release is an anonymous Market Context Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI explanation endpoint, and an inspectable reliability receipt. The GitHub release and Sites version 13 are public, and the product has no account or identity layer. Live odds, a four-scenario Runtime AI scorecard, CI, CodeQL, the authenticated hosted review, and the signed-out production smoke test pass.
+The public product is an anonymous Market Context Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI endpoint, and an inspectable reliability receipt. As of September 7, 2026, production remains Sites version 16 at main commit `57b170f`. This branch is an undeployed candidate. The July live scorecard and release checks are historical evidence; current candidate validation belongs in the [candidate review](flagship-candidate-2026-09-07.md). No account or identity layer is introduced.
 
 Showcase evidence:
 

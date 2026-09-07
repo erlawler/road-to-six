@@ -1,5 +1,7 @@
 # MVP Backlog: Market Context Lab Expansion
 
+**Historical scope record:** The completed criteria below document the July 2026 release. They do not validate the September candidate or its current dependencies. See the [candidate review](flagship-candidate-2026-09-07.md) for subsequent work and evidence.
+
 **Implementation status:** V1.0.0 PUBLIC. The source repository, tag, GitHub release, Sites version 13, live odds validation, live Runtime AI baseline, v1.0.0 regression, authenticated hosted review, signed-out production smoke test, CI, CodeQL, and public-use review are complete. Scores assume one sport, Cowboys-only views, cached market refreshes, and no product authentication.
 
 ## Prioritization rule

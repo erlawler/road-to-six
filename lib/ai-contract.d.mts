@@ -19,6 +19,7 @@ export type AIFallbackReasonCode =
   | "request_body_too_large"
   | "unsupported_content_type"
   | "invalid_json"
+  | "invalid_controls"
   | "unknown_game";
 
 export type AIReliabilityMode = "ai" | "deterministic" | "rejected";
@@ -40,6 +41,8 @@ export type AIReliabilityReceipt = {
   sourceUpdatedAt: string;
 };
 
+export const AI_MAX_INITIAL_OUTPUT_TOKENS: number;
+export const AI_MAX_GROUNDED_OUTPUT_TOKENS: number;
 export const AI_PROMPT_VERSION: string;
 export const AI_CONTRACT_VERSION: string;
 export const AI_EVAL_VERSION: string;
@@ -69,7 +72,7 @@ export function buildForecastExplanationInput(input: {
   game: ForecastExplanationGame;
   controls: ScenarioControls;
 }): Array<Record<string, unknown>>;
-export function buildForecastExplanationSchema(): Record<string, unknown>;
+export function buildForecastExplanationSchema(comparisonEvidence?: Array<{ id: string; text: string }>): Record<string, unknown>;
 export function buildInitialForecastExplanationRequest(
   input: ForecastExplanationRequestInput,
 ): Record<string, unknown>;

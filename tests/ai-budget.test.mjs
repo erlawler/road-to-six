@@ -49,8 +49,8 @@ test("uses the current Terra rates and discounts only cached input tokens", () =
 
 test("reserves enough budget for the bounded two-call explanation flow", () => {
   assert.equal(requestReservationMicros("gpt-5.6-luna"), 25_000);
-  assert.equal(requestReservationMicros("gpt-5.6-terra"), 25_000);
-  assert.equal(requestReservationMicros("gpt-5.6"), 45_000);
+  assert.equal(requestReservationMicros("gpt-5.6-terra"), 30_500);
+  assert.equal(requestReservationMicros("gpt-5.6"), 55_000);
 });
 
 test("can apply the conservative input-rate reservation margin", () => {

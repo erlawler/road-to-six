@@ -13,7 +13,7 @@ description: Review a Road to Six feature or release for data integrity, forecas
 6. Run the binary AI evaluation suite and confirm responsible-use and fallback cases pass.
 7. Check API cost controls, odds caching, secret handling, input boundaries, and failure behavior.
 8. Check keyboard access, visible labels, heading order, focus states, contrast, and reduced motion behavior.
-9. Run `npm run lint`, `npm run build`, and `npm test`.
+9. Run `npm run typecheck`, `npm run lint`, `npm run eval`, `npm test`, `npm run build`, and `npm audit --audit-level=high`. Record the exact candidate commit, evidence time, and unresolved findings. A historical green run does not validate a new candidate.
 10. Scan the repository for em dash and en dash characters.
-11. Confirm every showcase claim is supported by implementation, test, or evaluation evidence.
+11. Confirm every showcase claim is supported by implementation, test, or evaluation evidence. Separate current production, undeployed candidate work, historical release results, and unmeasured user-value hypotheses. Check the source freshness policy and reconcile displayed explanation contributions to the final forecast.
 12. Return findings by severity, followed by the release recommendation and any open gate owner.

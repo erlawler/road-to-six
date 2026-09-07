@@ -22,10 +22,11 @@ test("showcase overview exposes the technical product management story", async (
   const readme = await readFile(resolve(root, "README.md"), "utf8");
 
   assert.match(readme, /## Technical product management and frontier AI showcase/);
-  assert.match(readme, /## Two-minute showcase path/);
+  assert.match(readme, /docs\/flagship-reviewer-guide\.md/);
   assert.match(readme, /## What I owned/);
   assert.match(readme, /## Key product decisions and tradeoffs/);
-  assert.match(readme, /## Verified outcomes/);
+  assert.match(readme, /historical evidence/i);
+  assert.match(readme, /undeployed.*candidate/i);
   assert.match(readme, /## Frontier AI product judgment/);
   assert.match(readme, /public\/og-market-context\.png/);
   assert.match(readme, /Twenty-one product, architecture, positioning, and release-governance decisions/);
@@ -34,15 +35,19 @@ test("showcase overview exposes the technical product management story", async (
   assert.match(readme, /reliability receipt/i);
 });
 
-test("every local README link and image resolves", async () => {
-  const readmePath = resolve(root, "README.md");
-  const readme = await readFile(readmePath, "utf8");
-
-  for (const target of localTargets(readme)) {
-    await assert.doesNotReject(
-      access(resolve(dirname(readmePath), target)),
-      `README target does not exist: ${target}`,
-    );
+test("every local showcase documentation link and image resolves", async () => {
+  const docs = (await readdir(resolve(root, "docs")))
+    .filter((name) => name.endsWith(".md"))
+    .map((name) => `docs/${name}`);
+  for (const relativePath of ["README.md", ...docs]) {
+    const documentPath = resolve(root, relativePath);
+    const markdown = await readFile(documentPath, "utf8");
+    for (const target of localTargets(markdown)) {
+      await assert.doesNotReject(
+        access(resolve(dirname(documentPath), target)),
+        `${relativePath} target does not exist: ${target}`,
+      );
+    }
   }
 });
 
@@ -55,7 +60,10 @@ test("NFL snapshot exposes explicit and consistent freshness metadata", async ()
   assert.equal(Number.isNaN(Date.parse(`${snapshot.asOf}T00:00:00Z`)), false);
   assert.equal(snapshot.schedule.length, 17);
   assert.equal(
-    snapshot.schedule.every((game) => game.sourceUpdatedAt === snapshot.asOf),
+    snapshot.schedule.every((game) => (
+      game.validatedAt === snapshot.asOf
+      && game.sourceUpdatedAt === snapshot.manifest.inputs.games.sourceUpdatedAt
+    )),
     true,
   );
 });
@@ -71,6 +79,11 @@ test("showcase evidence set is complete and free of prohibited dash characters",
     "docs/demo-media.md",
     "docs/dependabot-review-2026-07-30.md",
     "docs/figma-flow.md",
+    "docs/flagship-reviewer-guide.md",
+    "docs/flagship-candidate-2026-09-07.md",
+    "docs/data-freshness-policy.md",
+    "docs/data-provenance.md",
+    "docs/model-card.md",
     "docs/frontier-ai-architecture.md",
     "docs/live-ai-scorecard.md",
     "docs/showcase-case-study.md",
@@ -241,11 +254,11 @@ test("AI persona validation is complete without claiming human research", async 
   assert.match(simulations, /Human testing:\*\* Not conducted or claimed/);
   assert.match(simulations, /52 of 60/);
   assert.match(simulations, /do not represent observed participant behavior/);
-  assert.match(sessionKit, /OPTIONAL FUTURE WORK/);
-  assert.match(sessionKit, /Five real moderated sessions/);
-  assert.match(sessionKit, /Notes consent: yes or no/);
-  assert.match(sessionKit, /Runtime AI calculates or changes the probability/);
-  assert.match(sessionKit, /Raw recordings, names, contact information, and identifiable notes must not be committed/);
+  assert.match(sessionKit, /No recruitment, sessions, consent collection, or human results have occurred/);
+  assert.match(sessionKit, /five voluntary sessions/i);
+  assert.match(sessionKit, /separate consent.*notes, recording/);
+  assert.match(sessionKit, /does not.*alter a probability/);
+  assert.match(sessionKit, /Raw recordings or identifiable records must not enter this repository/);
   assert.match(flow, /flowchart TD/);
   assert.match(flow, /not presented as a Figma screenshot/);
   assert.match(launch, /20-second animated hosted walkthrough/);

@@ -49,7 +49,7 @@ test("uses the same normalized market inputs for the client and server forecast"
     cowboysConsensusProbability: 0.612345,
     sportsbookCount: 5,
   };
-  const market = marketFromOddsEvent(event, game);
+  const market = marketFromOddsEvent(event);
   const effectiveGame = applyLiveMarket(game, market);
   const forecast = calculateForecast({
     game: {
@@ -71,9 +71,51 @@ test("uses the same normalized market inputs for the client and server forecast"
   assert.equal(effectiveGame.sportsbookCount, 5);
   assert.equal(forecast.marketImplied, 0.612345);
   assert.match(
-    forecast.drivers.find((driver) => driver.label === "Market consensus")?.evidence ?? "",
+    forecast.drivers.find((driver) => driver.label === "Market blend contribution")?.evidence ?? "",
     /Median of 5 independently vig-adjusted sportsbook probabilities/,
   );
+});
+
+test("does not borrow bundled fields when current market coverage is absent or partial", () => {
+  const game = snapshot.schedule[0];
+  for (const event of [
+    {},
+    { cowboysMoneyline: -150, opponentMoneyline: null, sportsbookCount: 0 },
+    { cowboysMoneyline: -150, opponentMoneyline: 125, sportsbookCount: 0 },
+  ]) {
+    // An old caller's extra fallback argument must never change live provenance.
+    const market = marketFromOddsEvent(event, game);
+    assert.deepEqual(market, {
+      cowboysMoneyline: null,
+      opponentMoneyline: null,
+      cowboysSpread: null,
+      totalLine: null,
+      marketImpliedProbability: null,
+      sportsbookCount: 0,
+    });
+    const forecast = calculateForecast({
+      game: applyLiveMarket(game, market),
+      ratings: snapshot.ratings,
+      controls: { quarterback: 100, lamb: 100, pickens: 100, williams: 100, defense: 100, opponentStar: 100 },
+    });
+    assert.equal(forecast.marketImplied, null);
+    assert.equal(forecast.probability, forecast.footballOnly);
+  }
+});
+
+test("keeps an available live spread without fabricating a moneyline pair or total", () => {
+  const market = marketFromOddsEvent({
+    cowboysMoneyline: -150,
+    opponentMoneyline: null,
+    cowboysSpread: -3,
+    total: null,
+    sportsbookCount: 0,
+  });
+  assert.equal(market.cowboysSpread, -3);
+  assert.equal(market.totalLine, null);
+  assert.equal(market.cowboysMoneyline, null);
+  assert.equal(market.opponentMoneyline, null);
+  assert.equal(market.marketImpliedProbability, null);
 });
 
 test("clears live market state when the forecast API reports bundled evidence", () => {
@@ -81,6 +123,7 @@ test("clears live market state when the forecast API reports bundled evidence", 
     source: "The Odds API",
     retrievedAt: "2026-08-23T19:07:56.106Z",
     cached: true,
+    cacheExpiresAt: "2026-08-24T01:07:56.106Z",
     market: {
       cowboysMoneyline: -145,
       opponentMoneyline: 125,
@@ -101,6 +144,7 @@ test("clears live market state when the forecast API reports bundled evidence", 
   assert.equal(liveAction.action, "apply");
   assert.equal(liveAction.market.marketImpliedProbability, 0.612345);
   assert.equal(liveAction.market.sportsbookCount, 5);
+  assert.equal(liveAction.metadata.cacheExpiresAt, "2026-08-24T01:07:56.106Z");
   assert.deepEqual(bundledAction, { action: "clear" });
 });
 

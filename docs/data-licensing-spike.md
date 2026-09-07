@@ -47,9 +47,11 @@ When cache persistence succeeds, the six-hour shared odds cache permits no more 
 - When the cutoff, project quota, timeout, or schema validation blocks AI, return the same calculated probability with a deterministic explanation.
 - Display the fallback as a normal reliability state, not an error that prevents scenario completion.
 
-## Data contract
+## Original target data contract
 
-Every normalized record must include:
+The July design target listed the fields below. It was not a claim that every released player and schedule record contained them. The September candidate records source manifests and explicit snapshot-level inheritance; see [data provenance](data-provenance.md) for actual fields and [freshness policy](data-freshness-policy.md) for operating targets.
+
+The original target fields were:
 
 - Source name and source record identifier
 - Event, team, and player identifiers
@@ -65,7 +67,7 @@ Do not store or display player headshots, team logos, official uniform artwork, 
 
 The scenario endpoint returns two probabilities:
 
-1. **Football-only probability:** Uses team and player performance features without market inputs.
+1. **Football-only probability:** Uses team Elo and hand-set participation sensitivity assumptions without market inputs. Player production statistics provide supporting context and opponent ranking, not fitted player-effect coefficients. See the [model card](model-card.md) for that distinction.
 2. **Market-aware probability:** Blends football probability with vig-adjusted consensus moneyline probability. Spread, total, and line status remain separately visible evidence.
 
 The runtime AI must call the versioned probability function and return its probability unchanged. Its structured response contains:

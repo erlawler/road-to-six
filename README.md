@@ -1,7 +1,7 @@
 # Road to Six
 
 [![CI](https://github.com/erlawler/road-to-six/actions/workflows/ci.yml/badge.svg)](https://github.com/erlawler/road-to-six/actions/workflows/ci.yml)
-[![AI eval: 12 of 12](https://img.shields.io/badge/AI%20eval-12%20of%2012%20passed-1f7a4d)](docs/ai-evaluation.md)
+[![Candidate AI eval: 17 of 17](https://img.shields.io/badge/candidate%20AI%20eval-17%20of%2017%20passed-1f7a4d)](docs/flagship-candidate-2026-09-07.md)
 [![Release: v1.0.0](https://img.shields.io/badge/release-v1.0.0-2774d8)](RELEASE_NOTES.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1d6fd1.svg)](LICENSE)
 
@@ -15,7 +15,7 @@
 
 The product demonstrates how I frame an ambiguous problem, choose the right boundary between deterministic software and frontier AI, integrate governed data sources, define measurable quality gates, and move a product from concept to a governed public release.
 
-> **Current status:** Version 1.0.0 is public on GitHub and Sites. The anonymous production smoke test passed on July 30, 2026 for page load, client hydration, live odds, matchup changes, deterministic forecast behavior, Runtime AI, structured reliability evidence, input rejection, accessibility markers, security headers, source links, social metadata, and browser errors. Build, lint, 76 tests, 12 AI evaluation cases, the four-scenario live scorecard, dependency audit, CI, and CodeQL also pass. The owner-approved showcase evidence gate is complete through transparent AI persona validation. No human usability testing has been conducted or claimed.
+> **Evidence status, September 7, 2026:** Public production remains Sites version 16 at main commit `57b170f`. This branch contains an undeployed flagship reliability candidate. July release checks and the four-scenario AI scorecard below are historical evidence, not current health assertions. The September audit identified data freshness, explanation clarity, and documentation gaps; candidate verification is recorded separately in the [September candidate release review](docs/flagship-candidate-2026-09-07.md). No human usability testing or observed adoption is claimed.
 
 ## Technical product management and frontier AI showcase
 
@@ -32,14 +32,14 @@ The product demonstrates how I frame an ambiguous problem, choose the right boun
 
 **Ownership:** I owned the product strategy, technical decisions, risk acceptance, and release approval. Codex accelerated implementation, testing, review, and documentation within the boundaries I defined.
 
-## Two-minute showcase path
+## Reviewer path
 
 1. **First 30 seconds:** Read [The problem](#the-problem) and [What I owned](#what-i-owned).
 2. **Next 30 seconds:** Scan the [key product decisions](#key-product-decisions-and-tradeoffs).
-3. **Next 30 seconds:** Review the [verified outcomes](#verified-outcomes), including the honest model conclusion.
+3. **Next 30 seconds:** Review the [historical release evidence](#historical-release-evidence), including the honest model conclusion.
 4. **Final 30 seconds:** Inspect the [architecture](#architecture), [frontier AI judgment](#frontier-ai-product-judgment), and [showcase evidence](#showcase-evidence).
 
-For the complete narrative, open the [showcase case study](docs/showcase-case-study.md).
+For a practical demonstration, use the [90-second reviewer guide](docs/flagship-reviewer-guide.md). For the complete narrative, open the [showcase case study](docs/showcase-case-study.md). The guide separates the public release, candidate behavior, historical engineering evidence, and untested user-value hypotheses.
 
 ## The problem
 
@@ -69,16 +69,16 @@ Road to Six makes the decision path visible:
 | Decision | Product rationale | Tradeoff accepted |
 |---|---|---|
 | Use deterministic code for probability | The result stays testable, reproducible, and versioned | The system is less flexible than asking an LLM to reason freely |
-| Use AI for explanation only | AI adds accessible synthesis without becoming the source of truth | Explanations must pass schema and semantic validation |
+| Restrict AI to supplied evidence | Demonstrates tool orchestration and tests whether selecting relevant facts improves comprehension | Facts remain deterministic; incremental user value is unmeasured |
 | Blend 20% football Elo with 80% market probability | Establishes a transparent, predeclared baseline | The baseline does not claim to beat the market |
 | Keep exploration anonymous | Reduces friction, privacy risk, and security scope | No saved scenarios or personalization |
 | Use free data sources and a six-hour odds cache | Keeps operating cost predictable | Data breadth and refresh frequency are intentionally limited |
 | Exclude bettor splits | Avoids unsupported claims about Cowboys popularity | Popularity-driven market bias remains an unvalidated hypothesis |
 | Prohibit betting recommendations | Keeps the experience educational and responsible | The product provides analysis, not action |
 
-## Verified outcomes
+## Historical release evidence
 
-These are implemented or validated outcomes, not aspirational claims.
+The following results describe the July 2026 release and bounded evaluation samples. Dependency posture, data coverage, and production behavior change over time. Use the dated candidate review for subsequent findings; these results do not validate the current candidate. Elo uses prior completed results, but the historical CSV lacks archived quote timestamps. The market comparison is a retrospective historical-price benchmark, not proof of a prospective fixed-lead-time forecast. See the [model card](docs/model-card.md).
 
 | Outcome | Verified evidence |
 |---|---|
@@ -92,7 +92,7 @@ These are implemented or validated outcomes, not aspirational claims.
 | Live AI scorecard | Four of four Runtime AI cases passed with 3,568 ms average latency and $0.013118 total estimated cost; four of four deterministic cases passed at $0 |
 | AI operations | A reliability receipt exposes version, latency, token, cost, validation, source, and fallback evidence |
 | Product quality | Production build, lint, 76 automated tests, 12-case AI evaluation, and dependency audit passed |
-| Dependency security | Current audit returned zero vulnerabilities |
+| Dependency security | The July release audit returned zero vulnerabilities; the September audit found high and moderate dependencies, subsequently addressed in the local candidate; see its separate validation |
 | Release governance | Accessibility, security, privacy, responsible-use, data-rights, and trademark reviews are documented |
 
 See the [release review](docs/release-review.md) for the full evidence, accepted limitations, and publication verification.
@@ -124,11 +124,11 @@ The architecture keeps credentials and vendor calls server-side. It also keeps t
 
 This project is intentionally not an LLM wrapper.
 
-- **AI explains:** It translates model drivers, source evidence, and uncertainty into a structured narrative.
+- **AI integration is inspectable:** The deployed version demonstrates required tool calling and exact evidence reproduction. Its summary and disclaimer are application templates; improved human comprehension has not been established.
 - **AI does not calculate:** The versioned probability function owns the number.
 - **AI is grounded:** The server supplies a bounded scenario, model result, and cited evidence.
 - **AI is evaluated:** The response must preserve probability, model version, source time, required evidence, and uncertainty.
-- **AI is constrained:** The server owns the summary and disclaimer, then exposes only exact validated evidence fields from the model.
+- **AI is constrained:** Production owns the summary and disclaimer and exposes exact validated evidence fields. A bounded AI selection of what-changed evidence is candidate work and must preserve this trusted factual contract before release.
 - **AI is observable:** Each run returns a reliability receipt with version, latency, token, cost, source, validation, and fallback evidence.
 - **AI can fail safely:** A deterministic explanation preserves the core user job when quota, timeout, budget, or validation blocks AI.
 - **AI cost is governed:** A D1 ledger reserves and reconciles estimated use, stops application calls at $9.50, and preserves a margin under the $10 project limit.
@@ -146,6 +146,9 @@ Anthropic is not integrated in v1.0.0. Supporting it would require a separate ad
 
 | Artifact | What it demonstrates |
 |---|---|
+| [90-second reviewer guide](docs/flagship-reviewer-guide.md) | A concise demonstration with explicit production and candidate boundaries |
+| [September candidate review](docs/flagship-candidate-2026-09-07.md) | Audit findings, candidate changes, validation state, and release boundaries |
+| [Data freshness policy](docs/data-freshness-policy.md) | Per-source age expectations, coverage gaps, and refresh ownership |
 | [Detailed showcase case study](docs/showcase-case-study.md) | Product narrative, ownership, tradeoffs, evidence, and lessons |
 | [Product brief](docs/product-brief.md) | Problem framing, users, scope, success measures, and launch decision |
 | [Architecture](docs/architecture.md) | Components, trust boundaries, data flow, and AI controls |
@@ -185,9 +188,12 @@ The application remains usable without external credentials through bundled data
 Run the quality gates:
 
 ```bash
+npm run typecheck
 npm run lint
+npm run data:validate
 npm run eval
 npm test
+npm run build
 npm audit --audit-level=high
 ```
 

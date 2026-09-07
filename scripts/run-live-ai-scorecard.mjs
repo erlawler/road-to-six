@@ -1,10 +1,13 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { evaluateAIOutput } from "../lib/ai-evaluation.mjs";
 import { deterministicExplanation } from "../lib/forecast.mjs";
 
+import { scoreRuntimeResponse } from "../lib/live-scorecard-evaluation.mjs";
+
 const DEFAULT_BASE_URL = "http://localhost:3000";
-const EXPECTED_MODE = "ai";
+const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
+const expectedModel = process.env.LIVE_EVAL_EXPECTED_MODEL ?? "gpt-5.6-luna";
 
 const scenarios = Object.freeze([
   {
@@ -71,28 +74,15 @@ function summarizeChecks(report) {
   return report.checks.map(({ id, passed }) => ({ id, passed }));
 }
 
-function buildContract(data) {
-  const sourceUpdatedAt = data.reliability?.sourceUpdatedAt
-    ?? data.explanation?.sourceUpdatedAt
-    ?? data.marketEvidence?.retrievedAt;
-  return {
-    probability: data.forecast.probability,
-    modelVersion: data.forecast.modelVersion,
-    sourceUpdatedAt,
-    expectedDrivers: data.forecast.drivers,
-    expectedUncertainty: data.forecast.uncertainty,
-  };
-}
-
-function deterministicBaseline(data, scenario) {
+function deterministicBaseline(data, scenario, scored) {
   const startedAt = performance.now();
   const explanation = deterministicExplanation({
-    forecast: data.forecast,
+    forecast: scored.forecast,
     game: { opponentName: scenario.opponentName },
   });
   const latencyMs = performance.now() - startedAt;
   const output = {
-    forecast: data.forecast,
+    forecast: scored.forecast,
     explanation,
     fallbackReason: "scorecard_deterministic_baseline",
     marketEvidence: data.marketEvidence,
@@ -100,7 +90,7 @@ function deterministicBaseline(data, scenario) {
   const report = evaluateAIOutput({
     output,
     contract: {
-      ...buildContract(data),
+      ...scored.contract,
       expectedFallback: true,
     },
   });
@@ -134,15 +124,7 @@ async function evaluateRuntime(baseUrl, scenario) {
     throw new Error(`Scenario ${scenario.id} returned HTTP ${response.status}`);
   }
 
-  const report = evaluateAIOutput({
-    output: {
-      explanation: data.explanation,
-      forecast: data.forecast,
-      fallbackReason: data.fallbackReason,
-      marketEvidence: data.marketEvidence,
-    },
-    contract: buildContract(data),
-  });
+  const report = scoreRuntimeResponse({ data, scenario, snapshot, expectedModel });
   const reliability = data.reliability ?? {};
   return {
     runtime: {
@@ -153,7 +135,7 @@ async function evaluateRuntime(baseUrl, scenario) {
       contractVersion: reliability.contractVersion ?? "unreported",
       evalVersion: reliability.evalVersion ?? "unreported",
       forecastVersion: reliability.forecastVersion ?? data.forecast?.modelVersion ?? "unreported",
-      passed: report.passed && data.explanation?.mode === EXPECTED_MODE,
+      passed: report.passed,
       validationStatus: reliability.validationStatus ?? (report.passed ? "passed" : "failed"),
       latencyMs: rounded(reliability.latencyMs ?? measuredLatencyMs, 3),
       measuredLatencyMs: rounded(measuredLatencyMs, 3),
@@ -163,7 +145,7 @@ async function evaluateRuntime(baseUrl, scenario) {
       fallbackReasonCode: reliability.fallbackReasonCode ?? null,
       checks: summarizeChecks(report),
     },
-    deterministic: deterministicBaseline(data, scenario),
+    deterministic: deterministicBaseline(data, scenario, report),
   };
 }
 
@@ -193,10 +175,13 @@ async function main() {
   }
 
   const summary = {
-    schemaVersion: "1.0.0",
+    schemaVersion: "1.1.0",
     generatedAt: new Date().toISOString(),
     scenarioCount: scenarios.length,
-    expectedRuntimeMode: EXPECTED_MODE,
+    expectedRuntimeMode: "ai",
+    expectedModel,
+    sourceSnapshotVersion: snapshot.dataVersion,
+    validationBasis: "Forecast independently recomputed from the local snapshot, controls and returned market inputs; receipt fields checked explicitly",
     scorecard: [
       aggregate(rows, "runtime"),
       aggregate(rows, "deterministic"),

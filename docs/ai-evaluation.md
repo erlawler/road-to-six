@@ -4,9 +4,15 @@
 
 Road to Six evaluates runtime AI as a governed product component, not as a writing sample. The deterministic model owns the probability. Runtime AI may only explain that result with complete evidence, uncertainty, source context, and responsible-use boundaries.
 
-The evaluation is intentionally local, deterministic, and free to run. It makes no live API calls and does not score tone or subjective style.
+The evaluation is intentionally local, deterministic, and free to run. It makes no live API calls and does not score tone, human comprehension, or usefulness. The July baseline below is historical; candidate selection-contract extensions require their own current results in the [candidate review](flagship-candidate-2026-09-07.md). The [moderated comparison protocol](usability-session-kit.md) tests the separate user-value hypothesis.
 
-## User-value scorecard
+## September candidate contract
+
+The undeployed candidate uses forecast model `elo-market-v1.2.0`, prompt and contract version `1.1.0`, and evaluation version `1.1.0`. It adds an eighth criterion for bounded selection of comparison evidence. AI must select 1 to 3 distinct approved IDs, including the baseline-change fact, and cannot invent new factual text. Invalid, missing, duplicate, irrelevant, or excessive selections must fail closed.
+
+The candidate set contains 17 cases: 2 positive and 15 adversarial, evaluated across 8 criteria for 136 binary checks. Current execution evidence belongs in the [candidate review](flagship-candidate-2026-09-07.md). These checks establish contract behavior, not measured user comprehension or live provider readiness.
+
+## Historical July contract-integrity scorecard
 
 Every response receives seven binary checks. A response passes only when all seven checks pass.
 

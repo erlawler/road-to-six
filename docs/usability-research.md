@@ -14,7 +14,7 @@
 
 **AI persona evidence:** [Synthetic Ideal-Persona Usability Simulations](synthetic-persona-sessions.md)
 
-**Optional future protocol:** [Optional Moderated Usability Research Kit](usability-session-kit.md)
+**Prepared September 7 comparison protocol:** [Five voluntary sessions](usability-session-kit.md) comparing deterministic evidence with a bounded AI what-changed candidate. No recruitment, sessions, consent collection, or human results have occurred. This prospective work does not change the completed July gate.
 
 ## Decision supported
 
