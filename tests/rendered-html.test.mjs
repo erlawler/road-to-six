@@ -138,11 +138,13 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Uncertainty to keep in view/);
   assert.match(html, /The Odds API current markets/);
   assert.match(html, /Illustrative uncertainty band/);
-  assert.match(html, /Product strategy, architecture, risk, and release owned by Eric Lawler\. Implemented with Code\./);
+  assert.match(html, /Product strategy, architecture, risk, and release owned by Eric Lawler\. Implemented with Codex\./);
   assert.match(html, /Review the case/);
-  assert.match(html, /OpenAI explains evidence today/);
-  assert.match(html, /governed path to Anthropic/);
-  assert.match(html, /top four stat producers from its active 2026 roster/);
+  assert.match(html, /OpenAI selects comparison context from approved evidence/);
+  assert.match(html, /Incremental user value is unmeasured/);
+  assert.match(html, /What changed from baseline/);
+  assert.match(html, /Contributions below add to a 50% starting point/);
+  assert.match(html, /top four stat producers from the roster snapshot verified/);
   assert.match(html, /#(?:<!-- -->)?1(?:<!-- -->)? rank/);
   assert.match(html, /2024-2025/);
   assert.match(html, /<span class="sr-only">2024 to 2025<\/span>/);
@@ -151,8 +153,8 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /aria-label="Road to Super Bowl Six"/);
   assert.match(html, /Ownership and strategy by Eric Lawler\. Implemented with Codex\./);
   assert.match(html, /Product judgment, made inspectable/);
-  assert.match(html, /12 of 12 expected outcomes detected/);
-  assert.match(html, /four-scenario live scorecard passed four of four Runtime AI/);
+  assert.match(html, /17 of 17 expected outcomes detected/);
+  assert.match(html, /scorecard passed four of four AI and deterministic cases under the earlier contract/);
   assert.match(html, /Reset scenario/);
   assert.match(html, /Binary checks/);
   assert.match(html, /AI explains but does not invent probability/);
@@ -251,7 +253,7 @@ test("forecast API fails closed without the shared rate-limit ledger", async () 
   assert.equal(response.status, 503);
   const payload = await response.json();
   assert.equal(payload.explanation.mode, "deterministic");
-  assert.equal(payload.forecast.modelVersion, "elo-market-v1.1.0");
+  assert.equal(payload.forecast.modelVersion, "elo-market-v1.2.0");
   assert.equal(payload.forecast.probability > 0 && payload.forecast.probability < 1, true);
   assert.equal(payload.forecast.marketImplied < 0.7, true);
   assert.equal(payload.marketEvidence.source, "Bundled nflverse market snapshot");
@@ -259,7 +261,7 @@ test("forecast API fails closed without the shared rate-limit ledger", async () 
   assert.equal(payload.reliability.mode, "deterministic");
   assert.equal(payload.reliability.validationStatus, "not_run");
   assert.equal(payload.reliability.fallbackReasonCode, "rate_limit_unavailable");
-  assert.equal(payload.reliability.forecastVersion, "elo-market-v1.1.0");
+  assert.equal(payload.reliability.forecastVersion, "elo-market-v1.2.0");
   assert.equal(payload.reliability.estimatedCostUsd, 0);
   assert.equal(payload.budget, undefined);
 });

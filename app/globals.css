@@ -475,7 +475,8 @@ footer span, footer p { color: #91a3b7; font-size: 0.72rem; line-height: 1.6; ma
   .site-header nav {
     gap: 20px;
     grid-column: 1 / -1;
-    overflow-x: auto;
+    flex-wrap: wrap;
+    row-gap: 2px;
     padding: 2px 0 3px;
     scrollbar-width: thin;
   }
@@ -519,3 +520,19 @@ footer span, footer p { color: #91a3b7; font-size: 0.72rem; line-height: 1.6; ma
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+.freshness-note { background: #f1f4f7; color: var(--muted); font-size: 0.78rem; line-height: 1.6; margin: 0; padding: 14px clamp(19px, 7vw, 110px); }
+.scenario-presets { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.scenario-presets span { color: var(--muted); font-size: 0.75rem; width: 100%; }
+.scenario-presets button { background: #edf3f9; border: 1px solid #c7d0da; border-radius: 4px; color: var(--navy-900); cursor: pointer; font: inherit; font-size: 0.74rem; font-weight: 700; min-height: 44px; padding: 9px 12px; }
+.scenario-comparison { background: #102239; border: 1px solid #304963; border-radius: 8px; margin: 22px 0; padding: 18px; }
+.scenario-comparison h4 { font-size: 1rem; margin: 0 0 16px; }
+.scenario-comparison dl { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 18px; }
+.scenario-comparison dt { color: #b6c8dc; font-size: 0.7rem; line-height: 1.5; }
+.scenario-comparison dd { font-size: 1.1rem; font-weight: 800; margin: 6px 0 0; }
+.scenario-comparison small, .contribution-note { color: #b6c8dc; font-size: 0.72rem; line-height: 1.6; }
+.scenario-comparison ul { color: #d7e1ed; font-size: 0.78rem; line-height: 1.65; margin-bottom: 0; padding-left: 18px; }
+.scenario-comparison li + li { margin-top: 10px; }
+
+.source-stale { color: #9b2b16; }
+.source-age { color: var(--navy-900); }

@@ -1,5 +1,7 @@
 # Road to Six 1.0.0
 
+**Historical release notes:** The checks and hosting versions below describe the July 2026 release. The September flagship candidate is undeployed and has [separate release notes and validation](docs/flagship-candidate-2026-09-07.md).
+
 **Prepared:** July 27, 2026
 **Release state:** Public on GitHub and Sites
 **Public hosting:** Published at [Road to Six](https://road-to-six-erl.erlrickylre.chatgpt.site)

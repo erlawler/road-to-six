@@ -2,6 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   calculateForecast,
+  calculateProbabilities,
+  DEFAULT_CONTROLS,
+  advanceRatingsSeason,
+  eloWinProbability,
   moneylineToImplied,
   removeVig,
 } from "../lib/forecast.mjs";
@@ -46,10 +50,7 @@ test("uses the per-book consensus probability when the trusted adapter supplies 
   });
 
   assert.equal(forecast.marketImplied, 0.61);
-  assert.equal(
-    forecast.drivers.find((driver) => driver.label === "Market consensus")?.evidence,
-    "Median of 4 independently vig-adjusted sportsbook probabilities.",
-  );
+  assert.match(forecast.drivers.find((driver) => driver.label === "Market blend contribution")?.evidence ?? "", /Median of 4 independently vig-adjusted sportsbook probabilities/);
 });
 
 test("quarterback participation materially changes the scenario", () => {
@@ -87,4 +88,44 @@ test("Cowboys skill players and the opponent leader change the scenario in the e
 
   assert.equal(cowboysReduced.footballOnly < baseline.footballOnly, true);
   assert.equal(opponentReduced.footballOnly > baseline.footballOnly, true);
+});
+
+
+test("season advancement applies exactly one regression per season and never mutates input", () => {
+  const ratings = { DAL: 1600, NYG: 1400 };
+  assert.deepEqual(advanceRatingsSeason(ratings, 2025, 2026), { DAL: 1575, NYG: 1425 });
+  assert.deepEqual(advanceRatingsSeason(ratings, 2026, 2026), ratings);
+  assert.deepEqual(advanceRatingsSeason(ratings, 2024, 2026), { DAL: 1556.25, NYG: 1443.75 });
+  assert.deepEqual(ratings, { DAL: 1600, NYG: 1400 });
+  assert.throws(() => advanceRatingsSeason(ratings, 2026, 2025), /ordered integer seasons/);
+});
+
+test("neutral venues have no home advantage in the shared probability kernel", () => {
+  assert.equal(eloWinProbability(1500, 1500, "neutral"), 0.5);
+  assert.equal(calculateProbabilities({ footballBaseline: eloWinProbability(1500, 1500, "neutral") }).probability, 0.5);
+});
+
+test("baseline comparison and additive impacts reconcile across markets, scenarios, and clamps", () => {
+  for (const marketImpliedProbability of [null, 0.0001, 0.4, 0.9999]) {
+    for (const ratings of [{ DAL: 1457, NYG: 1360 }, { DAL: 900, NYG: 2100 }, { DAL: 2100, NYG: 900 }]) {
+      for (const controls of [DEFAULT_CONTROLS, { ...DEFAULT_CONTROLS, quarterback: 0 }, { ...DEFAULT_CONTROLS, quarterback: 0, lamb: 0, pickens: 0, williams: 0, defense: 0, opponentStar: 0 }]) {
+        const currentGame = { ...game, marketImpliedProbability, cowboysMoneyline: null, opponentMoneyline: null };
+        const baseline = calculateForecast({ game: currentGame, ratings, controls: DEFAULT_CONTROLS });
+        const changed = calculateForecast({ game: currentGame, ratings, controls });
+        assert.equal(changed.baselineProbability, baseline.probability);
+        assert.equal(changed.scenarioDelta, changed.probability - baseline.probability);
+        assert.ok(Math.abs(0.5 + changed.drivers.reduce((sum, driver) => sum + driver.impact, 0) / 100 - changed.probability) < 1e-12);
+        assert.equal(changed.drivers.find((driver) => driver.label === "Scenario contribution").impact, changed.scenarioDelta * 100);
+      }
+    }
+  }
+});
+
+test("quarterback driver reports the actual final blend effect, not the unweighted sensitivity", () => {
+  const baseline = calculateForecast({ game, ratings: { DAL: 1457, NYG: 1360 }, controls: DEFAULT_CONTROLS });
+  const changed = calculateForecast({ game, ratings: { DAL: 1457, NYG: 1360 }, controls: { ...DEFAULT_CONTROLS, quarterback: 0 } });
+  assert.ok(Math.abs(changed.scenarioDelta * 100 + 3.6) < 1e-10);
+  assert.equal(changed.baselineProbability, baseline.probability);
+  assert.match(changed.uncertainty.join(" "), /hand-set sensitivity coefficients/);
+  assert.match(changed.uncertainty.join(" "), /illustrative/);
 });

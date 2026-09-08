@@ -1,4 +1,5 @@
 export type AIEvaluationCriterionId =
+  | "comparison_grounding"
   | "probability_fidelity"
   | "model_version_fidelity"
   | "source_freshness"
@@ -12,6 +13,7 @@ export type AIEvaluationContract = {
   modelVersion: string;
   sourceUpdatedAt: string;
   expectedFallback?: boolean;
+  expectedComparisonEvidence?: Array<{ id: string; text: string }>;
   expectedDrivers: Array<{
     label: string;
     evidence: string;

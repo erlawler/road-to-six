@@ -38,6 +38,7 @@ export type MarketEvidenceAction =
         source: "The Odds API";
         retrievedAt: string | null;
         cached: boolean;
+        cacheExpiresAt: string | null;
       };
     };
 
@@ -49,7 +50,6 @@ export function findCowboysScheduleGame<T extends ScheduleGame>(
 ): T | undefined;
 export function marketFromOddsEvent(
   event: OddsEvent,
-  fallback?: Partial<LiveMarket>,
 ): LiveMarket;
 export function applyLiveMarket<T extends object>(game: T, market?: LiveMarket): T & Partial<LiveMarket>;
 export function forecastMarketEvidenceAction(evidence: unknown): MarketEvidenceAction;

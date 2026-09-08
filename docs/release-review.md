@@ -1,5 +1,9 @@
 # Release Review
 
+**Evidence boundary:** This is the historical July 30, 2026 release review. Statuses and live measurements below refer to that release window. Production later advanced to Sites version 16 at main commit `57b170f`. The September 7 candidate is undeployed and has a [separate review and validation record](flagship-candidate-2026-09-07.md). Historical approval does not release the candidate.
+
+**Current review procedure:** Require `npm run typecheck`, `npm run lint`, `npm run eval`, `npm test`, `npm run build`, and `npm audit --audit-level=high`. Record the tested commit, run timestamp, result, and any unresolved dependency finding. Follow the repository release-review skill for data, AI, browser, accessibility, and publication gates.
+
 **Review date:** July 30, 2026
 
 **Release candidate:** V1.0.0 RELEASED ON GITHUB

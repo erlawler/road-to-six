@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import snapshot from "./data/nfl-snapshot.json";
 import {
   calculateForecast,
@@ -14,8 +14,11 @@ import {
   forecastMarketEvidenceAction,
   marketFromOddsEvent,
   type LiveMarket,
+  type OddsEvent,
 } from "@/lib/odds-market.mjs";
 import type { AIReliabilityReceipt } from "@/lib/ai-contract.mjs";
+
+import { buildComparisonEvidence, defaultComparisonSelection, selectComparisonEvidence } from "@/lib/scenario-comparison.mjs";
 
 type Player = (typeof snapshot.players)[number];
 
@@ -33,6 +36,26 @@ type Explanation = {
   drivers: Array<{ label: string; evidence: string; impact: string | number }>;
   uncertainty: string[];
   disclaimer: string;
+  comparisonEvidenceIds?: string[];
+};
+
+type ForecastResponse = {
+  explanation?: Explanation;
+  forecast?: ForecastResult;
+  error?: string;
+  fallbackReason?: string;
+  reliability?: AIReliabilityReceipt;
+  marketEvidence?: unknown;
+};
+type OddsResponse = {
+  events?: OddsEvent[];
+  source?: string;
+  retrievedAt?: string;
+  fetchedAt?: string;
+  cacheExpiresAt?: string;
+  cacheTtlHours?: number;
+  cached?: boolean;
+  message?: string;
 };
 
 const defaultControls: ScenarioControls = {
@@ -142,6 +165,14 @@ function ProbabilityRing({ value, label }: { value: number; label: string }) {
 }
 
 export default function Home() {
+  const [currentTime, setCurrentTime] = useState<number | null>(null);
+  useEffect(() => {
+    setCurrentTime(Date.now());
+    const timer = setInterval(() => setCurrentTime(Date.now()), 60_000);
+    return () => clearInterval(timer);
+  }, []);
+  const snapshotAgeDays = currentTime === null ? null
+    : Math.max(0, Math.floor((currentTime - Date.parse(`${snapshot.asOf}T00:00:00Z`)) / 86_400_000));
   const [selectedGameId, setSelectedGameId] = useState(snapshot.schedule[0].id);
   const [controls, setControls] = useState<ScenarioControls>(defaultControls);
   const [runtimeResult, setRuntimeResult] = useState<{
@@ -192,9 +223,27 @@ export default function Home() {
   );
   const displayedForecast = runtimeResult?.key === scenarioKey ? runtimeResult.forecast : forecast;
   const displayedExplanation = runtimeResult?.key === scenarioKey ? runtimeResult.explanation : localExplanation;
+  const comparisonEvidence = buildComparisonEvidence({ forecast: displayedForecast, controls });
+  const comparisonCards = selectComparisonEvidence(
+    displayedExplanation.comparisonEvidenceIds ?? defaultComparisonSelection(comparisonEvidence),
+    comparisonEvidence,
+  );
+  useEffect(() => {
+    if (!marketMetadata?.cacheExpiresAt) return;
+    const expireMarkets = () => {
+      if (Date.now() < Date.parse(marketMetadata.cacheExpiresAt!)) return;
+      setMarkets({});
+      setMarketMetadata(null);
+      setRuntimeResult(null);
+      setMarketStatus("Live market cache expired. Bundled snapshot restored; refresh when ready.");
+    };
+    const timer = setInterval(expireMarkets, 15_000);
+    expireMarkets();
+    return () => clearInterval(timer);
+  }, [marketMetadata]);
   const selectedMarketStatus = marketMetadata
     ? liveMarket
-      ? `Current market applied to Week ${selectedGame.week}.`
+      ? `Week ${selectedGame.week}: ${liveMarket.sportsbookCount} paired sportsbook(s). ${liveMarket.marketImpliedProbability === null ? "No paired market probability; football-only forecast." : liveMarket.sportsbookCount === 1 ? "Single-book reference, limited coverage." : "Paired-book consensus applied."}`
       : `No current market matched Week ${selectedGame.week}. Continuing with the ${snapshot.asOf} baseline.`
     : null;
 
@@ -216,16 +265,15 @@ export default function Home() {
           controls,
         }),
       });
-      const data = await response.json();
+      const data = await response.json() as ForecastResponse;
       const marketAction = forecastMarketEvidenceAction(data.marketEvidence);
       if (marketAction.action === "apply") {
-        setMarkets((current) => ({
-          ...current,
-          [selectedGame.id]: marketAction.market,
-        }));
+        // Forecast evidence covers this game only; never give older quotes its new freshness.
+        setMarkets({ [selectedGame.id]: marketAction.market });
         setMarketMetadata({
           ...marketAction.metadata,
-          retrievedAt: marketAction.metadata.retrievedAt ?? new Date().toISOString(),
+          cacheExpiresAt: marketAction.metadata.cacheExpiresAt ?? undefined,
+          retrievedAt: marketAction.metadata.retrievedAt ?? "",
         });
       } else if (marketAction.action === "clear") {
         setMarkets({});
@@ -247,6 +295,7 @@ export default function Home() {
         }
         throw new Error(data.error ?? "Forecast unavailable");
       }
+      if (!data.explanation || !data.forecast) throw new Error("Incomplete forecast response");
       setRuntimeResult({
         key: scenarioKey,
         explanation: data.explanation,
@@ -272,7 +321,7 @@ export default function Home() {
     setMarketStatus("Checking current markets...");
     try {
       const response = await fetch("/api/odds");
-      const data = await response.json();
+      const data = await response.json() as OddsResponse;
       if (!response.ok) {
         setMarkets({});
         setMarketMetadata(null);
@@ -286,7 +335,7 @@ export default function Home() {
         ? data.retrievedAt
         : typeof data.fetchedAt === "string"
           ? data.fetchedAt
-          : new Date().toISOString();
+          : "";
       const cacheTtlHours = Number.isFinite(Number(data.cacheTtlHours))
         ? Number(data.cacheTtlHours)
         : null;
@@ -294,7 +343,7 @@ export default function Home() {
       for (const event of data.events ?? []) {
         const game = findCowboysScheduleGame(snapshot.schedule, event);
         if (!game) continue;
-        nextMarkets[game.id] = marketFromOddsEvent(event, game);
+        nextMarkets[game.id] = marketFromOddsEvent(event);
       }
       setMarkets(nextMarkets);
       setRuntimeResult(null);
@@ -354,7 +403,7 @@ export default function Home() {
             safety, and release decisions are governed.
           </p>
           <p className="ownership-line">
-            Product strategy, architecture, risk, and release owned by Eric Lawler. Implemented with Code.
+            Product strategy, architecture, risk, and release owned by Eric Lawler. Implemented with Codex.
           </p>
           <div className="hero-actions">
             <a className="primary-action" href="#forecast">Run the forecast</a>
@@ -389,11 +438,16 @@ export default function Home() {
         </article>
       </section>
 
+      <p className="freshness-note">
+        Football and roster snapshot: {snapshot.asOf}.
+        {snapshotAgeDays !== null ? <strong className={snapshotAgeDays > 7 ? "source-stale" : "source-age"}> {snapshotAgeDays} day(s) old{snapshotAgeDays > 7 ? ". Snapshot refresh needed under the weekly review policy." : ". Within the weekly review window."}</strong> : null}
+        {" "}Historical player baseline: 2025 regular season. Refresh odds separately for current market coverage.
+      </p>
       <section className="market-strip" aria-label="Market snapshot">
         <div><span>Dallas moneyline</span><strong>{moneyline(effectiveGame.cowboysMoneyline)}</strong></div>
         <div><span>Spread</span><strong>{spread(effectiveGame.cowboysSpread)}</strong></div>
         <div><span>Total</span><strong>{effectiveGame.totalLine ?? "Pending"}</strong></div>
-        <div><span>Line status</span><strong>{liveMarket ? "Current" : "Baseline"}</strong></div>
+        <div><span>Line status</span><strong>{liveMarket ? liveMarket.marketImpliedProbability === null ? "Incomplete" : "Live source" : "Bundled snapshot"}</strong></div>
       </section>
 
       <section className="forecast-section" id="forecast">
@@ -423,6 +477,11 @@ export default function Home() {
               </select>
             </div>
 
+            <div className="scenario-presets" role="group" aria-label="Example scenario assumptions">
+              <span>Try an assumption</span>
+              <button type="button" onClick={() => { setControls({ ...defaultControls, quarterback: 50 }); setRuntimeResult(null); setRuntimeStatus("Quarterback 50% scenario loaded."); }}>Quarterback at 50%</button>
+              <button type="button" onClick={() => { setControls({ ...defaultControls, defense: 70, opponentStar: 70 }); setRuntimeResult(null); setRuntimeStatus("Two-sided 70% scenario loaded."); }}>Two-sided at 70%</button>
+            </div>
             <fieldset className="scenario-controls" aria-describedby="scenario-disclaimer">
               <legend className="sr-only">Scenario participation assumptions</legend>
               {[
@@ -501,14 +560,25 @@ export default function Home() {
               </span>
             </div>
             {displayedExplanation.mode === "ai" ? (
-              <p className="ai-boundary">Probability unchanged. Runtime AI explained the locked forecast.</p>
+              <p className="ai-boundary">Probability unchanged. Runtime AI selected grounded context for this comparison.</p>
             ) : null}
             <p className="explanation-summary">{displayedExplanation.summary}</p>
+            <section className="scenario-comparison" aria-labelledby="comparison-title">
+              <h4 id="comparison-title">What changed from baseline</h4>
+              <dl>
+                <div><dt>All controls at 100%</dt><dd>{(displayedForecast.baselineProbability * 100).toFixed(1)}%</dd></div>
+                <div><dt>Your scenario</dt><dd>{(displayedForecast.probability * 100).toFixed(1)}%</dd></div>
+                <div><dt>Change</dt><dd>{displayedForecast.scenarioDelta > 0 ? "+" : ""}{(displayedForecast.scenarioDelta * 100).toFixed(1)} pp</dd></div>
+              </dl>
+              <small>{displayedExplanation.mode === "ai" ? "Experimental AI-selected context" : "Default context"}. Same game and market evidence; only assumptions change.</small>
+              <ul>{comparisonCards.map((item) => <li key={item.id}>{item.text}</li>)}</ul>
+            </section>
+            <p className="contribution-note">Contributions below add to a 50% starting point. Units are percentage points (pp); display rounding can affect the sum.</p>
             <div className="driver-list">
               {displayedExplanation.drivers.slice(0, 3).map((driver) => (
                 <div key={driver.label}>
                   <span>{driver.label}</span>
-                  <strong>{typeof driver.impact === "number" ? `${driver.impact > 0 ? "+" : ""}${driver.impact} pts` : driver.impact}</strong>
+                  <strong>{typeof driver.impact === "number" ? `${driver.impact > 0 ? "+" : ""}${driver.impact.toFixed(1)} pp` : driver.impact}</strong>
                   <small>{driver.evidence}</small>
                 </div>
               ))}
@@ -636,7 +706,7 @@ export default function Home() {
           <div>
             <span className="eyebrow">Player evidence</span>
             <h2>Weekly matchup. Real baselines.</h2>
-            <p>Compare featured Cowboys with the selected opponent&apos;s top four stat producers from its active 2026 roster.</p>
+            <p>Compare featured Cowboys with the selected opponent&apos;s top four stat producers from the roster snapshot verified {snapshot.asOf}.</p>
           </div>
         </div>
         <div className="opponent-heading">
@@ -662,7 +732,7 @@ export default function Home() {
         </div>
         <div className="cowboys-heading">
           <span className="eyebrow">Featured Cowboys</span>
-          <h3>Active 2026 roster</h3>
+          <h3>Roster snapshot verified {snapshot.asOf}</h3>
         </div>
         <div className="player-grid">
           {snapshot.players.map((player) => (
@@ -740,7 +810,7 @@ export default function Home() {
         <div className="case-pillars">
           {[
             ["Opportunity", "Test whether football evidence and market prices tell the same story without claiming a wagering edge."],
-            ["AI role", "Deterministic code owns the probability. OpenAI explains evidence today, while contract-first controls preserve a governed path to Anthropic and other modern LLMs."],
+            ["AI role", "Deterministic code owns the forecast and factual text. OpenAI selects comparison context from approved evidence. Incremental user value is unmeasured."],
             ["Operating model", "Free sports data, a six-hour odds cache, an AI cutoff, and a deterministic fallback protect cost and reliability."],
             ["Launch governance", "Accessibility, security, data rights, trademark, responsible-use, and private-release gates are explicit."],
           ].map(([title, copy]) => (
@@ -754,19 +824,19 @@ export default function Home() {
         <div className="eval-proof" aria-labelledby="eval-proof-title">
           <div>
             <span className="eyebrow">AI evaluation release gate</span>
-            <h3 id="eval-proof-title">12 of 12 expected outcomes detected.</h3>
+            <h3 id="eval-proof-title">17 of 17 expected outcomes detected.</h3>
             <p>
-              The offline suite verifies positive and adversarial behavior without spending API
-              budget. The four-scenario live scorecard passed four of four Runtime AI and four of
-              four deterministic cases with no fallbacks. Runtime AI averaged 3,568 ms and an
-              estimated $0.0131 total.
+              September 7 candidate: evaluation v1.1.0 covers contract integrity and grounded comparison selection.
+              These are offline safety checks, not proof of user comprehension. The July 27, 2026 live
+              scorecard passed four of four AI and deterministic cases under the earlier contract;
+              that historical sample does not validate this candidate.
             </p>
           </div>
           <dl>
             <div><dt>Positive cases</dt><dd>2</dd></div>
-            <div><dt>Adversarial cases</dt><dd>10</dd></div>
-            <div><dt>Product criteria</dt><dd>7</dd></div>
-            <div><dt>Binary checks</dt><dd>84</dd></div>
+            <div><dt>Adversarial cases</dt><dd>15</dd></div>
+            <div><dt>Product criteria</dt><dd>8</dd></div>
+            <div><dt>Binary checks</dt><dd>136</dd></div>
           </dl>
         </div>
 

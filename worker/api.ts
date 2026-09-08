@@ -10,6 +10,7 @@ import {
   calculateForecast,
   deterministicExplanation,
   MODEL_VERSION,
+  moneylineToImplied,
   removeVig,
   type ForecastResult,
   type ScenarioControls,
@@ -24,6 +25,7 @@ import {
   requestReservationMicros,
 } from "../lib/ai-budget.mjs";
 import { assertAIOutput } from "../lib/ai-evaluation.mjs";
+import { buildComparisonEvidence, selectComparisonEvidence } from "../lib/scenario-comparison.mjs";
 import {
   AI_CONTRACT_VERSION,
   AI_EVAL_VERSION,
@@ -58,7 +60,7 @@ type AIBudgetStatusRow = {
 type SnapshotGame = (typeof snapshot.schedule)[number];
 
 type BudgetReservation =
-  | { ok: true; reservedMicros: number }
+  | { ok: true; reservedMicros: number; month: string }
   | {
     ok: false;
     reasonCode: Extract<
@@ -120,6 +122,7 @@ type MarketEvidence = {
   fetchedAt: string;
   retrievedAt: string;
   cached: boolean;
+  cacheExpiresAt: string | null;
   market: {
     cowboysMoneyline: number | null;
     opponentMoneyline: number | null;
@@ -169,6 +172,7 @@ const FALLBACK_REASON_MESSAGES: Record<AIFallbackReasonCode, string> = {
   request_body_too_large: "Request body is too large",
   unsupported_content_type: "Content-Type must be application/json",
   invalid_json: "Invalid JSON body",
+  invalid_controls: "Scenario controls must be finite numbers in a JSON object",
   unknown_game: "Unknown game",
 };
 
@@ -429,8 +433,9 @@ async function readOddsCache(env: RuntimeEnv) {
       .bind(ODDS_CACHE_KEY)
       .first<OddsCacheRow>();
     if (!row || row.expires_at <= now) return null;
-    const payload = normalizeCachedOddsPayload(JSON.parse(row.payload), row.fetched_at);
-    if (!payload) return null;
+    const normalized = normalizeCachedOddsPayload(JSON.parse(row.payload), row.fetched_at);
+    if (!normalized) return null;
+    const payload = { ...normalized, cacheExpiresAt: new Date(row.expires_at).toISOString() };
     memoryOddsCache = payload;
     memoryOddsCacheExpiresAt = row.expires_at;
     return { ...payload, cached: true };
@@ -566,6 +571,7 @@ async function reserveBudget(env: RuntimeEnv): Promise<BudgetReservation> {
   try {
     await ensureBudgetTable(env.DB);
     const now = new Date().toISOString();
+    const reservationMonth = monthKey();
     const result = await env.DB
       .prepare(`
         INSERT INTO ai_monthly_budget (
@@ -579,7 +585,7 @@ async function reserveBudget(env: RuntimeEnv): Promise<BudgetReservation> {
         RETURNING month
       `)
       .bind(
-        monthKey(),
+        reservationMonth,
         reservationMicros,
         now,
         reservationMicros,
@@ -589,7 +595,7 @@ async function reserveBudget(env: RuntimeEnv): Promise<BudgetReservation> {
       )
       .first<{ month: string }>();
     return result
-      ? { ok: true, reservedMicros: reservationMicros }
+      ? { ok: true, reservedMicros: reservationMicros, month: reservationMonth }
       : { ok: false, reasonCode: "budget_exhausted" };
   } catch {
     return { ok: false, reasonCode: "budget_ledger_unavailable" };
@@ -598,9 +604,10 @@ async function reserveBudget(env: RuntimeEnv): Promise<BudgetReservation> {
 
 async function reconcileBudget(
   env: RuntimeEnv,
-  reservedMicros: number,
+  reservation: Extract<BudgetReservation, { ok: true }>,
   usage: RuntimeUsage,
 ) {
+  const { reservedMicros, month } = reservation;
   const knownUsageMicros = estimateTokenCostMicros({
     model: env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL,
     inputTokens: usage.inputTokens,
@@ -619,7 +626,7 @@ async function reconcileBudget(
 
   try {
     const adjustment = reconciledMicros - reservedMicros;
-    await env.DB
+    const result = await env.DB
       .prepare(`
         UPDATE ai_monthly_budget
         SET estimated_spend_micros = MAX(0, estimated_spend_micros + ?),
@@ -633,9 +640,12 @@ async function reconcileBudget(
         usage.inputTokens,
         usage.outputTokens,
         new Date().toISOString(),
-        monthKey(),
+        month,
       )
       .run();
+    if (!result.success || result.meta?.changes !== 1) {
+      throw new Error("The reserved budget row was not reconciled");
+    }
     return {
       estimatedCostMicros: reconciledMicros,
       reconciled: true,
@@ -643,18 +653,23 @@ async function reconcileBudget(
   } catch {
     // The original reservation remains charged if reconciliation is unavailable.
     return {
-      estimatedCostMicros: reservedMicros,
+      estimatedCostMicros: Math.max(reservedMicros, knownUsageMicros),
       reconciled: false,
     };
   }
 }
 
-function normalizeControls(input: unknown): ScenarioControls {
-  const source = input && typeof input === "object" ? input as Record<string, unknown> : {};
-  const bound = (value: unknown) => {
-    const parsed = Number(value ?? 100);
-    return Number.isFinite(parsed) ? Math.min(100, Math.max(0, parsed)) : 100;
-  };
+function normalizeControls(input: unknown): ScenarioControls | null {
+  if (input !== undefined && (!input || typeof input !== "object" || Array.isArray(input))) {
+    return null;
+  }
+  const source = (input ?? {}) as Record<string, unknown>;
+  const keys = ["quarterback", "lamb", "receiver", "pickens", "williams", "defense", "opponentStar"];
+  if (keys.some((key) => source[key] !== undefined
+    && (typeof source[key] !== "number" || !Number.isFinite(source[key])))) {
+    return null;
+  }
+  const bound = (value: unknown) => Math.min(100, Math.max(0, value === undefined ? 100 : value as number));
   return {
     quarterback: bound(source.quarterback),
     lamb: bound(source.lamb ?? source.receiver),
@@ -680,6 +695,7 @@ function bundledMarketContext(game: SnapshotGame): {
       fetchedAt: game.sourceUpdatedAt,
       retrievedAt: game.sourceUpdatedAt,
       cached: true,
+      cacheExpiresAt: null,
       market: {
         cowboysMoneyline: game.cowboysMoneyline,
         opponentMoneyline: game.opponentMoneyline,
@@ -705,7 +721,7 @@ async function resolveTrustedMarket(env: RuntimeEnv, game: SnapshotGame): Promis
     return bundledMarketContext(game);
   }
 
-  const market = marketFromOddsEvent(event, game);
+  const market = marketFromOddsEvent(event);
 
   return {
     game: applyLiveMarket(game, market),
@@ -714,6 +730,7 @@ async function resolveTrustedMarket(env: RuntimeEnv, game: SnapshotGame): Promis
       fetchedAt: cached.fetchedAt,
       retrievedAt: cached.retrievedAt,
       cached: cached.cached,
+      cacheExpiresAt: cached.cacheExpiresAt,
       market,
     },
   };
@@ -753,23 +770,25 @@ function responseUsage(response: Record<string, unknown>) {
     && !Array.isArray(response.usage)
     ? response.usage as Record<string, unknown>
     : null;
-  const validTokenCount = (value: unknown) => (
+  const validTokenCount = (value: unknown): value is number => (
     typeof value === "number"
     && Number.isFinite(value)
     && Number.isInteger(value)
     && value >= 0
   );
-  const inputValid = validTokenCount(usage?.input_tokens);
-  const outputValid = validTokenCount(usage?.output_tokens);
+  const inputTokens = usage?.input_tokens;
+  const outputTokens = usage?.output_tokens;
+  const inputValid = validTokenCount(inputTokens);
+  const outputValid = validTokenCount(outputTokens);
   const inputDetails = usage?.input_tokens_details
     && typeof usage.input_tokens_details === "object"
     && !Array.isArray(usage.input_tokens_details)
     ? usage.input_tokens_details as Record<string, unknown>
     : null;
   const cachedInputCandidate = inputDetails?.cached_tokens;
-  const cachedInputTokens = inputValid
+  const cachedInputTokens = validTokenCount(inputTokens)
     && validTokenCount(cachedInputCandidate)
-    && cachedInputCandidate <= usage.input_tokens
+    && cachedInputCandidate <= inputTokens
     ? cachedInputCandidate
     : 0;
   return {
@@ -822,6 +841,7 @@ async function createAIExplanation(
   usage: RuntimeUsage,
 ) {
   const model = env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL;
+  const comparisonEvidence = buildComparisonEvidence({ forecast, controls });
   const first = await openAIRequest(env, buildInitialForecastExplanationRequest({
     model,
     game,
@@ -896,6 +916,7 @@ async function createAIExplanation(
     probability: explanation.probability,
     modelVersion: explanation.modelVersion,
     sourceUpdatedAt: explanation.sourceUpdatedAt,
+    comparisonEvidenceIds: explanation.comparisonEvidenceIds,
   };
 
   let parsed: Record<string, unknown>;
@@ -908,6 +929,7 @@ async function createAIExplanation(
         sourceUpdatedAt,
         expectedDrivers: forecast.drivers,
         expectedUncertainty: forecast.uncertainty,
+        expectedComparisonEvidence: comparisonEvidence,
       },
     });
   } catch {
@@ -919,6 +941,7 @@ async function createAIExplanation(
   return {
     ...parsed,
     mode: "ai",
+    comparisonEvidence: selectComparisonEvidence(parsed.comparisonEvidenceIds, comparisonEvidence),
   };
 }
 
@@ -979,6 +1002,7 @@ async function forecastResponse(request: Request, env: RuntimeEnv) {
       | "request_body_too_large"
       | "unsupported_content_type"
       | "invalid_json"
+      | "invalid_controls"
       | "unknown_game"
     >,
     status: number,
@@ -1027,6 +1051,7 @@ async function forecastResponse(request: Request, env: RuntimeEnv) {
   const snapshotGame = getGame(body.gameId);
   if (!snapshotGame) return rejected("unknown_game", 400);
   const controls = normalizeControls(body.controls);
+  if (!controls) return rejected("invalid_controls", 400);
   const buildScenario = (
     context: Awaited<ReturnType<typeof resolveTrustedMarket>>,
   ) => {
@@ -1132,7 +1157,7 @@ async function forecastResponse(request: Request, env: RuntimeEnv) {
 
   const reconciliation = await reconcileBudget(
     env,
-    reservation.reservedMicros,
+    reservation,
     usage,
   );
   if (failure || !explanation) {
@@ -1304,7 +1329,19 @@ function median(values: number[]) {
   return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle];
 }
 
+function medianMoneyline(values: number[]) {
+  const probabilities = values
+    .map(moneylineToImplied)
+    .filter((probability): probability is number => probability !== null);
+  const probability = median(probabilities);
+  if (probability === null) return null;
+  return probability > 0.5
+    ? Math.round(-100 * probability / (1 - probability))
+    : Math.round(100 * (1 - probability) / probability);
+}
+
 async function fetchOddsPayload(env: RuntimeEnv) {
+  if (!env.THE_ODDS_API_KEY) throw new Error("Odds provider is not configured");
   const url = new URL("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/");
   url.searchParams.set("apiKey", env.THE_ODDS_API_KEY);
   url.searchParams.set("regions", "us");
@@ -1335,30 +1372,32 @@ async function fetchOddsPayload(env: RuntimeEnv) {
         const outcomes = Array.isArray(market.outcomes) ? market.outcomes as Array<Record<string, unknown>> : [];
         if (market.key === "h2h") {
           for (const outcome of outcomes) {
-            const price = Number(outcome.price);
+            const price = typeof outcome.price === "number" ? outcome.price : NaN;
             if (!Number.isFinite(price)) continue;
             if (outcome.name === "Dallas Cowboys") {
-              cowboysMoneylines.push(price);
               bookCowboysMoneyline = price;
             } else if (outcome.name === opponentTeam) {
-              opponentMoneylines.push(price);
               bookOpponentMoneyline = price;
             }
           }
         }
         if (market.key === "spreads") {
           for (const outcome of outcomes) {
-            const point = Number(outcome.point);
+            const point = typeof outcome.point === "number" ? outcome.point : NaN;
             if (outcome.name === "Dallas Cowboys" && Number.isFinite(point)) cowboysSpreads.push(point);
           }
         }
         if (market.key === "totals") {
-          const point = Number(outcomes.find((outcome) => outcome.name === "Over")?.point);
-          if (Number.isFinite(point)) totals.push(point);
+          const point = outcomes.find((outcome) => outcome.name === "Over")?.point;
+          if (typeof point === "number" && Number.isFinite(point)) totals.push(point);
         }
       }
       const bookProbability = removeVig(bookCowboysMoneyline, bookOpponentMoneyline);
-      if (bookProbability !== null) perBookCowboysProbabilities.push(bookProbability);
+      if (bookProbability !== null && bookCowboysMoneyline !== null && bookOpponentMoneyline !== null) {
+        cowboysMoneylines.push(bookCowboysMoneyline);
+        opponentMoneylines.push(bookOpponentMoneyline);
+        perBookCowboysProbabilities.push(bookProbability);
+      }
     }
 
     return {
@@ -1366,8 +1405,8 @@ async function fetchOddsPayload(env: RuntimeEnv) {
       commenceTime: event.commence_time,
       homeTeam: event.home_team,
       awayTeam: event.away_team,
-      cowboysMoneyline: median(cowboysMoneylines),
-      opponentMoneyline: median(opponentMoneylines),
+      cowboysMoneyline: medianMoneyline(cowboysMoneylines),
+      opponentMoneyline: medianMoneyline(opponentMoneylines),
       cowboysConsensusProbability: median(perBookCowboysProbabilities),
       cowboysSpread: median(cowboysSpreads),
       total: median(totals),
@@ -1391,15 +1430,19 @@ async function fetchOddsPayload(env: RuntimeEnv) {
   return payload;
 }
 
-function oddsCacheHeaders() {
+function oddsCacheHeaders(payload: OddsCachePayload) {
+  const expiresAt = Date.parse(payload.cacheExpiresAt);
+  const remainingSeconds = Number.isFinite(expiresAt)
+    ? Math.min(ODDS_CACHE_TTL_MS / 1_000, Math.max(0, Math.floor((expiresAt - Date.now()) / 1_000)))
+    : 0;
   return {
-    "Cache-Control": "public, max-age=300, s-maxage=21600, stale-while-revalidate=3600",
+    "Cache-Control": `public, max-age=${Math.min(300, remainingSeconds)}, s-maxage=${remainingSeconds}, must-revalidate`,
   };
 }
 
 async function oddsResponse(env: RuntimeEnv) {
   const cached = await readOddsCache(env);
-  if (cached) return jsonResponse(cached, 200, oddsCacheHeaders());
+  if (cached) return jsonResponse(cached, 200, oddsCacheHeaders(cached));
 
   if (!env.THE_ODDS_API_KEY) {
     return jsonResponse({
@@ -1440,7 +1483,7 @@ async function oddsResponse(env: RuntimeEnv) {
     if (!lease.acquired) {
       const refreshedCache = await readOddsCache(env);
       if (refreshedCache) {
-        return jsonResponse(refreshedCache, 200, oddsCacheHeaders());
+        return jsonResponse(refreshedCache, 200, oddsCacheHeaders(refreshedCache));
       }
       const status = lease.controlUnavailable
         ? "refresh_control_unavailable"
@@ -1468,7 +1511,7 @@ async function oddsResponse(env: RuntimeEnv) {
     return jsonResponse(
       joinedRefresh ? { ...payload, cached: true } : payload,
       200,
-      oddsCacheHeaders(),
+      oddsCacheHeaders(payload),
     );
   } catch {
     return jsonResponse({

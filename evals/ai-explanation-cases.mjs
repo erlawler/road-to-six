@@ -28,9 +28,11 @@ const contract = {
   sourceUpdatedAt: "2026-07-27T14:00:00.000Z",
   expectedDrivers: drivers,
   expectedUncertainty: uncertainty,
+  expectedComparisonEvidence: [{ id: "baseline_change", text: "Synthetic known-answer baseline comparison." }, { id: "control_quarterback", text: "Synthetic quarterback participation assumption." }],
 };
 
 const validAIExplanation = {
+  comparisonEvidenceIds: ["baseline_change", "control_quarterback"],
   summary: "Dallas has a 55% model probability in this scenario.",
   drivers,
   uncertainty,
@@ -69,6 +71,13 @@ function runtimeCase(id, description, explanation, expectedValid = false) {
 }
 
 export const aiExplanationCases = [
+  ...[
+    ["missing_comparison", undefined],
+    ["duplicate_comparison", ["baseline_change", "baseline_change"]],
+    ["irrelevant_comparison", ["baseline_change", "control_lamb"]],
+    ["omitted_baseline_comparison", ["control_quarterback"]],
+    ["invented_comparison", ["baseline_change", "guaranteed_win"]],
+  ].map(([id, comparisonEvidenceIds]) => runtimeCase(id, "Rejects an ungrounded comparison selection.", { ...validAIExplanation, comparisonEvidenceIds })),
   runtimeCase(
     "valid_runtime_explanation",
     "Accepts a grounded runtime explanation that preserves every contract field.",

@@ -1,5 +1,71 @@
 {
-  "asOf": "2026-08-03",
+  "asOf": "2026-09-07",
+  "dataVersion": "nflverse-2026-09-07-ec64c93dcaae",
+  "manifest": {
+    "schemaVersion": "1.0.0",
+    "validatedAt": "2026-09-07",
+    "inputs": {
+      "games": {
+        "url": "https://raw.githubusercontent.com/nflverse/nfldata/e2a169b41f56fb027ca894c930ab75b699a12e68/data/games.csv",
+        "sourceVersion": "e2a169b41f56fb027ca894c930ab75b699a12e68",
+        "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+        "retrievedBetween": {
+          "start": "2026-09-07T09:02:00Z",
+          "end": "2026-09-07T09:11:00Z"
+        },
+        "expectedSha256": "68f2b4d7e7f7fa51d1a5adeab0778bc1372b5f4ac71dd062ec7537bb5883c7fe",
+        "sha256": "68f2b4d7e7f7fa51d1a5adeab0778bc1372b5f4ac71dd062ec7537bb5883c7fe",
+        "bytes": 2177175,
+        "rows": 7548,
+        "metadataStatus": "verified"
+      },
+      "roster": {
+        "url": "https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv",
+        "sourceUpdatedAt": "2026-09-06T11:28:09Z",
+        "retrievedBetween": {
+          "start": "2026-09-07T09:02:00Z",
+          "end": "2026-09-07T09:11:00Z"
+        },
+        "expectedSha256": "5ec59c5228198f57ba577cfe06d52a789259b92d9c5c98c152b206e8ab80ab55",
+        "sha256": "5ec59c5228198f57ba577cfe06d52a789259b92d9c5c98c152b206e8ab80ab55",
+        "bytes": 932784,
+        "rows": 2946,
+        "metadataStatus": "verified"
+      },
+      "stats": {
+        "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2025.csv",
+        "sourceUpdatedAt": "2026-08-13T16:51:50Z",
+        "retrievedBetween": {
+          "start": "2026-09-07T09:02:00Z",
+          "end": "2026-09-07T09:11:00Z"
+        },
+        "expectedSha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12",
+        "sha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12",
+        "bytes": 882104,
+        "rows": 2020,
+        "metadataStatus": "verified"
+      }
+    },
+    "validationStatus": "passed",
+    "limitations": [],
+    "coverage": {
+      "scheduleGames": 17,
+      "expectedRegularSeasonGames": 17,
+      "featuredPlayers": 8,
+      "expectedFeaturedPlayers": 8,
+      "missingFeaturedPlayers": [],
+      "opponentTeams": 14,
+      "opponentLeaders": 56,
+      "missingOpponentLeaders": [],
+      "rosterSeason": 2026,
+      "rosterWeek": 1,
+      "latestStartedWeek": 1,
+      "duplicateRosterRowsRemoved": 0,
+      "unidentifiedRosterRows": 1,
+      "playerBaselineSeason": 2025,
+      "unidentifiedStatsRows": 1
+    }
+  },
   "schedule": [
     {
       "id": "2026_01_DAL_NYG",
@@ -14,7 +80,9 @@
       "cowboysSpread": -2.5,
       "totalLine": 48.5,
       "stadium": "MetLife Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_01_DAL_NYG"
     },
     {
       "id": "2026_02_WAS_DAL",
@@ -29,7 +97,9 @@
       "cowboysSpread": -4.5,
       "totalLine": 51.5,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_02_WAS_DAL"
     },
     {
       "id": "2026_03_BAL_DAL",
@@ -44,7 +114,9 @@
       "cowboysSpread": 2.5,
       "totalLine": 51.5,
       "stadium": "Maracana Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_03_BAL_DAL"
     },
     {
       "id": "2026_04_DAL_HOU",
@@ -54,12 +126,14 @@
       "opponent": "HOU",
       "opponentName": "Houston Texans",
       "venue": "away",
-      "cowboysMoneyline": null,
-      "opponentMoneyline": null,
-      "cowboysSpread": null,
-      "totalLine": null,
+      "cowboysMoneyline": 114,
+      "opponentMoneyline": -135,
+      "cowboysSpread": 2.5,
+      "totalLine": 47.5,
       "stadium": "Reliant Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_04_DAL_HOU"
     },
     {
       "id": "2026_05_TB_DAL",
@@ -69,12 +143,14 @@
       "opponent": "TB",
       "opponentName": "Tampa Bay Buccaneers",
       "venue": "home",
-      "cowboysMoneyline": null,
-      "opponentMoneyline": null,
-      "cowboysSpread": null,
-      "totalLine": null,
+      "cowboysMoneyline": -205,
+      "opponentMoneyline": 170,
+      "cowboysSpread": -3.5,
+      "totalLine": 52.5,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_05_TB_DAL"
     },
     {
       "id": "2026_06_DAL_GB",
@@ -84,12 +160,14 @@
       "opponent": "GB",
       "opponentName": "Green Bay Packers",
       "venue": "away",
-      "cowboysMoneyline": null,
-      "opponentMoneyline": null,
-      "cowboysSpread": null,
-      "totalLine": null,
+      "cowboysMoneyline": 140,
+      "opponentMoneyline": -166,
+      "cowboysSpread": 3,
+      "totalLine": 51.5,
       "stadium": "Lambeau Field",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_06_DAL_GB"
     },
     {
       "id": "2026_07_DAL_PHI",
@@ -104,7 +182,9 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lincoln Financial Field",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_07_DAL_PHI"
     },
     {
       "id": "2026_08_ARI_DAL",
@@ -119,7 +199,9 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_08_ARI_DAL"
     },
     {
       "id": "2026_09_DAL_IND",
@@ -134,7 +216,9 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lucas Oil Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_09_DAL_IND"
     },
     {
       "id": "2026_10_SF_DAL",
@@ -149,7 +233,9 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_10_SF_DAL"
     },
     {
       "id": "2026_11_TEN_DAL",
@@ -164,7 +250,9 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_11_TEN_DAL"
     },
     {
       "id": "2026_12_PHI_DAL",
@@ -174,12 +262,14 @@
       "opponent": "PHI",
       "opponentName": "Philadelphia Eagles",
       "venue": "home",
-      "cowboysMoneyline": null,
-      "opponentMoneyline": null,
-      "cowboysSpread": null,
-      "totalLine": null,
+      "cowboysMoneyline": -126,
+      "opponentMoneyline": 108,
+      "cowboysSpread": -1.5,
+      "totalLine": 49.5,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_12_PHI_DAL"
     },
     {
       "id": "2026_13_DAL_SEA",
@@ -194,7 +284,9 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lumen Field",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_13_DAL_SEA"
     },
     {
       "id": "2026_15_DAL_LA",
@@ -209,7 +301,9 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "SoFi Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_15_DAL_LA"
     },
     {
       "id": "2026_16_JAX_DAL",
@@ -224,7 +318,9 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_16_JAX_DAL"
     },
     {
       "id": "2026_17_NYG_DAL",
@@ -239,7 +335,9 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_17_NYG_DAL"
     },
     {
       "id": "2026_18_DAL_WAS",
@@ -254,7 +352,9 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Northwest Stadium",
-      "sourceUpdatedAt": "2026-08-03"
+      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "validatedAt": "2026-09-07",
+      "sourceRecordId": "2026_18_DAL_WAS"
     }
   ],
   "players": [
@@ -505,6 +605,14 @@
       "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
       "leaders": [
         {
+          "id": "00-0031588",
+          "name": "Stefon Diggs",
+          "position": "WR",
+          "jerseyNumber": 3,
+          "fantasyPointsPpr": 210.3,
+          "evidence": "85 rec, 1,013 yds"
+        },
+        {
           "id": "00-0037256",
           "name": "Rachaad White",
           "position": "RB",
@@ -527,14 +635,6 @@
           "jerseyNumber": 8,
           "fantasyPointsPpr": 125.5,
           "evidence": "1,695 pass yds, 10 pass TD"
-        },
-        {
-          "id": "00-0037809",
-          "name": "Chig Okonkwo",
-          "position": "TE",
-          "jerseyNumber": 85,
-          "fantasyPointsPpr": 124,
-          "evidence": "56 rec, 560 yds"
         }
       ]
     },
@@ -631,7 +731,7 @@
         },
         {
           "id": "00-0036919",
-          "name": "Kenneth Gainwell",
+          "name": "Kenny Gainwell",
           "position": "RB",
           "jerseyNumber": 1,
           "fantasyPointsPpr": 221.3,
@@ -661,14 +761,6 @@
       "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
       "leaders": [
         {
-          "id": "00-0035700",
-          "name": "Josh Jacobs",
-          "position": "RB",
-          "jerseyNumber": 8,
-          "fantasyPointsPpr": 237.1,
-          "evidence": "929 rush yds, 36 rec"
-        },
-        {
           "id": "00-0036264",
           "name": "Jordan Love",
           "position": "QB",
@@ -691,6 +783,14 @@
           "jerseyNumber": 85,
           "fantasyPointsPpr": 117.2,
           "evidence": "32 rec, 489 yds"
+        },
+        {
+          "id": "00-0033858",
+          "name": "Jonnu Smith",
+          "position": "TE",
+          "jerseyNumber": 81,
+          "fantasyPointsPpr": 85.2,
+          "evidence": "38 rec, 222 yds"
         }
       ]
     },
@@ -825,6 +925,14 @@
           "evidence": "1,202 rush yds, 102 rec"
         },
         {
+          "id": "00-0035719",
+          "name": "Deebo Samuel Sr.",
+          "position": "WR",
+          "jerseyNumber": 19,
+          "fantasyPointsPpr": 188.2,
+          "evidence": "72 rec, 727 yds"
+        },
+        {
           "id": "00-0037834",
           "name": "Brock Purdy",
           "position": "QB",
@@ -839,14 +947,6 @@
           "jerseyNumber": 85,
           "fantasyPointsPpr": 161.5,
           "evidence": "57 rec, 628 yds"
-        },
-        {
-          "id": "00-0036972",
-          "name": "Mac Jones",
-          "position": "QB",
-          "jerseyNumber": 10,
-          "fantasyPointsPpr": 130.04,
-          "evidence": "2,151 pass yds, 13 pass TD"
         }
       ]
     },
@@ -911,20 +1011,20 @@
           "evidence": "4,048 pass yds, 25 pass TD"
         },
         {
-          "id": "00-0039165",
-          "name": "Zach Charbonnet",
-          "position": "RB",
-          "jerseyNumber": 26,
-          "fantasyPointsPpr": 181.4,
-          "evidence": "730 rush yds, 20 rec"
-        },
-        {
           "id": "00-0037545",
           "name": "Rashid Shaheed",
           "position": "WR",
           "jerseyNumber": 22,
           "fantasyPointsPpr": 156.6,
           "evidence": "59 rec, 687 yds"
+        },
+        {
+          "id": "00-0039793",
+          "name": "AJ Barner",
+          "position": "TE",
+          "jerseyNumber": 88,
+          "fantasyPointsPpr": 147.3,
+          "evidence": "52 rec, 519 yds"
         }
       ]
     },
@@ -1008,60 +1108,149 @@
     }
   },
   "ratings": {
-    "PHI": 1616.223572577582,
-    "ARI": 1344.6769563344735,
-    "STL": 1497.9568735096423,
-    "BAL": 1573.3183841502068,
-    "IND": 1443.945091025092,
-    "BUF": 1650.4581376098795,
-    "NO": 1402.3485416142805,
-    "CAR": 1398.9447131396173,
-    "TEN": 1279.2573038809905,
-    "CIN": 1473.2221701517917,
-    "WAS": 1444.9055842780094,
-    "DAL": 1457.3224564151983,
-    "SEA": 1668.546857486811,
-    "DET": 1595.7609316866294,
-    "CHI": 1523.9584832845835,
-    "KC": 1512.5239722404624,
-    "ATL": 1464.196083495229,
-    "MIN": 1583.2107069728995,
-    "NYJ": 1323.171333038412,
-    "NE": 1568.3369891703449,
-    "TB": 1478.519970426889,
-    "NYG": 1360.4210349264295,
-    "GB": 1569.8585117482673,
-    "OAK": 1486.0687317704783,
-    "CLE": 1389.3584426241473,
-    "PIT": 1556.7065305744886,
-    "JAX": 1565.5071064164551,
-    "SF": 1566.9530536477748,
-    "DEN": 1646.229988475289,
-    "MIA": 1456.4592644077165,
-    "SD": 1492.083642582193,
-    "HOU": 1615.9911001033179,
-    "LA": 1623.2184975303048,
-    "LAC": 1566.3270845236927,
-    "LV": 1304.0118981804198
+    "PHI": 1587.3375825702276,
+    "ARI": 1383.4128115686624,
+    "STL": 1498.4655627745,
+    "BAL": 1554.801927725447,
+    "IND": 1459.4211460309252,
+    "BUF": 1612.9561245130153,
+    "NO": 1426.6964594276706,
+    "CAR": 1424.4965372275578,
+    "TEN": 1334.7199082513898,
+    "CIN": 1480.0715417709976,
+    "WAS": 1457.4434172207075,
+    "DAL": 1467.8464817113188,
+    "SEA": 1626.1695448883338,
+    "DET": 1571.6273831520457,
+    "CHI": 1518.5448817996628,
+    "KC": 1508.581164696013,
+    "ATL": 1471.66740995174,
+    "MIN": 1561.0675543060315,
+    "NYJ": 1367.6488377226767,
+    "NE": 1551.003497993394,
+    "TB": 1483.8980821077466,
+    "NYG": 1394.7614433395509,
+    "GB": 1551.9933372252929,
+    "OAK": 1489.8726778756038,
+    "CLE": 1417.8758261125536,
+    "PIT": 1543.4267304090567,
+    "JAX": 1550.8718950428959,
+    "SF": 1550.2215963798278,
+    "DEN": 1609.0190803671267,
+    "MIA": 1468.2927476545988,
+    "SD": 1494.0802441957483,
+    "HOU": 1587.1673494119368,
+    "LA": 1590.8225127681158,
+    "LAC": 1550.6629292581017,
+    "LV": 1353.0537725495274
+  },
+  "ratingsMetadata": {
+    "season": 2026,
+    "trainedThrough": "2026-01-04",
+    "lastCompletedSeason": 2025,
+    "preseasonRegressionAppliedThrough": 2026,
+    "modelVersion": "elo-market-v1.2.0"
   },
   "backtest": {
     "seasons": "2024 to 2025 holdout",
+    "modelVersion": "elo-market-v1.2.0",
     "games": 544,
+    "marketEligibleGames": 544,
+    "missingMarketGames": 0,
     "footballOnlyBrier": 0.22,
+    "footballOnlyPairedBrier": 0.22,
     "marketAwareBrier": 0.207,
     "marketBaselineBrier": 0.206,
     "marketAwareCalibrationError": 0.063,
-    "method": "Walk-forward Elo with preseason regression, home-field adjustment, and a predeclared 80% vig-adjusted market blend evaluated after the 2019 to 2023 development window."
+    "calibrationBins": [
+      {
+        "lower": 0,
+        "upper": 0.1,
+        "count": 0,
+        "meanPredicted": null,
+        "meanOutcome": null
+      },
+      {
+        "lower": 0.1,
+        "upper": 0.2,
+        "count": 8,
+        "meanPredicted": 0.16725078037257546,
+        "meanOutcome": 0.125
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.3,
+        "count": 41,
+        "meanPredicted": 0.2626964299690412,
+        "meanOutcome": 0.25609756097560976
+      },
+      {
+        "lower": 0.3,
+        "upper": 0.4,
+        "count": 82,
+        "meanPredicted": 0.3532930075312932,
+        "meanOutcome": 0.3170731707317073
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.5,
+        "count": 90,
+        "meanPredicted": 0.45089124926894786,
+        "meanOutcome": 0.35555555555555557
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.6,
+        "count": 103,
+        "meanPredicted": 0.5553753156037249,
+        "meanOutcome": 0.5339805825242718
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.7,
+        "count": 90,
+        "meanPredicted": 0.6524067010579376,
+        "meanOutcome": 0.7444444444444445
+      },
+      {
+        "lower": 0.7,
+        "upper": 0.8,
+        "count": 88,
+        "meanPredicted": 0.743436027978635,
+        "meanOutcome": 0.6704545454545454
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.9,
+        "count": 41,
+        "meanPredicted": 0.8486415497353882,
+        "meanOutcome": 0.975609756097561
+      },
+      {
+        "lower": 0.9,
+        "upper": 1,
+        "count": 1,
+        "meanPredicted": 0.9157056374149124,
+        "meanOutcome": 1
+      }
+    ],
+    "evaluationSha256": "bfe8ddc54ca0de9c60d7fba2e6cb4c0df2fde580e1fef451e5ab867c1485394c",
+    "method": "Walk-forward Elo with preseason regression and neutral-aware venue adjustment; shared production scoring and a predeclared 80% vig-adjusted market blend. Historical rating warm-up begins in 1999; the documented development window is 2019 to 2023. Scenario sensitivities are not evaluated by this default-control backtest."
   },
   "sources": [
     {
       "name": "nflverse schedules",
-      "url": "https://github.com/nflverse/nfldata/blob/master/data/games.csv",
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/e2a169b41f56fb027ca894c930ab75b699a12e68/data/games.csv",
       "license": "CC BY 4.0 repository license; underlying data rights remain with their owners."
     },
     {
-      "name": "nflverse roster and 2025 player stats",
-      "url": "https://github.com/nflverse/nflverse-data/releases/tag/stats_player",
+      "name": "nflverse 2026 weekly roster",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv",
+      "license": "CC BY 4.0 repository license; underlying data rights remain with their owners."
+    },
+    {
+      "name": "nflverse 2025 player stats",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2025.csv",
       "license": "CC BY 4.0 repository license; underlying data rights remain with their owners."
     }
   ]
