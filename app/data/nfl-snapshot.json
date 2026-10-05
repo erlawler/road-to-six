@@ -1,21 +1,21 @@
 {
   "asOf": "2026-10-05",
-  "dataVersion": "nflverse-2026-10-05-29e908db851c",
+  "dataVersion": "nflverse-2026-10-05-69a7380301be",
   "manifest": {
     "schemaVersion": "1.0.0",
     "validatedAt": "2026-10-05",
     "inputs": {
       "games": {
-        "url": "https://raw.githubusercontent.com/nflverse/nfldata/8a1842886102b86605b93c458b0981423560a272/data/games.csv",
-        "sourceVersion": "8a1842886102b86605b93c458b0981423560a272",
-        "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+        "url": "https://raw.githubusercontent.com/nflverse/nfldata/c3d49fba205cf241b8465609a1155e3f3c7d1f23/data/games.csv",
+        "sourceVersion": "c3d49fba205cf241b8465609a1155e3f3c7d1f23",
+        "sourceUpdatedAt": "2026-10-05T22:45:14Z",
         "retrievedBetween": {
-          "start": "2026-10-05T18:30:39.289644+00:00",
-          "end": "2026-10-05T18:30:39.669958+00:00"
+          "start": "2026-10-05T23:07:36.221264+00:00",
+          "end": "2026-10-05T23:07:36.747727+00:00"
         },
-        "expectedSha256": "aacb97a1ae4b197c18b75537607732729c435ec6dba123fd9825c00a7e6a04e7",
-        "sha256": "aacb97a1ae4b197c18b75537607732729c435ec6dba123fd9825c00a7e6a04e7",
-        "bytes": 2182769,
+        "expectedSha256": "27b28a7ce6023bbf4cd56268162e74eca40d28ff75270fcada6c98ac86658a7a",
+        "sha256": "27b28a7ce6023bbf4cd56268162e74eca40d28ff75270fcada6c98ac86658a7a",
+        "bytes": 2182767,
         "rows": 7548,
         "metadataStatus": "verified"
       },
@@ -23,8 +23,8 @@
         "url": "https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv",
         "sourceUpdatedAt": "2026-10-05T15:58:32Z",
         "retrievedBetween": {
-          "start": "2026-10-05T18:30:39.673606+00:00",
-          "end": "2026-10-05T18:30:40.140492+00:00"
+          "start": "2026-10-05T23:07:36.750368+00:00",
+          "end": "2026-10-05T23:07:37.514956+00:00"
         },
         "expectedSha256": "0f72f882f3974ff2d524ce838fb750f2d2f2fb8b3f081728ed45e832972292c3",
         "sha256": "0f72f882f3974ff2d524ce838fb750f2d2f2fb8b3f081728ed45e832972292c3",
@@ -36,8 +36,8 @@
         "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2025.csv",
         "sourceUpdatedAt": "2026-08-13T16:51:50Z",
         "retrievedBetween": {
-          "start": "2026-10-05T18:30:40.143853+00:00",
-          "end": "2026-10-05T18:30:40.520650+00:00"
+          "start": "2026-10-05T23:07:37.518377+00:00",
+          "end": "2026-10-05T23:07:38.056015+00:00"
         },
         "expectedSha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12",
         "sha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12",
@@ -72,6 +72,10 @@
       "week": 1,
       "date": "2026-09-13",
       "time": "20:20",
+      "kickoffAt": "2026-09-14T00:20:00.000Z",
+      "status": "final",
+      "cowboysScore": 20,
+      "opponentScore": 28,
       "opponent": "NYG",
       "opponentName": "New York Giants",
       "venue": "away",
@@ -80,7 +84,7 @@
       "cowboysSpread": -3,
       "totalLine": 47.5,
       "stadium": "MetLife Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_01_DAL_NYG"
     },
@@ -89,6 +93,10 @@
       "week": 2,
       "date": "2026-09-20",
       "time": "16:25",
+      "kickoffAt": "2026-09-20T20:25:00.000Z",
+      "status": "final",
+      "cowboysScore": 37,
+      "opponentScore": 20,
       "opponent": "WAS",
       "opponentName": "Washington Commanders",
       "venue": "home",
@@ -97,7 +105,7 @@
       "cowboysSpread": -3.5,
       "totalLine": 51.5,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_02_WAS_DAL"
     },
@@ -106,6 +114,10 @@
       "week": 3,
       "date": "2026-09-27",
       "time": "16:25",
+      "kickoffAt": "2026-09-27T20:25:00.000Z",
+      "status": "final",
+      "cowboysScore": 31,
+      "opponentScore": 34,
       "opponent": "BAL",
       "opponentName": "Baltimore Ravens",
       "venue": "neutral",
@@ -114,7 +126,7 @@
       "cowboysSpread": 3,
       "totalLine": 53.5,
       "stadium": "Maracana Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_03_BAL_DAL"
     },
@@ -123,6 +135,10 @@
       "week": 4,
       "date": "2026-10-04",
       "time": "13:00",
+      "kickoffAt": "2026-10-04T17:00:00.000Z",
+      "status": "final",
+      "cowboysScore": 34,
+      "opponentScore": 30,
       "opponent": "HOU",
       "opponentName": "Houston Texans",
       "venue": "away",
@@ -131,7 +147,7 @@
       "cowboysSpread": 3,
       "totalLine": 48.5,
       "stadium": "Reliant Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_04_DAL_HOU"
     },
@@ -140,15 +156,19 @@
       "week": 5,
       "date": "2026-10-08",
       "time": "20:15",
+      "kickoffAt": "2026-10-09T00:15:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "TB",
       "opponentName": "Tampa Bay Buccaneers",
       "venue": "home",
-      "cowboysMoneyline": -500,
-      "opponentMoneyline": 380,
+      "cowboysMoneyline": -455,
+      "opponentMoneyline": 350,
       "cowboysSpread": -9.5,
       "totalLine": 47.5,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_05_TB_DAL"
     },
@@ -157,6 +177,10 @@
       "week": 6,
       "date": "2026-10-18",
       "time": "20:20",
+      "kickoffAt": "2026-10-19T00:20:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "GB",
       "opponentName": "Green Bay Packers",
       "venue": "away",
@@ -165,7 +189,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lambeau Field",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_06_DAL_GB"
     },
@@ -174,6 +198,10 @@
       "week": 7,
       "date": "2026-10-26",
       "time": "20:15",
+      "kickoffAt": "2026-10-27T00:15:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "PHI",
       "opponentName": "Philadelphia Eagles",
       "venue": "away",
@@ -182,7 +210,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lincoln Financial Field",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_07_DAL_PHI"
     },
@@ -191,6 +219,10 @@
       "week": 8,
       "date": "2026-11-01",
       "time": "13:00",
+      "kickoffAt": "2026-11-01T18:00:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "ARI",
       "opponentName": "Arizona Cardinals",
       "venue": "home",
@@ -199,7 +231,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_08_ARI_DAL"
     },
@@ -208,6 +240,10 @@
       "week": 9,
       "date": "2026-11-08",
       "time": "13:00",
+      "kickoffAt": "2026-11-08T18:00:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "IND",
       "opponentName": "Indianapolis Colts",
       "venue": "away",
@@ -216,7 +252,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lucas Oil Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_09_DAL_IND"
     },
@@ -225,6 +261,10 @@
       "week": 10,
       "date": "2026-11-15",
       "time": "16:25",
+      "kickoffAt": "2026-11-15T21:25:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "SF",
       "opponentName": "San Francisco 49ers",
       "venue": "home",
@@ -233,7 +273,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_10_SF_DAL"
     },
@@ -242,6 +282,10 @@
       "week": 11,
       "date": "2026-11-22",
       "time": "13:00",
+      "kickoffAt": "2026-11-22T18:00:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "TEN",
       "opponentName": "Tennessee Titans",
       "venue": "home",
@@ -250,7 +294,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_11_TEN_DAL"
     },
@@ -259,6 +303,10 @@
       "week": 12,
       "date": "2026-11-26",
       "time": "16:30",
+      "kickoffAt": "2026-11-26T21:30:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "PHI",
       "opponentName": "Philadelphia Eagles",
       "venue": "home",
@@ -267,7 +315,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_12_PHI_DAL"
     },
@@ -276,6 +324,10 @@
       "week": 13,
       "date": "2026-12-07",
       "time": "20:15",
+      "kickoffAt": "2026-12-08T01:15:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "SEA",
       "opponentName": "Seattle Seahawks",
       "venue": "away",
@@ -284,7 +336,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lumen Field",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_13_DAL_SEA"
     },
@@ -293,6 +345,10 @@
       "week": 15,
       "date": "2026-12-20",
       "time": "16:25",
+      "kickoffAt": "2026-12-20T21:25:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "LA",
       "opponentName": "Los Angeles Rams",
       "venue": "away",
@@ -301,7 +357,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "SoFi Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_15_DAL_LA"
     },
@@ -310,6 +366,10 @@
       "week": 16,
       "date": "2026-12-27",
       "time": "20:20",
+      "kickoffAt": "2026-12-28T01:20:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "JAX",
       "opponentName": "Jacksonville Jaguars",
       "venue": "home",
@@ -318,7 +378,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_16_JAX_DAL"
     },
@@ -327,6 +387,10 @@
       "week": 17,
       "date": "2027-01-03",
       "time": "13:00",
+      "kickoffAt": "2027-01-03T18:00:00.000Z",
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "NYG",
       "opponentName": "New York Giants",
       "venue": "home",
@@ -335,7 +399,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_17_NYG_DAL"
     },
@@ -344,6 +408,10 @@
       "week": 18,
       "date": "2027-01-10",
       "time": "13:00",
+      "kickoffAt": null,
+      "status": "scheduled",
+      "cowboysScore": null,
+      "opponentScore": null,
       "opponent": "WAS",
       "opponentName": "Washington Commanders",
       "venue": "away",
@@ -352,7 +420,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Northwest Stadium",
-      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
+      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_18_DAL_WAS"
     }
@@ -1144,6 +1212,109 @@
     "LAC": 1471.7781631548262,
     "LV": 1421.5428227057175
   },
+  "season": {
+    "year": 2026,
+    "verifiedAt": "2026-10-05T23:04:41Z",
+    "primarySources": [
+      "https://www.dallascowboys.com/schedule/",
+      "https://www.nfl.com/teams/dallas-cowboys/"
+    ],
+    "weeks": [
+      {
+        "week": 1,
+        "startsAt": "2026-09-08T04:00:00.000Z",
+        "endsAt": "2026-09-15T04:00:00.000Z"
+      },
+      {
+        "week": 2,
+        "startsAt": "2026-09-15T04:00:00.000Z",
+        "endsAt": "2026-09-22T04:00:00.000Z"
+      },
+      {
+        "week": 3,
+        "startsAt": "2026-09-22T04:00:00.000Z",
+        "endsAt": "2026-09-29T04:00:00.000Z"
+      },
+      {
+        "week": 4,
+        "startsAt": "2026-09-29T04:00:00.000Z",
+        "endsAt": "2026-10-06T04:00:00.000Z"
+      },
+      {
+        "week": 5,
+        "startsAt": "2026-10-06T04:00:00.000Z",
+        "endsAt": "2026-10-13T04:00:00.000Z"
+      },
+      {
+        "week": 6,
+        "startsAt": "2026-10-13T04:00:00.000Z",
+        "endsAt": "2026-10-20T04:00:00.000Z"
+      },
+      {
+        "week": 7,
+        "startsAt": "2026-10-20T04:00:00.000Z",
+        "endsAt": "2026-10-27T04:00:00.000Z"
+      },
+      {
+        "week": 8,
+        "startsAt": "2026-10-27T04:00:00.000Z",
+        "endsAt": "2026-11-03T05:00:00.000Z"
+      },
+      {
+        "week": 9,
+        "startsAt": "2026-11-03T05:00:00.000Z",
+        "endsAt": "2026-11-10T05:00:00.000Z"
+      },
+      {
+        "week": 10,
+        "startsAt": "2026-11-10T05:00:00.000Z",
+        "endsAt": "2026-11-17T05:00:00.000Z"
+      },
+      {
+        "week": 11,
+        "startsAt": "2026-11-17T05:00:00.000Z",
+        "endsAt": "2026-11-24T05:00:00.000Z"
+      },
+      {
+        "week": 12,
+        "startsAt": "2026-11-24T05:00:00.000Z",
+        "endsAt": "2026-12-01T05:00:00.000Z"
+      },
+      {
+        "week": 13,
+        "startsAt": "2026-12-01T05:00:00.000Z",
+        "endsAt": "2026-12-08T05:00:00.000Z"
+      },
+      {
+        "week": 14,
+        "startsAt": "2026-12-08T05:00:00.000Z",
+        "endsAt": "2026-12-15T05:00:00.000Z"
+      },
+      {
+        "week": 15,
+        "startsAt": "2026-12-15T05:00:00.000Z",
+        "endsAt": "2026-12-22T05:00:00.000Z"
+      },
+      {
+        "week": 16,
+        "startsAt": "2026-12-22T05:00:00.000Z",
+        "endsAt": "2026-12-29T05:00:00.000Z"
+      },
+      {
+        "week": 17,
+        "startsAt": "2026-12-29T05:00:00.000Z",
+        "endsAt": "2027-01-05T05:00:00.000Z"
+      },
+      {
+        "week": 18,
+        "startsAt": "2027-01-05T05:00:00.000Z",
+        "endsAt": "2027-01-12T05:00:00.000Z"
+      }
+    ],
+    "byeWeeks": [
+      14
+    ]
+  },
   "ratingsMetadata": {
     "season": 2026,
     "trainedThrough": "2026-10-04",
@@ -1234,13 +1405,13 @@
         "meanOutcome": 1
       }
     ],
-    "evaluationSha256": "7bd0da32b39dd678baf1b81429966058f5a5ed1e77148d1b5fd9e841f112d29e",
+    "evaluationSha256": "5b8e693ad75fb7a23cc17cd7f1a038b2c62ce79f5d2a0ccb7eef6a8fe6fe6990",
     "method": "Walk-forward Elo with preseason regression and neutral-aware venue adjustment; shared production scoring and a predeclared 80% vig-adjusted market blend. Historical rating warm-up begins in 1999; the documented development window is 2019 to 2023. Scenario sensitivities are not evaluated by this default-control backtest."
   },
   "sources": [
     {
       "name": "nflverse schedules",
-      "url": "https://raw.githubusercontent.com/nflverse/nfldata/8a1842886102b86605b93c458b0981423560a272/data/games.csv",
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/c3d49fba205cf241b8465609a1155e3f3c7d1f23/data/games.csv",
       "license": "CC BY 4.0 repository license; underlying data rights remain with their owners."
     },
     {

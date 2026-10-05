@@ -47,6 +47,8 @@ test("preseason snapshot excludes future outcomes and regresses ratings exactly 
   assert.equal(snapshot.backtest.seasons, "2025 holdout");
   assert.equal(snapshot.backtest.games, 1);
   assert.equal(snapshot.schedule.length, 2);
+  assert.equal(snapshot.schedule[0].status, "scheduled");
+  assert.equal(snapshot.schedule[0].cowboysScore, null);
   const evaluation = JSON.parse(await readFile(join(f.directory, "model-evaluation.json"), "utf8"));
   assert.equal(evaluation.records[0].footballProbability, 0.5);
 });
@@ -64,6 +66,9 @@ test("first current-season result updates regressed ratings without a second reg
   assert.equal(snapshot.ratingsMetadata.lastCompletedSeason, 2026);
   assert.equal(snapshot.backtest.seasons, "2025 holdout");
   assert.equal(snapshot.backtest.games, 1);
+  assert.equal(snapshot.schedule[0].status, "final");
+  assert.equal(snapshot.schedule[0].cowboysScore, 20);
+  assert.equal(snapshot.schedule[0].opponentScore, 21);
   const evaluation = JSON.parse(await readFile(join(f.directory, "model-evaluation.json"), "utf8"));
   assert.deepEqual(evaluation.records.map((row) => row.season), [2025]);
 });

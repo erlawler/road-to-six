@@ -3,6 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { MODEL_VERSION, MODEL_PARAMETERS, advanceRatingsSeason, calculateProbabilities, eloWinProbability, removeVig } from "../lib/forecast.mjs";
+import { kickoffTimestamp, seasonWeekCalendar } from "../lib/season-state.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const args = Object.fromEntries(
@@ -221,11 +222,17 @@ const schedule = allGames
     const venue = game.location === "Neutral" ? "neutral" : cowboysHome ? "home" : "away";
     const opponent = game.home_team === "DAL" ? game.away_team : game.home_team;
     const spreadLine = numberOrNull(game.spread_line);
+    const hasResult = game.gameday <= snapshotAsOf && game.home_score !== "" && game.away_score !== "";
+    const timeUnconfirmed = metadata.seasonVerification?.unconfirmedKickoffWeeks?.includes(Number(game.week)) ?? false;
     return {
       id: game.game_id,
       week: Number(game.week),
       date: game.gameday,
       time: game.gametime,
+      kickoffAt: timeUnconfirmed ? null : kickoffTimestamp(game.gameday, game.gametime),
+      status: hasResult ? "final" : "scheduled",
+      cowboysScore: hasResult ? numberOrNull(cowboysHome ? game.home_score : game.away_score) : null,
+      opponentScore: hasResult ? numberOrNull(cowboysHome ? game.away_score : game.home_score) : null,
       opponent,
       opponentName: teamNames[opponent] ?? opponent,
       venue,
@@ -398,10 +405,17 @@ if (rosterWeek < eligibleWeek) limitations.push("Roster source has not reached t
 if (Object.values(sourceInputs).some((source) => source.metadataStatus !== "verified")) limitations.push("Source metadata was not supplied for every input.");
 const snapshot = {
   asOf: snapshotAsOf,
-  dataVersion: `nflverse-${snapshotAsOf}-${sha256(JSON.stringify(sourceInputs)).slice(0, 12)}`,
+  dataVersion: `nflverse-${snapshotAsOf}-${sha256(JSON.stringify({ inputs: sourceInputs, seasonVerification: metadata.seasonVerification ?? null })).slice(0, 12)}`,
   manifest: { schemaVersion: "1.0.0", validatedAt: snapshotAsOf, inputs: sourceInputs,
     validationStatus: limitations.length ? "partial" : "passed", limitations, coverage },
   schedule, players, opponents, ratings,
+  season: {
+    year: forecastSeason,
+    verifiedAt: metadata.seasonVerification?.verifiedAt ?? null,
+    primarySources: metadata.seasonVerification?.sources ?? [],
+    weeks: seasonWeekCalendar(allGames.filter((game) => Number(game.season) === forecastSeason && game.game_type === "REG")),
+    byeWeeks: Array.from({ length: 18 }, (_, index) => index + 1).filter((week) => !schedule.some((game) => game.week === week)),
+  },
   ratingsMetadata: { season: forecastSeason, trainedThrough: completedGames.at(-1).gameday,
     lastCompletedSeason: season, preseasonRegressionAppliedThrough: forecastSeason, modelVersion: MODEL_VERSION },
   backtest: {

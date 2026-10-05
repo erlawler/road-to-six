@@ -8,15 +8,19 @@ The [source manifest](../app/data/source-manifest.json) records the verified sou
 
 | Input | Source update time, UTC | Input rows | SHA-256 prefix |
 |---|---|---:|---|
-| Schedule and historical games | 2026-10-05T18:15:13Z | 7,548 | `aacb97a1ae4b197c` |
+| Schedule and historical games | 2026-10-05T22:45:14Z | 7,548 | `27b28a7ce6023bbf` |
 | Weekly 2026 roster | 2026-10-05T15:58:32Z | 10,612 | `0f72f882f3974ff2` |
 | Complete 2025 regular-season player stats | 2026-08-13T16:51:50Z | 2,020 | `aaa8559478dd8d58` |
 
-All three sources were downloaded and checksummed October 5 between 18:30:39 and 18:30:41 UTC. Each input retains its actual retrieval window. GitHub release-asset digests independently matched the roster and statistics downloads. The schedule is pinned to [nflverse commit 8a18428](https://github.com/nflverse/nfldata/commit/8a1842886102b86605b93c458b0981423560a272). Roster and stats release assets are mutable URLs; a later download is an exact replay only if its full SHA-256 matches the manifest. The 2025 statistics bytes are unchanged from the prior verified release.
+All three sources were downloaded and checksummed October 5 between 23:07:36 and 23:07:39 UTC. Each input retains its actual retrieval window. GitHub release-asset digests independently matched the roster and statistics downloads. The schedule is pinned to [nflverse commit c3d49fb](https://github.com/nflverse/nfldata/commit/c3d49fba205cf241b8465609a1155e3f3c7d1f23). Roster and stats release assets are mutable URLs; a later download is an exact replay only if its full SHA-256 matches the manifest. The 2025 statistics bytes are unchanged from the prior verified release.
 
 `sourceUpdatedAt` describes the source file or commit, not an individual quote or player-record update. `validatedAt` is the date of the check. `retrievedBetween` is the observed download window. `ratingsMetadata.trainedThrough` records October 4, 2026. Current-season completed games update serving ratings after preseason regression; the retrospective holdout remains fixed to the documented 2024 to 2025 window. The refresh does not add current-season outcomes to that historical comparison.
 
 ## Validation and coverage
+
+The official [Cowboys schedule and results](https://www.dallascowboys.com/schedule/) and [NFL team record](https://www.nfl.com/teams/dallas-cowboys/) were manually cross-checked at **2026-10-05T23:04:41Z**. Dallas was 2-2-0: losses 20-28 at New York and 31-34 against Baltimore, wins 37-20 against Washington and 34-30 at Houston. Four finals leave 13 regular-season games. The next matchup is Week 5 against Tampa Bay, October 8 at 7:15 p.m. CDT (October 9 at 00:15 UTC). Week 14 is a bye. Week 18 is officially TBD; its nflverse date/time is provisional and is not offered as a confirmed forecast.
+
+`seasonVerification` in the source manifest records those facts, primary source links, verification time, and unconfirmed kickoffs. The release validator independently compares normalized scores, record, next kickoff, and bye against that review. The data version includes this verification record as well as the input hashes. This is manual primary-source corroboration of the approved nflverse ingestion, not a new scraped feed or a live scoreboard. Reverify and update the record with every new final or schedule change.
 
 The builder rejects malformed CSV widths, duplicate game IDs, conflicting same-week player IDs, duplicate season-stat player IDs, malformed numeric fields, mismatched source hashes, and inconsistent source dates. It excludes completed outcomes after the validation date. It selects the forecast season, uses only roster weeks that have started, and admits week 1 preseason. Within the latest eligible week it deduplicates identical stable player IDs, then filters active status. It does not revive a prior-week active record when a newer row is inactive or missing.
 

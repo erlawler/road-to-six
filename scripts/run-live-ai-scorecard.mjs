@@ -2,18 +2,22 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { evaluateAIOutput } from "../lib/ai-evaluation.mjs";
 import { deterministicExplanation } from "../lib/forecast.mjs";
+import { cowboysSeasonState } from "../lib/season-state.mjs";
 
 import { scoreRuntimeResponse } from "../lib/live-scorecard-evaluation.mjs";
 
 const DEFAULT_BASE_URL = "http://localhost:3000";
 const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
 const expectedModel = process.env.LIVE_EVAL_EXPECTED_MODEL ?? "gpt-5.6-luna";
+const seasonState = cowboysSeasonState(snapshot);
+if (!seasonState.current || seasonState.status !== "upcoming") throw new Error("Verify current season state before running a live scorecard");
+const currentGame = seasonState.nextGame;
 
 const scenarios = Object.freeze([
   {
-    id: "baseline_week_1",
-    gameId: "2026_01_DAL_NYG",
-    opponentName: "New York Giants",
+    id: "baseline_current_matchup",
+    gameId: currentGame.id,
+    opponentName: currentGame.opponentName,
     controls: {
       quarterback: 100,
       lamb: 100,
@@ -25,8 +29,8 @@ const scenarios = Object.freeze([
   },
   {
     id: "pickens_reduced",
-    gameId: "2026_02_WAS_DAL",
-    opponentName: "Washington Commanders",
+    gameId: currentGame.id,
+    opponentName: currentGame.opponentName,
     controls: {
       quarterback: 100,
       lamb: 100,
@@ -38,8 +42,8 @@ const scenarios = Object.freeze([
   },
   {
     id: "williams_reduced",
-    gameId: "2026_03_BAL_DAL",
-    opponentName: "Baltimore Ravens",
+    gameId: currentGame.id,
+    opponentName: currentGame.opponentName,
     controls: {
       quarterback: 100,
       lamb: 100,
@@ -51,8 +55,8 @@ const scenarios = Object.freeze([
   },
   {
     id: "two_sided_stress",
-    gameId: "2026_06_DAL_GB",
-    opponentName: "Green Bay Packers",
+    gameId: currentGame.id,
+    opponentName: currentGame.opponentName,
     controls: {
       quarterback: 75,
       lamb: 80,

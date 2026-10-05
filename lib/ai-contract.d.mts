@@ -20,7 +20,8 @@ export type AIFallbackReasonCode =
   | "unsupported_content_type"
   | "invalid_json"
   | "invalid_controls"
-  | "unknown_game";
+  | "unknown_game"
+  | "game_not_upcoming";
 
 export type AIReliabilityMode = "ai" | "deterministic" | "rejected";
 

@@ -43,7 +43,6 @@ export type MarketEvidenceAction =
     };
 
 export function cowboysScheduleDate(commenceTime: unknown): string | null;
-export function defaultScheduleGame<T extends { date: string }>(schedule: readonly T[], date: string): T | undefined;
 export function cowboysOpponent(event: OddsEvent): string | null;
 export function findCowboysScheduleGame<T extends ScheduleGame>(
   schedule: readonly T[],

@@ -27,6 +27,16 @@ body {
 button, input, select { font: inherit; }
 a { color: inherit; text-decoration: none; }
 main { min-height: 100vh; overflow: hidden; }
+.season-state { max-width: 1200px; margin: 2rem auto; padding: 1.5rem; background: white; border: 1px solid var(--silver-300); border-radius: 16px; }
+.season-state h2 { margin-top: 0; }
+.season-state a { color: var(--blue-on-light); text-decoration: underline; }
+.season-state time { overflow-wrap: anywhere; }
+.season-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1rem; }
+.season-details summary { cursor: pointer; font-weight: 700; padding: .75rem 0; }
+.season-details table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+.season-details caption { text-align: left; color: var(--muted); padding-bottom: .75rem; }
+.season-details th, .season-details td { text-align: left; padding: .5rem; border-bottom: 1px solid var(--silver-300); }
+.season-kicker, .scenario-context { font-weight: 700; }
 
 .sr-only {
   border: 0;

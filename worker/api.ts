@@ -1,4 +1,5 @@
 import snapshot from "../app/data/nfl-snapshot.json";
+import { gameProgress } from "../lib/season-state.mjs";
 import {
   AI_BUDGET_SCHEMA_SQL,
   AI_RUN_LEDGER_INDEX_SCHEMA_SQL,
@@ -174,6 +175,7 @@ const FALLBACK_REASON_MESSAGES: Record<AIFallbackReasonCode, string> = {
   invalid_json: "Invalid JSON body",
   invalid_controls: "Scenario controls must be finite numbers in a JSON object",
   unknown_game: "Unknown game",
+  game_not_upcoming: "This game is final, has started, or has no confirmed kickoff. Refresh the season state before requesting a pregame explanation.",
 };
 
 let memoryOddsCache: OddsCachePayload | null = null;
@@ -1004,6 +1006,7 @@ async function forecastResponse(request: Request, env: RuntimeEnv) {
       | "invalid_json"
       | "invalid_controls"
       | "unknown_game"
+      | "game_not_upcoming"
     >,
     status: number,
   ) => terminalForecastResponse(
@@ -1052,6 +1055,7 @@ async function forecastResponse(request: Request, env: RuntimeEnv) {
   if (!snapshotGame) return rejected("unknown_game", 400);
   const controls = normalizeControls(body.controls);
   if (!controls) return rejected("invalid_controls", 400);
+  if (gameProgress(snapshotGame) !== "scheduled") return rejected("game_not_upcoming", 409);
   const buildScenario = (
     context: Awaited<ReturnType<typeof resolveTrustedMarket>>,
   ) => {
