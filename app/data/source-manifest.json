@@ -1,33 +1,34 @@
 {
   "validatedAt": "2026-10-05",
+  "note": "Upstream metadata and downloaded bytes verified October 5, 2026. Retrieval does not imply publication time.",
   "inputs": {
     "games": {
-      "url": "https://raw.githubusercontent.com/nflverse/nfldata/b809c3192e37a7b2c290b1cb5366667bae63b9a2/data/games.csv",
-      "sourceVersion": "b809c3192e37a7b2c290b1cb5366667bae63b9a2",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/8a1842886102b86605b93c458b0981423560a272/data/games.csv",
+      "sourceVersion": "8a1842886102b86605b93c458b0981423560a272",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "retrievedBetween": {
-        "start": "2026-10-05T15:47:52.145634+00:00",
-        "end": "2026-10-05T15:47:52.542680+00:00"
+        "start": "2026-10-05T18:30:39.289644+00:00",
+        "end": "2026-10-05T18:30:39.669958+00:00"
       },
-      "expectedSha256": "f195878bff1bc7096ffceb506938903ef42543873b2d65b0adab5a905da5a609"
+      "expectedSha256": "aacb97a1ae4b197c18b75537607732729c435ec6dba123fd9825c00a7e6a04e7"
     },
     "roster": {
       "url": "https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv",
+      "sourceUpdatedAt": "2026-10-05T15:58:32Z",
       "retrievedBetween": {
-        "start": "2026-10-05T09:07:08.217015+00:00",
-        "end": "2026-10-05T09:07:08.612906+00:00"
+        "start": "2026-10-05T18:30:39.673606+00:00",
+        "end": "2026-10-05T18:30:40.140492+00:00"
       },
-      "expectedSha256": "a0dda588ff40f73bf6643a904e7ca89b9e028e7c16493b059b9a79c52b95fa55",
-      "sourceUpdatedAt": "2026-10-05T06:02:48Z"
+      "expectedSha256": "0f72f882f3974ff2d524ce838fb750f2d2f2fb8b3f081728ed45e832972292c3"
     },
     "stats": {
       "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2025.csv",
+      "sourceUpdatedAt": "2026-08-13T16:51:50Z",
       "retrievedBetween": {
-        "start": "2026-10-05T09:07:08.217097+00:00",
-        "end": "2026-10-05T09:07:08.579569+00:00"
+        "start": "2026-10-05T18:30:40.143853+00:00",
+        "end": "2026-10-05T18:30:40.520650+00:00"
       },
-      "expectedSha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12",
-      "sourceUpdatedAt": "2026-08-13T16:51:50Z"
+      "expectedSha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12"
     }
   }
 }

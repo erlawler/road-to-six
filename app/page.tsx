@@ -19,6 +19,7 @@ import {
   type OddsEvent,
 } from "@/lib/odds-market.mjs";
 import type { AIReliabilityReceipt } from "@/lib/ai-contract.mjs";
+import { footballSnapshotFreshness } from "@/lib/source-freshness.mjs";
 
 import { buildComparisonEvidence, defaultComparisonSelection, selectComparisonEvidence } from "@/lib/scenario-comparison.mjs";
 
@@ -175,8 +176,8 @@ export default function Home() {
     const timer = setInterval(() => setCurrentTime(Date.now()), 60_000);
     return () => clearInterval(timer);
   }, []);
-  const snapshotAgeDays = currentTime === null ? null
-    : Math.max(0, Math.floor((currentTime - Date.parse(`${snapshot.asOf}T00:00:00Z`)) / 86_400_000));
+  const snapshotFreshness = currentTime === null ? null
+    : footballSnapshotFreshness(snapshot, currentTime);
   const [selectedGameId, setSelectedGameId] = useState(
     (defaultScheduleGame(snapshot.schedule, snapshot.asOf) ?? snapshot.schedule[0]).id,
   );
@@ -446,7 +447,7 @@ export default function Home() {
 
       <p className="freshness-note">
         Football and roster snapshot: {snapshot.asOf}.
-        {snapshotAgeDays !== null ? <strong className={snapshotAgeDays > 7 ? "source-stale" : "source-age"}> {snapshotAgeDays} day(s) old{snapshotAgeDays > 7 ? ". Snapshot refresh needed under the weekly review policy." : ". Within the weekly review window."}</strong> : null}
+        {snapshotFreshness ? <strong className={snapshotFreshness.status === "current" ? "source-age" : "source-stale"}> {snapshotFreshness.message}</strong> : null}
         {" "}Historical player baseline: 2025 regular season. Refresh odds separately for current market coverage.
       </p>
       <section className="market-strip" aria-label="Market snapshot">

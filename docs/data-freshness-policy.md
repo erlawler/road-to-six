@@ -1,7 +1,7 @@
 # Source freshness and coverage policy
 
-**Prepared:** September 7, 2026
-**Scope:** September flagship candidate; operational targets are proposed and are not evidence that a scheduled refresh exists.
+**Updated:** October 5, 2026
+**Scope:** Football review freshness is enforced in release validation and browser status. No scheduled source refresh exists.
 **Owner:** Eric Lawler owns source review and release acceptance. Codex can prepare source comparisons and validated candidate artifacts within authorized scope.
 
 ## Interpret timestamps correctly
@@ -17,7 +17,9 @@ Use upstream publication or commit time only when recorded by the source. Use re
 | Current moneyline, spread, and total | Apply only supported, matched markets within the six-hour cache lifetime. Preserve provider timestamps, retrieval time, cache expiry, event match, and market-specific sportsbook counts. | One participating book is a single-source price. Missing spreads, totals, or paired moneylines must be explicit. Expired or unmatched data must not be described as current or multi-book consensus. |
 | Archived market snapshot | Retain only with its captured date and baseline label. It has no current-market freshness guarantee. | Show baseline or unavailable state distinctly. A fallback is evidence of availability design, not evidence of current odds. |
 
-The 7-day and 24-hour targets are product operating choices, not vendor service guarantees. A monthly health check alone does not satisfy an in-season weekly freshness target. No new automation, source subscription, or deployment is created by this policy. Builders may enforce structural and temporal consistency without enforcing these elapsed-time operating targets; release review must check both.
+The 7-day and 24-hour targets are product operating choices, not vendor service guarantees. A monthly health check alone does not satisfy an in-season weekly freshness target. No new automation, source subscription, or deployment is created by this policy.
+
+`npm run data:validate` now rejects a snapshot when the oldest of its validation date (UTC midnight), schedule retrieval, and roster retrieval is more than seven days old. Missing, future, partial, or inconsistent review evidence fails closed. The browser shares this check and reevaluates it each minute; changing only the validation date cannot renew old retrieval evidence. The completed 2025 statistical baseline is deliberately excluded from the seven-day review-age test. Its checksum and provenance remain validated separately. Source review is not a claim that every provider record changed that day, and a live odds refresh never renews football review evidence. The selected-game 24-hour pre-kickoff review remains an operator responsibility.
 
 ## Coverage decision rules
 

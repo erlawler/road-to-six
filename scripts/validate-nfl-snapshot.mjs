@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { calculateForecast, DEFAULT_CONTROLS, MODEL_VERSION, MODEL_PARAMETERS } from "../lib/forecast.mjs";
+import { footballSnapshotFreshness } from "../lib/source-freshness.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const args = Object.fromEntries(process.argv.slice(2).map((value) => {
@@ -27,6 +28,8 @@ assert.equal(snapshot.asOf, sourceMetadata.validatedAt);
 assert.equal(snapshot.manifest.validatedAt, snapshot.asOf);
 assert.equal(snapshot.manifest.validationStatus, "passed", "A partial data snapshot requires owner review before release");
 assert.deepEqual(snapshot.manifest.limitations, []);
+const freshness = footballSnapshotFreshness(snapshot);
+assert.equal(freshness.status, "current", freshness.message);
 for (const key of ["games", "roster", "stats"]) {
   const source = snapshot.manifest.inputs[key];
   const expected = sourceMetadata.inputs[key];

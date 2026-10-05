@@ -8,11 +8,11 @@ The [source manifest](../app/data/source-manifest.json) records the verified sou
 
 | Input | Source update time, UTC | Input rows | SHA-256 prefix |
 |---|---|---:|---|
-| Schedule and historical games | 2026-10-05T15:45:14Z | 7,548 | `f195878bff1bc709` |
-| Weekly 2026 roster | 2026-10-05T06:02:48Z | 10,612 | `a0dda588ff40f73b` |
+| Schedule and historical games | 2026-10-05T18:15:13Z | 7,548 | `aacb97a1ae4b197c` |
+| Weekly 2026 roster | 2026-10-05T15:58:32Z | 10,612 | `0f72f882f3974ff2` |
 | Complete 2025 regular-season player stats | 2026-08-13T16:51:50Z | 2,020 | `aaa8559478dd8d58` |
 
-The schedule was downloaded in the October 5 window recorded in the manifest. Roster and statistics bytes from the same day's health check were reused only after current upstream publication times and their complete checksums were reverified. Each input retains its actual retrieval window. The schedule is pinned to [nflverse commit b809c31](https://github.com/nflverse/nfldata/commit/b809c3192e37a7b2c290b1cb5366667bae63b9a2). Roster and stats release assets are mutable URLs; a later download is an exact replay only if its full SHA-256 matches the manifest.
+All three sources were downloaded and checksummed October 5 between 18:30:39 and 18:30:41 UTC. Each input retains its actual retrieval window. GitHub release-asset digests independently matched the roster and statistics downloads. The schedule is pinned to [nflverse commit 8a18428](https://github.com/nflverse/nfldata/commit/8a1842886102b86605b93c458b0981423560a272). Roster and stats release assets are mutable URLs; a later download is an exact replay only if its full SHA-256 matches the manifest. The 2025 statistics bytes are unchanged from the prior verified release.
 
 `sourceUpdatedAt` describes the source file or commit, not an individual quote or player-record update. `validatedAt` is the date of the check. `retrievedBetween` is the observed download window. `ratingsMetadata.trainedThrough` records October 4, 2026. Current-season completed games update serving ratings after preseason regression; the retrospective holdout remains fixed to the documented 2024 to 2025 window. The refresh does not add current-season outcomes to that historical comparison.
 
@@ -31,7 +31,7 @@ Verified October 5 coverage:
 - One unidentified roster row and one unidentified stats row excluded and counted. Neither leaves a featured-player or opponent-leader gap.
 - 544 of 544 holdout games have paired historical moneylines.
 
-Missing featured players, incomplete opponent cards, a lagging roster week, or missing source metadata produce `validationStatus: partial` and explicit limitations. The separate release validator rejects a partial snapshot. Source metadata and completeness are not a timer-based freshness guarantee; the proposed operating targets are in [data-freshness-policy.md](data-freshness-policy.md). No new scheduled refresh or production deployment is created by the builder.
+Missing featured players, incomplete opponent cards, a lagging roster week, or missing source metadata produce `validationStatus: partial` and explicit limitations. The separate release validator rejects a partial snapshot and checks the seven-day review window against the current clock. The browser uses the same bounded review check and reports stale or unavailable evidence. See [data-freshness-policy.md](data-freshness-policy.md). No new scheduled refresh or production deployment is created by the builder.
 
 ## Reproduce and verify
 

@@ -1,45 +1,45 @@
 {
   "asOf": "2026-10-05",
-  "dataVersion": "nflverse-2026-10-05-e4b28390e519",
+  "dataVersion": "nflverse-2026-10-05-29e908db851c",
   "manifest": {
     "schemaVersion": "1.0.0",
     "validatedAt": "2026-10-05",
     "inputs": {
       "games": {
-        "url": "https://raw.githubusercontent.com/nflverse/nfldata/b809c3192e37a7b2c290b1cb5366667bae63b9a2/data/games.csv",
-        "sourceVersion": "b809c3192e37a7b2c290b1cb5366667bae63b9a2",
-        "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+        "url": "https://raw.githubusercontent.com/nflverse/nfldata/8a1842886102b86605b93c458b0981423560a272/data/games.csv",
+        "sourceVersion": "8a1842886102b86605b93c458b0981423560a272",
+        "sourceUpdatedAt": "2026-10-05T18:15:13Z",
         "retrievedBetween": {
-          "start": "2026-10-05T15:47:52.145634+00:00",
-          "end": "2026-10-05T15:47:52.542680+00:00"
+          "start": "2026-10-05T18:30:39.289644+00:00",
+          "end": "2026-10-05T18:30:39.669958+00:00"
         },
-        "expectedSha256": "f195878bff1bc7096ffceb506938903ef42543873b2d65b0adab5a905da5a609",
-        "sha256": "f195878bff1bc7096ffceb506938903ef42543873b2d65b0adab5a905da5a609",
-        "bytes": 2182770,
+        "expectedSha256": "aacb97a1ae4b197c18b75537607732729c435ec6dba123fd9825c00a7e6a04e7",
+        "sha256": "aacb97a1ae4b197c18b75537607732729c435ec6dba123fd9825c00a7e6a04e7",
+        "bytes": 2182769,
         "rows": 7548,
         "metadataStatus": "verified"
       },
       "roster": {
         "url": "https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv",
+        "sourceUpdatedAt": "2026-10-05T15:58:32Z",
         "retrievedBetween": {
-          "start": "2026-10-05T09:07:08.217015+00:00",
-          "end": "2026-10-05T09:07:08.612906+00:00"
+          "start": "2026-10-05T18:30:39.673606+00:00",
+          "end": "2026-10-05T18:30:40.140492+00:00"
         },
-        "expectedSha256": "a0dda588ff40f73bf6643a904e7ca89b9e028e7c16493b059b9a79c52b95fa55",
-        "sourceUpdatedAt": "2026-10-05T06:02:48Z",
-        "sha256": "a0dda588ff40f73bf6643a904e7ca89b9e028e7c16493b059b9a79c52b95fa55",
-        "bytes": 3445289,
+        "expectedSha256": "0f72f882f3974ff2d524ce838fb750f2d2f2fb8b3f081728ed45e832972292c3",
+        "sha256": "0f72f882f3974ff2d524ce838fb750f2d2f2fb8b3f081728ed45e832972292c3",
+        "bytes": 3445291,
         "rows": 10612,
         "metadataStatus": "verified"
       },
       "stats": {
         "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2025.csv",
+        "sourceUpdatedAt": "2026-08-13T16:51:50Z",
         "retrievedBetween": {
-          "start": "2026-10-05T09:07:08.217097+00:00",
-          "end": "2026-10-05T09:07:08.579569+00:00"
+          "start": "2026-10-05T18:30:40.143853+00:00",
+          "end": "2026-10-05T18:30:40.520650+00:00"
         },
         "expectedSha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12",
-        "sourceUpdatedAt": "2026-08-13T16:51:50Z",
         "sha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12",
         "bytes": 882104,
         "rows": 2020,
@@ -80,7 +80,7 @@
       "cowboysSpread": -3,
       "totalLine": 47.5,
       "stadium": "MetLife Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_01_DAL_NYG"
     },
@@ -97,7 +97,7 @@
       "cowboysSpread": -3.5,
       "totalLine": 51.5,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_02_WAS_DAL"
     },
@@ -114,7 +114,7 @@
       "cowboysSpread": 3,
       "totalLine": 53.5,
       "stadium": "Maracana Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_03_BAL_DAL"
     },
@@ -131,7 +131,7 @@
       "cowboysSpread": 3,
       "totalLine": 48.5,
       "stadium": "Reliant Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_04_DAL_HOU"
     },
@@ -143,12 +143,12 @@
       "opponent": "TB",
       "opponentName": "Tampa Bay Buccaneers",
       "venue": "home",
-      "cowboysMoneyline": -520,
-      "opponentMoneyline": 390,
+      "cowboysMoneyline": -500,
+      "opponentMoneyline": 380,
       "cowboysSpread": -9.5,
       "totalLine": 47.5,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_05_TB_DAL"
     },
@@ -165,7 +165,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lambeau Field",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_06_DAL_GB"
     },
@@ -182,7 +182,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lincoln Financial Field",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_07_DAL_PHI"
     },
@@ -199,7 +199,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_08_ARI_DAL"
     },
@@ -216,7 +216,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lucas Oil Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_09_DAL_IND"
     },
@@ -233,7 +233,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_10_SF_DAL"
     },
@@ -250,7 +250,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_11_TEN_DAL"
     },
@@ -267,7 +267,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_12_PHI_DAL"
     },
@@ -284,7 +284,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lumen Field",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_13_DAL_SEA"
     },
@@ -301,7 +301,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "SoFi Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_15_DAL_LA"
     },
@@ -318,7 +318,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_16_JAX_DAL"
     },
@@ -335,7 +335,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_17_NYG_DAL"
     },
@@ -352,7 +352,7 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Northwest Stadium",
-      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
+      "sourceUpdatedAt": "2026-10-05T18:15:13Z",
       "validatedAt": "2026-10-05",
       "sourceRecordId": "2026_18_DAL_WAS"
     }
@@ -1234,13 +1234,13 @@
         "meanOutcome": 1
       }
     ],
-    "evaluationSha256": "b610348ef75a5f1ff58db5eace6c596fb29718cd59bb8134a5c2e34c23d816df",
+    "evaluationSha256": "7bd0da32b39dd678baf1b81429966058f5a5ed1e77148d1b5fd9e841f112d29e",
     "method": "Walk-forward Elo with preseason regression and neutral-aware venue adjustment; shared production scoring and a predeclared 80% vig-adjusted market blend. Historical rating warm-up begins in 1999; the documented development window is 2019 to 2023. Scenario sensitivities are not evaluated by this default-control backtest."
   },
   "sources": [
     {
       "name": "nflverse schedules",
-      "url": "https://raw.githubusercontent.com/nflverse/nfldata/b809c3192e37a7b2c290b1cb5366667bae63b9a2/data/games.csv",
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/8a1842886102b86605b93c458b0981423560a272/data/games.csv",
       "license": "CC BY 4.0 repository license; underlying data rights remain with their owners."
     },
     {
