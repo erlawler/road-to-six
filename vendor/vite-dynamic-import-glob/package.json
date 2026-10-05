@@ -1,0 +1,10 @@
+{
+  "name": "@road-to-six/vite-dynamic-import-glob",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scoped glob adapter for vite-plugin-dynamic-import 1.6.0",
+  "main": "index.cjs",
+  "dependencies": {
+    "tinyglobby": "0.2.17"
+  }
+}
