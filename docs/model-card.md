@@ -26,7 +26,7 @@ The displayed band is illustrative: plus or minus 8 percentage points with a mar
 
 ## Evaluation and limits
 
-The [snapshot builder](../scripts/build-nfl-snapshot.mjs) uses the same Elo and probability functions as production. Chronological rating warm-up begins in 1999; the documented model-development window is 2019 to 2023. The reported retrospective holdout is 2024 to 2025, with 544 completed regular-season games and 544 eligible market pairs. Elo predictions are calculated before each outcome updates ratings. Games later than the artifact validation date are excluded. Ties receive an outcome score of 0.5, consistent with Elo scoring, rather than being treated as a binary win.
+The [snapshot builder](../scripts/build-nfl-snapshot.mjs) uses the same Elo and probability functions as production. Chronological rating warm-up begins in 1999; the documented model-development window is 2019 to 2023. The reported retrospective holdout is 2024 to 2025, with 544 completed regular-season games and 544 eligible market pairs. Elo predictions are calculated before each outcome updates ratings. Games later than the artifact validation date are excluded. Current-season completed games advance serving ratings without expanding the fixed 2024 to 2025 retrospective holdout. Ties receive an outcome score of 0.5, consistent with Elo scoring, rather than being treated as a binary win.
 
 | Retrospective metric | Value |
 |---|---:|

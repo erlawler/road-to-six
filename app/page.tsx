@@ -10,6 +10,8 @@ import {
 } from "@/lib/forecast.mjs";
 import {
   applyLiveMarket,
+  cowboysScheduleDate,
+  defaultScheduleGame,
   findCowboysScheduleGame,
   forecastMarketEvidenceAction,
   marketFromOddsEvent,
@@ -168,12 +170,16 @@ export default function Home() {
   const [currentTime, setCurrentTime] = useState<number | null>(null);
   useEffect(() => {
     setCurrentTime(Date.now());
+    const today = cowboysScheduleDate(new Date().toISOString()) ?? snapshot.asOf;
+    setSelectedGameId((defaultScheduleGame(snapshot.schedule, today) ?? snapshot.schedule[0]).id);
     const timer = setInterval(() => setCurrentTime(Date.now()), 60_000);
     return () => clearInterval(timer);
   }, []);
   const snapshotAgeDays = currentTime === null ? null
     : Math.max(0, Math.floor((currentTime - Date.parse(`${snapshot.asOf}T00:00:00Z`)) / 86_400_000));
-  const [selectedGameId, setSelectedGameId] = useState(snapshot.schedule[0].id);
+  const [selectedGameId, setSelectedGameId] = useState(
+    (defaultScheduleGame(snapshot.schedule, snapshot.asOf) ?? snapshot.schedule[0]).id,
+  );
   const [controls, setControls] = useState<ScenarioControls>(defaultControls);
   const [runtimeResult, setRuntimeResult] = useState<{
     key: string;
@@ -826,7 +832,7 @@ export default function Home() {
             <span className="eyebrow">AI evaluation release gate</span>
             <h3 id="eval-proof-title">17 of 17 expected outcomes detected.</h3>
             <p>
-              September 7 candidate: evaluation v1.1.0 covers contract integrity and grounded comparison selection.
+              Evaluation v1.1.0 covers contract integrity and grounded comparison selection.
               These are offline safety checks, not proof of user comprehension. The July 27, 2026 live
               scorecard passed four of four AI and deterministic cases under the earlier contract;
               that historical sample does not validate this candidate.

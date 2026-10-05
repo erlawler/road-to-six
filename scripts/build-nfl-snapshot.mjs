@@ -167,7 +167,8 @@ for (const game of completedGames) {
   const awayMoneyline = numberOrNull(game.away_moneyline);
   const marketProbability = removeVig(homeMoneyline, awayMoneyline);
   const probabilities = calculateProbabilities({ footballBaseline, marketImplied: marketProbability });
-  if (currentSeason >= 2024) {
+  // Keep the predeclared retrospective holdout fixed as current-season ratings advance.
+  if (currentSeason >= 2024 && currentSeason <= 2025) {
     evaluation.push({ gameId: game.game_id, season: currentSeason, date: game.gameday,
       homeRating, awayRating, venue, homeMoneyline, awayMoneyline,
       footballProbability: probabilities.footballOnly, marketProbability,

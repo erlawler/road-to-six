@@ -62,7 +62,10 @@ test("first current-season result updates regressed ratings without a second reg
   const delta = MODEL_PARAMETERS.eloK * (1 - homeProbability);
   assert.equal(snapshot.ratings.DAL, preseason.DAL - delta);
   assert.equal(snapshot.ratingsMetadata.lastCompletedSeason, 2026);
-  assert.equal(snapshot.backtest.seasons, "2025 to 2026 holdout");
+  assert.equal(snapshot.backtest.seasons, "2025 holdout");
+  assert.equal(snapshot.backtest.games, 1);
+  const evaluation = JSON.parse(await readFile(join(f.directory, "model-evaluation.json"), "utf8"));
+  assert.deepEqual(evaluation.records.map((row) => row.season), [2025]);
 });
 
 test("roster selection excludes other seasons and future weeks and deduplicates identical records", async (context) => {

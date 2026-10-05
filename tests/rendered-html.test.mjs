@@ -133,7 +133,8 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /George Pickens participation/);
   assert.match(html, /Javonte Williams participation/);
   assert.match(html, /New York Giants/);
-  assert.match(html, /Jaxson Dart/);
+  assert.match(html, /Tampa Bay Buccaneers/);
+  assert.match(html, /Kenny Gainwell/);
   assert.match(html, /Refresh odds/);
   assert.match(html, /Uncertainty to keep in view/);
   assert.match(html, /The Odds API current markets/);

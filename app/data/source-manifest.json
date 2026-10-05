@@ -1,34 +1,33 @@
 {
-  "validatedAt": "2026-09-07",
-  "note": "Source timestamps and retrieval window were verified in the September 7 production health check. The builder adds SHA-256 hashes, byte sizes, row counts, and coverage for the actual local input bytes. Release-asset URLs can change; use checksums to verify an exact replay.",
+  "validatedAt": "2026-10-05",
   "inputs": {
     "games": {
-      "url": "https://raw.githubusercontent.com/nflverse/nfldata/e2a169b41f56fb027ca894c930ab75b699a12e68/data/games.csv",
-      "sourceVersion": "e2a169b41f56fb027ca894c930ab75b699a12e68",
-      "sourceUpdatedAt": "2026-09-07T08:15:12Z",
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/b809c3192e37a7b2c290b1cb5366667bae63b9a2/data/games.csv",
+      "sourceVersion": "b809c3192e37a7b2c290b1cb5366667bae63b9a2",
+      "sourceUpdatedAt": "2026-10-05T15:45:14Z",
       "retrievedBetween": {
-        "start": "2026-09-07T09:02:00Z",
-        "end": "2026-09-07T09:11:00Z"
+        "start": "2026-10-05T15:47:52.145634+00:00",
+        "end": "2026-10-05T15:47:52.542680+00:00"
       },
-      "expectedSha256": "68f2b4d7e7f7fa51d1a5adeab0778bc1372b5f4ac71dd062ec7537bb5883c7fe"
+      "expectedSha256": "f195878bff1bc7096ffceb506938903ef42543873b2d65b0adab5a905da5a609"
     },
     "roster": {
       "url": "https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv",
-      "sourceUpdatedAt": "2026-09-06T11:28:09Z",
       "retrievedBetween": {
-        "start": "2026-09-07T09:02:00Z",
-        "end": "2026-09-07T09:11:00Z"
+        "start": "2026-10-05T09:07:08.217015+00:00",
+        "end": "2026-10-05T09:07:08.612906+00:00"
       },
-      "expectedSha256": "5ec59c5228198f57ba577cfe06d52a789259b92d9c5c98c152b206e8ab80ab55"
+      "expectedSha256": "a0dda588ff40f73bf6643a904e7ca89b9e028e7c16493b059b9a79c52b95fa55",
+      "sourceUpdatedAt": "2026-10-05T06:02:48Z"
     },
     "stats": {
       "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2025.csv",
-      "sourceUpdatedAt": "2026-08-13T16:51:50Z",
       "retrievedBetween": {
-        "start": "2026-09-07T09:02:00Z",
-        "end": "2026-09-07T09:11:00Z"
+        "start": "2026-10-05T09:07:08.217097+00:00",
+        "end": "2026-10-05T09:07:08.579569+00:00"
       },
-      "expectedSha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12"
+      "expectedSha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12",
+      "sourceUpdatedAt": "2026-08-13T16:51:50Z"
     }
   }
 }

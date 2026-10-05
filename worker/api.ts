@@ -1363,11 +1363,17 @@ async function fetchOddsPayload(env: RuntimeEnv) {
     const perBookCowboysProbabilities: number[] = [];
     const cowboysSpreads: number[] = [];
     const totals: number[] = [];
+    let spreadBooks = 0;
+    let totalBooks = 0;
+    const reportedMarketUpdates: string[] = [];
 
     for (const bookmaker of bookmakers) {
       const markets = Array.isArray(bookmaker.markets) ? bookmaker.markets as Array<Record<string, unknown>> : [];
       let bookCowboysMoneyline: number | null = null;
       let bookOpponentMoneyline: number | null = null;
+      let hasSpread = false;
+      let hasTotal = false;
+      const bookUpdates: string[] = [];
       for (const market of markets) {
         const outcomes = Array.isArray(market.outcomes) ? market.outcomes as Array<Record<string, unknown>> : [];
         if (market.key === "h2h") {
@@ -1384,12 +1390,23 @@ async function fetchOddsPayload(env: RuntimeEnv) {
         if (market.key === "spreads") {
           for (const outcome of outcomes) {
             const point = typeof outcome.point === "number" ? outcome.point : NaN;
-            if (outcome.name === "Dallas Cowboys" && Number.isFinite(point)) cowboysSpreads.push(point);
+            if (outcome.name === "Dallas Cowboys" && Number.isFinite(point)) {
+              cowboysSpreads.push(point);
+              hasSpread = true;
+            }
           }
         }
         if (market.key === "totals") {
           const point = outcomes.find((outcome) => outcome.name === "Over")?.point;
-          if (typeof point === "number" && Number.isFinite(point)) totals.push(point);
+          if (typeof point === "number" && Number.isFinite(point)) {
+            totals.push(point);
+            hasTotal = true;
+          }
+        }
+        const update = market.last_update ?? bookmaker.last_update;
+        if (["h2h", "spreads", "totals"].includes(String(market.key))
+          && typeof update === "string" && Number.isFinite(Date.parse(update))) {
+          bookUpdates.push(new Date(update).toISOString());
         }
       }
       const bookProbability = removeVig(bookCowboysMoneyline, bookOpponentMoneyline);
@@ -1398,6 +1415,9 @@ async function fetchOddsPayload(env: RuntimeEnv) {
         opponentMoneylines.push(bookOpponentMoneyline);
         perBookCowboysProbabilities.push(bookProbability);
       }
+      if (hasSpread) spreadBooks += 1;
+      if (hasTotal) totalBooks += 1;
+      if (bookProbability !== null || hasSpread || hasTotal) reportedMarketUpdates.push(...bookUpdates);
     }
 
     return {
@@ -1411,6 +1431,8 @@ async function fetchOddsPayload(env: RuntimeEnv) {
       cowboysSpread: median(cowboysSpreads),
       total: median(totals),
       sportsbookCount: perBookCowboysProbabilities.length,
+      marketSportsbookCounts: { moneyline: perBookCowboysProbabilities.length, spread: spreadBooks, total: totalBooks },
+      oldestReportedMarketUpdate: reportedMarketUpdates.sort()[0] ?? null,
     };
   });
 

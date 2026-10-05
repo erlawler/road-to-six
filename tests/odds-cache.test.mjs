@@ -43,6 +43,7 @@ test("normalizes per-book consensus and reuses the six-hour odds cache", async (
         away_team: "Dallas Cowboys",
         bookmakers: [
           {
+            last_update: "2026-09-13T15:00:00Z",
             markets: [
               {
                 key: "h2h",
@@ -113,6 +114,8 @@ test("normalizes per-book consensus and reuses the six-hour odds cache", async (
     assert.equal(Number.isFinite(Date.parse(firstPayload.fetchedAt)), true);
     assert.equal(firstPayload.retrievedAt, firstPayload.fetchedAt);
     assert.equal(firstPayload.events[0].sportsbookCount, 2);
+    assert.deepEqual(firstPayload.events[0].marketSportsbookCounts, { moneyline: 2, spread: 1, total: 1 });
+    assert.equal(firstPayload.events[0].oldestReportedMarketUpdate, "2026-09-13T15:00:00.000Z");
     assert.equal(firstPayload.events[0].cowboysMoneyline, -105);
     assert.equal(firstPayload.events[0].opponentMoneyline, -115);
     assert.equal(

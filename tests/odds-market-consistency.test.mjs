@@ -5,6 +5,7 @@ import test from "node:test";
 import { calculateForecast } from "../lib/forecast.mjs";
 import {
   applyLiveMarket,
+  defaultScheduleGame,
   findCowboysScheduleGame,
   forecastMarketEvidenceAction,
   marketFromOddsEvent,
@@ -13,6 +14,15 @@ import {
 const snapshot = JSON.parse(
   await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"),
 );
+
+test("default matchup skips past games and keeps an explicit archive after the season", () => {
+  const schedule = [{ id: "past", date: "2026-09-27" }, { id: "next", date: "2026-10-08" }, { id: "later", date: "2026-10-18" }];
+  assert.equal(defaultScheduleGame(schedule, "2026-10-05").id, "next");
+  assert.equal(defaultScheduleGame(schedule, "2026-10-08").id, "next");
+  assert.equal(defaultScheduleGame(schedule, "2026-10-09").id, "later");
+  assert.equal(defaultScheduleGame(schedule, "2027-02-01").id, "later");
+  assert.equal(defaultScheduleGame([], "2026-10-05"), undefined);
+});
 
 test("matches every current Cowboys night game to its Central schedule date", () => {
   const rolloverEvents = [

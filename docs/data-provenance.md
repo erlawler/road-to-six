@@ -1,6 +1,6 @@
 # Football data provenance and reproducibility
 
-**Validation date:** September 7, 2026. **Status:** Local release candidate. **Owner:** Eric Lawler. This refresh has not been deployed by the flagship improvement work.
+**Validation date:** October 5, 2026. **Status:** Source validation passed. **Owner:** Eric Lawler. Deployment provenance is recorded separately by Sites.
 
 ## Source evidence
 
@@ -8,13 +8,13 @@ The [source manifest](../app/data/source-manifest.json) records the verified sou
 
 | Input | Source update time, UTC | Input rows | SHA-256 prefix |
 |---|---|---:|---|
-| Schedule and historical games | September 7, 08:15:12 | 7,548 | `68f2b4d7e7f7fa5` |
-| Weekly 2026 roster | September 6, 11:28:09 | 2,946 | `5ec59c5228198f57` |
-| Complete 2025 regular-season player stats | August 13, 16:51:50 | 2,020 | `aaa8559478dd8d585` |
+| Schedule and historical games | 2026-10-05T15:45:14Z | 7,548 | `f195878bff1bc709` |
+| Weekly 2026 roster | 2026-10-05T06:02:48Z | 10,612 | `a0dda588ff40f73b` |
+| Complete 2025 regular-season player stats | 2026-08-13T16:51:50Z | 2,020 | `aaa8559478dd8d58` |
 
-All three files were retrieved during the verified September 7 window from 09:02 to 09:11 UTC. No exact per-file retrieval timestamp is claimed. The schedule is pinned to [nflverse commit e2a169b](https://github.com/nflverse/nfldata/commit/e2a169b41f56fb027ca894c930ab75b699a12e68). Roster and stats release assets are mutable URLs; a later download is an exact replay only if its full SHA-256 matches the manifest.
+The schedule was downloaded in the October 5 window recorded in the manifest. Roster and statistics bytes from the same day's health check were reused only after current upstream publication times and their complete checksums were reverified. Each input retains its actual retrieval window. The schedule is pinned to [nflverse commit b809c31](https://github.com/nflverse/nfldata/commit/b809c3192e37a7b2c290b1cb5366667bae63b9a2). Roster and stats release assets are mutable URLs; a later download is an exact replay only if its full SHA-256 matches the manifest.
 
-`sourceUpdatedAt` describes the source file or commit, not an individual quote or player-record update. `validatedAt` is the date of the check. `retrievedBetween` is the observed download window. `ratingsMetadata.trainedThrough` separately records January 4, 2026, the final completed 2025 regular-season game used for ratings. The preseason regression prepares those ratings for season 2026; it does not imply that 2026 games have been observed.
+`sourceUpdatedAt` describes the source file or commit, not an individual quote or player-record update. `validatedAt` is the date of the check. `retrievedBetween` is the observed download window. `ratingsMetadata.trainedThrough` records October 4, 2026. Current-season completed games update serving ratings after preseason regression; the retrospective holdout remains fixed to the documented 2024 to 2025 window. The refresh does not add current-season outcomes to that historical comparison.
 
 ## Validation and coverage
 
@@ -22,12 +22,12 @@ The builder rejects malformed CSV widths, duplicate game IDs, conflicting same-w
 
 The player baseline must be from a prior season whose listed regular-season schedule is complete by the validation date. Player statistics join by stable ID. Opponent cards rank active roster players with prior-season statistics by PPR, using stable ID as a deterministic tie-breaker.
 
-Verified September 7 coverage:
+Verified October 5 coverage:
 
 - 17 of 17 Cowboys regular-season games.
 - Eight of eight featured Cowboys players.
 - Four leaders for each of 14 distinct opponents, 56 cards in total.
-- Season 2026, roster week 1, and complete 2025 player baselines.
+- Season 2026, roster week 4, and complete 2025 player baselines.
 - One unidentified roster row and one unidentified stats row excluded and counted. Neither leaves a featured-player or opponent-leader gap.
 - 544 of 544 holdout games have paired historical moneylines.
 
@@ -43,7 +43,7 @@ node scripts/build-nfl-snapshot.mjs \
   --roster=/absolute/path/roster_weekly_2026.csv \
   --stats=/absolute/path/stats_player_reg_2025.csv \
   --source-metadata=app/data/source-manifest.json \
-  --as-of=2026-09-07 \
+  --as-of=2026-10-05 \
   --season=2026
 node scripts/validate-nfl-snapshot.mjs
 ```
