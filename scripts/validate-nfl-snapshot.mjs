@@ -77,7 +77,10 @@ const verified = sourceMetadata.seasonVerification;
 assert.ok(verified && Number.isFinite(Date.parse(verified.verifiedAt)), "Official season verification is required");
 assert.equal(snapshot.season.verifiedAt, verified.verifiedAt);
 assert.deepEqual(snapshot.season.primarySources, verified.sources);
-assert.ok(verified.sources.includes("https://www.dallascowboys.com/schedule/"));
+assert.deepEqual(verified.sources, [
+  "https://www.dallascowboys.com/schedule/",
+  "https://www.nfl.com/teams/dallas-cowboys/",
+], "Official verification must name the exact approved primary URLs");
 const seasonState = cowboysSeasonState(snapshot, Date.parse(verified.verifiedAt));
 assert.deepEqual(seasonState.record, verified.record, "Record differs from official verification");
 assert.deepEqual(seasonState.completed.map(({ week, cowboysScore, opponentScore }) => ({ week, cowboysScore, opponentScore })), verified.completedResults);
