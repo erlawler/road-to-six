@@ -2,7 +2,7 @@
 
 ## Answer
 
-The public product is an anonymous Market Context Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI endpoint, and an inspectable reliability receipt. As of September 7, 2026, production remains Sites version 16 at main commit `57b170f`. This branch is an undeployed candidate. The July live scorecard and release checks are historical evidence; current candidate validation belongs in the [candidate review](flagship-candidate-2026-09-07.md). No account or identity layer is introduced.
+The public product is an anonymous Market Context Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI endpoint, and an inspectable reliability receipt. October 5 maintenance refreshes the approved football sources and preserves the retrospective holdout. Exact deployment commits are recorded in Sites. Historical release results remain dated evidence; current source validation belongs in [data provenance](data-provenance.md). No account or identity layer is introduced.
 
 Showcase evidence:
 
@@ -128,3 +128,7 @@ The repository uses:
 ## Implementation boundary
 
 Visitor authentication and saved scenarios remain out of scope. A separate operator bearer token protects the aggregate budget status used by production monitoring. Persistence is limited to normalized odds cache data, refresh controls, aggregate AI cost, anonymous request buckets, and bounded AI run metadata. None contains user identity, wagering history, prompts, or raw provider responses. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).
+
+## Market coverage observability
+
+`GET /api/odds` retains the paired-moneyline `sportsbookCount` and also returns `marketSportsbookCounts` for supported Cowboys moneyline pairs, Cowboys spreads, and totals. Each count is per contributing bookmaker; the three counts can differ. `oldestReportedMarketUpdate` is the earliest valid provider timestamp reported by contributing books for the requested markets, or null when absent. It does not establish that every quote has a timestamp or that missing events exist upstream. Retrieval and six-hour expiry remain separate application-cache timestamps. Cached payloads from a preceding release may omit the new fields until the next normal refresh. The adapter retains all returned Cowboys events; provider absence is distinct from an unmatched schedule or application error.

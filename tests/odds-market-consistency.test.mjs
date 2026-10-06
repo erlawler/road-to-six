@@ -160,8 +160,8 @@ test("the forecast API uses a next-day UTC event as current market evidence", as
     cacheTtlHours: 6,
     cached: true,
     events: [{
-      commenceTime: "2026-09-14T00:20:00Z",
-      homeTeam: "New York Giants",
+      commenceTime: "2026-10-09T00:15:00Z",
+      homeTeam: "Tampa Bay Buccaneers",
       awayTeam: "Dallas Cowboys",
       cowboysMoneyline: -145,
       opponentMoneyline: 125,
@@ -219,7 +219,7 @@ test("the forecast API uses a next-day UTC event as current market evidence", as
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          gameId: "2026_01_DAL_NYG",
+          gameId: "2026_05_TB_DAL",
           controls: {
             quarterback: 100,
             lamb: 100,

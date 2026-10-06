@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import snapshot from "./data/nfl-snapshot.json";
 import {
   calculateForecast,
@@ -17,6 +17,8 @@ import {
   type OddsEvent,
 } from "@/lib/odds-market.mjs";
 import type { AIReliabilityReceipt } from "@/lib/ai-contract.mjs";
+import { footballSnapshotFreshness } from "@/lib/source-freshness.mjs";
+import { cowboysSeasonState, gameProgress, scenarioContextKey } from "@/lib/season-state.mjs";
 
 import { buildComparisonEvidence, defaultComparisonSelection, selectComparisonEvidence } from "@/lib/scenario-comparison.mjs";
 
@@ -167,13 +169,25 @@ function ProbabilityRing({ value, label }: { value: number; label: string }) {
 export default function Home() {
   const [currentTime, setCurrentTime] = useState<number | null>(null);
   useEffect(() => {
-    setCurrentTime(Date.now());
-    const timer = setInterval(() => setCurrentTime(Date.now()), 60_000);
-    return () => clearInterval(timer);
+    const updateClock = () => setCurrentTime(Date.now());
+    updateClock();
+    const timer = setInterval(updateClock, 60_000);
+    window.addEventListener("pageshow", updateClock);
+    window.addEventListener("focus", updateClock);
+    document.addEventListener("visibilitychange", updateClock);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("pageshow", updateClock);
+      window.removeEventListener("focus", updateClock);
+      document.removeEventListener("visibilitychange", updateClock);
+    };
   }, []);
-  const snapshotAgeDays = currentTime === null ? null
-    : Math.max(0, Math.floor((currentTime - Date.parse(`${snapshot.asOf}T00:00:00Z`)) / 86_400_000));
-  const [selectedGameId, setSelectedGameId] = useState(snapshot.schedule[0].id);
+  const snapshotFreshness = currentTime === null ? null
+    : footballSnapshotFreshness(snapshot, currentTime);
+  const seasonState = useMemo(() => cowboysSeasonState(snapshot,
+    currentTime ?? Date.parse(snapshot.season.verifiedAt)), [currentTime]);
+  const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
+  const [followCurrent, setFollowCurrent] = useState(true);
   const [controls, setControls] = useState<ScenarioControls>(defaultControls);
   const [runtimeResult, setRuntimeResult] = useState<{
     key: string;
@@ -189,7 +203,22 @@ export default function Home() {
   const [marketMetadata, setMarketMetadata] = useState<MarketMetadata | null>(null);
   const [isRefreshingMarkets, setIsRefreshingMarkets] = useState(false);
 
-  const selectedGame = snapshot.schedule.find((game) => game.id === selectedGameId) ?? snapshot.schedule[0];
+  const selectedGame = (!followCurrent && snapshot.schedule.find((game) => game.id === selectedGameId))
+    || seasonState.nextGame || snapshot.schedule[snapshot.schedule.length - 1];
+  const canExplore = seasonState.status === "upcoming"
+    && gameProgress(selectedGame, currentTime ?? Date.parse(snapshot.season.verifiedAt)) === "scheduled";
+  const contextKey = scenarioContextKey(snapshot, seasonState);
+  const previousContext = useRef(contextKey);
+  useEffect(() => {
+    if (previousContext.current === contextKey) return;
+    previousContext.current = contextKey;
+    setFollowCurrent(true);
+    setSelectedGameId(null);
+    setControls(defaultControls);
+    setRuntimeResult(null);
+    setRuntimeStatus("The week or matchup changed. Previous assumptions were cleared; the next verified matchup is selected.");
+  }, [contextKey]);
+  const customAssumptions = Object.values(controls).some((value) => value !== 100);
   const selectedOpponent = snapshot.opponents[selectedGame.opponent as keyof typeof snapshot.opponents];
   const opponentLeader = selectedOpponent?.leaders[0];
   const liveMarket = markets[selectedGame.id];
@@ -209,7 +238,7 @@ export default function Home() {
     }),
     [controls, effectiveGame, opponentLeader?.name],
   );
-  const scenarioKey = `${selectedGame.id}:${controls.quarterback}:${controls.lamb}:${controls.pickens}:${controls.williams}:${controls.defense}:${controls.opponentStar}`;
+  const scenarioKey = `${contextKey}:${selectedGame.id}:${controls.quarterback}:${controls.lamb}:${controls.pickens}:${controls.williams}:${controls.defense}:${controls.opponentStar}`;
   const localExplanation = useMemo(
     () => deterministicExplanation({
       forecast,
@@ -253,7 +282,7 @@ export default function Home() {
   }
 
   async function explainForecast() {
-    if (isExplaining) return;
+    if (isExplaining || !canExplore || !seasonState.current) return;
     setIsExplaining(true);
     setRuntimeStatus("Grounding the explanation in the forecast function...");
     try {
@@ -395,6 +424,7 @@ export default function Home() {
 
       <section className="hero" id="top">
         <div className="hero-copy">
+          <p className="season-kicker">2026 record verified {snapshot.asOf}: {seasonState.record.wins}-{seasonState.record.losses}-{seasonState.record.ties} · {seasonState.completed.length} final, {seasonState.remaining.length} remaining</p>
           <span className="eyebrow">Frontier AI skills showcase</span>
           <h1>Football evidence meets market reality.</h1>
           <p>
@@ -416,7 +446,8 @@ export default function Home() {
           </div>
         </div>
 
-        <article className="hero-forecast" aria-label="Selected game forecast summary">
+        {canExplore ? <article className="hero-forecast" aria-label="Selected game forecast summary">
+          <p className="scenario-context">{currentTime !== null && !seasonState.current ? "Dated snapshot hypothetical" : selectedGame.id === seasonState.nextGame?.id ? "Next Cowboys matchup" : "Future-week hypothetical"}{customAssumptions ? " · Your custom assumptions" : " · Baseline assumptions"}</p>
           <div className="game-kicker">
             <span>Week {selectedGame.week}</span>
             <span>{gameDate(selectedGame.date)}</span>
@@ -435,15 +466,41 @@ export default function Home() {
             Illustrative uncertainty band {percent(displayedForecast.confidenceLow)} to {percent(displayedForecast.confidenceHigh)}
           </p>
           <small>Educational probability, not a recommended bet.</small>
-        </article>
+        </article> : <article className="hero-forecast" aria-label="Season status">
+          <h2>{seasonState.status === "complete" ? "Regular season complete" : "Current result or schedule verification needed"}</h2>
+          <p>Completed outcomes are actual results. A pregame probability is unavailable until the next matchup can be verified.</p>
+        </article>}
+      </section>
+
+      <section className="season-state" aria-labelledby="season-state-title">
+        <h2 id="season-state-title">Start from the season as played</h2>
+        <p><strong>Dallas: {seasonState.record.wins}-{seasonState.record.losses}-{seasonState.record.ties}</strong> from {seasonState.completed.length} verified finals. {seasonState.remaining.length} games remain without a verified final result.</p>
+        <p>Last official result and schedule verification: <time dateTime={snapshot.season.verifiedAt}>{snapshot.season.verifiedAt}</time>. Ratings include completed games through {snapshot.ratingsMetadata.trainedThrough}.</p>
+        <p><a href="https://www.dallascowboys.com/schedule/" target="_blank" rel="noreferrer">Official Cowboys schedule and results</a> · <a href="https://www.nfl.com/teams/dallas-cowboys/" target="_blank" rel="noreferrer">NFL team record</a></p>
+        {seasonState.byeWeek !== null ? <p><strong>Week {seasonState.byeWeek} is the Cowboys bye.</strong> The next-game scenario is separate from this bye week.</p> : null}
+        {seasonState.nextGame ? <p>Next scheduled matchup: <strong>Week {seasonState.nextGame.week}, {seasonState.nextGame.opponentName}</strong>, {new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "America/Chicago" }).format(new Date(seasonState.nextGame.kickoffAt!))} (Dallas time).</p> : null}
+        {seasonState.pending.length ? <p className="source-stale" role="status">Kickoff has passed for Week {seasonState.pending.map((game) => game.week).join(", ")}; a final result is not verified. This is not a live scoreboard. The displayed record may be incomplete and scenarios are paused until the source refresh.</p> : currentTime !== null && !seasonState.current ? <p className="source-stale" role="status">Current season state is not verified. The record and scenario use the dated snapshot below; they must not be read as current.</p> : null}
+        <div className="season-details">
+          <details><summary>Completed results ({seasonState.completed.length})</summary>
+            <table><caption>Actual finals, never changed by scenario controls</caption><thead><tr><th>Week</th><th>Opponent</th><th>Dallas score first</th></tr></thead>
+              <tbody>{seasonState.completed.map((game) => <tr key={game.id}><th scope="row">{game.week}</th><td>{game.opponentName}</td><td>{game.cowboysScore! > game.opponentScore! ? "W" : game.cowboysScore! < game.opponentScore! ? "L" : "T"} {game.cowboysScore}-{game.opponentScore}</td></tr>)}</tbody>
+            </table>
+          </details>
+          <details><summary>Remaining schedule ({seasonState.remaining.length}) and bye</summary>
+            <p>Bye: Week {snapshot.season.byeWeeks.join(", ")}. Future dates remain subject to official schedule changes.</p>
+            <table><caption>Games without a verified final result</caption><thead><tr><th>Week</th><th>Matchup</th><th>Date / status</th></tr></thead>
+              <tbody>{seasonState.remaining.map((game) => <tr key={game.id}><th scope="row">{game.week}</th><td>{game.venue === "home" ? "vs" : game.venue === "away" ? "at" : "neutral vs"} {game.opponentName}</td><td>{game.kickoffAt ? `${gameDate(game.date)}${gameProgress(game, currentTime ?? Date.parse(snapshot.season.verifiedAt)) === "result_pending" ? ": result pending" : ""}` : "TBD: kickoff not confirmed"}</td></tr>)}</tbody>
+            </table>
+          </details>
+        </div>
       </section>
 
       <p className="freshness-note">
         Football and roster snapshot: {snapshot.asOf}.
-        {snapshotAgeDays !== null ? <strong className={snapshotAgeDays > 7 ? "source-stale" : "source-age"}> {snapshotAgeDays} day(s) old{snapshotAgeDays > 7 ? ". Snapshot refresh needed under the weekly review policy." : ". Within the weekly review window."}</strong> : null}
+        {snapshotFreshness ? <strong className={snapshotFreshness.status === "current" ? "source-age" : "source-stale"}> {snapshotFreshness.message}</strong> : null}
         {" "}Historical player baseline: 2025 regular season. Refresh odds separately for current market coverage.
       </p>
-      <section className="market-strip" aria-label="Market snapshot">
+      {canExplore ? <><section className="market-strip" aria-label="Market snapshot">
         <div><span>Dallas moneyline</span><strong>{moneyline(effectiveGame.cowboysMoneyline)}</strong></div>
         <div><span>Spread</span><strong>{spread(effectiveGame.cowboysSpread)}</strong></div>
         <div><span>Total</span><strong>{effectiveGame.totalLine ?? "Pending"}</strong></div>
@@ -456,7 +513,8 @@ export default function Home() {
           <div>
             <span className="eyebrow">Interactive forecast</span>
             <h2>Change assumptions. Keep the evidence visible.</h2>
-            <p id="scenario-disclaimer">Player controls are scenario assumptions, not medical or injury reports.</p>
+            <p id="scenario-disclaimer">Hypothetical participation starts at 100%; this is not a report of current player availability. Completed results and the actual record never change with these controls.</p>
+            <p className="scenario-context">{selectedGame.id === seasonState.nextGame?.id ? `Week ${selectedGame.week}: next-matchup scenario` : `Week ${selectedGame.week}: future-week hypothetical`}. {customAssumptions ? "Custom assumptions are active." : "Baseline assumptions are active."} {currentTime !== null && !seasonState.current ? "Stale snapshot: current-state verification required." : "Uses the verified season results above."}</p>
           </div>
         </div>
 
@@ -466,10 +524,11 @@ export default function Home() {
               <label htmlFor="game-select">Select a Cowboys game</label>
               <select id="game-select" value={selectedGame.id} onChange={(event) => {
                 setSelectedGameId(event.target.value);
+                setFollowCurrent(false);
                 setControls((current) => ({ ...current, opponentStar: 100 }));
                 setRuntimeStatus("Game changed. Generate a new explanation when ready.");
               }} aria-describedby="scenario-disclaimer">
-                {snapshot.schedule.map((game) => (
+                {seasonState.upcoming.map((game) => (
                   <option key={game.id} value={game.id}>
                     Week {game.week}: {game.venue === "home" ? "vs" : game.venue === "away" ? "at" : "neutral vs"} {game.opponentName}
                   </option>
@@ -526,7 +585,8 @@ export default function Home() {
               >
                 Reset scenario
               </button>
-              <small>Dallas assumptions stay in place when you change matchups until you reset them.</small>
+              <button type="button" className="scenario-reset" onClick={() => { setFollowCurrent(true); setSelectedGameId(null); setControls(defaultControls); setRuntimeResult(null); setRuntimeStatus("Returned to the next matchup with baseline assumptions."); }}>Use current matchup</button>
+              <small>Dallas assumptions stay in place during manual matchup changes. Week transitions clear old assumptions. Scenarios are not saved across page loads.</small>
             </div>
 
             <div className="market-refresh">
@@ -603,7 +663,7 @@ export default function Home() {
                 type="button"
                 className="primary-action dark"
                 onClick={explainForecast}
-                disabled={isExplaining}
+                disabled={isExplaining || !seasonState.current}
                 aria-busy={isExplaining}
               >
                 {isExplaining ? "Generating explanation" : "Generate grounded explanation"}
@@ -699,6 +759,8 @@ export default function Home() {
           </article>
         </div>
       </section>
+
+      </> : null}
 
       <section className="players-section" id="players">
         <div className="section-heading compact">
@@ -826,7 +888,7 @@ export default function Home() {
             <span className="eyebrow">AI evaluation release gate</span>
             <h3 id="eval-proof-title">17 of 17 expected outcomes detected.</h3>
             <p>
-              September 7 candidate: evaluation v1.1.0 covers contract integrity and grounded comparison selection.
+              Evaluation v1.1.0 covers contract integrity and grounded comparison selection.
               These are offline safety checks, not proof of user comprehension. The July 27, 2026 live
               scorecard passed four of four AI and deterministic cases under the earlier contract;
               that historical sample does not validate this candidate.

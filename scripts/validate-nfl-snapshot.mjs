@@ -4,6 +4,8 @@ import { createHash } from "node:crypto";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { calculateForecast, DEFAULT_CONTROLS, MODEL_VERSION, MODEL_PARAMETERS } from "../lib/forecast.mjs";
+import { footballSnapshotFreshness } from "../lib/source-freshness.mjs";
+import { cowboysSeasonState, kickoffTimestamp } from "../lib/season-state.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const args = Object.fromEntries(process.argv.slice(2).map((value) => {
@@ -27,6 +29,8 @@ assert.equal(snapshot.asOf, sourceMetadata.validatedAt);
 assert.equal(snapshot.manifest.validatedAt, snapshot.asOf);
 assert.equal(snapshot.manifest.validationStatus, "passed", "A partial data snapshot requires owner review before release");
 assert.deepEqual(snapshot.manifest.limitations, []);
+const freshness = footballSnapshotFreshness(snapshot);
+assert.equal(freshness.status, "current", freshness.message);
 for (const key of ["games", "roster", "stats"]) {
   const source = snapshot.manifest.inputs[key];
   const expected = sourceMetadata.inputs[key];
@@ -42,7 +46,7 @@ for (const key of ["games", "roster", "stats"]) {
   assert.ok(source.retrievedBetween.end.slice(0, 10) <= snapshot.asOf);
   if (args[key]) assert.equal(hash(await readFile(args[key])), source.sha256, `${key} raw input checksum mismatch`);
 }
-assert.equal(snapshot.dataVersion, `nflverse-${snapshot.asOf}-${hash(JSON.stringify(snapshot.manifest.inputs)).slice(0, 12)}`);
+assert.equal(snapshot.dataVersion, `nflverse-${snapshot.asOf}-${hash(JSON.stringify({ inputs: snapshot.manifest.inputs, seasonVerification: sourceMetadata.seasonVerification ?? null })).slice(0, 12)}`);
 const coverage = snapshot.manifest.coverage;
 assert.equal(snapshot.schedule.length, coverage.expectedRegularSeasonGames);
 assert.equal(coverage.scheduleGames, snapshot.schedule.length);
@@ -60,7 +64,31 @@ for (const game of snapshot.schedule) {
   for (const field of ["cowboysMoneyline", "opponentMoneyline"]) assert.ok(game[field] === null || (Math.abs(game[field]) >= 100 && Math.abs(game[field]) <= 10_000), "Invalid American moneyline");
   assert.ok(game.totalLine === null || game.totalLine > 0);
   assert.ok(snapshot.opponents[game.opponent], "Missing scheduled opponent evidence");
+  assert.ok(["final", "scheduled"].includes(game.status));
+  if (game.status === "final") {
+    for (const score of [game.cowboysScore, game.opponentScore]) assert.ok(Number.isInteger(score) && score >= 0, "Final scores must be nonnegative integers");
+    assert.ok(game.date <= snapshot.asOf, "Future game cannot be final");
+  } else {
+    assert.equal(game.cowboysScore, null);
+    assert.equal(game.opponentScore, null);
+  }
 }
+const verified = sourceMetadata.seasonVerification;
+assert.ok(verified && Number.isFinite(Date.parse(verified.verifiedAt)), "Official season verification is required");
+assert.equal(snapshot.season.verifiedAt, verified.verifiedAt);
+assert.deepEqual(snapshot.season.primarySources, verified.sources);
+assert.deepEqual(verified.sources, [
+  "https://www.dallascowboys.com/schedule/",
+  "https://www.nfl.com/teams/dallas-cowboys/",
+], "Official verification must name the exact approved primary URLs");
+const seasonState = cowboysSeasonState(snapshot, Date.parse(verified.verifiedAt));
+assert.deepEqual(seasonState.record, verified.record, "Record differs from official verification");
+assert.deepEqual(seasonState.completed.map(({ week, cowboysScore, opponentScore }) => ({ week, cowboysScore, opponentScore })), verified.completedResults);
+assert.deepEqual(snapshot.season.byeWeeks, verified.byeWeeks);
+assert.deepEqual(seasonState.nextGame ? { week: seasonState.nextGame.week, opponent: seasonState.nextGame.opponent, kickoffAt: seasonState.nextGame.kickoffAt } : null, verified.nextGame);
+for (const game of snapshot.schedule) assert.equal(game.kickoffAt,
+  verified.unconfirmedKickoffWeeks.includes(game.week) ? null : kickoffTimestamp(game.date, game.time));
+assert.ok(cowboysSeasonState(snapshot).current, "Season verification expired or a started game needs a verified result");
 assert.equal(snapshot.players.length, coverage.expectedFeaturedPlayers);
 assert.equal(coverage.featuredPlayers, snapshot.players.length);
 assert.deepEqual(coverage.missingFeaturedPlayers, []);

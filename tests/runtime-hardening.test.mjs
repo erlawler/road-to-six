@@ -4,6 +4,7 @@ import test from "node:test";
 import { MODEL_VERSION } from "../lib/forecast.mjs";
 
 const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
+const testGame = snapshot.schedule.find((game) => game.status === "scheduled" && game.kickoffAt && Date.parse(game.kickoffAt) > Date.parse(snapshot.season.verifiedAt));
 
 const env = {
   THE_ODDS_API_KEY: "test-key",
@@ -106,7 +107,7 @@ function forecastRequest(headers = {}) {
       ...headers,
     },
     body: JSON.stringify({
-      gameId: "2026_01_DAL_NYG",
+      gameId: testGame.id,
       controls: {
         quarterback: 100,
         lamb: 100,
@@ -172,6 +173,30 @@ function groundedAIResponse(requestBody, options = {}) {
   }
   return Response.json(payload);
 }
+
+test("completed, started and unconfirmed games are rejected before any provider or ledger call", async (t) => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => { calls += 1; throw new Error("No provider call allowed"); };
+  const d1 = createD1();
+  try {
+    const worker = await loadWorker("not-upcoming");
+    for (const [id, now] of [["2026_01_DAL_NYG", "2026-10-05T23:00:00Z"], ["2026_05_TB_DAL", "2026-10-09T00:15:00Z"], ["2026_18_DAL_WAS", "2026-10-05T23:00:00Z"]]) {
+      t.mock.timers.enable({ apis: ["Date"], now: Date.parse(now) });
+      const request = forecastRequest();
+      const body = await request.json();
+      const response = await worker.fetch(new Request(request.url, { method: "POST", headers: request.headers, body: JSON.stringify({ ...body, gameId: id }) }), { ...env, DB: d1.db, OPENAI_API_KEY: "test-key" }, ctx);
+      const result = await response.json();
+      assert.equal(response.status, 409);
+      assert.equal(result.reliability.mode, "rejected");
+      assert.equal(result.reliability.fallbackReasonCode, "game_not_upcoming");
+      assert.equal(result.reliability.estimatedCostUsd, 0);
+      t.mock.timers.reset();
+    }
+    assert.equal(calls, 0);
+    assert.equal(d1.calls.length, 0);
+  } finally { globalThis.fetch = originalFetch; t.mock.timers.reset(); }
+});
 
 test("reconciles a request to its reserved month when the provider finishes after UTC rollover", async (t) => {
   const originalFetch = globalThis.fetch;
@@ -246,7 +271,7 @@ test("rejects malformed controls before rate, budget, market, or provider work",
         const request = new Request("http://localhost/api/forecast", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ gameId: "2026_01_DAL_NYG", controls }),
+          body: JSON.stringify({ gameId: testGame.id, controls }),
         });
         const response = await worker.fetch(request, { ...env, DB: d1.db, OPENAI_API_KEY: "test-key" }, ctx);
         const payload = await response.json();
@@ -269,7 +294,7 @@ test("defaults omitted controls and clamps finite numeric scenario values", asyn
     const response = await worker.fetch(new Request("http://localhost/api/forecast", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ gameId: "2026_01_DAL_NYG", controls }),
+      body: JSON.stringify({ gameId: testGame.id, controls }),
     }), { ...env, DB: createD1().db }, ctx);
     const payload = await response.json();
     assert.equal(response.status, 200);
@@ -557,7 +582,7 @@ test("returns a validated AI reliability receipt and privacy-safe ledger row", a
     assert.equal(payload.explanation.mode, "ai");
     assert.equal(
       payload.explanation.summary,
-      `The governed forecast assigns Dallas a ${Math.round(payload.forecast.probability * 100)}% win probability against New York Giants.`,
+      `The governed forecast assigns Dallas a ${Math.round(payload.forecast.probability * 100)}% win probability against ${testGame.opponentName}.`,
     );
     assert.equal(
       payload.explanation.disclaimer,
@@ -591,7 +616,7 @@ test("returns a validated AI reliability receipt and privacy-safe ledger row", a
     assert.equal(payload.reliability.outputTokens, 60);
     assert.equal(payload.reliability.estimatedCostUsd, 0.000107);
     assert.equal(payload.reliability.forecastVersion, MODEL_VERSION);
-    assert.equal(payload.reliability.sourceUpdatedAt, snapshot.schedule.find((game) => game.id === "2026_01_DAL_NYG").sourceUpdatedAt);
+    assert.equal(payload.reliability.sourceUpdatedAt, testGame.sourceUpdatedAt);
     assert.equal(aiCalls, 2);
     assert.equal(d1.reconciliations.length, 1);
     assert.equal(d1.ledgerRows.length, 1);
@@ -708,7 +733,7 @@ test("replaces provider-authored betting language with canonical server copy", a
         assert.equal(payload.explanation.mode, "ai");
         assert.equal(
           payload.explanation.summary,
-          `The governed forecast assigns Dallas a ${Math.round(payload.forecast.probability * 100)}% win probability against New York Giants.`,
+          `The governed forecast assigns Dallas a ${Math.round(payload.forecast.probability * 100)}% win probability against ${testGame.opponentName}.`,
         );
         assert.equal(payload.explanation.summary.includes(providerSummary), false);
         assert.equal(JSON.stringify(payload.explanation).includes(providerSummary), false);

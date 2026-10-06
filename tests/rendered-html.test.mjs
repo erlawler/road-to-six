@@ -3,6 +3,8 @@ import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const templateRoot = new URL("../", import.meta.url);
+const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
+const upcomingGame = snapshot.schedule.find((game) => game.status === "scheduled" && game.kickoffAt);
 
 function customProperties(css) {
   return new Map(
@@ -133,7 +135,15 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /George Pickens participation/);
   assert.match(html, /Javonte Williams participation/);
   assert.match(html, /New York Giants/);
-  assert.match(html, /Jaxson Dart/);
+  assert.match(html, /Tampa Bay Buccaneers/);
+  assert.match(html, /Start from the season as played/);
+  assert.match(html, /Actual finals, never changed by scenario controls/);
+  assert.match(html, /Last official result and schedule verification/);
+  assert.match(html, /TBD: kickoff not confirmed/);
+  const select = html.match(/<select[^>]*id="game-select"[\s\S]*?<\/select>/)?.[0] ?? "";
+  for (const game of snapshot.schedule.filter((game) => game.status === "final" || !game.kickoffAt)) assert.equal(select.includes(game.id), false);
+  assert.equal(select.includes(upcomingGame.id), true);
+  assert.match(html, /Kenny Gainwell/);
   assert.match(html, /Refresh odds/);
   assert.match(html, /Uncertainty to keep in view/);
   assert.match(html, /The Odds API current markets/);
@@ -239,7 +249,7 @@ test("forecast API fails closed without the shared rate-limit ledger", async () 
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
-        gameId: "2026_01_DAL_NYG",
+        gameId: upcomingGame.id,
         controls: { quarterback: 100, lamb: 100, pickens: 100, williams: 100, defense: 100, opponentStar: 100 },
         market: { cowboysMoneyline: -10_000, opponentMoneyline: 10_000 },
       }),
@@ -255,7 +265,7 @@ test("forecast API fails closed without the shared rate-limit ledger", async () 
   assert.equal(payload.explanation.mode, "deterministic");
   assert.equal(payload.forecast.modelVersion, "elo-market-v1.2.0");
   assert.equal(payload.forecast.probability > 0 && payload.forecast.probability < 1, true);
-  assert.equal(payload.forecast.marketImplied < 0.7, true);
+  assert.equal(payload.forecast.marketImplied < 0.9, true);
   assert.equal(payload.marketEvidence.source, "Bundled nflverse market snapshot");
   assert.match(payload.fallbackReason, /rate limit is unavailable/i);
   assert.equal(payload.reliability.mode, "deterministic");

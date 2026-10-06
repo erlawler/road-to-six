@@ -1,6 +1,6 @@
 # Football data provenance and reproducibility
 
-**Validation date:** September 7, 2026. **Status:** Local release candidate. **Owner:** Eric Lawler. This refresh has not been deployed by the flagship improvement work.
+**Validation date:** October 5, 2026. **Status:** Source validation passed. **Owner:** Eric Lawler. Deployment provenance is recorded separately by Sites.
 
 ## Source evidence
 
@@ -8,30 +8,34 @@ The [source manifest](../app/data/source-manifest.json) records the verified sou
 
 | Input | Source update time, UTC | Input rows | SHA-256 prefix |
 |---|---|---:|---|
-| Schedule and historical games | September 7, 08:15:12 | 7,548 | `68f2b4d7e7f7fa5` |
-| Weekly 2026 roster | September 6, 11:28:09 | 2,946 | `5ec59c5228198f57` |
-| Complete 2025 regular-season player stats | August 13, 16:51:50 | 2,020 | `aaa8559478dd8d585` |
+| Schedule and historical games | 2026-10-05T22:45:14Z | 7,548 | `27b28a7ce6023bbf` |
+| Weekly 2026 roster | 2026-10-05T15:58:32Z | 10,612 | `0f72f882f3974ff2` |
+| Complete 2025 regular-season player stats | 2026-08-13T16:51:50Z | 2,020 | `aaa8559478dd8d58` |
 
-All three files were retrieved during the verified September 7 window from 09:02 to 09:11 UTC. No exact per-file retrieval timestamp is claimed. The schedule is pinned to [nflverse commit e2a169b](https://github.com/nflverse/nfldata/commit/e2a169b41f56fb027ca894c930ab75b699a12e68). Roster and stats release assets are mutable URLs; a later download is an exact replay only if its full SHA-256 matches the manifest.
+All three sources were downloaded and checksummed October 5 between 23:07:36 and 23:07:39 UTC. Each input retains its actual retrieval window. GitHub release-asset digests independently matched the roster and statistics downloads. The schedule is pinned to [nflverse commit c3d49fb](https://github.com/nflverse/nfldata/commit/c3d49fba205cf241b8465609a1155e3f3c7d1f23). Roster and stats release assets are mutable URLs; a later download is an exact replay only if its full SHA-256 matches the manifest. The 2025 statistics bytes are unchanged from the prior verified release.
 
-`sourceUpdatedAt` describes the source file or commit, not an individual quote or player-record update. `validatedAt` is the date of the check. `retrievedBetween` is the observed download window. `ratingsMetadata.trainedThrough` separately records January 4, 2026, the final completed 2025 regular-season game used for ratings. The preseason regression prepares those ratings for season 2026; it does not imply that 2026 games have been observed.
+`sourceUpdatedAt` describes the source file or commit, not an individual quote or player-record update. `validatedAt` is the date of the check. `retrievedBetween` is the observed download window. `ratingsMetadata.trainedThrough` records October 4, 2026. Current-season completed games update serving ratings after preseason regression; the retrospective holdout remains fixed to the documented 2024 to 2025 window. The refresh does not add current-season outcomes to that historical comparison.
 
 ## Validation and coverage
+
+The official [Cowboys schedule and results](https://www.dallascowboys.com/schedule/) and [NFL team record](https://www.nfl.com/teams/dallas-cowboys/) were manually cross-checked at **2026-10-05T23:04:41Z**. Dallas was 2-2-0: losses 20-28 at New York and 31-34 against Baltimore, wins 37-20 against Washington and 34-30 at Houston. Four finals leave 13 regular-season games. The next matchup is Week 5 against Tampa Bay, October 8 at 7:15 p.m. CDT (October 9 at 00:15 UTC). Week 14 is a bye. Week 18 is officially TBD; its nflverse date/time is provisional and is not offered as a confirmed forecast.
+
+`seasonVerification` in the source manifest records those facts, primary source links, verification time, and unconfirmed kickoffs. The release validator independently compares normalized scores, record, next kickoff, and bye against that review. The data version includes this verification record as well as the input hashes. This is manual primary-source corroboration of the approved nflverse ingestion, not a new scraped feed or a live scoreboard. Reverify and update the record with every new final or schedule change.
 
 The builder rejects malformed CSV widths, duplicate game IDs, conflicting same-week player IDs, duplicate season-stat player IDs, malformed numeric fields, mismatched source hashes, and inconsistent source dates. It excludes completed outcomes after the validation date. It selects the forecast season, uses only roster weeks that have started, and admits week 1 preseason. Within the latest eligible week it deduplicates identical stable player IDs, then filters active status. It does not revive a prior-week active record when a newer row is inactive or missing.
 
 The player baseline must be from a prior season whose listed regular-season schedule is complete by the validation date. Player statistics join by stable ID. Opponent cards rank active roster players with prior-season statistics by PPR, using stable ID as a deterministic tie-breaker.
 
-Verified September 7 coverage:
+Verified October 5 coverage:
 
 - 17 of 17 Cowboys regular-season games.
 - Eight of eight featured Cowboys players.
 - Four leaders for each of 14 distinct opponents, 56 cards in total.
-- Season 2026, roster week 1, and complete 2025 player baselines.
+- Season 2026, roster week 4, and complete 2025 player baselines.
 - One unidentified roster row and one unidentified stats row excluded and counted. Neither leaves a featured-player or opponent-leader gap.
 - 544 of 544 holdout games have paired historical moneylines.
 
-Missing featured players, incomplete opponent cards, a lagging roster week, or missing source metadata produce `validationStatus: partial` and explicit limitations. The separate release validator rejects a partial snapshot. Source metadata and completeness are not a timer-based freshness guarantee; the proposed operating targets are in [data-freshness-policy.md](data-freshness-policy.md). No new scheduled refresh or production deployment is created by the builder.
+Missing featured players, incomplete opponent cards, a lagging roster week, or missing source metadata produce `validationStatus: partial` and explicit limitations. The separate release validator rejects a partial snapshot and checks the seven-day review window against the current clock. The browser uses the same bounded review check and reports stale or unavailable evidence. See [data-freshness-policy.md](data-freshness-policy.md). No new scheduled refresh or production deployment is created by the builder.
 
 ## Reproduce and verify
 
@@ -43,7 +47,7 @@ node scripts/build-nfl-snapshot.mjs \
   --roster=/absolute/path/roster_weekly_2026.csv \
   --stats=/absolute/path/stats_player_reg_2025.csv \
   --source-metadata=app/data/source-manifest.json \
-  --as-of=2026-09-07 \
+  --as-of=2026-10-05 \
   --season=2026
 node scripts/validate-nfl-snapshot.mjs
 ```

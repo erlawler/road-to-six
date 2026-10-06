@@ -1,7 +1,7 @@
 # Product Brief: Road to Six Market Context Lab
 
-**Status:** Public v1.0.0 product; September 7, 2026 candidate improvements are undeployed.
-**Current evidence:** [Candidate review](flagship-candidate-2026-09-07.md); [source freshness policy](data-freshness-policy.md).
+**Status:** Public product; football source validation refreshed October 5, 2026.
+**Current evidence:** [Source provenance](data-provenance.md); [source freshness policy](data-freshness-policy.md). Historical September candidate validation remains in its dated review.
 **Owner:** Eric Lawler  
 **Product type:** Public technical product management and frontier AI skills showcase
 **Audience:** Technical product managers, AI product leaders, platform and engineering partners, analytics practitioners, product peers, and football fans
@@ -109,4 +109,4 @@ The weakest dimension is effort. Improve it with staged free-data adapters, a sm
 
 ## Launch decision
 
-The public GitHub repository, `v1.0.0` tag, GitHub release, and [public product](https://road-to-six-erl.erlrickylre.chatgpt.site) are available for review. As of September 7, production remains Sites version 16 at main commit `57b170f`. The July release passed its recorded 76-test suite, 12-case AI evaluation, bounded live scorecard, and release checks. These are historical results. The September candidate must independently pass typecheck, lint, tests, AI evaluation, build, and dependency review, followed by approved release and production verification. Its proposed comprehension study has no participants or results yet.
+The public GitHub repository, original `v1.0.0` release, and [public product](https://road-to-six-erl.erlrickylre.chatgpt.site) are available for review. Production deployments retain exact source provenance in Sites. October 5 maintenance incorporates the reviewed dependency repair and refreshed schedule, roster, and serving ratings. Release acceptance requires current typecheck, lint, tests, AI evaluation, build, dependency audit, and source validation. Historical green results are not current validation. Human comprehension and adoption outcomes remain unmeasured.
