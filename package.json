@@ -16,7 +16,7 @@
     "test": "npm run build && node --test tests/*.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "typecheck": "tsc --noEmit --incremental false",
-    "data:validate": "node scripts/validate-nfl-snapshot.mjs"
+    "data:validate": "node scripts/validate-nfl-snapshot.mjs --at-verification"
   },
   "dependencies": {
     "next": "16.3.6",

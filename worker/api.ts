@@ -1,5 +1,7 @@
-import snapshot from "../app/data/nfl-snapshot.json";
-import { gameProgress } from "../lib/season-state.mjs";
+import bundledSnapshot from "../app/data/nfl-snapshot.json";
+import { readFootballState } from "../lib/football-store.mjs";
+import { footballSnapshotFreshness } from "../lib/source-freshness.mjs";
+import { gameProgress, cowboysSeasonState } from "../lib/season-state.mjs";
 import {
   AI_BUDGET_SCHEMA_SQL,
   AI_RUN_LEDGER_INDEX_SCHEMA_SQL,
@@ -58,7 +60,7 @@ type AIBudgetStatusRow = {
   updated_at: string;
 };
 
-type SnapshotGame = (typeof snapshot.schedule)[number];
+type SnapshotGame = (typeof bundledSnapshot.schedule)[number];
 
 type BudgetReservation =
   | { ok: true; reservedMicros: number; month: string }
@@ -175,6 +177,8 @@ const FALLBACK_REASON_MESSAGES: Record<AIFallbackReasonCode, string> = {
   invalid_json: "Invalid JSON body",
   invalid_controls: "Scenario controls must be finite numbers in a JSON object",
   unknown_game: "Unknown game",
+  football_version_changed: "Football data changed. Reload the current scenario before requesting an explanation.",
+  football_snapshot_stale: "Football state is dated or the latest refresh failed. Verify current data before requesting an explanation.",
   game_not_upcoming: "This game is final, has started, or has no confirmed kickoff. Refresh the season state before requesting a pregame explanation.",
 };
 
@@ -270,7 +274,7 @@ function reliabilityReceipt(input: {
     outputTokens: Math.max(0, input.outputTokens ?? 0),
     estimatedCostUsd: Math.max(0, input.estimatedCostMicros ?? 0) / 1_000_000,
     fallbackReasonCode: input.fallbackReasonCode,
-    sourceUpdatedAt: input.sourceUpdatedAt ?? snapshot.asOf,
+    sourceUpdatedAt: input.sourceUpdatedAt ?? bundledSnapshot.asOf,
   };
 }
 
@@ -682,7 +686,7 @@ function normalizeControls(input: unknown): ScenarioControls | null {
   };
 }
 
-function getGame(gameId: unknown) {
+function getGame(gameId: unknown, snapshot: typeof bundledSnapshot) {
   return snapshot.schedule.find((game) => game.id === gameId) ?? null;
 }
 
@@ -710,7 +714,7 @@ function bundledMarketContext(game: SnapshotGame): {
   };
 }
 
-async function resolveTrustedMarket(env: RuntimeEnv, game: SnapshotGame): Promise<{
+async function resolveTrustedMarket(env: RuntimeEnv, game: SnapshotGame, snapshot: typeof bundledSnapshot): Promise<{
   game: SnapshotGame & { marketImpliedProbability?: number | null };
   evidence: MarketEvidence;
 }> {
@@ -738,7 +742,7 @@ async function resolveTrustedMarket(env: RuntimeEnv, game: SnapshotGame): Promis
   };
 }
 
-function makeForecast(game: SnapshotGame, controls: ScenarioControls) {
+function makeForecast(game: SnapshotGame, controls: ScenarioControls, snapshot: typeof bundledSnapshot) {
   const opponent = snapshot.opponents[game.opponent as keyof typeof snapshot.opponents];
   return calculateForecast({
     game: {
@@ -1007,6 +1011,8 @@ async function forecastResponse(request: Request, env: RuntimeEnv) {
       | "invalid_controls"
       | "unknown_game"
       | "game_not_upcoming"
+      | "football_version_changed"
+      | "football_snapshot_stale"
     >,
     status: number,
   ) => terminalForecastResponse(
@@ -1051,15 +1057,22 @@ async function forecastResponse(request: Request, env: RuntimeEnv) {
     return rejected("invalid_json", 400);
   }
 
-  const snapshotGame = getGame(body.gameId);
-  if (!snapshotGame) return rejected("unknown_game", 400);
   const controls = normalizeControls(body.controls);
   if (!controls) return rejected("invalid_controls", 400);
+  if (typeof body.gameId !== "string" || !/^\d{4}_\d{2}_[A-Z]{2,3}_[A-Z]{2,3}$/.test(body.gameId)) return rejected("unknown_game", 400);
+  // Known final outcomes can be rejected before any database or provider work.
+  if (getGame(body.gameId, bundledSnapshot)?.status === "final") return rejected("game_not_upcoming", 409);
+  const football = await readFootballState(env, bundledSnapshot);
+  const snapshot = football.snapshot;
+  const snapshotGame = getGame(body.gameId, snapshot);
+  if (!snapshotGame) return rejected("unknown_game", 400);
+  if (body.dataVersion !== undefined && body.dataVersion !== snapshot.dataVersion) return rejected("football_version_changed", 409);
   if (gameProgress(snapshotGame) !== "scheduled") return rejected("game_not_upcoming", 409);
+  if (footballSnapshotFreshness(snapshot).status !== "current" || !cowboysSeasonState(snapshot).current || football.update.status === "failed" || (football.update.status === "unavailable" && Boolean(env.DB))) return rejected("football_snapshot_stale", 409);
   const buildScenario = (
     context: Awaited<ReturnType<typeof resolveTrustedMarket>>,
   ) => {
-    const forecast = makeForecast(context.game, controls);
+    const forecast = makeForecast(context.game, controls, snapshot);
     const fallback = deterministicExplanation({
       forecast,
       game: {
@@ -1130,7 +1143,7 @@ async function forecastResponse(request: Request, env: RuntimeEnv) {
     return fallbackResponse(bundledScenario, "ai_not_configured");
   }
 
-  const scenario = buildScenario(await resolveTrustedMarket(env, snapshotGame));
+  const scenario = buildScenario(await resolveTrustedMarket(env, snapshotGame, snapshot));
   const { game, marketEvidence, forecast } = scenario;
   const reservation = await reserveBudget(env);
   if (!reservation.ok) {

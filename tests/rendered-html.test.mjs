@@ -4,6 +4,7 @@ import test from "node:test";
 
 const templateRoot = new URL("../", import.meta.url);
 const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
+test.beforeEach((t) => t.mock.timers.enable({ apis: ["Date"], now: Date.parse(snapshot.manifest.inputs.roster.retrievedBetween.end) + 60_000 }));
 const upcomingGame = snapshot.schedule.find((game) => game.status === "scheduled" && game.kickoffAt);
 
 function customProperties(css) {
@@ -104,7 +105,7 @@ test("small section labels meet WCAG normal-text contrast thresholds", async () 
 test("stylesheet custom-property references resolve", async () => {
   const [css, page] = await Promise.all([
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/football-lab.tsx", import.meta.url), "utf8"),
   ]);
   const definitions = new Set(customProperties(css).keys());
   const externallyAssigned = new Set(["probability"]);
@@ -278,7 +279,7 @@ test("forecast API fails closed without the shared rate-limit ledger", async () 
 
 test("removes disposable starter content", async () => {
   const [page, layout, packageJson] = await Promise.all([
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/football-lab.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);

@@ -62,7 +62,7 @@ The product name is grounded in the Dallas Cowboys' five Super Bowl championship
 - Official team analysis or endorsement
 - User accounts, saved scenarios, or gated exploration
 - Bettor ticket percentages, money percentages, and paid sports-data feeds
-- Unlicensed logos, headshots, player likenesses, or scraped NFL.com content
+- Unlicensed logos, headshots, player likenesses, or republished NFL.com page content; official pages are consulted only to verify schedule and result facts
 
 ## Success measures
 

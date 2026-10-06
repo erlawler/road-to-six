@@ -21,7 +21,9 @@ export type AIFallbackReasonCode =
   | "invalid_json"
   | "invalid_controls"
   | "unknown_game"
-  | "game_not_upcoming";
+  | "game_not_upcoming"
+  | "football_version_changed"
+  | "football_snapshot_stale";
 
 export type AIReliabilityMode = "ai" | "deterministic" | "rejected";
 

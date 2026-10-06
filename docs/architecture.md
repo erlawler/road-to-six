@@ -2,7 +2,7 @@
 
 ## Answer
 
-The public product is an anonymous Market Context Lab with server-side data adapters, a versioned nflverse snapshot, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI endpoint, and an inspectable reliability receipt. October 5 maintenance refreshes the approved football sources and preserves the retrospective holdout. Exact deployment commits are recorded in Sites. Historical release results remain dated evidence; current source validation belongs in [data provenance](data-provenance.md). No account or identity layer is introduced.
+The public product is an anonymous Market Context Lab with server-side data adapters, a validated D1 football snapshot with a versioned bundled fallback, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI endpoint, and an inspectable reliability receipt. October 5 maintenance refreshes the approved football sources and preserves the retrospective holdout. Exact deployment commits are recorded in Sites. Historical release results remain dated evidence; current source validation belongs in [data provenance](data-provenance.md). Public exploration remains anonymous. The separate hosted football updater uses the approved owner identity only for authorization.
 
 Showcase evidence:
 
@@ -127,8 +127,14 @@ The repository uses:
 
 ## Implementation boundary
 
-Visitor authentication and saved scenarios remain out of scope. A separate operator bearer token protects the aggregate budget status used by production monitoring. Persistence is limited to normalized odds cache data, refresh controls, aggregate AI cost, anonymous request buckets, and bounded AI run metadata. None contains user identity, wagering history, prompts, or raw provider responses. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).
+Visitor authentication and saved scenarios remain out of scope. A separate operator bearer token protects the aggregate budget status used by production monitoring. Persistence is limited to the validated football snapshot, normalized odds cache data, refresh controls, aggregate AI cost, anonymous request buckets, and bounded AI run metadata. None contains user identity, wagering history, prompts, or raw provider responses. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).
 
 ## Market coverage observability
 
 `GET /api/odds` retains the paired-moneyline `sportsbookCount` and also returns `marketSportsbookCounts` for supported Cowboys moneyline pairs, Cowboys spreads, and totals. Each count is per contributing bookmaker; the three counts can differ. `oldestReportedMarketUpdate` is the earliest valid provider timestamp reported by contributing books for the requested markets, or null when absent. It does not establish that every quote has a timestamp or that missing events exist upstream. Retrieval and six-hour expiry remain separate application-cache timestamps. Cached payloads from a preceding release may omit the new fields until the next normal refresh. The adapter retains all returned Cowboys events; provider absence is distinct from an unmatched schedule or application error.
+
+## Hosted weekly football data
+
+The Worker and server-rendered page share a request-local football snapshot loaded from D1. The public `/api/football` reader exposes the same schema; the client rechecks on focus and at five-minute intervals without fetching vendors. A data-version change resets stale scenario assumptions, and a mismatched forecast request is rejected before provider work.
+
+The Site-hosted `/mcp` service exposes only owner-authorized football status and refresh operations. Sites-managed OAuth supplies trusted identity; a server-side owner email allowlist restricts data-bearing calls. Anonymous writes, service-only access without user identity, other users, and arbitrary updater arguments are denied. The existing public audience, AI/odds configuration, and budget controls are preserved. A one-hour shared cooldown and expiring D1 lease bound update work. One conditional statement publishes the complete validated payload. Existing D1 tables and migrations are unchanged; football storage is an additive migration. See [weekly update operations](weekly-football-updates.md).
