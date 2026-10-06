@@ -62,3 +62,18 @@ export const AI_RUN_LEDGER_INDEX_SCHEMA_SQL = `
 CREATE INDEX IF NOT EXISTS idx_ai_run_ledger_created_at
 ON ai_run_ledger (created_at)
 `;
+
+export const FOOTBALL_STATE_SCHEMA_SQL = `
+CREATE TABLE IF NOT EXISTS football_state (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  payload TEXT,
+  data_version TEXT,
+  content_hash TEXT,
+  last_success_at TEXT,
+  last_attempt_at TEXT NOT NULL,
+  last_error TEXT,
+  lease_token TEXT,
+  lease_expires_at INTEGER NOT NULL DEFAULT 0,
+  cooldown_until INTEGER NOT NULL DEFAULT 0
+);
+`;

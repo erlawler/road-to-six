@@ -2,6 +2,10 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 import { handleApiRequest } from "./api";
+import { handleFootballMcp } from "./football-mcp";
+import { readFootballState } from "../lib/football-store.mjs";
+import { footballRequestContext } from "../lib/football-context";
+import bundledSnapshot from "../app/data/nfl-snapshot.json";
 
 interface Env {
   ASSETS: Fetcher;
@@ -11,6 +15,7 @@ interface Env {
   OPENAI_MODEL?: string;
   AI_MONTHLY_BUDGET_USD?: string;
   BUDGET_STATUS_TOKEN?: string;
+  FOOTBALL_UPDATER_OWNER_EMAIL?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -55,6 +60,12 @@ const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
+    if (url.pathname === "/mcp") return handleFootballMcp(request, env);
+    if (url.pathname === "/api/football") {
+      if (request.method !== "GET") return new Response(null, { status: 405, headers: { Allow: "GET" } });
+      const state = await readFootballState(env, bundledSnapshot);
+      return Response.json(state, { headers: { "Cache-Control": "no-store", "X-Football-Data-Version": state.snapshot.dataVersion, "X-Content-Type-Options": "nosniff" } });
+    }
     if (url.pathname.startsWith("/api/")) {
       return handleApiRequest(request, env);
     }
@@ -80,8 +91,11 @@ const worker = {
       }, allowedWidths);
     }
 
-    const response = await handler.fetch(request, env, ctx);
+    const response = url.pathname === "/"
+      ? await footballRequestContext.run(await readFootballState(env, bundledSnapshot), () => handler.fetch(request, env, ctx))
+      : await handler.fetch(request, env, ctx);
     const headers = new Headers(response.headers);
+    if (url.pathname === "/") headers.set("Cache-Control", "no-store");
     headers.set("Content-Security-Policy", CONTENT_SECURITY_POLICY);
     headers.set("Cross-Origin-Opener-Policy", "same-origin");
     headers.set("Cross-Origin-Resource-Policy", "same-origin");

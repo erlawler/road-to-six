@@ -1,7 +1,7 @@
 # Source freshness and coverage policy
 
 **Updated:** October 5, 2026
-**Scope:** Football review freshness is enforced in release validation and browser status. No scheduled source refresh exists.
+**Scope:** Football freshness is enforced by the authenticated hosted updater, shared data reader, forecast API, and browser. See [weekly update operations](weekly-football-updates.md) for activation and verification requirements.
 **Owner:** Eric Lawler owns source review and release acceptance. Codex can prepare source comparisons and validated candidate artifacts within authorized scope.
 
 ## Interpret timestamps correctly
@@ -19,7 +19,7 @@ Use upstream publication or commit time only when recorded by the source. Use re
 
 The 7-day and 24-hour targets are product operating choices, not vendor service guarantees. A monthly health check alone does not satisfy an in-season weekly freshness target. No new automation, source subscription, or deployment is created by this policy.
 
-`npm run data:validate` now rejects a snapshot when the oldest of its validation date (UTC midnight), schedule retrieval, and roster retrieval is more than seven days old. Missing, future, partial, or inconsistent review evidence fails closed. The browser shares this check and reevaluates it each minute; changing only the validation date cannot renew old retrieval evidence. The completed 2025 statistical baseline is deliberately excluded from the seven-day review-age test. Its checksum and provenance remain validated separately. Source review is not a claim that every provider record changed that day, and a live odds refresh never renews football review evidence. The selected-game 24-hour pre-kickoff review remains an operator responsibility.
+`npm run data:validate` validates the immutable bundled fallback at its recorded verification time, including hashes, joins, model calculations, and official evidence consistency. It makes no claim that this fallback is current today. Every hosted refresh uses the same validator with the actual current time and rejects stale, future, incomplete, or conflicting evidence before publication. The public page and forecast API read the same D1 version; a failed data read is visible and cannot silently renew the source dates. Precise review and retrieval timestamps determine the seven-day window for hosted data, avoiding premature expiration at UTC midnight. Legacy bundled data retains its conservative date-only age. Completed 2025 player statistics remain explicitly historical.
 
 ## Current season and scenario behavior
 
@@ -29,13 +29,13 @@ The next Cowboys matchup is distinct from the league calendar week, which runs T
 
 Scenarios are held in memory only. On page load the next eligible matchup and baseline controls are selected. Manual matchup changes retain Dallas assumptions, label them as custom, and reset the opponent control. A data-version, week, or automatic matchup transition invalidates the prior AI response and clears old controls with a visible explanation. The clock is checked each minute and on focus, visibility, and page restoration. The 100% baseline is a hypothetical participation assumption, never a claim about current player availability.
 
-## Ongoing refresh proposal, not enabled
+## Weekly hosted refresh
 
-No source-content refresh job exists in this repository or Site. CI validates checked-in data on PRs and main pushes; the scheduled CodeQL run scans code. The separate monthly health check can detect maintenance gaps but does not ingest and publish current football content. The six-hour odds cache only updates markets on demand and cannot update game results, rosters, ratings, or the default scenario.
+The approved cadence is Wednesday at 8 a.m. America/Chicago, using a Site-linked cloud task and the owner-only football updater. The supported connection, controlled update/readback, and saved schedule must be verified before calling it enabled. Its source and publication operations require no Mac and no paid AI or odds calls. The separate monthly health check is preserved.
 
-The minimum maintenance loop is a verified football rebuild after each Cowboys final and a schedule check within 24 hours of the next kickoff, including bye weeks and flex changes. An unattended experience needs a content refresh pipeline that downloads approved free inputs, verifies the official record and next matchup, rebuilds ratings and snapshots, passes the existing checks, and publishes only the reviewed candidate. Changing a date or creating a reminder alone cannot make the site current.
+On success the updater atomically replaces the football snapshot and verification evidence in D1. On failure it retains the last good payload and successful timestamp, records failure status, and notifies the owner. Public readers see dated evidence and a warning. The updater validates all final scores, actual record, remaining schedule, official next kickoff, bye/TBD weeks, roster coverage, and rating calculations. Scenario controls remain hypothetical and cannot change actual results.
 
-Proposed recurring preparation, requiring owner approval: every day at 8:00 a.m. America/Chicago during the regular season, check free source publication metadata and primary schedule/results; prepare a tested PR when content changes and flag missing results or inconsistent sources. No paid AI tests or odds calls. The morning after every game captures the normal result refresh; a failed or delayed source check must remain visible. Confirm the owner, end date, and approval/publication path before enabling it. Automatic merging, deployment, credentials, or broader access would require separate authorization. No schedule or recurring job is created by this change.
+Wednesday-only operation means weekend results may remain pending until Wednesday. A kickoff that has passed without a verified final pauses scenarios. The site is not a live scoreboard, injury report, or automatic current-season player-performance model. The 24-hour pre-kickoff recommendation for a demonstration remains separate from the owner's chosen weekly cadence; no extra daily schedule is implied.
 
 ## Coverage decision rules
 

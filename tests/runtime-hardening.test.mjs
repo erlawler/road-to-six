@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import test from "node:test";
+import test, { mock } from "node:test";
 import { MODEL_VERSION } from "../lib/forecast.mjs";
 
 const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
@@ -10,6 +10,9 @@ const env = {
   THE_ODDS_API_KEY: "test-key",
   ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) },
 };
+test.beforeEach(() => { mock.timers.reset(); mock.timers.enable({ apis: ["Date"], now: Date.parse(snapshot.manifest.inputs.roster.retrievedBetween.end) + 60_000 }); });
+test.afterEach(() => mock.timers.reset());
+
 const ctx = { waitUntil() {}, passThroughOnException() {} };
 
 async function loadWorker(label) {
@@ -42,6 +45,7 @@ function createD1(options = {}) {
         },
         async first() {
           calls.push({ operation: "first", sql, values });
+          if (sql.includes("FROM football_state")) return options.footballSnapshot ? { payload: JSON.stringify(options.footballSnapshot), data_version: options.footballSnapshot.dataVersion } : null;
           if (sql.includes("FROM odds_cache")) return null;
           if (sql.includes("INSERT INTO ai_rate_limit_window")) {
             return state.rateAllowed ? { request_count: 1 } : null;
@@ -174,7 +178,7 @@ function groundedAIResponse(requestBody, options = {}) {
   return Response.json(payload);
 }
 
-test("completed, started and unconfirmed games are rejected before any provider or ledger call", async (t) => {
+test("completed, started and unconfirmed games are rejected before any provider or ledger call", async () => {
   const originalFetch = globalThis.fetch;
   let calls = 0;
   globalThis.fetch = async () => { calls += 1; throw new Error("No provider call allowed"); };
@@ -182,7 +186,8 @@ test("completed, started and unconfirmed games are rejected before any provider 
   try {
     const worker = await loadWorker("not-upcoming");
     for (const [id, now] of [["2026_01_DAL_NYG", "2026-10-05T23:00:00Z"], ["2026_05_TB_DAL", "2026-10-09T00:15:00Z"], ["2026_18_DAL_WAS", "2026-10-05T23:00:00Z"]]) {
-      t.mock.timers.enable({ apis: ["Date"], now: Date.parse(now) });
+      mock.timers.reset();
+      mock.timers.enable({ apis: ["Date"], now: Date.parse(now) });
       const request = forecastRequest();
       const body = await request.json();
       const response = await worker.fetch(new Request(request.url, { method: "POST", headers: request.headers, body: JSON.stringify({ ...body, gameId: id }) }), { ...env, DB: d1.db, OPENAI_API_KEY: "test-key" }, ctx);
@@ -191,22 +196,28 @@ test("completed, started and unconfirmed games are rejected before any provider 
       assert.equal(result.reliability.mode, "rejected");
       assert.equal(result.reliability.fallbackReasonCode, "game_not_upcoming");
       assert.equal(result.reliability.estimatedCostUsd, 0);
-      t.mock.timers.reset();
+      mock.timers.reset();
     }
     assert.equal(calls, 0);
-    assert.equal(d1.calls.length, 0);
-  } finally { globalThis.fetch = originalFetch; t.mock.timers.reset(); }
+    assert.ok(d1.calls.every((call) => call.operation === "first" && call.sql.includes("FROM football_state")));
+  } finally { globalThis.fetch = originalFetch; mock.timers.reset(); }
 });
 
-test("reconciles a request to its reserved month when the provider finishes after UTC rollover", async (t) => {
+test("reconciles a request to its reserved month when the provider finishes after UTC rollover", async () => {
   const originalFetch = globalThis.fetch;
-  t.mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-09-30T23:59:59Z") });
-  const d1 = createD1({ budgetBalances: { "2026-10": 200_000 } });
+  mock.timers.reset();
+  mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-09-30T23:59:59Z") });
+  const current = structuredClone(snapshot);
+  current.asOf = current.manifest.validatedAt = "2026-09-30";
+  current.season.verifiedAt = "2026-09-30T20:00:00Z";
+  for (const key of ["games", "roster"]) Object.assign(current.manifest.inputs[key], { sourceUpdatedAt: "2026-09-30T19:00:00Z", retrievedBetween: { start: "2026-09-30T19:30:00Z", end: "2026-09-30T19:31:00Z" } });
+  for (const game of current.schedule.filter((game) => game.date > current.asOf)) Object.assign(game, { status: "scheduled", cowboysScore: null, opponentScore: null });
+  const d1 = createD1({ budgetBalances: { "2026-10": 200_000 }, footballSnapshot: current });
   let providerCalls = 0;
   globalThis.fetch = async (_input, init) => {
     providerCalls += 1;
     if (providerCalls === 1) return firstAIResponse();
-    t.mock.timers.setTime(Date.parse("2026-10-01T00:00:01Z"));
+    mock.timers.setTime(Date.parse("2026-10-01T00:00:01Z"));
     return groundedAIResponse(JSON.parse(init.body));
   };
   try {
@@ -224,7 +235,7 @@ test("reconciles a request to its reserved month when the provider finishes afte
     assert.equal(payload.reliability.estimatedCostUsd, 0.000132);
   } finally {
     globalThis.fetch = originalFetch;
-    t.mock.timers.reset();
+    mock.timers.reset();
   }
 });
 
