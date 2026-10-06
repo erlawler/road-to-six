@@ -11,12 +11,12 @@ const snapshot = () => ({
   asOf: "2026-10-05",
   manifest: {
     validatedAt: "2026-10-05", validationStatus: "passed",
-    inputs: { games: structuredClone(source), roster: structuredClone(source), stats: { sourceUpdatedAt: "2026-08-13T16:51:50Z" } },
+    inputs: { games: structuredClone(source), roster: structuredClone(source), stats: structuredClone(source) },
   },
 });
 const at = (date) => Date.parse(date);
 
-test("football review expires at the seven-day boundary independently of historical stats", () => {
+test("football review expires at the seven-day boundary including current-season stats", () => {
   const data = snapshot();
   assert.equal(footballSnapshotFreshness(data, at("2026-10-05T18:00:00Z")).status, "current");
   assert.equal(footballSnapshotFreshness(data, at("2026-10-12T00:00:00Z")).status, "current");
@@ -27,6 +27,15 @@ test("changing the validation date cannot renew old source retrievals", () => {
   const data = snapshot();
   data.asOf = data.manifest.validatedAt = "2026-10-13";
   assert.equal(footballSnapshotFreshness(data, at("2026-10-13T18:00:00Z")).status, "stale");
+});
+
+test("fresh roster and schedule cannot hide an expired current-season stats review", () => {
+  const data = snapshot();
+  data.manifest.inputs.stats.sourceUpdatedAt = "2026-09-27T06:00:00Z";
+  data.manifest.inputs.stats.retrievedBetween = { start: "2026-09-27T09:00:00Z", end: "2026-09-27T09:01:00Z" };
+  assert.equal(footballSnapshotFreshness(data, at("2026-10-05T18:00:00Z")).status, "stale");
+  delete data.manifest.inputs.stats;
+  assert.equal(footballSnapshotFreshness(data, at("2026-10-05T18:00:00Z")).status, "unavailable");
 });
 
 test("future, malformed, partial, and missing review evidence never claim freshness", () => {

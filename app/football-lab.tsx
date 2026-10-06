@@ -134,26 +134,26 @@ function latencyLabel(value?: number) {
 }
 
 function playerEvidence(player: Player) {
-  if (!player.stats || !player.statsSeason) return "2026 active roster";
+  if (!player.stats) return `${player.statsSeason} stats not yet available`;
   if (player.position === "QB") {
-    return `${player.stats.passingYards.toLocaleString()} pass yds, ${player.stats.passingTds} pass TD in ${player.statsSeason}`;
+    return `${player.stats.passingYards.toLocaleString()} pass yds, ${player.stats.passingTds} pass TD in ${player.statsSeason} to date`;
   }
   if (["WR", "TE"].includes(player.position)) {
-    return `${player.stats.receptions} rec, ${player.stats.receivingYards.toLocaleString()} yds in ${player.statsSeason}`;
+    return `${player.stats.receptions} rec, ${player.stats.receivingYards.toLocaleString()} yds in ${player.statsSeason} to date`;
   }
   if (player.position === "RB") {
-    return `${player.stats.rushingYards.toLocaleString()} rush yds, ${player.stats.receptions} rec in ${player.statsSeason}`;
+    return `${player.stats.rushingYards.toLocaleString()} rush yds, ${player.stats.receptions} rec in ${player.statsSeason} to date`;
   }
   if (player.position === "K") {
-    return `${player.stats.fgMade} of ${player.stats.fgAttempts} FG in ${player.statsSeason}`;
+    return `${player.stats.fgMade} of ${player.stats.fgAttempts} FG in ${player.statsSeason} to date`;
   }
   if (["DL", "DT", "DE"].includes(player.position)) {
-    return `${player.stats.defSacks} sacks, ${player.stats.defQbHits} QB hits in ${player.statsSeason}`;
+    return `${player.stats.defSacks} sacks, ${player.stats.defQbHits} QB hits in ${player.statsSeason} to date`;
   }
   if (["DB", "CB", "S"].includes(player.position)) {
-    return `${player.stats.defInterceptions} INT, ${player.stats.defPassDefended} passes defended in ${player.statsSeason}`;
+    return `${player.stats.defInterceptions} INT, ${player.stats.defPassDefended} passes defended in ${player.statsSeason} to date`;
   }
-  return "2026 active roster";
+  return `${player.statsSeason} active roster`;
 }
 
 function ProbabilityRing({ value, label }: { value: number; label: string }) {
@@ -528,7 +528,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
       <p className="freshness-note">
         Football and roster snapshot: {snapshot.asOf}.
         {snapshotFreshness ? <strong className={snapshotFreshness.status === "current" ? "source-age" : "source-stale"}> {snapshotFreshness.message}</strong> : null}
-        {" "}Historical player baseline: 2025 regular season. Refresh odds separately for current market coverage.
+        {" "}Player stats: {snapshot.season.year} regular season to date. Refresh odds separately for current market coverage.
       </p>
       {canExplore ? <><section className="market-strip" aria-label="Market snapshot">
         <div><span>Dallas moneyline</span><strong>{moneyline(effectiveGame.cowboysMoneyline)}</strong></div>
@@ -579,7 +579,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
                 ["pickens", "George Pickens participation", "Secondary receiving scenario"],
                 ["williams", "Javonte Williams participation", "Rushing and receiving scenario"],
                 ["defense", "Defensive core participation", "Combined defensive scenario"],
-                ["opponentStar", `${opponentLeader?.name ?? selectedGame.opponentName} participation`, `${selectedGame.opponentName} top 2025 PPR producer`],
+                ["opponentStar", `${opponentLeader?.name ?? selectedGame.opponentName} participation`, `${selectedGame.opponentName} top ${selectedOpponent.statsSeason} PPR producer to date`],
               ].map(([key, label, hint]) => {
                 const controlId = `scenario-${key}`;
                 const hintId = `${controlId}-hint`;
@@ -797,8 +797,8 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
           <span className="section-number">02</span>
           <div>
             <span className="eyebrow">Player evidence</span>
-            <h2>Weekly matchup. Real baselines.</h2>
-            <p>Compare featured Cowboys with the selected opponent&apos;s top four stat producers from the roster snapshot verified {snapshot.asOf}.</p>
+            <h2>Weekly matchup. Current-season stats.</h2>
+            <p>Compare featured Cowboys with the selected opponent&apos;s top four active production leaders. {snapshot.season.year} regular-season totals through the source update on {snapshot.manifest.inputs.stats.sourceUpdatedAt.slice(0, 10)}.</p>
           </div>
         </div>
         <div className="opponent-heading">
@@ -817,14 +817,15 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
               </div>
               <h3>{leader.name}</h3>
               <strong>{leader.fantasyPointsPpr.toFixed(1)}</strong>
-              <small>2025 PPR points</small>
+              <small>{selectedOpponent.statsSeason} PPR points to date</small>
               <p>{leader.evidence}</p>
             </article>
           ))}
         </div>
         <div className="cowboys-heading">
           <span className="eyebrow">Featured Cowboys</span>
-          <h3>Roster snapshot verified {snapshot.asOf}</h3>
+          <h3>{snapshot.season.year} roster snapshot</h3>
+          <p>Regular-season stats to date. Verified {snapshot.asOf}. <a href="https://www.dallascowboys.com/team/stats/" target="_blank" rel="noreferrer">Official Cowboys stats</a></p>
         </div>
         <div className="player-grid">
           {snapshot.players.map((player) => (

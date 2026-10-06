@@ -8,8 +8,8 @@
     "eloK": 18,
     "maxMarginMultiplier": 2.2
   },
-  "asOf": "2026-10-05",
-  "sourceSha256": "27b28a7ce6023bbf4cd56268162e74eca40d28ff75270fcada6c98ac86658a7a",
+  "asOf": "2026-10-06",
+  "sourceSha256": "c665b32f6a386ac13b66c25c42acb6731c5ebcfb1b6f3b2c089ee2e758fc41bf",
   "records": [
     {
       "gameId": "2024_01_BAL_KC",
@@ -748,7 +748,7 @@
       "venue": "home",
       "homeMoneyline": -425,
       "awayMoneyline": 330,
-      "footballProbability": 0.5926374074137466,
+      "footballProbability": 0.5926374074137465,
       "marketProbability": 0.7768331562167907,
       "blendedProbability": 0.7399940064561819,
       "outcome": 0
@@ -958,7 +958,7 @@
       "venue": "home",
       "homeMoneyline": -118,
       "awayMoneyline": -102,
-      "footballProbability": 0.37297809354779604,
+      "footballProbability": 0.372978093547796,
       "marketProbability": 0.5173641257162701,
       "blendedProbability": 0.4884869192825753,
       "outcome": 1
@@ -2008,7 +2008,7 @@
       "venue": "home",
       "homeMoneyline": 190,
       "awayMoneyline": -230,
-      "footballProbability": 0.37808825736431706,
+      "footballProbability": 0.3780882573643171,
       "marketProbability": 0.33099297893681046,
       "blendedProbability": 0.3404120346223118,
       "outcome": 0
@@ -2022,7 +2022,7 @@
       "venue": "home",
       "homeMoneyline": 280,
       "awayMoneyline": -345,
-      "footballProbability": 0.3915240434570905,
+      "footballProbability": 0.3915240434570906,
       "marketProbability": 0.25341685649202733,
       "blendedProbability": 0.28103829388504,
       "outcome": 0
@@ -2862,7 +2862,7 @@
       "venue": "home",
       "homeMoneyline": -325,
       "awayMoneyline": 260,
-      "footballProbability": 0.7445485221261856,
+      "footballProbability": 0.7445485221261855,
       "marketProbability": 0.7335423197492164,
       "blendedProbability": 0.7357435602246102,
       "outcome": 1
@@ -3240,9 +3240,9 @@
       "venue": "home",
       "homeMoneyline": -130,
       "awayMoneyline": 110,
-      "footballProbability": 0.5146632777698736,
+      "footballProbability": 0.5146632777698738,
       "marketProbability": 0.5427435387673957,
-      "blendedProbability": 0.5371274865678912,
+      "blendedProbability": 0.5371274865678913,
       "outcome": 1
     },
     {
@@ -4010,7 +4010,7 @@
       "venue": "home",
       "homeMoneyline": -105,
       "awayMoneyline": -115,
-      "footballProbability": 0.4438408872498641,
+      "footballProbability": 0.4438408872498642,
       "marketProbability": 0.4891657638136511,
       "blendedProbability": 0.48010078850089377,
       "outcome": 0
@@ -4206,7 +4206,7 @@
       "venue": "home",
       "homeMoneyline": 102,
       "awayMoneyline": -122,
-      "footballProbability": 0.5495144442010432,
+      "footballProbability": 0.5495144442010433,
       "marketProbability": 0.4739134147382802,
       "blendedProbability": 0.48903362063083283,
       "outcome": 0
@@ -5788,9 +5788,9 @@
       "venue": "home",
       "homeMoneyline": 110,
       "awayMoneyline": -130,
-      "footballProbability": 0.5375801029640402,
+      "footballProbability": 0.5375801029640401,
       "marketProbability": 0.4572564612326044,
-      "blendedProbability": 0.4733211895788916,
+      "blendedProbability": 0.4733211895788915,
       "outcome": 1
     },
     {
@@ -6208,9 +6208,9 @@
       "venue": "home",
       "homeMoneyline": 310,
       "awayMoneyline": -395,
-      "footballProbability": 0.5113700656493609,
+      "footballProbability": 0.5113700656493608,
       "marketProbability": 0.23409789548356585,
-      "blendedProbability": 0.2895523295167249,
+      "blendedProbability": 0.2895523295167248,
       "outcome": 0
     },
     {
@@ -7244,7 +7244,7 @@
       "venue": "home",
       "homeMoneyline": -118,
       "awayMoneyline": -102,
-      "footballProbability": 0.5907652485903155,
+      "footballProbability": 0.5907652485903154,
       "marketProbability": 0.5173641257162701,
       "blendedProbability": 0.5320443502910792,
       "outcome": 0
@@ -7356,7 +7356,7 @@
       "venue": "home",
       "homeMoneyline": 170,
       "awayMoneyline": -205,
-      "footballProbability": 0.27089844708386385,
+      "footballProbability": 0.2708984470838638,
       "marketProbability": 0.35527082119976705,
       "blendedProbability": 0.3383963463765864,
       "outcome": 1
@@ -7468,7 +7468,7 @@
       "venue": "home",
       "homeMoneyline": -455,
       "awayMoneyline": 350,
-      "footballProbability": 0.7228295156024764,
+      "footballProbability": 0.7228295156024765,
       "marketProbability": 0.7867435158501441,
       "blendedProbability": 0.7739607158006107,
       "outcome": 0

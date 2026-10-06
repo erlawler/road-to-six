@@ -1,48 +1,49 @@
 {
-  "asOf": "2026-10-05",
-  "dataVersion": "nflverse-2026-10-05-69a7380301be",
+  "asOf": "2026-10-06",
+  "dataVersion": "nflverse-2026-10-06-40daf0822b95",
   "manifest": {
-    "schemaVersion": "1.0.0",
-    "validatedAt": "2026-10-05",
+    "schemaVersion": "1.1.0",
+    "validatedAt": "2026-10-06",
+    "reviewedAt": "2026-10-06T23:41:16.127Z",
     "inputs": {
       "games": {
-        "url": "https://raw.githubusercontent.com/nflverse/nfldata/c3d49fba205cf241b8465609a1155e3f3c7d1f23/data/games.csv",
-        "sourceVersion": "c3d49fba205cf241b8465609a1155e3f3c7d1f23",
-        "sourceUpdatedAt": "2026-10-05T22:45:14Z",
+        "url": "https://raw.githubusercontent.com/nflverse/nfldata/85de4762b6f41624f46ff2680a4af7a46e22ab6c/data/games.csv",
+        "sourceVersion": "85de4762b6f41624f46ff2680a4af7a46e22ab6c",
+        "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+        "expectedSha256": "c665b32f6a386ac13b66c25c42acb6731c5ebcfb1b6f3b2c089ee2e758fc41bf",
         "retrievedBetween": {
-          "start": "2026-10-05T23:07:36.221264+00:00",
-          "end": "2026-10-05T23:07:36.747727+00:00"
+          "start": "2026-10-06T23:39:02.748373+00:00",
+          "end": "2026-10-06T23:39:09.804503+00:00"
         },
-        "expectedSha256": "27b28a7ce6023bbf4cd56268162e74eca40d28ff75270fcada6c98ac86658a7a",
-        "sha256": "27b28a7ce6023bbf4cd56268162e74eca40d28ff75270fcada6c98ac86658a7a",
-        "bytes": 2182767,
+        "sha256": "c665b32f6a386ac13b66c25c42acb6731c5ebcfb1b6f3b2c089ee2e758fc41bf",
+        "bytes": 2183211,
         "rows": 7548,
         "metadataStatus": "verified"
       },
       "roster": {
         "url": "https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv",
-        "sourceUpdatedAt": "2026-10-05T15:58:32Z",
+        "sourceUpdatedAt": "2026-10-06T14:11:27Z",
+        "expectedSha256": "fa51a2fbf2b5997009fef30c52066cd080fb0258da6558fd7b89600d546b2ec6",
         "retrievedBetween": {
-          "start": "2026-10-05T23:07:36.750368+00:00",
-          "end": "2026-10-05T23:07:37.514956+00:00"
+          "start": "2026-10-06T23:39:02.749045+00:00",
+          "end": "2026-10-06T23:39:26.865623+00:00"
         },
-        "expectedSha256": "0f72f882f3974ff2d524ce838fb750f2d2f2fb8b3f081728ed45e832972292c3",
-        "sha256": "0f72f882f3974ff2d524ce838fb750f2d2f2fb8b3f081728ed45e832972292c3",
-        "bytes": 3445291,
-        "rows": 10612,
+        "sha256": "fa51a2fbf2b5997009fef30c52066cd080fb0258da6558fd7b89600d546b2ec6",
+        "bytes": 4222435,
+        "rows": 13004,
         "metadataStatus": "verified"
       },
       "stats": {
-        "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2025.csv",
-        "sourceUpdatedAt": "2026-08-13T16:51:50Z",
+        "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2026.csv",
+        "sourceUpdatedAt": "2026-10-06T15:55:17Z",
+        "expectedSha256": "0ce6b0bc6c08448a097d405b687fefe8f7d50acc5a7e6952db81fff0fcaa6bcf",
         "retrievedBetween": {
-          "start": "2026-10-05T23:07:37.518377+00:00",
-          "end": "2026-10-05T23:07:38.056015+00:00"
+          "start": "2026-10-06T23:39:02.749476+00:00",
+          "end": "2026-10-06T23:39:26.779782+00:00"
         },
-        "expectedSha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12",
-        "sha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12",
-        "bytes": 882104,
-        "rows": 2020,
+        "sha256": "0ce6b0bc6c08448a097d405b687fefe8f7d50acc5a7e6952db81fff0fcaa6bcf",
+        "bytes": 653013,
+        "rows": 1519,
         "metadataStatus": "verified"
       }
     },
@@ -62,7 +63,8 @@
       "latestStartedWeek": 4,
       "duplicateRosterRowsRemoved": 0,
       "unidentifiedRosterRows": 1,
-      "playerBaselineSeason": 2025,
+      "playerStatsSeason": 2026,
+      "playerStatsPeriod": "regular-season-to-date",
       "unidentifiedStatsRows": 1
     }
   },
@@ -84,8 +86,8 @@
       "cowboysSpread": -3,
       "totalLine": 47.5,
       "stadium": "MetLife Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_01_DAL_NYG"
     },
     {
@@ -105,8 +107,8 @@
       "cowboysSpread": -3.5,
       "totalLine": 51.5,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_02_WAS_DAL"
     },
     {
@@ -126,8 +128,8 @@
       "cowboysSpread": 3,
       "totalLine": 53.5,
       "stadium": "Maracana Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_03_BAL_DAL"
     },
     {
@@ -147,8 +149,8 @@
       "cowboysSpread": 3,
       "totalLine": 48.5,
       "stadium": "Reliant Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_04_DAL_HOU"
     },
     {
@@ -165,11 +167,11 @@
       "venue": "home",
       "cowboysMoneyline": -455,
       "opponentMoneyline": 350,
-      "cowboysSpread": -9.5,
+      "cowboysSpread": -8.5,
       "totalLine": 47.5,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_05_TB_DAL"
     },
     {
@@ -184,13 +186,13 @@
       "opponent": "GB",
       "opponentName": "Green Bay Packers",
       "venue": "away",
-      "cowboysMoneyline": null,
-      "opponentMoneyline": null,
-      "cowboysSpread": null,
-      "totalLine": null,
+      "cowboysMoneyline": -142,
+      "opponentMoneyline": 120,
+      "cowboysSpread": -2.5,
+      "totalLine": 50.5,
       "stadium": "Lambeau Field",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_06_DAL_GB"
     },
     {
@@ -210,8 +212,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lincoln Financial Field",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_07_DAL_PHI"
     },
     {
@@ -231,8 +233,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_08_ARI_DAL"
     },
     {
@@ -252,8 +254,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lucas Oil Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_09_DAL_IND"
     },
     {
@@ -273,8 +275,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_10_SF_DAL"
     },
     {
@@ -294,8 +296,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_11_TEN_DAL"
     },
     {
@@ -315,8 +317,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_12_PHI_DAL"
     },
     {
@@ -336,8 +338,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Lumen Field",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_13_DAL_SEA"
     },
     {
@@ -357,8 +359,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "SoFi Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_15_DAL_LA"
     },
     {
@@ -378,8 +380,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_16_JAX_DAL"
     },
     {
@@ -399,8 +401,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "AT&T Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_17_NYG_DAL"
     },
     {
@@ -420,8 +422,8 @@
       "cowboysSpread": null,
       "totalLine": null,
       "stadium": "Northwest Stadium",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
-      "validatedAt": "2026-10-05",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "validatedAt": "2026-10-06",
       "sourceRecordId": "2026_18_DAL_WAS"
     }
   ],
@@ -433,13 +435,13 @@
       "jerseyNumber": 4,
       "status": "ACT",
       "yearsExperience": 10,
-      "statsSeason": 2025,
+      "statsSeason": 2026,
       "stats": {
-        "passingYards": 4552,
-        "passingTds": 30,
-        "interceptions": 10,
-        "rushingYards": 177,
-        "rushingTds": 2,
+        "passingYards": 1065,
+        "passingTds": 8,
+        "interceptions": 1,
+        "rushingYards": 66,
+        "rushingTds": 0,
         "receptions": 0,
         "receivingYards": 0,
         "receivingTds": 0,
@@ -458,16 +460,16 @@
       "jerseyNumber": 88,
       "status": "ACT",
       "yearsExperience": 6,
-      "statsSeason": 2025,
+      "statsSeason": 2026,
       "stats": {
         "passingYards": 0,
         "passingTds": 0,
         "interceptions": 0,
-        "rushingYards": 2,
+        "rushingYards": -6,
         "rushingTds": 0,
-        "receptions": 75,
-        "receivingYards": 1077,
-        "receivingTds": 3,
+        "receptions": 37,
+        "receivingYards": 498,
+        "receivingTds": 4,
         "defSacks": 0,
         "defQbHits": 0,
         "defInterceptions": 0,
@@ -483,16 +485,16 @@
       "jerseyNumber": 3,
       "status": "ACT",
       "yearsExperience": 4,
-      "statsSeason": 2025,
+      "statsSeason": 2026,
       "stats": {
         "passingYards": 0,
         "passingTds": 0,
         "interceptions": 0,
         "rushingYards": 0,
         "rushingTds": 0,
-        "receptions": 93,
-        "receivingYards": 1429,
-        "receivingTds": 9,
+        "receptions": 18,
+        "receivingYards": 225,
+        "receivingTds": 0,
         "defSacks": 0,
         "defQbHits": 0,
         "defInterceptions": 0,
@@ -508,16 +510,16 @@
       "jerseyNumber": 33,
       "status": "ACT",
       "yearsExperience": 5,
-      "statsSeason": 2025,
+      "statsSeason": 2026,
       "stats": {
         "passingYards": 0,
         "passingTds": 0,
         "interceptions": 0,
-        "rushingYards": 1201,
-        "rushingTds": 11,
-        "receptions": 35,
-        "receivingYards": 137,
-        "receivingTds": 2,
+        "rushingYards": 231,
+        "rushingTds": 5,
+        "receptions": 15,
+        "receivingYards": 77,
+        "receivingTds": 1,
         "defSacks": 0,
         "defQbHits": 0,
         "defInterceptions": 0,
@@ -533,16 +535,16 @@
       "jerseyNumber": 87,
       "status": "ACT",
       "yearsExperience": 4,
-      "statsSeason": 2025,
+      "statsSeason": 2026,
       "stats": {
         "passingYards": 0,
         "passingTds": 0,
         "interceptions": 0,
-        "rushingYards": 1,
+        "rushingYards": 0,
         "rushingTds": 0,
-        "receptions": 82,
-        "receivingYards": 600,
-        "receivingTds": 8,
+        "receptions": 12,
+        "receivingYards": 83,
+        "receivingTds": 3,
         "defSacks": 0,
         "defQbHits": 0,
         "defInterceptions": 0,
@@ -558,32 +560,7 @@
       "jerseyNumber": 17,
       "status": "ACT",
       "yearsExperience": 4,
-      "statsSeason": 2025,
-      "stats": {
-        "passingYards": 0,
-        "passingTds": 0,
-        "interceptions": 0,
-        "rushingYards": 6,
-        "rushingTds": 0,
-        "receptions": 0,
-        "receivingYards": 0,
-        "receivingTds": 0,
-        "defSacks": 0,
-        "defQbHits": 0,
-        "defInterceptions": 0,
-        "defPassDefended": 0,
-        "fgMade": 36,
-        "fgAttempts": 42
-      }
-    },
-    {
-      "id": "00-0035718",
-      "name": "Quinnen Williams",
-      "position": "DL",
-      "jerseyNumber": 92,
-      "status": "ACT",
-      "yearsExperience": 7,
-      "statsSeason": 2025,
+      "statsSeason": 2026,
       "stats": {
         "passingYards": 0,
         "passingTds": 0,
@@ -593,10 +570,35 @@
         "receptions": 0,
         "receivingYards": 0,
         "receivingTds": 0,
-        "defSacks": 2.5,
-        "defQbHits": 12,
-        "defInterceptions": 1,
-        "defPassDefended": 1,
+        "defSacks": 0,
+        "defQbHits": 0,
+        "defInterceptions": 0,
+        "defPassDefended": 0,
+        "fgMade": 8,
+        "fgAttempts": 11
+      }
+    },
+    {
+      "id": "00-0035718",
+      "name": "Quinnen Williams",
+      "position": "DL",
+      "jerseyNumber": 92,
+      "status": "ACT",
+      "yearsExperience": 7,
+      "statsSeason": 2026,
+      "stats": {
+        "passingYards": 0,
+        "passingTds": 0,
+        "interceptions": 0,
+        "rushingYards": 0,
+        "rushingTds": 0,
+        "receptions": 0,
+        "receivingYards": 0,
+        "receivingTds": 0,
+        "defSacks": 1,
+        "defQbHits": 3,
+        "defInterceptions": 0,
+        "defPassDefended": 0,
         "fgMade": 0,
         "fgAttempts": 0
       }
@@ -608,7 +610,7 @@
       "jerseyNumber": 26,
       "status": "ACT",
       "yearsExperience": 4,
-      "statsSeason": 2025,
+      "statsSeason": 2026,
       "stats": {
         "passingYards": 0,
         "passingTds": 0,
@@ -620,8 +622,8 @@
         "receivingTds": 0,
         "defSacks": 0,
         "defQbHits": 0,
-        "defInterceptions": 1,
-        "defPassDefended": 6,
+        "defInterceptions": 0,
+        "defPassDefended": 1,
         "fgMade": 0,
         "fgAttempts": 0
       }
@@ -630,547 +632,547 @@
   "opponents": {
     "NYG": {
       "teamName": "New York Giants",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
         {
-          "id": "00-0039384",
-          "name": "Tyrone Tracy Jr.",
-          "position": "RB",
-          "jerseyNumber": 29,
-          "fantasyPointsPpr": 160.8,
-          "evidence": "740 rush yds, 36 rec"
+          "id": "00-0037838",
+          "name": "Isaiah Likely",
+          "position": "TE",
+          "jerseyNumber": 9,
+          "fantasyPointsPpr": 53,
+          "evidence": "22 rec, 190 yds"
         },
         {
-          "id": "00-0039847",
-          "name": "Theo Johnson",
-          "position": "TE",
-          "jerseyNumber": 84,
-          "fantasyPointsPpr": 127.8,
-          "evidence": "45 rec, 528 yds"
+          "id": "00-0039337",
+          "name": "Malik Nabers",
+          "position": "WR",
+          "jerseyNumber": 1,
+          "fantasyPointsPpr": 44.8,
+          "evidence": "18 rec, 208 yds"
         },
         {
           "id": "00-0040715",
           "name": "Cam Skattebo",
           "position": "RB",
           "jerseyNumber": 44,
-          "fantasyPointsPpr": 127.7,
-          "evidence": "410 rush yds, 24 rec"
+          "fantasyPointsPpr": 44.2,
+          "evidence": "235 rush yds, 8 rec"
         },
         {
-          "id": "00-0039923",
-          "name": "J.J. McCarthy",
+          "id": "00-0031503",
+          "name": "Jameis Winston",
           "position": "QB",
-          "jerseyNumber": 18,
-          "fantasyPointsPpr": 125.38,
-          "evidence": "1,632 pass yds, 11 pass TD"
+          "jerseyNumber": 19,
+          "fantasyPointsPpr": 26.66,
+          "evidence": "479 pass yds, 3 pass TD"
         }
       ]
     },
     "WAS": {
       "teamName": "Washington Commanders",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
         {
           "id": "00-0031588",
           "name": "Stefon Diggs",
           "position": "WR",
           "jerseyNumber": 3,
-          "fantasyPointsPpr": 210.3,
-          "evidence": "85 rec, 1,013 yds"
-        },
-        {
-          "id": "00-0040242",
-          "name": "Jacory Croskey-Merritt",
-          "position": "RB",
-          "jerseyNumber": 22,
-          "fantasyPointsPpr": 140.3,
-          "evidence": "805 rush yds, 9 rec"
+          "fantasyPointsPpr": 53,
+          "evidence": "18 rec, 170 yds"
         },
         {
           "id": "00-0032268",
           "name": "Marcus Mariota",
           "position": "QB",
           "jerseyNumber": 8,
-          "fantasyPointsPpr": 125.5,
-          "evidence": "1,695 pass yds, 10 pass TD"
+          "fantasyPointsPpr": 34.5,
+          "evidence": "340 pass yds, 4 pass TD"
         },
         {
-          "id": "00-0037809",
-          "name": "Chig Okonkwo",
-          "position": "TE",
-          "jerseyNumber": 85,
-          "fantasyPointsPpr": 124,
-          "evidence": "56 rec, 560 yds"
+          "id": "00-0040242",
+          "name": "Jacory Croskey-Merritt",
+          "position": "RB",
+          "jerseyNumber": 22,
+          "fantasyPointsPpr": 30.7,
+          "evidence": "157 rush yds, 5 rec"
+        },
+        {
+          "id": "00-0041040",
+          "name": "Antonio Williams",
+          "position": "WR",
+          "jerseyNumber": 14,
+          "fantasyPointsPpr": 30.4,
+          "evidence": "12 rec, 124 yds"
         }
       ]
     },
     "BAL": {
       "teamName": "Baltimore Ravens",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
         {
           "id": "00-0032764",
           "name": "Derrick Henry",
           "position": "RB",
           "jerseyNumber": 22,
-          "fantasyPointsPpr": 279.5,
-          "evidence": "1,595 rush yds, 15 rec"
-        },
-        {
-          "id": "00-0039064",
-          "name": "Zay Flowers",
-          "position": "WR",
-          "jerseyNumber": 4,
-          "fantasyPointsPpr": 243.3,
-          "evidence": "86 rec, 1,211 yds"
+          "fantasyPointsPpr": 90.8,
+          "evidence": "374 rush yds, 7 rec"
         },
         {
           "id": "00-0034796",
           "name": "Lamar Jackson",
           "position": "QB",
           "jerseyNumber": 8,
-          "fantasyPointsPpr": 214.86,
-          "evidence": "2,549 pass yds, 21 pass TD"
+          "fantasyPointsPpr": 79.08,
+          "evidence": "967 pass yds, 6 pass TD"
+        },
+        {
+          "id": "00-0039064",
+          "name": "Zay Flowers",
+          "position": "WR",
+          "jerseyNumber": 4,
+          "fantasyPointsPpr": 67.2,
+          "evidence": "18 rec, 352 yds"
         },
         {
           "id": "00-0034753",
           "name": "Mark Andrews",
           "position": "TE",
           "jerseyNumber": 89,
-          "fantasyPointsPpr": 131,
-          "evidence": "48 rec, 422 yds"
+          "fantasyPointsPpr": 38.9,
+          "evidence": "18 rec, 149 yds"
         }
       ]
     },
     "HOU": {
       "teamName": "Houston Texans",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
-        {
-          "id": "00-0036554",
-          "name": "Nico Collins",
-          "position": "WR",
-          "jerseyNumber": 12,
-          "fantasyPointsPpr": 226.2,
-          "evidence": "71 rec, 1,117 yds"
-        },
         {
           "id": "00-0039163",
           "name": "C.J. Stroud",
           "position": "QB",
           "jerseyNumber": 7,
-          "fantasyPointsPpr": 208.54,
-          "evidence": "3,041 pass yds, 19 pass TD"
+          "fantasyPointsPpr": 68.24,
+          "evidence": "1,141 pass yds, 5 pass TD"
         },
         {
-          "id": "00-0034383",
-          "name": "Dalton Schultz",
-          "position": "TE",
-          "jerseyNumber": 86,
-          "fantasyPointsPpr": 177.7,
-          "evidence": "82 rec, 777 yds"
+          "id": "00-0036554",
+          "name": "Nico Collins",
+          "position": "WR",
+          "jerseyNumber": 12,
+          "fantasyPointsPpr": 52,
+          "evidence": "14 rec, 193 yds"
         },
         {
           "id": "00-0035685",
           "name": "David Montgomery",
           "position": "RB",
           "jerseyNumber": 32,
-          "fantasyPointsPpr": 166.92,
-          "evidence": "716 rush yds, 24 rec"
+          "fantasyPointsPpr": 44.4,
+          "evidence": "127 rush yds, 7 rec"
+        },
+        {
+          "id": "00-0034383",
+          "name": "Dalton Schultz",
+          "position": "TE",
+          "jerseyNumber": 86,
+          "fantasyPointsPpr": 42.4,
+          "evidence": "21 rec, 214 yds"
         }
       ]
     },
     "TB": {
       "teamName": "Tampa Bay Buccaneers",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
         {
-          "id": "00-0036919",
-          "name": "Kenny Gainwell",
+          "id": "00-0039361",
+          "name": "Bucky Irving",
           "position": "RB",
-          "jerseyNumber": 1,
-          "fantasyPointsPpr": 221.3,
-          "evidence": "537 rush yds, 73 rec"
+          "jerseyNumber": 7,
+          "fantasyPointsPpr": 47.2,
+          "evidence": "241 rush yds, 13 rec"
         },
         {
           "id": "00-0040129",
           "name": "Emeka Egbuka",
           "position": "WR",
           "jerseyNumber": 2,
-          "fantasyPointsPpr": 195.7,
-          "evidence": "63 rec, 938 yds"
+          "fantasyPointsPpr": 36.1,
+          "evidence": "15 rec, 154 yds"
         },
         {
-          "id": "00-0039361",
-          "name": "Bucky Irving",
-          "position": "RB",
-          "jerseyNumber": 7,
-          "fantasyPointsPpr": 138.5,
-          "evidence": "588 rush yds, 30 rec"
+          "id": "00-0033921",
+          "name": "Chris Godwin Jr.",
+          "position": "WR",
+          "jerseyNumber": 14,
+          "fantasyPointsPpr": 31.7,
+          "evidence": "16 rec, 142 yds"
         },
         {
           "id": "00-0038129",
           "name": "Cade Otton",
           "position": "TE",
           "jerseyNumber": 88,
-          "fantasyPointsPpr": 122.2,
-          "evidence": "59 rec, 572 yds"
+          "fantasyPointsPpr": 30.7,
+          "evidence": "15 rec, 157 yds"
         }
       ]
     },
     "GB": {
       "teamName": "Green Bay Packers",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
-        {
-          "id": "00-0036264",
-          "name": "Jordan Love",
-          "position": "QB",
-          "jerseyNumber": 10,
-          "fantasyPointsPpr": 235.14,
-          "evidence": "3,381 pass yds, 23 pass TD"
-        },
         {
           "id": "00-0038124",
           "name": "Christian Watson",
           "position": "WR",
           "jerseyNumber": 9,
-          "fantasyPointsPpr": 132.4,
-          "evidence": "35 rec, 611 yds"
+          "fantasyPointsPpr": 77.1,
+          "evidence": "20 rec, 331 yds"
+        },
+        {
+          "id": "00-0036264",
+          "name": "Jordan Love",
+          "position": "QB",
+          "jerseyNumber": 10,
+          "fantasyPointsPpr": 64.84,
+          "evidence": "1,041 pass yds, 8 pass TD"
+        },
+        {
+          "id": "00-0040667",
+          "name": "Matthew Golden",
+          "position": "WR",
+          "jerseyNumber": 0,
+          "fantasyPointsPpr": 58,
+          "evidence": "18 rec, 274 yds"
         },
         {
           "id": "00-0038996",
           "name": "Tucker Kraft",
           "position": "TE",
           "jerseyNumber": 85,
-          "fantasyPointsPpr": 117.2,
-          "evidence": "32 rec, 489 yds"
-        },
-        {
-          "id": "00-0033858",
-          "name": "Jonnu Smith",
-          "position": "TE",
-          "jerseyNumber": 18,
-          "fantasyPointsPpr": 85.2,
-          "evidence": "38 rec, 222 yds"
+          "fantasyPointsPpr": 36.1,
+          "evidence": "15 rec, 148 yds"
         }
       ]
     },
     "PHI": {
       "teamName": "Philadelphia Eagles",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
         {
           "id": "00-0036389",
           "name": "Jalen Hurts",
           "position": "QB",
           "jerseyNumber": 1,
-          "fantasyPointsPpr": 301.06,
-          "evidence": "3,224 pass yds, 25 pass TD"
-        },
-        {
-          "id": "00-0034844",
-          "name": "Saquon Barkley",
-          "position": "RB",
-          "jerseyNumber": 26,
-          "fantasyPointsPpr": 232.3,
-          "evidence": "1,140 rush yds, 37 rec"
-        },
-        {
-          "id": "00-0030061",
-          "name": "Zach Ertz",
-          "position": "TE",
-          "jerseyNumber": 86,
-          "fantasyPointsPpr": 126.4,
-          "evidence": "50 rec, 504 yds"
+          "fantasyPointsPpr": 67.02,
+          "evidence": "713 pass yds, 7 pass TD"
         },
         {
           "id": "00-0038393",
           "name": "Dontayvion Wicks",
           "position": "WR",
           "jerseyNumber": 13,
-          "fantasyPointsPpr": 75.8,
-          "evidence": "30 rec, 332 yds"
+          "fantasyPointsPpr": 37.7,
+          "evidence": "12 rec, 197 yds"
+        },
+        {
+          "id": "00-0040024",
+          "name": "Darius Cooper",
+          "position": "WR",
+          "jerseyNumber": 80,
+          "fantasyPointsPpr": 28.9,
+          "evidence": "5 rec, 59 yds"
+        },
+        {
+          "id": "00-0034844",
+          "name": "Saquon Barkley",
+          "position": "RB",
+          "jerseyNumber": 26,
+          "fantasyPointsPpr": 23,
+          "evidence": "182 rush yds, 4 rec"
         }
       ]
     },
     "ARI": {
       "teamName": "Arizona Cardinals",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
         {
           "id": "00-0037744",
           "name": "Trey McBride",
           "position": "TE",
           "jerseyNumber": 85,
-          "fantasyPointsPpr": 315.9,
-          "evidence": "126 rec, 1,239 yds"
+          "fantasyPointsPpr": 69.2,
+          "evidence": "33 rec, 242 yds"
         },
         {
           "id": "00-0033119",
           "name": "Jacoby Brissett",
           "position": "QB",
           "jerseyNumber": 7,
-          "fantasyPointsPpr": 227.44,
-          "evidence": "3,366 pass yds, 23 pass TD"
+          "fantasyPointsPpr": 59.02,
+          "evidence": "818 pass yds, 6 pass TD"
         },
         {
           "id": "00-0038559",
           "name": "Michael Wilson",
           "position": "WR",
           "jerseyNumber": 14,
-          "fantasyPointsPpr": 220.6,
-          "evidence": "78 rec, 1,006 yds"
+          "fantasyPointsPpr": 56.8,
+          "evidence": "25 rec, 258 yds"
         },
         {
-          "id": "00-0039849",
-          "name": "Marvin Harrison Jr.",
-          "position": "WR",
-          "jerseyNumber": 18,
-          "fantasyPointsPpr": 127.8,
-          "evidence": "41 rec, 608 yds"
+          "id": "00-0041027",
+          "name": "Jeremiyah Love",
+          "position": "RB",
+          "jerseyNumber": 4,
+          "fantasyPointsPpr": 48.9,
+          "evidence": "223 rush yds, 11 rec"
         }
       ]
     },
     "IND": {
       "teamName": "Indianapolis Colts",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
         {
           "id": "00-0036223",
           "name": "Jonathan Taylor",
           "position": "RB",
           "jerseyNumber": 28,
-          "fantasyPointsPpr": 362.3,
-          "evidence": "1,585 rush yds, 46 rec"
-        },
-        {
-          "id": "00-0035710",
-          "name": "Daniel Jones",
-          "position": "QB",
-          "jerseyNumber": 17,
-          "fantasyPointsPpr": 226.44,
-          "evidence": "3,101 pass yds, 19 pass TD"
+          "fantasyPointsPpr": 86.2,
+          "evidence": "353 rush yds, 10 rec"
         },
         {
           "id": "00-0040128",
           "name": "Tyler Warren",
           "position": "TE",
           "jerseyNumber": 84,
-          "fantasyPointsPpr": 188.5,
-          "evidence": "76 rec, 817 yds"
+          "fantasyPointsPpr": 48.5,
+          "evidence": "23 rec, 130 yds"
         },
         {
           "id": "00-0038997",
           "name": "Josh Downs",
           "position": "WR",
           "jerseyNumber": 2,
-          "fantasyPointsPpr": 138.4,
-          "evidence": "58 rec, 566 yds"
+          "fantasyPointsPpr": 37.2,
+          "evidence": "17 rec, 202 yds"
+        },
+        {
+          "id": "00-0035710",
+          "name": "Daniel Jones",
+          "position": "QB",
+          "jerseyNumber": 17,
+          "fantasyPointsPpr": 36.26,
+          "evidence": "754 pass yds, 3 pass TD"
         }
       ]
     },
     "SF": {
       "teamName": "San Francisco 49ers",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
-        {
-          "id": "00-0033280",
-          "name": "Christian McCaffrey",
-          "position": "RB",
-          "jerseyNumber": 23,
-          "fantasyPointsPpr": 416.6,
-          "evidence": "1,202 rush yds, 102 rec"
-        },
-        {
-          "id": "00-0035719",
-          "name": "Deebo Samuel Sr.",
-          "position": "WR",
-          "jerseyNumber": 19,
-          "fantasyPointsPpr": 188.2,
-          "evidence": "72 rec, 727 yds"
-        },
         {
           "id": "00-0037834",
           "name": "Brock Purdy",
           "position": "QB",
           "jerseyNumber": 13,
-          "fantasyPointsPpr": 177.38,
-          "evidence": "2,167 pass yds, 20 pass TD"
+          "fantasyPointsPpr": 100.48,
+          "evidence": "1,007 pass yds, 11 pass TD"
+        },
+        {
+          "id": "00-0033280",
+          "name": "Christian McCaffrey",
+          "position": "RB",
+          "jerseyNumber": 23,
+          "fantasyPointsPpr": 74,
+          "evidence": "218 rush yds, 16 rec"
         },
         {
           "id": "00-0033288",
           "name": "George Kittle",
           "position": "TE",
           "jerseyNumber": 85,
-          "fantasyPointsPpr": 161.5,
-          "evidence": "57 rec, 628 yds"
+          "fantasyPointsPpr": 64.4,
+          "evidence": "16 rec, 244 yds"
+        },
+        {
+          "id": "00-0035719",
+          "name": "Deebo Samuel Sr.",
+          "position": "WR",
+          "jerseyNumber": 19,
+          "fantasyPointsPpr": 57.9,
+          "evidence": "14 rec, 185 yds"
         }
       ]
     },
     "TEN": {
       "teamName": "Tennessee Titans",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
-        {
-          "id": "00-0038117",
-          "name": "Wan'Dale Robinson",
-          "position": "WR",
-          "jerseyNumber": 4,
-          "fantasyPointsPpr": 217.9,
-          "evidence": "92 rec, 1,014 yds"
-        },
         {
           "id": "00-0040676",
           "name": "Cam Ward",
           "position": "QB",
           "jerseyNumber": 1,
-          "fantasyPointsPpr": 186.66,
-          "evidence": "3,169 pass yds, 15 pass TD"
+          "fantasyPointsPpr": 56.74,
+          "evidence": "726 pass yds, 3 pass TD"
+        },
+        {
+          "id": "00-0041438",
+          "name": "Carnell Tate",
+          "position": "WR",
+          "jerseyNumber": 14,
+          "fantasyPointsPpr": 46.8,
+          "evidence": "22 rec, 268 yds"
+        },
+        {
+          "id": "00-0038117",
+          "name": "Wan'Dale Robinson",
+          "position": "WR",
+          "jerseyNumber": 4,
+          "fantasyPointsPpr": 40.4,
+          "evidence": "16 rec, 123 yds"
         },
         {
           "id": "00-0035261",
           "name": "Tony Pollard",
           "position": "RB",
           "jerseyNumber": 20,
-          "fantasyPointsPpr": 185.8,
-          "evidence": "1,082 rush yds, 33 rec"
-        },
-        {
-          "id": "00-0040705",
-          "name": "Chimere Dike",
-          "position": "WR",
-          "jerseyNumber": 17,
-          "fantasyPointsPpr": 128.1,
-          "evidence": "48 rec, 423 yds"
+          "fantasyPointsPpr": 38.5,
+          "evidence": "221 rush yds, 8 rec"
         }
       ]
     },
     "SEA": {
       "teamName": "Seattle Seahawks",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
         {
           "id": "00-0038543",
           "name": "Jaxon Smith-Njigba",
           "position": "WR",
           "jerseyNumber": 11,
-          "fantasyPointsPpr": 359.9,
-          "evidence": "119 rec, 1,793 yds"
+          "fantasyPointsPpr": 116.66,
+          "evidence": "32 rec, 481 yds"
         },
         {
           "id": "00-0034869",
           "name": "Sam Darnold",
           "position": "QB",
           "jerseyNumber": 14,
-          "fantasyPointsPpr": 235.42,
-          "evidence": "4,048 pass yds, 25 pass TD"
+          "fantasyPointsPpr": 41.5,
+          "evidence": "560 pass yds, 6 pass TD"
         },
         {
-          "id": "00-0037545",
-          "name": "Rashid Shaheed",
-          "position": "WR",
-          "jerseyNumber": 22,
-          "fantasyPointsPpr": 156.6,
-          "evidence": "59 rec, 687 yds"
+          "id": "00-0038797",
+          "name": "Emanuel Wilson",
+          "position": "RB",
+          "jerseyNumber": 23,
+          "fantasyPointsPpr": 37.9,
+          "evidence": "190 rush yds, 3 rec"
         },
         {
-          "id": "00-0039793",
-          "name": "AJ Barner",
-          "position": "TE",
-          "jerseyNumber": 88,
-          "fantasyPointsPpr": 147.3,
-          "evidence": "52 rec, 519 yds"
+          "id": "00-0035704",
+          "name": "Drew Lock",
+          "position": "QB",
+          "jerseyNumber": 2,
+          "fantasyPointsPpr": 34.18,
+          "evidence": "422 pass yds, 4 pass TD"
         }
       ]
     },
     "LA": {
       "teamName": "Los Angeles Rams",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
-        {
-          "id": "00-0039075",
-          "name": "Puka Nacua",
-          "position": "WR",
-          "jerseyNumber": 12,
-          "fantasyPointsPpr": 375,
-          "evidence": "129 rec, 1,715 yds"
-        },
-        {
-          "id": "00-0026498",
-          "name": "Matthew Stafford",
-          "position": "QB",
-          "jerseyNumber": 9,
-          "fantasyPointsPpr": 350.38,
-          "evidence": "4,707 pass yds, 46 pass TD"
-        },
         {
           "id": "00-0037840",
           "name": "Kyren Williams",
           "position": "RB",
           "jerseyNumber": 23,
-          "fantasyPointsPpr": 263.3,
-          "evidence": "1,252 rush yds, 36 rec"
+          "fantasyPointsPpr": 89.7,
+          "evidence": "294 rush yds, 21 rec"
         },
         {
           "id": "00-0031381",
           "name": "Davante Adams",
           "position": "WR",
           "jerseyNumber": 17,
-          "fantasyPointsPpr": 222.9,
-          "evidence": "60 rec, 789 yds"
+          "fantasyPointsPpr": 73,
+          "evidence": "22 rec, 390 yds"
+        },
+        {
+          "id": "00-0026498",
+          "name": "Matthew Stafford",
+          "position": "QB",
+          "jerseyNumber": 9,
+          "fantasyPointsPpr": 61.66,
+          "evidence": "1,189 pass yds, 6 pass TD"
+        },
+        {
+          "id": "00-0039075",
+          "name": "Puka Nacua",
+          "position": "WR",
+          "jerseyNumber": 12,
+          "fantasyPointsPpr": 40.1,
+          "evidence": "14 rec, 199 yds"
         }
       ]
     },
     "JAX": {
       "teamName": "Jacksonville Jaguars",
-      "statsSeason": 2025,
-      "rankingMethod": "PPR fantasy points among active 2026 roster players with complete 2025 regular-season stats",
+      "statsSeason": 2026,
+      "rankingMethod": "2026 regular-season PPR points to date among active roster players",
       "leaders": [
         {
           "id": "00-0036971",
           "name": "Trevor Lawrence",
           "position": "QB",
           "jerseyNumber": 16,
-          "fantasyPointsPpr": 338.18,
-          "evidence": "4,007 pass yds, 29 pass TD"
+          "fantasyPointsPpr": 65.12,
+          "evidence": "843 pass yds, 8 pass TD"
+        },
+        {
+          "id": "00-0040719",
+          "name": "Bhayshul Tuten",
+          "position": "RB",
+          "jerseyNumber": 33,
+          "fantasyPointsPpr": 52.1,
+          "evidence": "277 rush yds, 7 rec"
         },
         {
           "id": "00-0038606",
           "name": "Parker Washington",
           "position": "WR",
           "jerseyNumber": 11,
-          "fantasyPointsPpr": 184.7,
-          "evidence": "58 rec, 847 yds"
+          "fantasyPointsPpr": 51.1,
+          "evidence": "16 rec, 228 yds"
         },
         {
           "id": "00-0034960",
           "name": "Jakobi Meyers",
           "position": "WR",
           "jerseyNumber": 3,
-          "fantasyPointsPpr": 175.8,
-          "evidence": "75 rec, 835 yds"
-        },
-        {
-          "id": "00-0039893",
-          "name": "Brian Thomas Jr.",
-          "position": "WR",
-          "jerseyNumber": 7,
-          "fantasyPointsPpr": 138.8,
-          "evidence": "48 rec, 707 yds"
+          "fantasyPointsPpr": 41.7,
+          "evidence": "13 rec, 165 yds"
         }
       ]
     }
@@ -1182,7 +1184,7 @@
     "BAL": 1558.372370458041,
     "IND": 1465.7384002766134,
     "BUF": 1635.301095912148,
-    "NO": 1425.7004438986105,
+    "NO": 1404.8564793173268,
     "CAR": 1444.0235708432297,
     "TEN": 1292.9618988975674,
     "CIN": 1495.6715207744103,
@@ -1192,7 +1194,7 @@
     "DET": 1547.7018659308203,
     "CHI": 1547.7986258460019,
     "KC": 1565.6096731189582,
-    "ATL": 1462.3647309612124,
+    "ATL": 1483.2086955424961,
     "MIN": 1615.6871779765765,
     "NYJ": 1363.2504998988497,
     "NE": 1560.9238080794023,
@@ -1214,7 +1216,7 @@
   },
   "season": {
     "year": 2026,
-    "verifiedAt": "2026-10-05T23:04:41Z",
+    "verifiedAt": "2026-10-06T23:41:16.127Z",
     "primarySources": [
       "https://www.dallascowboys.com/schedule/",
       "https://www.nfl.com/teams/dallas-cowboys/"
@@ -1317,7 +1319,7 @@
   },
   "ratingsMetadata": {
     "season": 2026,
-    "trainedThrough": "2026-10-04",
+    "trainedThrough": "2026-10-05",
     "lastCompletedSeason": 2026,
     "preseasonRegressionAppliedThrough": 2026,
     "modelVersion": "elo-market-v1.2.0"
@@ -1405,13 +1407,13 @@
         "meanOutcome": 1
       }
     ],
-    "evaluationSha256": "5b8e693ad75fb7a23cc17cd7f1a038b2c62ce79f5d2a0ccb7eef6a8fe6fe6990",
+    "evaluationSha256": "a512443890758a6722b13eeebac0caea2f749b7ccbde389919c0e4826b143177",
     "method": "Walk-forward Elo with preseason regression and neutral-aware venue adjustment; shared production scoring and a predeclared 80% vig-adjusted market blend. Historical rating warm-up begins in 1999; the documented development window is 2019 to 2023. Scenario sensitivities are not evaluated by this default-control backtest."
   },
   "sources": [
     {
       "name": "nflverse schedules",
-      "url": "https://raw.githubusercontent.com/nflverse/nfldata/c3d49fba205cf241b8465609a1155e3f3c7d1f23/data/games.csv",
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/85de4762b6f41624f46ff2680a4af7a46e22ab6c/data/games.csv",
       "license": "CC BY 4.0 repository license; underlying data rights remain with their owners."
     },
     {
@@ -1420,8 +1422,8 @@
       "license": "CC BY 4.0 repository license; underlying data rights remain with their owners."
     },
     {
-      "name": "nflverse 2025 player stats",
-      "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2025.csv",
+      "name": "nflverse 2026 player stats to date",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2026.csv",
       "license": "CC BY 4.0 repository license; underlying data rights remain with their owners."
     }
   ]

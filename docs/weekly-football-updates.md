@@ -4,7 +4,7 @@ This document defines the approved updater workflow. Code being present does not
 
 ## Scope and source evidence
 
-Refresh Dallas Cowboys record, actual completed scores, remaining games, confirmed next kickoff, roster evidence, serving ratings, default scenario, and visible verification/failure state. Preserve the model, 2025 player baseline labels, public viewing, $9.50 application cutoff, and existing provider configuration. Do not call `/api/forecast` or `/api/odds`, use paid feeds, change billing, or broaden permissions.
+Refresh Dallas Cowboys record, actual completed scores, remaining games, confirmed next kickoff, roster evidence, serving ratings, default scenario, and visible verification/failure state. Preserve the model, current-season player-stat labels, public viewing, $9.50 application cutoff, and existing provider configuration. Do not call `/api/forecast` or `/api/odds`, use paid feeds, change billing, or broaden permissions.
 
 Approved sources are fixed in `lib/football-sources.mjs`: nflverse games at a resolved commit, its weekly roster release and existing prior-season statistics release, the official Cowboys schedule, and the official NFL Cowboys record. Downloads have time and byte limits. Compare published digests where available, preserve retrieval/publication times and checksums, reconcile every Cowboys final and kickoff, then apply the shared snapshot validator with the actual time. Missing or conflicting source facts fail closed. Season rollover beyond the deployed supported season requires an explicit model/source review.
 
@@ -35,6 +35,6 @@ Before creating exactly one Site-linked task, verify the Active Agent Memory Cla
 
 ## Validation and fallback
 
-The bundled JSON is a dated recovery artifact; CI validates its consistency as of its recorded verification time. Runtime refresh validation always uses the actual current time. Both paths use the same ingestion and validation functions. Public API and UI expose failed/unavailable state without replacing good data with partial input or advancing successful timestamps. Scenarios pause for missing finals, unconfirmed kickoffs, expired reviews, or failed reads; historical player baselines are never presented as current availability.
+The bundled JSON is a dated recovery artifact; CI validates its consistency as of its recorded verification time. Runtime refresh validation always uses the actual current time. Both paths use the same ingestion and validation functions. Public API and UI expose failed/unavailable state without replacing good data with partial input or advancing successful timestamps. Scenarios pause for missing finals, unconfirmed kickoffs, expired reviews, or failed reads; player totals use the selected season only and never establish game-day availability.
 
 Tests cover official source disagreement, final/bye/TBD behavior, precise weekly freshness, atomic SQLite writes, overlapping calls, idempotency, expired leases, failed-source retention, unavailable storage, owner authorization, and matching server-rendered/public-reader data. Complete the repository release checks and security audit before publication. A new owner or authorization policy requires a separate review and connection verification.

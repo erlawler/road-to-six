@@ -1,6 +1,6 @@
 # Football data provenance and reproducibility
 
-**Validation date:** October 5, 2026. **Status:** Source validation passed. **Owner:** Eric Lawler. Deployment provenance is recorded separately by Sites.
+**Validation date:** October 6, 2026. **Status:** Source validation passed. **Owner:** Eric Lawler. Deployment provenance is recorded separately by Sites.
 
 ## Source evidence
 
@@ -8,30 +8,30 @@ The [source manifest](../app/data/source-manifest.json) records the verified sou
 
 | Input | Source update time, UTC | Input rows | SHA-256 prefix |
 |---|---|---:|---|
-| Schedule and historical games | 2026-10-05T22:45:14Z | 7,548 | `27b28a7ce6023bbf` |
-| Weekly 2026 roster | 2026-10-05T15:58:32Z | 10,612 | `0f72f882f3974ff2` |
-| Complete 2025 regular-season player stats | 2026-08-13T16:51:50Z | 2,020 | `aaa8559478dd8d58` |
+| Schedule and historical games | 2026-10-06T23:05:13Z | 7,548 | `c665b32f6a386ac1` |
+| Weekly 2026 roster | 2026-10-06T14:11:27Z | 13,004 | `fa51a2fbf2b59970` |
+| 2026 regular-season player totals to date | 2026-10-06T15:55:17Z | 1,519 | `0ce6b0bc6c08448a` |
 
-All three sources were downloaded and checksummed October 5 between 23:07:36 and 23:07:39 UTC. Each input retains its actual retrieval window. GitHub release-asset digests independently matched the roster and statistics downloads. The schedule is pinned to [nflverse commit c3d49fb](https://github.com/nflverse/nfldata/commit/c3d49fba205cf241b8465609a1155e3f3c7d1f23). Roster and stats release assets are mutable URLs; a later download is an exact replay only if its full SHA-256 matches the manifest. The 2025 statistics bytes are unchanged from the prior verified release.
+All three sources were downloaded and checksummed October 6, 2026. Each input retains its actual retrieval window. GitHub release-asset digests independently matched the roster and statistics downloads. The schedule is pinned to [nflverse commit 85de476](https://github.com/nflverse/nfldata/commit/85de4762b6f41624f46ff2680a4af7a46e22ab6c). Roster and stats release assets are mutable URLs; a later download is an exact replay only if its full SHA-256 matches the manifest.
 
 `sourceUpdatedAt` describes the source file or commit, not an individual quote or player-record update. `validatedAt` is the date of the check. `retrievedBetween` is the observed download window. `ratingsMetadata.trainedThrough` records October 4, 2026. Current-season completed games update serving ratings after preseason regression; the retrospective holdout remains fixed to the documented 2024 to 2025 window. The refresh does not add current-season outcomes to that historical comparison.
 
 ## Validation and coverage
 
-The official [Cowboys schedule and results](https://www.dallascowboys.com/schedule/) and [NFL team record](https://www.nfl.com/teams/dallas-cowboys/) were manually cross-checked at **2026-10-05T23:04:41Z**. Dallas was 2-2-0: losses 20-28 at New York and 31-34 against Baltimore, wins 37-20 against Washington and 34-30 at Houston. Four finals leave 13 regular-season games. The next matchup is Week 5 against Tampa Bay, October 8 at 7:15 p.m. CDT (October 9 at 00:15 UTC). Week 14 is a bye. Week 18 is officially TBD; its nflverse date/time is provisional and is not offered as a confirmed forecast.
+The official [Cowboys schedule and results](https://www.dallascowboys.com/schedule/) and [NFL team record](https://www.nfl.com/teams/dallas-cowboys/) were cross-checked at **2026-10-06T23:41:16.127Z**. Dallas was 2-2-0: losses 20-28 at New York and 31-34 against Baltimore, wins 37-20 against Washington and 34-30 at Houston. Four finals leave 13 regular-season games. The next matchup is Week 5 against Tampa Bay, October 8 at 7:15 p.m. CDT (October 9 at 00:15 UTC). Week 14 is a bye. Week 18 is officially TBD; its nflverse date/time is provisional and is not offered as a confirmed forecast.
 
-`seasonVerification` in the source manifest records those facts, primary source links, verification time, and unconfirmed kickoffs. The release validator independently compares normalized scores, record, next kickoff, and bye against that review. The data version includes this verification record as well as the input hashes. This is manual primary-source corroboration of the approved nflverse ingestion, not a new scraped feed or a live scoreboard. Reverify and update the record with every new final or schedule change.
+`seasonVerification` in the source manifest records those facts, primary source links, verification time, and unconfirmed kickoffs. The release validator independently compares normalized scores, record, next kickoff, and bye against that review. The data version includes this verification record as well as the input hashes. This is primary-source corroboration of the approved nflverse ingestion, not a new scraped feed or a live scoreboard. Reverify and update the record with every new final or schedule change.
 
 The builder rejects malformed CSV widths, duplicate game IDs, conflicting same-week player IDs, duplicate season-stat player IDs, malformed numeric fields, mismatched source hashes, and inconsistent source dates. It excludes completed outcomes after the validation date. It selects the forecast season, uses only roster weeks that have started, and admits week 1 preseason. Within the latest eligible week it deduplicates identical stable player IDs, then filters active status. It does not revive a prior-week active record when a newer row is inactive or missing.
 
-The player baseline must be from a prior season whose listed regular-season schedule is complete by the validation date. Player statistics join by stable ID. Opponent cards rank active roster players with prior-season statistics by PPR, using stable ID as a deterministic tie-breaker.
+Player statistics must match the selected football season and regular-season period. They join by stable ID. Opponent cards rank active roster players by current-season PPR totals, using stable ID as a deterministic tie-breaker. No prior-year substitute is allowed. Missing current-season rows remain unavailable. The [official Cowboys statistics](https://www.dallascowboys.com/team/stats/) and [active roster](https://www.dallascowboys.com/team/players-roster/) corroborated the featured-player evidence on October 6, including Prescott's 1,065 passing yards and Lamb's 37 receptions for 498 yards.
 
-Verified October 5 coverage:
+Verified October 6 coverage:
 
 - 17 of 17 Cowboys regular-season games.
 - Eight of eight featured Cowboys players.
 - Four leaders for each of 14 distinct opponents, 56 cards in total.
-- Season 2026, roster week 4, and complete 2025 player baselines.
+- Season 2026, roster week 4, and 2026 regular-season player totals to date.
 - One unidentified roster row and one unidentified stats row excluded and counted. Neither leaves a featured-player or opponent-leader gap.
 - 544 of 544 holdout games have paired historical moneylines.
 
@@ -45,9 +45,9 @@ Obtain the three approved CSV inputs from the manifest URLs into a private scrat
 node scripts/build-nfl-snapshot.mjs \
   --games=/absolute/path/games.csv \
   --roster=/absolute/path/roster_weekly_2026.csv \
-  --stats=/absolute/path/stats_player_reg_2025.csv \
+  --stats=/absolute/path/stats_player_reg_2026.csv \
   --source-metadata=app/data/source-manifest.json \
-  --as-of=2026-10-05 \
+  --as-of=2026-10-06 \
   --season=2026
 node scripts/validate-nfl-snapshot.mjs
 ```

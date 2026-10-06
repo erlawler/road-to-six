@@ -105,6 +105,21 @@ test("database failure serves the dated fallback with an unavailable status", as
   assert.equal(state.update.status, "unavailable");
 });
 
+test("a stored 2025 player snapshot cannot override the current-season release", async (t) => {
+  const db = database(t);
+  const legacy = structuredClone(fallback);
+  delete legacy.manifest.coverage.playerStatsSeason;
+  legacy.manifest.coverage.playerBaselineSeason = 2025;
+  legacy.players[0].statsSeason = 2025;
+  db.sqlite.prepare("INSERT INTO football_state (id, payload, data_version, last_success_at, last_attempt_at) VALUES (1, ?, ?, ?, ?)")
+    .run(JSON.stringify(legacy), legacy.dataVersion, new Date(reference).toISOString(), new Date(reference).toISOString());
+  const read = await readFootballState(db.env, fallback);
+  assert.deepEqual(read.snapshot, fallback);
+  assert.equal(read.snapshot.players[0].statsSeason, 2026);
+  assert.equal(read.update.lastSuccessAt, null);
+  assert.equal(read.update.status, "not_initialized");
+});
+
 test("material-change detection ignores verification-only and market quote changes", async () => {
   const changed = structuredClone(fallback);
   changed.asOf = "2026-10-06";
@@ -119,7 +134,7 @@ test("precise weekly verification does not expire at UTC midnight", () => {
   const data = structuredClone(fallback);
   data.asOf = data.manifest.validatedAt = "2026-10-07";
   data.manifest.reviewedAt = "2026-10-07T13:00:00Z";
-  for (const key of ["games", "roster"]) data.manifest.inputs[key].retrievedBetween = { start: "2026-10-07T12:59:55Z", end: "2026-10-07T13:00:00Z" };
+  for (const key of ["games", "roster", "stats"]) data.manifest.inputs[key].retrievedBetween = { start: "2026-10-07T12:59:55Z", end: "2026-10-07T13:00:00Z" };
   assert.equal(footballSnapshotFreshness(data, Date.parse("2026-10-14T12:59:59Z")).status, "current");
   assert.equal(footballSnapshotFreshness(data, Date.parse("2026-10-14T13:00:00.001Z")).status, "stale");
 });

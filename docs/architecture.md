@@ -72,7 +72,7 @@ flowchart LR
 
 1. The snapshot builder reads approved football and market records, normalizes identifiers, and writes a versioned local artifact.
 2. The free odds adapter acquires an atomic D1 refresh lease, then refreshes current markets through a six-hour shared cache.
-3. The visitor selects a game, reviews the opponent's four highest 2025 PPR producers who remain on its active 2026 roster, and changes Cowboys or opponent scenario assumptions without signing in.
+3. The visitor selects a game, reviews the opponent's four highest current-season PPR producers on its active roster, and changes Cowboys or opponent scenario assumptions without signing in.
 4. The feature builder calculates football-only probability and blends it with the median of each sportsbook's independently vig-adjusted Dallas probability. Median moneylines, spread, total, and line status remain visible market context without being double counted.
 5. The server enforces the anonymous request window, payload limits, and monthly AI budget before making a provider call.
 6. The Runtime AI calls the versioned probability function as a required tool.

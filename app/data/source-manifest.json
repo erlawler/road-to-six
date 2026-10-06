@@ -1,38 +1,38 @@
 {
-  "validatedAt": "2026-10-05",
-  "note": "Upstream metadata and downloaded bytes verified October 5, 2026. Retrieval does not imply publication time.",
+  "validatedAt": "2026-10-06",
   "inputs": {
     "games": {
-      "url": "https://raw.githubusercontent.com/nflverse/nfldata/c3d49fba205cf241b8465609a1155e3f3c7d1f23/data/games.csv",
-      "sourceVersion": "c3d49fba205cf241b8465609a1155e3f3c7d1f23",
-      "sourceUpdatedAt": "2026-10-05T22:45:14Z",
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/85de4762b6f41624f46ff2680a4af7a46e22ab6c/data/games.csv",
+      "sourceVersion": "85de4762b6f41624f46ff2680a4af7a46e22ab6c",
+      "sourceUpdatedAt": "2026-10-06T23:05:13Z",
+      "expectedSha256": "c665b32f6a386ac13b66c25c42acb6731c5ebcfb1b6f3b2c089ee2e758fc41bf",
       "retrievedBetween": {
-        "start": "2026-10-05T23:07:36.221264+00:00",
-        "end": "2026-10-05T23:07:36.747727+00:00"
-      },
-      "expectedSha256": "27b28a7ce6023bbf4cd56268162e74eca40d28ff75270fcada6c98ac86658a7a"
+        "start": "2026-10-06T23:39:02.748373+00:00",
+        "end": "2026-10-06T23:39:09.804503+00:00"
+      }
     },
     "roster": {
       "url": "https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv",
-      "sourceUpdatedAt": "2026-10-05T15:58:32Z",
+      "sourceUpdatedAt": "2026-10-06T14:11:27Z",
+      "expectedSha256": "fa51a2fbf2b5997009fef30c52066cd080fb0258da6558fd7b89600d546b2ec6",
       "retrievedBetween": {
-        "start": "2026-10-05T23:07:36.750368+00:00",
-        "end": "2026-10-05T23:07:37.514956+00:00"
-      },
-      "expectedSha256": "0f72f882f3974ff2d524ce838fb750f2d2f2fb8b3f081728ed45e832972292c3"
+        "start": "2026-10-06T23:39:02.749045+00:00",
+        "end": "2026-10-06T23:39:26.865623+00:00"
+      }
     },
     "stats": {
-      "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2025.csv",
-      "sourceUpdatedAt": "2026-08-13T16:51:50Z",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2026.csv",
+      "sourceUpdatedAt": "2026-10-06T15:55:17Z",
+      "expectedSha256": "0ce6b0bc6c08448a097d405b687fefe8f7d50acc5a7e6952db81fff0fcaa6bcf",
       "retrievedBetween": {
-        "start": "2026-10-05T23:07:37.518377+00:00",
-        "end": "2026-10-05T23:07:38.056015+00:00"
-      },
-      "expectedSha256": "aaa8559478dd8d58569c93e278239e70e9411e79ee649c99d8d506030cd42b12"
+        "start": "2026-10-06T23:39:02.749476+00:00",
+        "end": "2026-10-06T23:39:26.779782+00:00"
+      }
     }
   },
+  "reviewedAt": "2026-10-06T23:41:16.127Z",
   "seasonVerification": {
-    "verifiedAt": "2026-10-05T23:04:41Z",
+    "verifiedAt": "2026-10-06T23:41:16.127Z",
     "sources": [
       "https://www.dallascowboys.com/schedule/",
       "https://www.nfl.com/teams/dallas-cowboys/"
@@ -75,6 +75,23 @@
     "unconfirmedKickoffWeeks": [
       18
     ],
-    "note": "Official team schedule and NFL team record manually cross-checked. Week 18 remains TBD on the official schedule; the feed date is provisional."
+    "evidence": [
+      {
+        "url": "https://www.dallascowboys.com/schedule/",
+        "sha256": "261bbad2f061dde73139406e1f488892b0cee50c5cf6ffef1ad27a16f150e07a",
+        "retrievedBetween": {
+          "start": "2026-10-06T23:40:31.074887+00:00",
+          "end": "2026-10-06T23:40:37.429583+00:00"
+        }
+      },
+      {
+        "url": "https://www.nfl.com/teams/dallas-cowboys/",
+        "sha256": "39b43f16bc05a79abe9efe60b33d558801e3063492eba875c351aa4e7f701298",
+        "retrievedBetween": {
+          "start": "2026-10-06T23:40:31.075630+00:00",
+          "end": "2026-10-06T23:40:36.075612+00:00"
+        }
+      }
+    ]
   }
 }

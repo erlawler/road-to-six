@@ -1,6 +1,6 @@
 # Source freshness and coverage policy
 
-**Updated:** October 5, 2026
+**Updated:** October 6, 2026
 **Scope:** Football freshness is enforced by the authenticated hosted updater, shared data reader, forecast API, and browser. See [weekly update operations](weekly-football-updates.md) for activation and verification requirements.
 **Owner:** Eric Lawler owns source review and release acceptance. Codex can prepare source comparisons and validated candidate artifacts within authorized scope.
 
@@ -12,14 +12,14 @@ Use upstream publication or commit time only when recorded by the source. Use re
 |---|---|---|
 | NFL schedule | Review at least every 7 days during the season; verify a selected game's date and venue within 24 hours before kickoff when demonstrating or releasing a forecast for it. | Show the validated date. After 7 days, describe it as a dated schedule snapshot. A changed matchup, time, or venue requires source reconciliation before calling it current. |
 | Active roster and opponent leaders | Validate roster membership at least every 7 days during the season and after a known roster-source update that changes a featured player or selected opponent. | Say active as of the validation date. Past the target, mark roster membership as needing refresh. If a join fails, expose missing coverage instead of silently substituting a player. |
-| Complete 2025 player production | A completed-season baseline does not expire every 7 days. Recheck official source revisions with the roster refresh and preserve the season, checksum, and validation evidence. | Label the data as complete 2025 production. Do not call it current-season form. Missing prior-season production is a coverage gap, not automatically an application failure. |
+| Current-season player production | Review with the roster and schedule at least every 7 days. Fetch the regular-season totals for the selected season and preserve their source timestamp and checksum. | Label totals with their actual season and source date. Missing current-season production stays unavailable; never substitute prior-year totals. |
 | Ratings and backtest | Rebuild only from a documented model/data release; preserve the development window, holdout window, source evidence, and model version. | The historical holdout validates its stated baseline and inputs. It does not validate manually assigned player sensitivity coefficients or future-season accuracy. |
 | Current moneyline, spread, and total | Apply only supported, matched markets within the six-hour cache lifetime. Preserve provider timestamps, retrieval time, cache expiry, event match, and market-specific sportsbook counts. | One participating book is a single-source price. Missing spreads, totals, or paired moneylines must be explicit. Expired or unmatched data must not be described as current or multi-book consensus. |
 | Archived market snapshot | Retain only with its captured date and baseline label. It has no current-market freshness guarantee. | Show baseline or unavailable state distinctly. A fallback is evidence of availability design, not evidence of current odds. |
 
 The 7-day and 24-hour targets are product operating choices, not vendor service guarantees. A monthly health check alone does not satisfy an in-season weekly freshness target. No new automation, source subscription, or deployment is created by this policy.
 
-`npm run data:validate` validates the immutable bundled fallback at its recorded verification time, including hashes, joins, model calculations, and official evidence consistency. It makes no claim that this fallback is current today. Every hosted refresh uses the same validator with the actual current time and rejects stale, future, incomplete, or conflicting evidence before publication. The public page and forecast API read the same D1 version; a failed data read is visible and cannot silently renew the source dates. Precise review and retrieval timestamps determine the seven-day window for hosted data, avoiding premature expiration at UTC midnight. Legacy bundled data retains its conservative date-only age. Completed 2025 player statistics remain explicitly historical.
+`npm run data:validate` validates the immutable bundled fallback at its recorded verification time, including hashes, joins, model calculations, and official evidence consistency. It makes no claim that this fallback is current today. Every hosted refresh uses the same validator with the actual current time and rejects stale, future, incomplete, or conflicting evidence before publication. The public page and forecast API read the same D1 version; a failed data read is visible and cannot silently renew the source dates. Precise review and retrieval timestamps determine the seven-day window for hosted data, avoiding premature expiration at UTC midnight. Legacy bundled data retains its conservative date-only age. Current-season statistics participate in the same freshness check as roster and schedule evidence. Stored snapshots with the old historical-stat contract use the verified bundled release until the updater publishes compatible data.
 
 ## Current season and scenario behavior
 
@@ -43,7 +43,7 @@ Wednesday-only operation means weekend results may remain pending until Wednesda
 2. A returned provider event that cannot be joined to the product's schedule requires explicit reconciliation evidence. Never guess the match.
 3. A field returned correctly by the provider but discarded or mislabeled by the application is an application defect.
 4. A stale football snapshot is a maintenance gap even when live odds work. Report those states separately.
-5. A completed prior-season statistic may remain valid while current roster membership becomes stale. Evaluate each source category independently.
+5. Review statistics, roster membership, and schedule independently. Fresh roster data cannot renew an old statistics review.
 
 ## Release evidence
 

@@ -13,7 +13,7 @@ const args = Object.fromEntries(
 
 const gamesPath = args.games ?? "/tmp/road-to-six-games.csv";
 const rosterPath = args.roster ?? "/tmp/road-to-six-roster.csv";
-const statsPath = args.stats ?? "/tmp/road-to-six-player-stats-2025.csv";
+const statsPath = args.stats ?? "/tmp/road-to-six-player-stats-current.csv";
 const outputPath = resolve(root, args.output ?? "app/data/nfl-snapshot.json");
 const snapshotAsOf = args["as-of"];
 const evaluationOutputPath = resolve(args["evaluation-output"] ?? resolve(dirname(outputPath), "model-evaluation.json"));
