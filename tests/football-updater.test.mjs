@@ -163,8 +163,8 @@ test("server-rendered page and public reader use the same stored snapshot, with 
   assert.equal(state.headers.get("X-Football-Data-Version"), updated.dataVersion);
   assert.equal((await state.json()).snapshot.schedule[3].cowboysScore, 29);
   const page = await app.fetch(new Request("https://site.example/", { headers: { accept: "text/html" } }), db.env, ctx);
-  const html = (await page.text()).replace(/<!--.*?-->/g, "");
-  assert.match(html, /Dallas: 1-3-0/);
+  const html = await page.text();
+  assert.ok(html.includes("Dallas: <!-- -->1<!-- -->-<!-- -->3<!-- -->-<!-- -->0</strong>"));
   assert.equal(page.headers.get("cache-control"), "no-store");
   const denied = await app.fetch(new Request("https://site.example/api/football", { method: "POST" }), db.env, ctx);
   assert.equal(denied.status, 405);
