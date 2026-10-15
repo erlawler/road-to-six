@@ -19,6 +19,7 @@ import {
 import type { AIReliabilityReceipt } from "@/lib/ai-contract.mjs";
 import { footballSnapshotFreshness } from "@/lib/source-freshness.mjs";
 import { cowboysSeasonState, gameProgress, scenarioContextKey } from "@/lib/season-state.mjs";
+import { explanationAvailability, marketAvailability, type MarketRequestState } from "@/lib/forecast-presentation.mjs";
 
 import { buildComparisonEvidence, defaultComparisonSelection, selectComparisonEvidence } from "@/lib/scenario-comparison.mjs";
 
@@ -100,6 +101,7 @@ function evidenceTimestamp(value: string) {
     hour: "numeric",
     minute: "2-digit",
     timeZoneName: "short",
+    timeZone: "America/Chicago",
   }).format(date);
 }
 
@@ -168,6 +170,8 @@ function ProbabilityRing({ value, label }: { value: number; label: string }) {
 
 export default function FootballLab({ initialFootballState }: { initialFootballState: FootballState }) {
   const [football, setFootball] = useState(initialFootballState);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
   const [footballReadFailed, setFootballReadFailed] = useState(false);
   const snapshot = football.snapshot;
   useEffect(() => {
@@ -227,7 +231,8 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
   const [markets, setMarkets] = useState<Record<string, LiveMarket>>({});
   const [marketStatus, setMarketStatus] = useState("Bundled nflverse snapshot");
   const [marketMetadata, setMarketMetadata] = useState<MarketMetadata | null>(null);
-  const [isRefreshingMarkets, setIsRefreshingMarkets] = useState(false);
+  const [marketRequestState, setMarketRequestState] = useState<MarketRequestState>("idle");
+  const isRefreshingMarkets = marketRequestState === "loading";
 
   const selectedGame = (!followCurrent && snapshot.schedule.find((game) => game.id === selectedGameId))
     || seasonState.nextGame || snapshot.schedule[snapshot.schedule.length - 1];
@@ -291,6 +296,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
       setMarketMetadata(null);
       setRuntimeResult(null);
       setMarketStatus("Live market cache expired. Bundled snapshot restored; refresh when ready.");
+      setMarketRequestState("expired");
     };
     const timer = setInterval(expireMarkets, 15_000);
     expireMarkets();
@@ -302,13 +308,25 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
       : `No current market matched Week ${selectedGame.week}. Continuing with the ${snapshot.asOf} baseline.`
     : null;
 
+  const aiAvailability = explanationAvailability({ checking: currentTime === null, canExplore, current: seasonState.current, unverified: footballUnverified });
+  const marketAvailabilityState = marketAvailability({
+    requestState: marketRequestState,
+    paired: liveMarket?.marketImpliedProbability != null,
+    retrieved: marketMetadata !== null,
+    snapshotPaired: selectedGame.cowboysMoneyline != null && selectedGame.opponentMoneyline != null,
+  });
+  const verificationLabel = currentTime === null ? "Checking" : footballUnverified ? "Unavailable" : seasonState.current ? "Verified" : "Refresh needed";
+  const datedScenario = currentTime === null || !seasonState.current || footballUnverified;
+  const scenarioDeltaLabel = `${displayedForecast.scenarioDelta > 0 ? "+" : ""}${(displayedForecast.scenarioDelta * 100).toFixed(1)} pp`;
+  const visibleRuntimeStatus = aiAvailability.reason ?? runtimeStatus;
+
   function updateControl(key: keyof ScenarioControls, value: number) {
     setControls((current) => ({ ...current, [key]: value }));
-    setRuntimeStatus("Scenario changed. Generate a new explanation when ready.");
+    setRuntimeStatus("Scenario changed. The forecast above is updated.");
   }
 
   async function explainForecast() {
-    if (isExplaining || !canExplore || (!seasonState.current || footballUnverified)) return;
+    if (isExplaining || aiAvailability.reason) return;
     setIsExplaining(true);
     setRuntimeStatus("Grounding the explanation in the forecast function...");
     try {
@@ -326,12 +344,14 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
       if (marketAction.action === "apply") {
         // Forecast evidence covers this game only; never give older quotes its new freshness.
         setMarkets({ [selectedGame.id]: marketAction.market });
+        setMarketRequestState("loaded");
         setMarketMetadata({
           ...marketAction.metadata,
           cacheExpiresAt: marketAction.metadata.cacheExpiresAt ?? undefined,
           retrievedAt: marketAction.metadata.retrievedAt ?? "",
         });
       } else if (marketAction.action === "clear") {
+        setMarketRequestState("idle");
         setMarkets({});
         setMarketMetadata(null);
       }
@@ -373,7 +393,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
 
   async function refreshMarkets() {
     if (isRefreshingMarkets) return;
-    setIsRefreshingMarkets(true);
+    setMarketRequestState("loading");
     setMarketStatus("Checking current markets...");
     try {
       const response = await fetch("/api/odds");
@@ -384,6 +404,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
         setRuntimeResult(null);
         setRuntimeStatus("Live market data was cleared. The bundled scenario remains available.");
         setMarketStatus(data.message ?? "Live refresh unavailable. The bundled nflverse snapshot remains visible.");
+        setMarketRequestState("error");
         return;
       }
       const source = typeof data.source === "string" ? data.source : "The Odds API";
@@ -404,10 +425,11 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
       setMarkets(nextMarkets);
       setRuntimeResult(null);
       if (Object.keys(nextMarkets).length) {
-        setRuntimeStatus("Markets refreshed. Generate a new explanation when ready.");
+        setRuntimeStatus("Markets refreshed. The forecast above is updated.");
       } else {
         setRuntimeStatus("No current market matched the schedule. The bundled scenario remains available.");
       }
+      setMarketRequestState("loaded");
       setMarketMetadata({
         source,
         retrievedAt,
@@ -426,8 +448,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
       setRuntimeResult(null);
       setRuntimeStatus("Live market data was cleared. The bundled scenario remains available.");
       setMarketStatus("Live refresh unavailable. The bundled nflverse snapshot remains visible.");
-    } finally {
-      setIsRefreshingMarkets(false);
+      setMarketRequestState("error");
     }
   }
 
@@ -439,25 +460,25 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
           <span>ROAD TO SIX</span>
           <small>Market Context Lab</small>
         </a>
-        <nav aria-label="Primary navigation">
-          <a href="#forecast">Forecast</a>
-          <a href="#players">Players</a>
-          <a href="#model">Model audit</a>
-          <a href="#case-study">Product case</a>
-          <a href="#trust">Trust</a>
+        <a className="mobile-forecast-link" href="#forecast" onClick={() => setMenuOpen(false)}>Forecast</a>
+        <button ref={menuButton} className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen(!menuOpen)}>Menu <span aria-hidden="true">{menuOpen ? "−" : "+"}</span></button>
+        <nav id="primary-navigation" className={menuOpen ? "is-open" : ""} aria-label="Primary navigation" onKeyDown={(event) => { if (event.key === "Escape") { setMenuOpen(false); menuButton.current?.focus(); } }}>
+          <a href="#forecast" onClick={() => setMenuOpen(false)}>Forecast</a>
+          <a href="#players" onClick={() => setMenuOpen(false)}>Players</a>
+          <a href="#model" onClick={() => setMenuOpen(false)}>Model audit</a>
+          <a href="#case-study" onClick={() => setMenuOpen(false)}>Product case</a>
+          <a href="#trust" onClick={() => setMenuOpen(false)}>Trust</a>
         </nav>
         <span className="unofficial" aria-label="Eric Ryan Lawler">ERL</span>
       </header>
 
       <section className="hero" id="top">
         <div className="hero-copy">
-          <p className="season-kicker">2026 record verified {snapshot.asOf}: {seasonState.record.wins}-{seasonState.record.losses}-{seasonState.record.ties} · {seasonState.completed.length} final, {seasonState.remaining.length} remaining</p>
+          <p className="season-kicker">{snapshot.season.year} snapshot · Dallas {seasonState.record.wins}-{seasonState.record.losses}-{seasonState.record.ties} · {gameDate(snapshot.asOf)}</p>
           <span className="eyebrow">Frontier AI skills showcase</span>
           <h1>Football evidence meets market reality.</h1>
           <p>
-            An evidence-grounded product that joins actual players, games, and market lines with
-            transparent win probabilities. Explore scenarios, inspect the model, and see how cost,
-            safety, and release decisions are governed.
+            Explore Dallas matchups, change player assumptions, and see how football evidence compares with the market.
           </p>
           <p className="ownership-line">
             Product strategy, architecture, risk, and release owned by Eric Lawler. Implemented with Codex.
@@ -474,7 +495,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
         </div>
 
         {canExplore ? <article className="hero-forecast" aria-label="Selected game forecast summary">
-          <p className="scenario-context">{currentTime !== null && (!seasonState.current || footballUnverified) ? "Dated snapshot hypothetical" : selectedGame.id === seasonState.nextGame?.id ? "Next Cowboys matchup" : "Future-week hypothetical"}{customAssumptions ? " · Your custom assumptions" : " · Baseline assumptions"}</p>
+          <p className="scenario-context">{datedScenario ? "Dated snapshot scenario" : selectedGame.id === seasonState.nextGame?.id ? "Next Cowboys matchup" : "Future-week hypothetical"}{customAssumptions ? " · Your custom assumptions" : " · Baseline assumptions"}</p>
           <div className="game-kicker">
             <span>Week {selectedGame.week}</span>
             <span>{gameDate(selectedGame.date)}</span>
@@ -487,7 +508,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
           />
           <div className="hero-comparison">
             <div><span>Football only</span><strong>{percent(displayedForecast.footballOnly)}</strong></div>
-            <div><span>Market implied</span><strong>{percent(displayedForecast.marketImplied)}</strong></div>
+            <div><span>Market implied</span><strong>{displayedForecast.marketImplied === null ? marketAvailabilityState.missing : percent(displayedForecast.marketImplied)}</strong></div>
           </div>
           <p>
             Illustrative uncertainty band {percent(displayedForecast.confidenceLow)} to {percent(displayedForecast.confidenceHigh)}
@@ -499,17 +520,28 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
         </article>}
       </section>
 
-      <section className="season-state" aria-labelledby="season-state-title">
-        <h2 id="season-state-title">Start from the season as played</h2>
-        <p>{football.update.lastSuccessAt ? "Football update cadence: Wednesday at 8 a.m. Central." : "Automatic football updates are being initialized for Wednesdays at 8 a.m. Central."} Weekend results may remain pending until that update; this is not a live scoreboard.</p>
-        {footballUnverified ? <p className="source-stale" role="status">The latest football refresh or read could not be verified. The last successful dated snapshot is retained; current-state AI explanations are paused.</p> : null}
-        {football.update.lastSuccessAt ? <p>Last successful hosted refresh: <time dateTime={football.update.lastSuccessAt}>{football.update.lastSuccessAt}</time>.</p> : null}
-        <p><strong>Dallas: {seasonState.record.wins}-{seasonState.record.losses}-{seasonState.record.ties}</strong> from {seasonState.completed.length} verified finals. {seasonState.remaining.length} games remain without a verified final result.</p>
-        <p>Last official result and schedule verification: <time dateTime={snapshot.season.verifiedAt}>{snapshot.season.verifiedAt}</time>. Ratings include completed games through {snapshot.ratingsMetadata.trainedThrough}.</p>
-        <p><a href="https://www.dallascowboys.com/schedule/" target="_blank" rel="noreferrer">Official Cowboys schedule and results</a> · <a href="https://www.nfl.com/teams/dallas-cowboys/" target="_blank" rel="noreferrer">NFL team record</a></p>
-        {seasonState.byeWeek !== null ? <p><strong>Week {seasonState.byeWeek} is the Cowboys bye.</strong> The next-game scenario is separate from this bye week.</p> : null}
-        {seasonState.nextGame ? <p>Next scheduled matchup: <strong>Week {seasonState.nextGame.week}, {seasonState.nextGame.opponentName}</strong>, {new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "America/Chicago" }).format(new Date(seasonState.nextGame.kickoffAt!))} (Dallas time).</p> : null}
-        {seasonState.pending.length ? <p className="source-stale" role="status">Kickoff has passed for Week {seasonState.pending.map((game) => game.week).join(", ")}; a final result is not verified. This is not a live scoreboard. The displayed record may be incomplete and scenarios are paused until the source refresh.</p> : currentTime !== null && (!seasonState.current || footballUnverified) ? <p className="source-stale" role="status">Current season state is not verified. The record and scenario use the dated snapshot below; they must not be read as current.</p> : null}
+      <section className="season-state" id="evidence" aria-labelledby="season-state-title">
+        <div className="season-heading">
+          <div><span className="eyebrow">Evidence status</span><h2 id="season-state-title">Start from the season as played</h2></div>
+          <p><strong>Dallas: {seasonState.record.wins}-{seasonState.record.losses}-{seasonState.record.ties}</strong><span>{seasonState.completed.length} final · {seasonState.remaining.length} remaining</span></p>
+        </div>
+        <dl className="status-grid">
+          <div><dt>Football snapshot</dt><dd>{gameDate(snapshot.asOf)}, {snapshot.season.year}</dd><small>Results, roster and ratings</small></div>
+          <div><dt>Current verification</dt><dd className={datedScenario ? "status-warning" : ""}>{verificationLabel}</dd><small>{datedScenario ? "Use as a dated scenario" : "Season results are verified"}</small></div>
+          <div><dt>Market data</dt><dd>{marketAvailabilityState.label}</dd><small>{liveMarket && marketMetadata ? evidenceTimestamp(marketMetadata.retrievedAt) : "Separate from football updates"}</small></div>
+          <div><dt>AI explanation</dt><dd>{aiAvailability.label}</dd><small>{!canExplore ? "Waiting for a verified matchup" : aiAvailability.reason ? "Calculated forecasts still available" : "Optional grounded context"}</small></div>
+        </dl>
+        {seasonState.pending.length ? <p className="status-notice" role="status">Kickoff has passed for Week {seasonState.pending.map((game) => game.week).join(", ")}. A final result is not verified, so scenarios are paused.</p> : datedScenario ? <p className="status-notice" role="status">{currentTime === null ? "Checking current football verification." : "Current football verification is unavailable. The record and scenarios use the dated snapshot shown here."}</p> : null}
+        {seasonState.byeWeek !== null ? <p><strong>Week {seasonState.byeWeek} is the Cowboys bye.</strong></p> : null}
+        {seasonState.nextGame ? <p className="next-matchup">Next scheduled: <strong>Week {seasonState.nextGame.week}, {seasonState.nextGame.opponentName}</strong> · {evidenceTimestamp(seasonState.nextGame.kickoffAt!)}</p> : null}
+        <details className="source-details">
+          <summary>Sources and update timing</summary>
+          <p>{football.update.lastSuccessAt ? "Football update cadence: Wednesday at 8 a.m. Central." : "Automatic football updates are being initialized for Wednesdays at 8 a.m. Central."} This is not a live scoreboard. Weekend results may remain pending until the next update.</p>
+          {football.update.lastSuccessAt ? <p>Last successful hosted refresh: <time dateTime={football.update.lastSuccessAt}>{evidenceTimestamp(football.update.lastSuccessAt)}</time>.</p> : null}
+          <p>Last official result and schedule verification: <time dateTime={snapshot.season.verifiedAt}>{evidenceTimestamp(snapshot.season.verifiedAt)}</time>. Ratings include completed games through {snapshot.ratingsMetadata.trainedThrough}.</p>
+          {snapshotFreshness ? <p>Snapshot age: {snapshotFreshness.message} This age check is separate from current verification.</p> : null}
+          <p><a href="https://www.dallascowboys.com/schedule/" target="_blank" rel="noreferrer">Official Cowboys schedule and results</a> · <a href="https://www.nfl.com/teams/dallas-cowboys/" target="_blank" rel="noreferrer">NFL team record</a></p>
+        </details>
         <div className="season-details">
           <details><summary>Completed results ({seasonState.completed.length})</summary>
             <table><caption>Actual finals, never changed by scenario controls</caption><thead><tr><th>Week</th><th>Opponent</th><th>Dallas score first</th></tr></thead>
@@ -525,30 +557,38 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
         </div>
       </section>
 
-      <p className="freshness-note">
-        Football and roster snapshot: {snapshot.asOf}.
-        {snapshotFreshness ? <strong className={snapshotFreshness.status === "current" ? "source-age" : "source-stale"}> {snapshotFreshness.message}</strong> : null}
-        {" "}Player stats: {snapshot.season.year} regular season to date. Refresh odds separately for current market coverage.
-      </p>
-      {canExplore ? <><section className="market-strip" aria-label="Market snapshot">
-        <div><span>Dallas moneyline</span><strong>{moneyline(effectiveGame.cowboysMoneyline)}</strong></div>
-        <div><span>Spread</span><strong>{spread(effectiveGame.cowboysSpread)}</strong></div>
-        <div><span>Total</span><strong>{effectiveGame.totalLine ?? "Pending"}</strong></div>
-        <div><span>Line status</span><strong>{liveMarket ? liveMarket.marketImpliedProbability === null ? "Incomplete" : "Live source" : "Bundled snapshot"}</strong></div>
-      </section>
-
+      {canExplore ? <>
       <section className="forecast-section" id="forecast">
         <div className="section-heading">
           <span className="section-number">01</span>
           <div>
             <span className="eyebrow">Interactive forecast</span>
-            <h2>Change assumptions. Keep the evidence visible.</h2>
-            <p id="scenario-disclaimer">Hypothetical participation starts at 100%; this is not a report of current player availability. Completed results and the actual record never change with these controls.</p>
-            <p className="scenario-context">{selectedGame.id === seasonState.nextGame?.id ? `Week ${selectedGame.week}: next-matchup scenario` : `Week ${selectedGame.week}: future-week hypothetical`}. {customAssumptions ? "Custom assumptions are active." : "Baseline assumptions are active."} {currentTime !== null && (!seasonState.current || footballUnverified) ? "Stale snapshot: current-state verification required." : "Uses the verified season results above."}</p>
+            <h2>Explore the matchup.</h2>
+            <p id="scenario-disclaimer">Adjust hypothetical participation, not reported player availability. Actual results never change.</p>
+            <p className="scenario-context">Week {selectedGame.week} · {customAssumptions ? "Custom assumptions" : "All controls at 100%"} · {datedScenario ? `Dated football snapshot: ${gameDate(snapshot.asOf)}` : "Verified season results"}</p>
           </div>
         </div>
 
+        <section className="market-summary" aria-label="Market snapshot" aria-busy={isRefreshingMarkets}>
+          <div className="market-summary-heading">
+            <div><span className="eyebrow">Market comparison</span><h3>Odds for Week {selectedGame.week}</h3></div>
+            <button type="button" className="text-button" onClick={refreshMarkets} disabled={isRefreshingMarkets} aria-busy={isRefreshingMarkets}>{isRefreshingMarkets ? "Refreshing odds" : "Refresh odds"}</button>
+          </div>
+          <dl className="market-values">
+            <div><dt>Dallas moneyline</dt><dd>{effectiveGame.cowboysMoneyline === null ? marketAvailabilityState.missing : moneyline(effectiveGame.cowboysMoneyline)}</dd></div>
+            <div><dt>Spread</dt><dd>{effectiveGame.cowboysSpread === null ? marketAvailabilityState.missing : spread(effectiveGame.cowboysSpread)}</dd></div>
+            <div><dt>Total</dt><dd>{effectiveGame.totalLine ?? marketAvailabilityState.missing}</dd></div>
+            <div><dt>Market status</dt><dd>{marketAvailabilityState.label}</dd></div>
+          </dl>
+          <p className="market-feedback" role="status">{marketAvailabilityState.detail}</p>
+          {marketRequestState !== "idle" && marketRequestState !== "loading" ? <details className="source-details"><summary>Market source and coverage</summary><p>{marketStatus}</p>{selectedMarketStatus ? <p>{selectedMarketStatus}</p> : null}</details> : null}
+        </section>
         <div className="forecast-workspace">
+          <div className="controls-column">
+            <div className="forecast-live-summary" aria-label="Scenario summary">
+              <div><span>Dallas win · Week {selectedGame.week}</span><strong>{percent(displayedForecast.probability)} <small>{scenarioDeltaLabel} vs. baseline</small></strong><span>{datedScenario ? `Dated ${gameDate(snapshot.asOf)} · ` : ""}{displayedForecast.marketImplied === null ? "Football only" : "Market aware"}</span></div>
+              <a href="#scenario-result">Full result ↓</a>
+            </div>
           <div className="control-panel">
             <div className="game-select">
               <label htmlFor="game-select">Select a Cowboys game</label>
@@ -556,7 +596,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
                 setSelectedGameId(event.target.value);
                 setFollowCurrent(false);
                 setControls((current) => ({ ...current, opponentStar: 100 }));
-                setRuntimeStatus("Game changed. Generate a new explanation when ready.");
+                setRuntimeStatus("Game changed. The forecast above is updated.");
               }} aria-describedby="scenario-disclaimer">
                 {seasonState.upcoming.map((game) => (
                   <option key={game.id} value={game.id}>
@@ -610,7 +650,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
                 onClick={() => {
                   setControls(defaultControls);
                   setRuntimeResult(null);
-                  setRuntimeStatus("Scenario reset. Generate a new explanation when ready.");
+                  setRuntimeStatus("Scenario reset. The forecast above is updated.");
                 }}
               >
                 Reset scenario
@@ -619,25 +659,10 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
               <small>Dallas assumptions stay in place during manual matchup changes. Week transitions clear old assumptions. Scenarios are not saved across page loads.</small>
             </div>
 
-            <div className="market-refresh">
-              <div>
-                <strong>Market data</strong>
-                <small role="status">{marketStatus}</small>
-                {selectedMarketStatus ? <small className="selected-market-status">{selectedMarketStatus}</small> : null}
-              </div>
-              <button
-                type="button"
-                className="text-button"
-                onClick={refreshMarkets}
-                disabled={isRefreshingMarkets}
-                aria-busy={isRefreshingMarkets}
-              >
-                {isRefreshingMarkets ? "Refreshing odds" : "Refresh odds"}
-              </button>
-            </div>
+          </div>
           </div>
 
-          <article className="result-panel">
+          <article className="result-panel" id="scenario-result" tabIndex={-1}>
             <div className="result-header">
               <div>
                 <span className="eyebrow">Scenario result</span>
@@ -646,12 +671,13 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
                 </h3>
               </div>
               <span className={`mode-badge ${displayedExplanation.mode}`}>
-                {displayedExplanation.mode === "ai" ? "Runtime AI" : "Deterministic"}
+                {displayedExplanation.mode === "ai" ? "AI context" : "Calculated"}
               </span>
             </div>
             {displayedExplanation.mode === "ai" ? (
               <p className="ai-boundary">Probability unchanged. Runtime AI selected grounded context for this comparison.</p>
             ) : null}
+            <p className="result-context">{datedScenario ? `Dated football snapshot: ${gameDate(snapshot.asOf)}. Current verification is unavailable.` : "Based on verified season results."} {displayedForecast.marketImplied === null ? "Football only; paired market odds are not applied." : "Includes paired market odds."}</p>
             <p className="explanation-summary">{displayedExplanation.summary}</p>
             <section className="scenario-comparison" aria-labelledby="comparison-title">
               <h4 id="comparison-title">What changed from baseline</h4>
@@ -661,8 +687,12 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
                 <div><dt>Change</dt><dd>{displayedForecast.scenarioDelta > 0 ? "+" : ""}{(displayedForecast.scenarioDelta * 100).toFixed(1)} pp</dd></div>
               </dl>
               <small>{displayedExplanation.mode === "ai" ? "Experimental AI-selected context" : "Default context"}. Same game and market evidence; only assumptions change.</small>
-              <ul>{comparisonCards.map((item) => <li key={item.id}>{item.text}</li>)}</ul>
             </section>
+            <p className="essential-limits">Educational scenario only. Player effects are hand-set assumptions; the uncertainty band is illustrative, not a calibrated confidence interval.</p>
+            <details className="forecast-details">
+              <summary>How this forecast is calculated</summary>
+              <p>Deterministic means the same evidence and assumptions produce the same calculated probability. AI can select explanatory context, but cannot change that probability.</p>
+              <ul>{comparisonCards.map((item) => <li key={item.id}>{item.text}</li>)}</ul>
             <p className="contribution-note">Contributions below add to a 50% starting point. Units are percentage points (pp); display rounding can affect the sum.</p>
             <div className="driver-list">
               {displayedExplanation.drivers.slice(0, 3).map((driver) => (
@@ -688,17 +718,19 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
                 </span>
               </div>
             </div>
+            </details>
             <div className="runtime-action">
               <button
                 type="button"
                 className="primary-action dark"
                 onClick={explainForecast}
-                disabled={isExplaining || (!seasonState.current || footballUnverified)}
+                disabled={isExplaining || aiAvailability.reason !== null}
                 aria-busy={isExplaining}
+                aria-describedby="explanation-status"
               >
                 {isExplaining ? "Generating explanation" : "Generate grounded explanation"}
               </button>
-              <small role="status">{runtimeStatus}</small>
+              <small id="explanation-status" role="status">{visibleRuntimeStatus}</small>
             </div>
             {runtimeResult?.key === scenarioKey && (
               <section className="reliability-receipt" aria-labelledby="reliability-title">
@@ -806,7 +838,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
             <span className="eyebrow">Week {selectedGame.week} opponent</span>
             <h3>{selectedOpponent.teamName} production leaders</h3>
           </div>
-          <p>Ranked by {selectedOpponent.rankingMethod.toLowerCase()}.</p>
+          <p>Ranked by {selectedOpponent.rankingMethod.toLowerCase()}. PPR means points per reception in fantasy scoring.</p>
         </div>
         <div className="opponent-grid">
           {selectedOpponent.leaders.map((leader, index) => (
@@ -855,6 +887,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
             </p>
           </div>
         </div>
+        <p className="metric-definition">Brier score measures probability error. Lower is better; compare the model with the market benchmark below.</p>
         <div className="model-grid">
           <article>
             <span>Football-only Brier</span>
@@ -883,7 +916,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
             The market-aware baseline improves on football-only Elo, but it does not outperform the market itself.
             That limitation stays visible instead of being turned into a false claim of betting edge.
           </p>
-          <small>{snapshot.backtest.method}</small>
+          <details className="forecast-details"><summary>Backtest methodology</summary><small>{snapshot.backtest.method}</small></details>
         </div>
       </section>
 
@@ -933,7 +966,8 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
           </dl>
         </div>
 
-        <div className="decision-table" role="region" aria-label="Key product decisions" tabIndex={0}>
+        <p className="table-scroll-hint" id="decisions-scroll-hint">Swipe or scroll sideways to compare decisions, tradeoffs and evidence.</p>
+        <div className="decision-table" role="region" aria-label="Key product decisions" aria-describedby="decisions-scroll-hint" tabIndex={0}>
           <table>
             <caption>Key product decisions and their evidence</caption>
             <thead>
