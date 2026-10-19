@@ -9,10 +9,12 @@ const clock = () => reference;
 
 test("successful downloads retain exact text, byte count, digest and retrieval interval", async () => {
   const body = "Dallas \u2605";
-  const result = await boundedSource(url, async () => new Response(body), 100, clock, "games");
+  const lastModified = "Sun, 18 Oct 2026 18:30:00 GMT";
+  const result = await boundedSource(url, async () => new Response(body, { headers: { "last-modified": lastModified } }), 100, clock, "games");
   assert.deepEqual(result, {
     text: body, bytes: new TextEncoder().encode(body).byteLength, sha256: await sha256(body),
     retrievedBetween: { start: new Date(reference).toISOString(), end: new Date(reference).toISOString() },
+    lastModified,
   });
 });
 
@@ -93,27 +95,57 @@ test("the existing 25-second deadline aborts the request and reports a safe time
   assert.equal(signal.aborted, true);
 });
 
-test("all eight approved requests report their own source label", async () => {
+function sourceFixtures(digest = "b".repeat(64)) {
   const commit = "a".repeat(40);
-  const api = "https://api.github.com/repos/nflverse/";
-  const fixtures = new Map([
-    [`${api}nfldata/commits?path=data/games.csv&per_page=1`, ["nflverse games metadata", [{ sha: commit, commit: { committer: { date: new Date(reference).toISOString() } } }]]],
-    [`${api}nflverse-data/releases/tags/weekly_rosters`, ["nflverse roster metadata", { assets: [{ name: "roster_weekly_2026.csv", updated_at: new Date(reference).toISOString() }] }]],
-    [`${api}nflverse-data/releases/tags/stats_player`, ["nflverse player stats metadata", { assets: [{ name: "stats_player_reg_2026.csv", updated_at: new Date(reference).toISOString() }] }]],
+  const release = (tag, name) => `<ul><li><a href="/nflverse/nflverse-data/releases/download/${tag}/${name}">${name}</a><clipboard-copy aria-label="Copy to clipboard digest for ${name}" value="sha256:${digest}"></clipboard-copy><relative-time datetime="2026-10-18T18:00:00Z"></relative-time></li></ul>`;
+  const atom = `<feed xmlns="http://www.w3.org/2005/Atom"><id>tag:github.com,2008:/nflverse/nfldata/commits/master/data/games.csv</id><entry><id>tag:github.com,2008:Grit::Commit/${commit}</id><link rel="alternate" href="https://github.com/nflverse/nfldata/commit/${commit}"/><updated>2026-10-18T18:00:00Z</updated></entry></feed>`;
+  return new Map([
+    ["https://github.com/nflverse/nfldata/commits/master/data/games.csv.atom", ["nflverse games metadata", atom]],
+    ["https://github.com/nflverse/nflverse-data/releases/expanded_assets/weekly_rosters", ["nflverse roster metadata", release("weekly_rosters", "roster_weekly_2026.csv")]],
+    ["https://github.com/nflverse/nflverse-data/releases/expanded_assets/stats_player", ["nflverse player stats metadata", release("stats_player", "stats_player_reg_2026.csv")]],
     [`https://raw.githubusercontent.com/nflverse/nfldata/${commit}/data/games.csv`, ["nflverse games feed", ""]],
     ["https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv", ["nflverse roster feed", ""]],
     ["https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2026.csv", ["nflverse player stats feed", ""]],
     ["https://www.dallascowboys.com/schedule/", ["Official Cowboys schedule", ""]],
     ["https://www.nfl.com/teams/dallas-cowboys/", ["Official NFL team record", ""]],
   ]);
+}
+
+test("all eight approved requests report their own source label", async () => {
+  const fixtures = sourceFixtures();
   for (const [failedUrl, [label]] of fixtures) {
     const fetcher = async (requestedUrl) => {
       assert.ok(fixtures.has(requestedUrl), "Only approved sources may be requested");
       if (requestedUrl === failedUrl) return new Response("private upstream detail", { status: 503 });
       const value = fixtures.get(requestedUrl)[1];
-      return new Response(typeof value === "string" ? value : JSON.stringify(value));
+      return new Response(value);
     };
     await assert.rejects(retrieveFootballCandidate({ season: { year: 2026 } }, fetcher, clock),
       { message: `${label}: HTTP 503` });
+  }
+});
+
+test("retrieval still rejects a download that differs from the published checksum", async () => {
+  const fixtures = sourceFixtures();
+  const fetcher = async (requestedUrl) => {
+    assert.ok(fixtures.has(requestedUrl), "Only approved public sources may be requested");
+    return new Response(fixtures.get(requestedUrl)[1]);
+  };
+  await assert.rejects(retrieveFootballCandidate({ season: { year: 2026 } }, fetcher, clock), /Published source digest differs from download/);
+});
+
+test("asset modification timestamps must exist and fall between publication and retrieval", async () => {
+  const fixtures = sourceFixtures(await sha256(""));
+  for (const [lastModified, reason] of [
+    [null, /modification time is unavailable/],
+    ["not a date", /modification time is unavailable/],
+    ["Sun, 18 Oct 2026 17:00:00 GMT", /modification time predates publication/],
+    ["Sun, 18 Oct 2026 20:00:00 GMT", /modification time is in the future/],
+  ]) {
+    const fetcher = async (requestedUrl) => {
+      assert.ok(fixtures.has(requestedUrl), "Only approved public sources may be requested");
+      return new Response(fixtures.get(requestedUrl)[1], { headers: lastModified ? { "last-modified": lastModified } : {} });
+    };
+    await assert.rejects(retrieveFootballCandidate({ season: { year: 2026 } }, fetcher, clock), reason);
   }
 });
