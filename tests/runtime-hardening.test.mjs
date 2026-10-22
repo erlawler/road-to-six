@@ -554,6 +554,8 @@ test("returns a validated AI reliability receipt and privacy-safe ledger row", a
       return originalFetch(input, init);
     }
     aiCalls += 1;
+    assert.equal(init.redirect, "error");
+    assert.ok(init.signal instanceof AbortSignal);
     const requestBody = JSON.parse(init.body);
     return aiCalls === 1
       ? firstAIResponse({
@@ -1362,4 +1364,20 @@ test("redirects favicon requests to the existing SVG icon", async () => {
   assert.equal(response.status, 308);
   assert.equal(response.headers.get("location"), "https://road-to-six.example/icon.svg");
   assert.match(response.headers.get("cache-control") ?? "", /max-age=86400/);
+});
+
+
+test("forecast rejects cross-site writes and misleading JSON media types before database or provider work", async () => {
+  const worker = await loadWorker("cross-site-forecast");
+  let touched = false;
+  const guardedEnv = { ...env, DB: { prepare() { touched = true; throw new Error("Unexpected DB access"); } } };
+  for (const headers of [{ Origin: "https://attacker.example" }, { "Sec-Fetch-Site": "cross-site" }]) {
+    const response = await worker.fetch(forecastRequest(headers), guardedEnv, ctx);
+    assert.equal(response.status, 403);
+  }
+  for (const value of ["text/plain; application/json", "application/jsonp", "text/application/json"]) {
+    const response = await worker.fetch(forecastRequest({ "content-type": value }), guardedEnv, ctx);
+    assert.equal(response.status, 415);
+  }
+  assert.equal(touched, false);
 });

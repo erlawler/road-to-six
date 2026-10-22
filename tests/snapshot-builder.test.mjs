@@ -7,6 +7,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { advanceRatingsSeason, calculateForecast, DEFAULT_CONTROLS, eloWinProbability, MODEL_PARAMETERS, MODEL_VERSION } from "../lib/forecast.mjs";
+import { validateFootballSnapshot } from "../lib/football-validation.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const gameHeader = "season,game_type,home_score,away_score,gameday,game_id,home_team,away_team,home_moneyline,away_moneyline,week,location,spread_line,total_line,stadium,gametime";
@@ -131,8 +132,10 @@ test("every checked-in holdout row matches the production scorer at default cont
   assert.equal(evaluation.modelVersion, MODEL_VERSION);
   for (const row of evaluation.records) {
     const forecast = calculateForecast({ game: { opponent: "OPP", opponentName: "Opponent", venue: row.venue, cowboysMoneyline: row.homeMoneyline, opponentMoneyline: row.awayMoneyline }, ratings: { DAL: row.homeRating, OPP: row.awayRating }, controls: DEFAULT_CONTROLS });
-    assert.equal(forecast.footballOnly, row.footballProbability, row.gameId);
-    if (row.marketProbability !== null) assert.equal(forecast.probability, row.blendedProbability, row.gameId);
+    // Serialized historical calculations can differ at machine precision.
+    // Match the production validator's tolerance, without rounding the data.
+    assert.ok(Math.abs(forecast.footballOnly - row.footballProbability) < 1e-12, row.gameId);
+    if (row.marketProbability !== null) assert.ok(Math.abs(forecast.probability - row.blendedProbability) < 1e-12, row.gameId);
   }
 });
 
@@ -156,14 +159,31 @@ test("builder rejects raw inputs that differ from the declared source checksum",
 test("checked-in data validation recomputes claims and rejects tampered metrics", async (context) => {
   const directory = await mkdtemp(join(tmpdir(), "road-to-six-data-validation-"));
   context.after(() => rm(directory, { recursive: true, force: true }));
-  const good = spawnSync(process.execPath, ["scripts/validate-nfl-snapshot.mjs"], { cwd: root, encoding: "utf8" });
+  const good = spawnSync(process.execPath, ["scripts/validate-nfl-snapshot.mjs", "--at-verification"], { cwd: root, encoding: "utf8" });
   assert.equal(good.status, 0, good.stderr);
+  assert.match(good.stdout, /Validated dated fallback at its recorded verification time/);
   const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
   snapshot.backtest.marketAwareBrier = 0.01;
   const path = join(directory, "snapshot.json");
   await writeFile(path, JSON.stringify(snapshot));
-  const bad = spawnSync(process.execPath, ["scripts/validate-nfl-snapshot.mjs", `--snapshot=${path}`], { cwd: root, encoding: "utf8" });
+  const bad = spawnSync(process.execPath, ["scripts/validate-nfl-snapshot.mjs", "--at-verification", `--snapshot=${path}`], { cwd: root, encoding: "utf8" });
   assert.notEqual(bad.status, 0);
+  assert.match(bad.stderr, /Football data mismatch/);
+});
+
+test("historical validation does not bypass live freshness or probability integrity", async () => {
+  const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
+  const metadata = JSON.parse(await readFile(new URL("../app/data/source-manifest.json", import.meta.url), "utf8"));
+  const evaluationText = await readFile(new URL("../app/data/model-evaluation.json", import.meta.url), "utf8");
+  const verifiedAt = Math.max(Date.parse(snapshot.season.verifiedAt), Date.parse(snapshot.manifest.reviewedAt ?? snapshot.season.verifiedAt), ...["games", "roster", "stats"].map((key) => Date.parse(snapshot.manifest.inputs[key].retrievedBetween.end)));
+  await assert.rejects(validateFootballSnapshot(snapshot, metadata, evaluationText, verifiedAt + 8 * 86_400_000), /Snapshot refresh needed under the weekly review policy/);
+
+  // Re-sign the artifact checksum so this fails on the scorer comparison itself.
+  const evaluation = JSON.parse(evaluationText);
+  evaluation.records[0].footballProbability += 1e-6;
+  const tampered = JSON.stringify(evaluation);
+  snapshot.backtest.evaluationSha256 = createHash("sha256").update(tampered).digest("hex");
+  await assert.rejects(validateFootballSnapshot(snapshot, metadata, tampered, verifiedAt), /differs from recomputation/);
 });
 
 
