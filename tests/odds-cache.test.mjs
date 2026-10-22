@@ -35,6 +35,8 @@ test("normalizes per-book consensus and reuses the six-hour odds cache", async (
       return originalFetch(input, init);
     }
     vendorCalls += 1;
+    assert.equal(init.redirect, "error");
+    assert.ok(init.signal instanceof AbortSignal);
     return Response.json([
       {
         id: "event-1",

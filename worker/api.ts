@@ -815,6 +815,7 @@ async function openAIRequest(env: RuntimeEnv, body: Record<string, unknown>) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
+      redirect: "error",
       signal: AbortSignal.timeout(8_000),
     });
   } catch (error) {
@@ -1036,7 +1037,7 @@ async function forecastResponse(request: Request, env: RuntimeEnv) {
     return rejected("request_body_too_large", 413);
   }
   const contentType = request.headers.get("content-type") ?? "";
-  if (!contentType.toLowerCase().includes("application/json")) {
+  if (contentType.split(";", 1)[0].trim().toLowerCase() !== "application/json") {
     return rejected("unsupported_content_type", 415);
   }
   let body: Record<string, unknown>;
@@ -1365,7 +1366,7 @@ async function fetchOddsPayload(env: RuntimeEnv) {
   url.searchParams.set("markets", "h2h,spreads,totals");
   url.searchParams.set("oddsFormat", "american");
   url.searchParams.set("dateFormat", "iso");
-  const response = await fetch(url, { signal: AbortSignal.timeout(8_000) });
+  const response = await fetch(url, { signal: AbortSignal.timeout(8_000), redirect: "error" });
   if (!response.ok) throw new Error(`Odds provider returned status ${response.status}`);
   const events = await response.json() as Array<Record<string, unknown>>;
   const dallasEvents = events.filter(
@@ -1565,6 +1566,10 @@ async function oddsResponse(env: RuntimeEnv) {
 export async function handleApiRequest(request: Request, env: RuntimeEnv) {
   const url = new URL(request.url);
   if (url.pathname === "/api/forecast" && request.method === "POST") {
+    const origin = request.headers.get("Origin");
+    if ((origin && origin !== url.origin) || request.headers.get("Sec-Fetch-Site") === "cross-site") {
+      return jsonResponse({ error: "Origin not allowed" }, 403);
+    }
     return forecastResponse(request, env);
   }
   if (url.pathname === "/api/odds" && request.method === "GET") {
