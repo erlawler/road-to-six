@@ -148,8 +148,12 @@ test("clears live market state when the forecast API reports bundled evidence", 
   assert.deepEqual(bundledAction, { action: "clear" });
 });
 
-test("the forecast API uses a next-day UTC event as current market evidence", async () => {
-  const originalFetch = globalThis.fetch;
+test("the forecast API uses a next-day UTC event as current market evidence", async (context) => {
+  // Exercise market matching before kickoff, independently of the test run date.
+  context.mock.timers.enable({ apis: ["Date"], now: Math.max(Date.parse(snapshot.season.verifiedAt), Date.parse(snapshot.manifest.reviewedAt ?? snapshot.season.verifiedAt), ...["games", "roster", "stats"].map((key) => Date.parse(snapshot.manifest.inputs[key].retrievedBetween.end))) });
+  const game = snapshot.schedule.find((candidate) => candidate.status === "scheduled"
+    && candidate.kickoffAt && candidate.kickoffAt.slice(0, 10) !== candidate.date);
+  assert.ok(game, "The verified snapshot must include an upcoming Central-date rollover game");
   const fetchedAt = new Date().toISOString();
   const oddsPayload = {
     status: "current",
@@ -160,9 +164,9 @@ test("the forecast API uses a next-day UTC event as current market evidence", as
     cacheTtlHours: 6,
     cached: true,
     events: [{
-      commenceTime: "2026-10-09T00:15:00Z",
-      homeTeam: "Tampa Bay Buccaneers",
-      awayTeam: "Dallas Cowboys",
+      commenceTime: game.kickoffAt,
+      homeTeam: game.venue === "home" ? "Dallas Cowboys" : game.opponentName,
+      awayTeam: game.venue === "home" ? game.opponentName : "Dallas Cowboys",
       cowboysMoneyline: -145,
       opponentMoneyline: 125,
       cowboysSpread: -2.5,
@@ -180,6 +184,15 @@ test("the forecast API uses a next-day UTC event as current market evidence", as
           return statement;
         },
         async first() {
+          if (sql.includes("FROM football_state")) {
+            return {
+              payload: JSON.stringify(snapshot),
+              data_version: snapshot.dataVersion,
+              last_success_at: fetchedAt,
+              last_attempt_at: fetchedAt,
+              last_error: null,
+            };
+          }
           if (sql.includes("FROM odds_cache")) {
             return {
               payload: JSON.stringify(oddsPayload),
@@ -203,50 +216,50 @@ test("the forecast API uses a next-day UTC event as current market evidence", as
     },
   };
 
-  globalThis.fetch = async (input) => {
+  let providerCalls = 0;
+  context.mock.method(globalThis, "fetch", async (input) => {
     if (String(input).startsWith("https://api.openai.com/")) {
+      providerCalls++;
       return new Response(null, { status: 503 });
     }
-    return originalFetch(input);
-  };
+    assert.fail("The cached market fixture must not make other network requests");
+  });
 
-  try {
-    const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-    workerUrl.searchParams.set("market-rollover", `${process.pid}-${Date.now()}`);
-    const { default: worker } = await import(workerUrl.href);
-    const response = await worker.fetch(
-      new Request("http://localhost/api/forecast", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          gameId: "2026_05_TB_DAL",
-          controls: {
-            quarterback: 100,
-            lamb: 100,
-            pickens: 100,
-            williams: 100,
-            defense: 100,
-            opponentStar: 100,
-          },
-        }),
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("market-rollover", `${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+  const response = await worker.fetch(
+    new Request("http://localhost/api/forecast", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        gameId: game.id,
+        dataVersion: snapshot.dataVersion,
+        controls: {
+          quarterback: 100,
+          lamb: 100,
+          pickens: 100,
+          williams: 100,
+          defense: 100,
+          opponentStar: 100,
+        },
       }),
-      {
-        DB: db,
-        OPENAI_API_KEY: "server-side-test-key",
-        OPENAI_MODEL: "gpt-5.6-luna",
-        ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) },
-      },
-      { waitUntil() {}, passThroughOnException() {} },
-    );
-    const payload = await response.json();
+    }),
+    {
+      DB: db,
+      OPENAI_API_KEY: "server-side-test-key",
+      OPENAI_MODEL: "gpt-5.6-luna",
+      ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) },
+    },
+    { waitUntil() {}, passThroughOnException() {} },
+  );
+  const payload = await response.json();
 
-    assert.equal(response.status, 200);
-    assert.equal(payload.reliability.fallbackReasonCode, "provider_http_error");
-    assert.equal(payload.marketEvidence.source, "The Odds API");
-    assert.equal(payload.marketEvidence.market.marketImpliedProbability, 0.612345);
-    assert.equal(payload.marketEvidence.market.sportsbookCount, 5);
-    assert.equal(payload.forecast.marketImplied, 0.612345);
-  } finally {
-    globalThis.fetch = originalFetch;
-  }
+  assert.equal(response.status, 200);
+  assert.equal(payload.reliability.fallbackReasonCode, "provider_http_error");
+  assert.equal(payload.marketEvidence.source, "The Odds API");
+  assert.equal(payload.marketEvidence.market.marketImpliedProbability, 0.612345);
+  assert.equal(payload.marketEvidence.market.sportsbookCount, 5);
+  assert.equal(payload.forecast.marketImplied, 0.612345);
+  assert.equal(providerCalls, 1);
 });
