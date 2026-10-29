@@ -1,5 +1,6 @@
 "use client";
 
+import FantasyShowcase from "./fantasy-showcase";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { FootballState } from "@/lib/football-store.mjs";
 import {
@@ -177,11 +178,12 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
   useEffect(() => {
     let active = true;
     let inFlight = false;
+    const controller = new AbortController();
     const refresh = async () => {
       if (inFlight) return;
       inFlight = true;
       try {
-        const response = await fetch("/api/football", { cache: "no-store" });
+        const response = await fetch("/api/football", { cache: "no-store", signal: controller.signal });
         if (!response.ok) throw new Error("Football read unavailable");
         const next = await response.json() as FootballState;
         if (!next.snapshot?.dataVersion || !next.update) throw new Error("Football read invalid");
@@ -194,7 +196,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
     window.addEventListener("focus", refresh);
     window.addEventListener("pageshow", refresh);
     document.addEventListener("visibilitychange", onVisible);
-    return () => { active = false; clearInterval(timer); window.removeEventListener("focus", refresh); window.removeEventListener("pageshow", refresh); document.removeEventListener("visibilitychange", onVisible); };
+    return () => { active = false; controller.abort(); clearInterval(timer); window.removeEventListener("focus", refresh); window.removeEventListener("pageshow", refresh); document.removeEventListener("visibilitychange", onVisible); };
   }, []);
   const footballUnverified = footballReadFailed || ["failed", "unavailable"].includes(football.update.status);
   const [currentTime, setCurrentTime] = useState<number | null>(null);
@@ -455,7 +457,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
   return (
     <main>
       <a className="skip-link" href="#forecast">Skip to forecast</a>
-      <header className="site-header">
+      <header className="site-header" onKeyDown={(event) => { if (event.key === "Escape" && menuOpen) { setMenuOpen(false); menuButton.current?.focus(); } }}>
         <a className="brand" href="#top" aria-label="Road to Six home">
           <span>ROAD TO SIX</span>
           <small>Market Context Lab</small>
@@ -464,7 +466,8 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
         <button ref={menuButton} className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen(!menuOpen)}>Menu <span aria-hidden="true">{menuOpen ? "−" : "+"}</span></button>
         <nav id="primary-navigation" className={menuOpen ? "is-open" : ""} aria-label="Primary navigation" onKeyDown={(event) => { if (event.key === "Escape") { setMenuOpen(false); menuButton.current?.focus(); } }}>
           <a href="#forecast" onClick={() => setMenuOpen(false)}>Forecast</a>
-          <a href="#players" onClick={() => setMenuOpen(false)}>Players</a>
+          <a href="#fantasy" onClick={() => setMenuOpen(false)}>Fantasy lab</a>
+          <a href="#reliability" onClick={() => setMenuOpen(false)}>Reliability</a>
           <a href="#model" onClick={() => setMenuOpen(false)}>Model audit</a>
           <a href="#case-study" onClick={() => setMenuOpen(false)}>Product case</a>
           <a href="#trust" onClick={() => setMenuOpen(false)}>Trust</a>
@@ -484,7 +487,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
             Product strategy, architecture, risk, and release owned by Eric Lawler. Implemented with Codex.
           </p>
           <div className="hero-actions">
-            <a className="primary-action" href="#forecast">Run the forecast</a>
+            <a className="primary-action" href="#forecast">{canExplore ? "Run the forecast" : "View forecast status"}</a>
             <a className="secondary-action" href="#case-study">Review the case</a>
           </div>
           <div className="source-stamp">
@@ -536,8 +539,9 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
         {seasonState.nextGame ? <p className="next-matchup">Next scheduled: <strong>Week {seasonState.nextGame.week}, {seasonState.nextGame.opponentName}</strong> · {evidenceTimestamp(seasonState.nextGame.kickoffAt!)}</p> : null}
         <details className="source-details">
           <summary>Sources and update timing</summary>
-          <p>{football.update.lastSuccessAt ? "Football update cadence: Wednesday at 8 a.m. Central." : "Automatic football updates are being initialized for Wednesdays at 8 a.m. Central."} This is not a live scoreboard. Weekend results may remain pending until the next update.</p>
+          <p>Football review policy: weekly, targeting Wednesday at 8 a.m. Central. The last successful refresh below is the evidence of an update. This is not a live scoreboard. Weekend results may remain pending until the next update.</p>
           {football.update.lastSuccessAt ? <p>Last successful hosted refresh: <time dateTime={football.update.lastSuccessAt}>{evidenceTimestamp(football.update.lastSuccessAt)}</time>.</p> : null}
+          {snapshot.manifest.coverage.rosterWeeksByTeam ? <p>Roster coverage follows each team&apos;s latest played week. Verified bye carryovers: {Object.entries(snapshot.manifest.coverage.rosterWeeksByTeam).filter(([, week]) => week < snapshot.manifest.coverage.rosterWeek).map(([team, week]) => `${team}: Week ${week}`).join(", ") || "none"}. A missing roster for a team that played still blocks the update.</p> : null}
           <p>Last official result and schedule verification: <time dateTime={snapshot.season.verifiedAt}>{evidenceTimestamp(snapshot.season.verifiedAt)}</time>. Ratings include completed games through {snapshot.ratingsMetadata.trainedThrough}.</p>
           {snapshotFreshness ? <p>Snapshot age: {snapshotFreshness.message} This age check is separate from current verification.</p> : null}
           <p><a href="https://www.dallascowboys.com/schedule/" target="_blank" rel="noreferrer">Official Cowboys schedule and results</a> · <a href="https://www.nfl.com/teams/dallas-cowboys/" target="_blank" rel="noreferrer">NFL team record</a></p>
@@ -822,7 +826,14 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
         </div>
       </section>
 
-      </> : null}
+      </> : <section className="season-state forecast-unavailable" id="forecast" aria-labelledby="forecast-paused-title" tabIndex={-1}>
+        <span className="eyebrow">Interactive forecast</span>
+        <h2 id="forecast-paused-title">Forecast paused for verification</h2>
+        <p>{seasonState.status === "complete" ? "The regular season is complete." : "A completed result or upcoming kickoff needs verification before a pregame forecast is available."} The last verified football snapshot remains available.</p>
+        <a href="#evidence">Inspect the source status</a>
+      </section>}
+
+      <FantasyShowcase football={football} now={currentTime} readFailed={footballReadFailed} />
 
       <section className="players-section" id="players">
         <div className="section-heading compact">

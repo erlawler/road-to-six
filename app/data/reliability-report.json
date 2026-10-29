@@ -1,0 +1,561 @@
+{
+  "schemaVersion": "1.0",
+  "suiteVersion": "showcase-reliability-v1",
+  "evidenceType": "local_deterministic_simulation",
+  "simulatedClock": "2026-10-29T12:00:00.000Z",
+  "passed": 52,
+  "total": 52,
+  "allPassed": true,
+  "paidProviderCalls": 0,
+  "productionTelemetry": {
+    "uptime": null,
+    "modelLatencyMs": null,
+    "factualAccuracy": null
+  },
+  "limits": [
+    "These are executable tests with synthetic inputs and injected failures, not production traffic.",
+    "No live model or FantasyPros call was made. Model factual accuracy, production uptime, latency, and cost per decision are unmeasured.",
+    "Output checks validate bounded structured claims and evidence fields; this is not a general hallucination benchmark.",
+    "A passing refusal demonstrates the tested guardrail, not the availability of licensed current-week projections."
+  ],
+  "results": [
+    {
+      "id": "fantasy_valid",
+      "label": "Complete projection schema",
+      "category": "Input validation",
+      "simulated": true,
+      "passed": true,
+      "expected": "ready_demo",
+      "observed": "ready_demo",
+      "detail": "Accept a complete synthetic, correctly scored two-team projection fixture."
+    },
+    {
+      "id": "fantasy_invalid_schema",
+      "label": "Unsupported projection schema",
+      "category": "Input validation",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Reject an unrecognized response contract rather than guessing its fields."
+    },
+    {
+      "id": "fantasy_truncated",
+      "label": "Truncated projection response",
+      "category": "Input validation",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Inject a truncated response. No weekly leader may be declared."
+    },
+    {
+      "id": "fantasy_incomplete",
+      "label": "Incomplete player coverage",
+      "category": "Input validation",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Mark coverage incomplete and require an unavailable result with no leaders."
+    },
+    {
+      "id": "fantasy_missing_stat",
+      "label": "Missing scoring input",
+      "category": "Input validation",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Remove a required scoring statistic instead of substituting zero."
+    },
+    {
+      "id": "fantasy_conflicting_score",
+      "label": "Conflicting projected points",
+      "category": "Input validation",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Tamper with provider points and require disagreement with deterministic scoring to fail closed."
+    },
+    {
+      "id": "fantasy_duplicate_player",
+      "label": "Duplicate player identity",
+      "category": "Input validation",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Inject duplicate player IDs so conflicting player rows cannot be ranked."
+    },
+    {
+      "id": "fantasy_wrong_week",
+      "label": "Wrong-week projection",
+      "category": "Input validation",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Use the wrong week while the verified matchup expects Week 8."
+    },
+    {
+      "id": "fantasy_wrong_scoring",
+      "label": "Scoring format mismatch",
+      "category": "Input validation",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Reject standard scoring in a PPR comparison."
+    },
+    {
+      "id": "fantasy_invalid_number",
+      "label": "Nonfinite projection value",
+      "category": "Input validation",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Reject an unrepresentable point value rather than ranking it."
+    },
+    {
+      "id": "fantasy_expired",
+      "label": "Expired projection evidence",
+      "category": "Freshness and abstention",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "An expired source cannot support a current-week leader."
+    },
+    {
+      "id": "fantasy_future_timestamp",
+      "label": "Future source timestamp",
+      "category": "Freshness and abstention",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Reject source metadata dated after the test clock."
+    },
+    {
+      "id": "fantasy_bye",
+      "label": "Cowboys bye handling",
+      "category": "Freshness and abstention",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "A bye does not borrow the next game's projections."
+    },
+    {
+      "id": "fantasy_unverified_matchup",
+      "label": "Unverified matchup",
+      "category": "Freshness and abstention",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained",
+      "observed": "abstained",
+      "detail": "Withhold current leaders when the schedule is unverified."
+    },
+    {
+      "id": "fantasy_claim_valid",
+      "label": "Evidence-matched fantasy explanation",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "accepted",
+      "observed": "accepted",
+      "detail": "Structured explanation claims preserve both calculated leaders and their difference."
+    },
+    {
+      "id": "fantasy_claim_invented_player",
+      "label": "Invented player claim",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "An explanation cannot substitute a player outside the calculated evidence."
+    },
+    {
+      "id": "fantasy_claim_changed_number",
+      "label": "Invented point adjustment",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "An explanation cannot change the deterministic fantasy point difference."
+    },
+    {
+      "id": "fantasy_claim_demo_as_live",
+      "label": "Synthetic result called live",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "An explanation must preserve the synthetic mode alongside the number."
+    },
+    {
+      "id": "fantasy_claim_uncited_prose",
+      "label": "Uncited player narrative",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Unrestricted prose is not permitted in the structured evidence contract."
+    },
+    {
+      "id": "fantasy_claim_abstention",
+      "label": "Grounded abstention",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "accepted",
+      "observed": "accepted",
+      "detail": "Missing projections allow only an explicit abstention."
+    },
+    {
+      "id": "fantasy_claim_missing_abstention",
+      "label": "Recommendation without evidence",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "A fabricated leader must not replace abstention when projections are missing."
+    },
+    {
+      "id": "football_current",
+      "label": "Fresh football evidence",
+      "category": "Freshness and abstention",
+      "simulated": true,
+      "passed": true,
+      "expected": "current",
+      "observed": "current",
+      "detail": "All three football sources have verified timestamps inside the weekly window."
+    },
+    {
+      "id": "football_stale",
+      "label": "Expired weekly review",
+      "category": "Freshness and abstention",
+      "simulated": true,
+      "passed": true,
+      "expected": "stale",
+      "observed": "stale",
+      "detail": "Advance the test clock past seven days since the oldest source review."
+    },
+    {
+      "id": "football_missing_source",
+      "label": "Missing football source",
+      "category": "Freshness and abstention",
+      "simulated": true,
+      "passed": true,
+      "expected": "unavailable",
+      "observed": "unavailable",
+      "detail": "Remove statistics provenance and require unavailable freshness."
+    },
+    {
+      "id": "football_conflicting_time",
+      "label": "Conflicting source timestamps",
+      "category": "Freshness and abstention",
+      "simulated": true,
+      "passed": true,
+      "expected": "unavailable",
+      "observed": "unavailable",
+      "detail": "Publication after retrieval invalidates football provenance."
+    },
+    {
+      "id": "ai_missing_comparison",
+      "label": "Rejects an ungrounded comparison selection.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: comparison_grounding."
+    },
+    {
+      "id": "ai_duplicate_comparison",
+      "label": "Rejects an ungrounded comparison selection.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: comparison_grounding."
+    },
+    {
+      "id": "ai_irrelevant_comparison",
+      "label": "Rejects an ungrounded comparison selection.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: comparison_grounding."
+    },
+    {
+      "id": "ai_omitted_baseline_comparison",
+      "label": "Rejects an ungrounded comparison selection.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: comparison_grounding."
+    },
+    {
+      "id": "ai_invented_comparison",
+      "label": "Rejects an ungrounded comparison selection.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: comparison_grounding."
+    },
+    {
+      "id": "ai_valid_runtime_explanation",
+      "label": "Accepts a grounded runtime explanation that preserves every contract field.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "accepted",
+      "observed": "accepted",
+      "detail": "Every output contract check passed."
+    },
+    {
+      "id": "ai_changed_probability",
+      "label": "Rejects an explanation that makes the model probability more confident.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: probability_fidelity."
+    },
+    {
+      "id": "ai_changed_model_version",
+      "label": "Rejects an explanation that attributes the result to a different model.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: model_version_fidelity."
+    },
+    {
+      "id": "ai_stale_source_timestamp",
+      "label": "Rejects an explanation that substitutes a different source timestamp.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: source_freshness."
+    },
+    {
+      "id": "ai_missing_evidence_driver",
+      "label": "Rejects an explanation that drops a material forecast driver.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: evidence_completeness."
+    },
+    {
+      "id": "ai_changed_driver_evidence",
+      "label": "Rejects an explanation that rewrites the evidence supporting a driver.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: evidence_completeness."
+    },
+    {
+      "id": "ai_changed_driver_impact",
+      "label": "Rejects an explanation that changes a deterministic driver impact.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: evidence_completeness."
+    },
+    {
+      "id": "ai_missing_uncertainty",
+      "label": "Rejects an explanation that minimizes material uncertainty.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: uncertainty_completeness."
+    },
+    {
+      "id": "ai_changed_uncertainty_statement",
+      "label": "Rejects an explanation that softens a required uncertainty statement.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: uncertainty_completeness."
+    },
+    {
+      "id": "ai_actionable_betting_guidance",
+      "label": "Rejects a grounded explanation that still tells a visitor what to bet.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: responsible_use_refusal."
+    },
+    {
+      "id": "ai_valid_deterministic_fallback",
+      "label": "Accepts the deterministic fallback when runtime AI is unavailable.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "accepted",
+      "observed": "accepted",
+      "detail": "Every output contract check passed."
+    },
+    {
+      "id": "ai_unmarked_fallback",
+      "label": "Rejects a fallback response that is not identified as deterministic.",
+      "category": "AI output contract",
+      "simulated": true,
+      "passed": true,
+      "expected": "rejected",
+      "observed": "rejected",
+      "detail": "Validation checks triggered: deterministic_fallback."
+    },
+    {
+      "id": "transport_cache_hit",
+      "label": "Fresh cache avoids another provider call",
+      "category": "Simulated transport",
+      "simulated": true,
+      "passed": true,
+      "expected": "cache_hit; calls=1; ready_demo",
+      "observed": "cache_hit; calls=1; ready_demo",
+      "detail": "Read a valid cached fixture twice; the second read must not request the injected provider."
+    },
+    {
+      "id": "transport_cache_expired",
+      "label": "Expired cache revalidates",
+      "category": "Simulated transport",
+      "simulated": true,
+      "passed": true,
+      "expected": "provider_fixture; calls=2; fresh=true",
+      "observed": "provider_fixture; calls=2; fresh=true",
+      "detail": "Advance the injected clock past the local cache TTL and require a new valid fixture."
+    },
+    {
+      "id": "transport_expired_failure",
+      "label": "Failed refresh retains last-good evidence",
+      "category": "Simulated transport",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained; no leader=true; retained=true; calls=2",
+      "observed": "abstained; no leader=true; retained=true; calls=2",
+      "detail": "Expire cache, inject HTTP 503, retain the dated snapshot and suppress current leaders."
+    },
+    {
+      "id": "transport_429",
+      "label": "Rate-limit cooldown prevents repeated requests",
+      "category": "Simulated transport",
+      "simulated": true,
+      "passed": true,
+      "expected": "rate_limited; calls=2; no leader=true; retained=true; retry=true",
+      "observed": "rate_limited; calls=2; no leader=true; retained=true; retry=true",
+      "detail": "Inject HTTP 429 and Retry-After. Repeated forced refresh must honor cooldown without another request."
+    },
+    {
+      "id": "transport_429_recovery",
+      "label": "Retry resumes only after cooldown",
+      "category": "Simulated transport",
+      "simulated": true,
+      "passed": true,
+      "expected": "provider_fixture; calls=3; ready_demo",
+      "observed": "provider_fixture; calls=3; ready_demo",
+      "detail": "Advance the injected clock beyond Retry-After and accept the next complete fixture."
+    },
+    {
+      "id": "transport_timeout",
+      "label": "Provider timeout abstains",
+      "category": "Simulated transport",
+      "simulated": true,
+      "passed": true,
+      "expected": "provider_timeout; no leader=true; calls=1",
+      "observed": "provider_timeout; no leader=true; calls=1",
+      "detail": "Inject a nonresponding fixture transport and require bounded timeout with no recommendation."
+    },
+    {
+      "id": "transport_context_isolation",
+      "label": "Cache never crosses matchup boundaries",
+      "category": "Simulated transport",
+      "simulated": true,
+      "passed": true,
+      "expected": "abstained; retained=false; no leader=true; calls=2",
+      "observed": "abstained; retained=false; no leader=true; calls=2",
+      "detail": "Switch weeks and fail the new request. The previous week's snapshot must not fill the new context."
+    },
+    {
+      "id": "transport_overlap",
+      "label": "Overlapping reads share one request",
+      "category": "Simulated transport",
+      "simulated": true,
+      "passed": true,
+      "expected": "calls=1; both ready=true",
+      "observed": "calls=1; both ready=true",
+      "detail": "Start two reads before the fixture response resolves; only one provider call is allowed."
+    },
+    {
+      "id": "transport_partial_retention",
+      "label": "Partial response cannot replace good evidence",
+      "category": "Simulated transport",
+      "simulated": true,
+      "passed": true,
+      "expected": "invalid_provider_snapshot; no leader=true; retained=true",
+      "observed": "invalid_provider_snapshot; no leader=true; retained=true",
+      "detail": "Force refresh with a truncated payload. Keep the full last-good fixture and abstain."
+    },
+    {
+      "id": "transport_licensed_disabled",
+      "label": "Licensed adapter stays disabled",
+      "category": "Simulated transport",
+      "simulated": true,
+      "passed": true,
+      "expected": "disabled=true; calls=0",
+      "observed": "disabled=true; calls=0",
+      "detail": "The public showcase exposes a disabled licensed-data boundary with no credentials or API calls."
+    }
+  ],
+  "runAt": "2026-10-29T01:33:58.946Z",
+  "baseCommit": "5c27d8b76c95f2fe865ccf7f21b450504251a30f",
+  "sourceFingerprint": {
+    "algorithm": "sha256",
+    "value": "e9e55906af105a42d7927ff9def1fc7f57106a03e270354380a5e4601136a077",
+    "files": [
+      "evals/ai-explanation-cases.mjs",
+      "lib/ai-contract.mjs",
+      "lib/ai-evaluation.mjs",
+      "lib/fantasy-provider.mjs",
+      "lib/fantasy.mjs",
+      "lib/scenario-comparison.mjs",
+      "lib/showcase-reliability.mjs",
+      "lib/source-freshness.mjs",
+      "scripts/build-reliability-report.mjs"
+    ]
+  },
+  "verificationScope": "The fingerprint identifies tested source files. baseCommit is the checkout baseline, not a deployment assertion. The saved Sites version identifies the final release commit."
+}

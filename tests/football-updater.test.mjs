@@ -9,7 +9,7 @@ import { footballSnapshotFreshness } from "../lib/source-freshness.mjs";
 
 const fallback = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
 const schema = await readFile(new URL("../drizzle/0003_football_state.sql", import.meta.url), "utf8");
-const reference = Date.parse("2026-10-06T13:00:00Z");
+const reference = Date.parse(fallback.season.verifiedAt) + 60_000;
 
 function database(t) {
   const sqlite = new DatabaseSync(":memory:");
@@ -36,20 +36,20 @@ function officialSchedule(snapshot = fallback) {
 }
 
 test("official verification checks every final, kickoff, record, bye and TBD week", () => {
-  const result = verifyOfficialSeason(fallback.schedule, 2026, officialSchedule(), "Dallas Cowboys 3rd NFC East 2 - 2 - 0", new Date(reference).toISOString());
-  assert.deepEqual(result.record, { wins: 2, losses: 2, ties: 0 });
-  assert.equal(result.completedResults.length, 4);
-  assert.equal(result.nextGame.week, 5);
+  const result = verifyOfficialSeason(fallback.schedule, 2026, officialSchedule(), "Dallas Cowboys 3rd NFC East 3 - 4 - 0", new Date(reference).toISOString());
+  assert.deepEqual(result.record, { wins: 3, losses: 4, ties: 0 });
+  assert.equal(result.completedResults.length, 7);
+  assert.equal(result.nextGame.week, 8);
   assert.deepEqual(result.byeWeeks, [14]);
   assert.deepEqual(result.unconfirmedKickoffWeeks, [18]);
   for (const [schedule, nfl] of [
-    [officialSchedule().replace("34 - 30", "34 - 31"), "Dallas Cowboys 3rd NFC East 2 - 2 - 0"],
-    [officialSchedule().replace("7:15 PM CDT", "8:15 PM CDT"), "Dallas Cowboys 3rd NFC East 2 - 2 - 0"],
-    [officialSchedule().replace("Tampa Bay Buccaneers", "Wrong opponent"), "Dallas Cowboys 3rd NFC East 2 - 2 - 0"],
+    [officialSchedule().replace("34 - 30", "34 - 31"), "Dallas Cowboys 3rd NFC East 3 - 4 - 0"],
+    [officialSchedule().replace("12:00 PM CST", "1:00 PM CST"), "Dallas Cowboys 3rd NFC East 3 - 4 - 0"],
+    [officialSchedule().replace("Tampa Bay Buccaneers", "Wrong opponent"), "Dallas Cowboys 3rd NFC East 3 - 4 - 0"],
     [officialSchedule(), "Dallas Cowboys 3rd NFC East 3 - 1 - 0"],
-    ["Source unavailable", "Dallas Cowboys 3rd NFC East 2 - 2 - 0"],
+    ["Source unavailable", "Dallas Cowboys 3rd NFC East 3 - 4 - 0"],
   ]) assert.throws(() => verifyOfficialSeason(fallback.schedule, 2026, schedule, nfl, new Date(reference).toISOString()));
-  assert.throws(() => verifyOfficialSeason(fallback.schedule, 2026, officialSchedule(), "Dallas Cowboys 3rd NFC East 2 - 2 - 0", fallback.schedule[4].kickoffAt), /started game/);
+  assert.throws(() => verifyOfficialSeason(fallback.schedule, 2026, officialSchedule(), "Dallas Cowboys 3rd NFC East 3 - 4 - 0", fallback.schedule[7].kickoffAt), /started game/);
 });
 
 test("source retrieval rejects HTTP errors and oversized streaming bodies", async () => {
@@ -134,7 +134,7 @@ test("precise weekly verification does not expire at UTC midnight", () => {
   const data = structuredClone(fallback);
   data.asOf = data.manifest.validatedAt = "2026-10-07";
   data.manifest.reviewedAt = "2026-10-07T13:00:00Z";
-  for (const key of ["games", "roster", "stats"]) data.manifest.inputs[key].retrievedBetween = { start: "2026-10-07T12:59:55Z", end: "2026-10-07T13:00:00Z" };
+  for (const key of ["games", "roster", "stats"]) Object.assign(data.manifest.inputs[key], { sourceUpdatedAt: "2026-10-07T12:00:00Z", retrievedBetween: { start: "2026-10-07T12:59:55Z", end: "2026-10-07T13:00:00Z" } });
   assert.equal(footballSnapshotFreshness(data, Date.parse("2026-10-14T12:59:59Z")).status, "current");
   assert.equal(footballSnapshotFreshness(data, Date.parse("2026-10-14T13:00:00.001Z")).status, "stale");
 });
@@ -179,7 +179,7 @@ test("server-rendered page and public reader use the same stored snapshot, with 
   assert.equal((await state.json()).snapshot.schedule[3].cowboysScore, 29);
   const page = await app.fetch(new Request("https://site.example/", { headers: { accept: "text/html" } }), db.env, ctx);
   const html = await page.text();
-  assert.ok(html.includes("Dallas: <!-- -->1<!-- -->-<!-- -->3<!-- -->-<!-- -->0</strong>"));
+  assert.ok(html.includes("Dallas: <!-- -->2<!-- -->-<!-- -->5<!-- -->-<!-- -->0</strong>"));
   assert.equal(page.headers.get("cache-control"), "no-store");
   const denied = await app.fetch(new Request("https://site.example/api/football", { method: "POST" }), db.env, ctx);
   assert.equal(denied.status, 405);

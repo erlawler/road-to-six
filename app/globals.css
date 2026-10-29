@@ -677,3 +677,86 @@ summary { cursor: pointer; font-weight: 750; line-height: 1.5; padding: 12px 0; 
 @media (max-width: 1100px) {
   .control-panel :is(input, button, select) { scroll-margin-top: calc(var(--header-height) + 150px); scroll-margin-bottom: 24px; }
 }
+
+/* Fantasy evidence and reliability showcase. */
+.fantasy-section, .fantasy-impact-section, .showcase-reliability { padding: 64px clamp(22px, 6vw, 96px); }
+.fantasy-section { background: #e8edf2; }
+.fantasy-section .section-heading, .fantasy-impact-section .section-heading, .showcase-reliability .section-heading { max-width: 1000px; }
+.fantasy-section a, .fantasy-impact-section a, .showcase-reliability a { color: var(--blue-on-light); text-decoration: underline; text-underline-offset: 3px; }
+.fantasy-section p, .fantasy-impact-section p, .showcase-reliability p { line-height: 1.65; }
+.fantasy-current-context { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding: 24px 0 12px; border-top: 1px solid #b5c2d1; }
+.fantasy-current-context h3 { margin: 10px 0 8px; font-size: 1.45rem; }
+.fantasy-current-context p { margin-bottom: 0; }
+.evidence-badge { display: inline-block; width: fit-content; padding: 7px 10px; border: 1px solid #b7a46a; border-radius: 4px; font-size: .8rem; font-weight: 800; white-space: normal; }
+.evidence-badge.warning { background: #fff2cb; color: #624b00; }
+.fantasy-license-note { max-width: 960px; color: #3f5062; margin: 12px 0 30px; }
+.fantasy-demo { background: white; border: 1px solid #bdcbd8; border-radius: 8px; padding: clamp(20px, 3vw, 40px); }
+.fantasy-demo-heading { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, .42fr); align-items: start; gap: 32px; }
+.fantasy-demo-heading h3 { margin: 8px 0 12px; font-size: 1.65rem; }
+.fantasy-demo-heading p { color: #48596d; margin: 0 0 18px; max-width: 770px; }
+.fixture-label { display: block; color: var(--blue-on-light); font-size: .8rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+.fantasy-scenario-control label, .reliability-filter label { display: block; font-size: .875rem; font-weight: 800; margin-bottom: 10px; }
+.fantasy-scenario-control select, .reliability-filter select { width: 100%; min-height: 48px; padding: 10px 36px 10px 12px; color: var(--ink); background: white; border: 1px solid #6c7d90; border-radius: 4px; }
+.fantasy-scoring { padding: 18px 0; border-top: 1px solid var(--silver-300); border-bottom: 1px solid var(--silver-300); }
+.fantasy-scoring strong { display: block; }
+.fantasy-scoring summary, .fantasy-player-card summary, .reliability-run-evidence summary { cursor: pointer; padding: 12px 0; min-height: 44px; font-size: .875rem; font-weight: 750; }
+.fixture-warning { color: #624b00; background: #fff2cb; border-left: 4px solid #b4932c; font-weight: 750; padding: 12px 16px; }
+.fantasy-comparison-grid { display: grid; grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr); align-items: stretch; margin-top: 24px; }
+.fantasy-player-card { background: #f4f6f8; border: 1px solid #ccd6e0; border-top: 4px solid var(--blue-on-light); border-radius: 4px; padding: clamp(20px, 2.5vw, 32px); min-width: 0; }
+.fantasy-card-label { display: flex; justify-content: space-between; gap: 12px; font-weight: 850; margin-bottom: 24px; }
+.fantasy-card-label span:last-child { color: var(--muted); }
+.fantasy-player-card .fixture-label { margin: 0; }
+.fantasy-player-card h3 { font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1.15; margin: 10px 0 24px; overflow-wrap: anywhere; }
+.fantasy-points { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+.fantasy-points strong { font-size: 3.2rem; line-height: 1; letter-spacing: -.045em; }
+.fantasy-points span { color: #42576c; font-size: .875rem; }
+.fantasy-versus { display: flex; justify-content: center; align-items: center; color: #56697f; font-size: .8rem; font-weight: 900; }
+.fantasy-scoring-inputs { margin: 0; font-size: .875rem; }
+.fantasy-scoring-inputs div { display: flex; justify-content: space-between; gap: 15px; padding: 7px 0; border-top: 1px solid var(--silver-300); }
+.fantasy-scoring-inputs dd { font-weight: 750; margin: 0; }
+.fantasy-difference { text-align: center; font-size: 1rem; padding-top: 12px; }
+.fantasy-provenance { color: #46586c; font-size: .875rem; margin-top: 24px; }
+.fantasy-abstention { background: #f8f5eb; border: 1px solid #c5b98d; padding: 24px; border-radius: 5px; margin: 24px 0; }
+.fantasy-abstention h3 { font-size: 1.5rem; }
+.fantasy-impact-section { background: white; }
+.fantasy-impact-status { padding: 16px 0; color: #43576a; border-top: 1px solid var(--silver-300); }
+.fantasy-impact-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.fantasy-impact-card { padding: 28px; border: 1px solid #c6d1dd; border-radius: 6px; background: #f7f9fb; }
+.fantasy-impact-card h3 { margin: 12px 0 24px; font-size: 1.5rem; }
+.fantasy-impact-card dl { margin: 0; }
+.fantasy-impact-card dl div { margin-bottom: 22px; }
+.fantasy-impact-card dt { color: var(--blue-on-light); font-size: .8rem; text-transform: uppercase; font-weight: 850; letter-spacing: .04em; }
+.fantasy-impact-card dd { margin: 8px 0; line-height: 1.65; }
+.fantasy-impact-card small { display: block; color: #526579; line-height: 1.6; margin-top: 12px; }
+.showcase-reliability { background: #edf1f5; }
+.reliability-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.reliability-summary-grid article { background: white; padding: 24px; border: 1px solid #becddc; border-radius: 5px; }
+.reliability-summary-grid article > span { color: #465d74; font-size: .8rem; text-transform: uppercase; font-weight: 850; }
+.reliability-summary-grid strong { display: block; font-size: clamp(1.5rem, 2.7vw, 2.4rem); letter-spacing: -.04em; padding: 16px 0 4px; }
+.reliability-summary-grid p { color: #42576c; font-size: .875rem; }
+.reliability-run-evidence { margin: 24px 0; font-size: .875rem; }
+.reliability-run-evidence code { overflow-wrap: anywhere; }
+.reliability-run-evidence li { line-height: 1.65; margin: 8px 0; }
+.reliability-filter { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; margin: 28px 0 20px; }
+.reliability-filter label { margin: 0; }
+.reliability-filter select { width: min(100%, 290px); }
+.reliability-filter > span { color: #475e73; font-size: .875rem; }
+.reliability-check-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 10px 18px; }
+.reliability-check { background: white; border: 1px solid #c5d0dc; border-radius: 4px; min-width: 0; }
+.reliability-check summary { display: flex; gap: 14px; align-items: flex-start; padding: 18px; cursor: pointer; font-weight: 750; list-style: none; }
+.reliability-check summary::after { content: "+"; margin-left: auto; color: #557087; font-size: 1.2rem; }
+.reliability-check[open] summary::after { content: "−"; }
+.reliability-check summary small { display: block; color: #5c6d7e; font-size: .75rem; font-weight: 500; margin-top: 6px; }
+.check-pass, .check-fail { flex-shrink: 0; border-radius: 3px; padding: 4px 6px; font-size: .7rem; font-weight: 900; }
+.check-pass { background: #e0f3e7; color: #12552d; }
+.check-fail { background: #ffe1df; color: #8a221c; }
+.reliability-check > p { padding: 0 18px; font-size: .875rem; }
+.reliability-check dl { padding: 0 18px 12px; font-size: .8rem; }
+.reliability-check dl div { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 10px; padding: 6px 0; }
+.reliability-check dd { margin: 0; overflow-wrap: anywhere; }
+.reliability-check dt { font-weight: 800; }
+@media (min-width: 921px) and (max-width: 1100px) { .site-header { gap: 18px; padding-left: 24px; padding-right: 24px; } .site-header nav { gap: 16px; } }
+@media (max-width: 920px) { .fantasy-demo-heading { grid-template-columns: 1fr; gap: 12px; } .fantasy-scenario-control { max-width: 380px; } .reliability-summary-grid { grid-template-columns: 1fr; } .reliability-summary-grid strong { font-size: 2rem; } .reliability-check-list { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .fantasy-section, .fantasy-impact-section, .showcase-reliability { padding: 42px 19px; } .fantasy-current-context { flex-direction: column; gap: 12px; } .fantasy-comparison-grid { grid-template-columns: 1fr; gap: 0; } .fantasy-versus { min-height: 44px; } .fantasy-impact-grid { grid-template-columns: 1fr; } .fantasy-impact-card { padding: 22px; } .fantasy-demo { padding: 18px; } .fantasy-player-card { padding: 20px; } }
+
+.reliability-all-checks > summary { cursor: pointer; min-height: 48px; padding: 14px 0; font-weight: 850; font-size: 1rem; border-top: 1px solid #bac9d8; }

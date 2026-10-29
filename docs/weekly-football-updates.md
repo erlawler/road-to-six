@@ -37,6 +37,14 @@ Before creating exactly one Site-linked task, verify the Active Agent Memory Cla
 
 ## Validation and fallback
 
+### October 29 roster coverage repair
+
+The October 28 refresh failed because the builder selected one league-wide roster week. Washington and Jacksonville had week 7 byes and no week 7 release rows, so their four-player cards became empty and the complete-snapshot gate correctly blocked publication. The repaired builder selects each team's latest eligible roster and checks it against that team's latest scheduled game week. It permits an older week only when schedule coverage supports it. Missing non-bye team coverage, same-week stable-ID conflicts, and absent current-season statistics still fail closed. Newer transfer and inactive records supersede older active records.
+
+A second boundary defect advanced the eligible roster week at UTC midnight on the first game date. Runtime selection now uses the actual Eastern kickoff instant and exact review time. October 29 before the Thursday kickoff therefore remains eligible roster week 7. Date-only historical CLI runs retain an explicit end-of-date cutoff.
+
+The repaired local free-source retrieval passed at `2026-10-29T01:28:01.988Z`, producing `nflverse-2026-10-29-2f49ecb3140a`. The bundled fallback, source manifest, and historical evaluation artifact were rebuilt from checksum-matching input bytes and validated against the current clock at `2026-10-29T01:29:56.942Z`. The 544-game 2024 to 2025 holdout and model parameters are unchanged. This local evidence does not establish a hosted data publication. Preserve the existing one-hour cooldown and verify the owner tool's subsequent publication and public readback separately.
+
 The bundled JSON is a dated recovery artifact; CI validates its consistency as of its recorded verification time. Runtime refresh validation always uses the actual current time. Both paths use the same ingestion and validation functions. Public API and UI expose failed/unavailable state without replacing good data with partial input or advancing successful timestamps. Scenarios pause for missing finals, unconfirmed kickoffs, expired reviews, or failed reads; player totals use the selected season only and never establish game-day availability.
 
 Tests cover official source disagreement, final/bye/TBD behavior, precise weekly freshness, atomic SQLite writes, overlapping calls, idempotency, expired leases, failed-source retention, unavailable storage, owner authorization, and matching server-rendered/public-reader data. Complete the repository release checks and security audit before publication. A new owner or authorization policy requires a separate review and connection verification.

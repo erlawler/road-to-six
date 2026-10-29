@@ -128,6 +128,15 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Frontier AI skills showcase/);
   assert.match(html, /Football evidence meets market reality/);
   assert.match(html, /Interactive forecast/);
+  for (const id of ["forecast", "fantasy", "fantasy-impact", "reliability"]) assert.match(html, new RegExp(`id="${id}"`));
+  assert.match(html, /Player Decision Lab/);
+  assert.match(html, /Synthetic demonstration, not current FantasyPros projections/);
+  assert.match(html, /AI Reliability Dashboard/);
+  assert.match(html, /Cowboys Fantasy Impact/);
+  assert.match(html, /Live projections unavailable/);
+  assert.match(html, /Fictional player/);
+  assert.match(html, /Simulated test/);
+  assert.match(html, /Unmeasured/);
   assert.match(html, /Model audit/);
   assert.match(html, /Market Context Lab/);
   assert.match(html, /Measure the forecast against the market/);
@@ -157,8 +166,10 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Contributions below add to a 50% starting point/);
   assert.match(html, /top four active production leaders/);
   assert.doesNotMatch(html, /2025 PPR points|Historical player baseline: 2025/);
-  assert.match(html, /1,065 pass yds, 8 pass TD in 2026 to date/);
-  assert.match(html, /37 rec, 498 yds in 2026 to date/);
+  const quarterback = snapshot.players.find((player) => player.name === "Dak Prescott");
+  const receiver = snapshot.players.find((player) => player.name === "CeeDee Lamb");
+  assert.ok(html.includes(`${quarterback.stats.passingYards.toLocaleString()} pass yds, ${quarterback.stats.passingTds} pass TD in ${quarterback.statsSeason} to date`));
+  assert.ok(html.includes(`${receiver.stats.receptions} rec, ${receiver.stats.receivingYards.toLocaleString()} yds in ${receiver.statsSeason} to date`));
   assert.match(html, /#(?:<!-- -->)?1(?:<!-- -->)? rank/);
   assert.match(html, /2024-2025/);
   assert.match(html, /<span class="sr-only">2024 to 2025<\/span>/);
