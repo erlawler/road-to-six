@@ -53,3 +53,13 @@ test("future, malformed, partial, and missing review evidence never claim freshn
   }
   assert.equal(footballSnapshotFreshness(null).status, "unavailable");
 });
+
+test("usage-enabled snapshots cannot hide missing or expired weekly statistics behind fresh totals", () => {
+  const data = snapshot(); data.usage = { schemaVersion: "player-usage-v1" };
+  assert.equal(footballSnapshotFreshness(data, at("2026-10-05T18:00:00Z")).status, "unavailable");
+  data.manifest.inputs.weeklyStats = structuredClone(source);
+  assert.equal(footballSnapshotFreshness(data, at("2026-10-05T18:00:00Z")).status, "current");
+  data.manifest.inputs.weeklyStats.sourceUpdatedAt = "2026-09-27T06:00:00Z";
+  data.manifest.inputs.weeklyStats.retrievedBetween = { start: "2026-09-27T09:00:00Z", end: "2026-09-27T09:01:00Z" };
+  assert.equal(footballSnapshotFreshness(data, at("2026-10-05T18:00:00Z")).status, "stale");
+});

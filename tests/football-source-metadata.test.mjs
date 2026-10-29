@@ -62,7 +62,7 @@ test("metadata timestamps reject invalid dates, malformed times and non-UTC offs
 });
 
 test("release assets bind the exact asset row and preserve publication-time semantics", () => {
-  for (const [tag, name] of [["weekly_rosters", "roster_weekly_2026.csv"], ["stats_player", "stats_player_reg_2026.csv"]]) {
+  for (const [tag, name] of [["weekly_rosters", "roster_weekly_2026.csv"], ["stats_player", "stats_player_reg_2026.csv"], ["stats_player", "stats_player_week_2026.csv"]]) {
     const html = `<ul>${asset("weekly_rosters", "roster_weekly_2025.csv", "d".repeat(64), "2025-10-19T12:00:00Z")}${asset(tag, name)}</ul>`;
     assert.deepEqual(parseReleaseAsset(html, tag, name), {
       url: `https://github.com/nflverse/nflverse-data/releases/download/${tag}/${name}`,

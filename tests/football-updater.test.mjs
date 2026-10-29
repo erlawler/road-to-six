@@ -134,7 +134,7 @@ test("precise weekly verification does not expire at UTC midnight", () => {
   const data = structuredClone(fallback);
   data.asOf = data.manifest.validatedAt = "2026-10-07";
   data.manifest.reviewedAt = "2026-10-07T13:00:00Z";
-  for (const key of ["games", "roster", "stats"]) Object.assign(data.manifest.inputs[key], { sourceUpdatedAt: "2026-10-07T12:00:00Z", retrievedBetween: { start: "2026-10-07T12:59:55Z", end: "2026-10-07T13:00:00Z" } });
+  for (const input of Object.values(data.manifest.inputs)) Object.assign(input, { sourceUpdatedAt: "2026-10-07T12:00:00Z", retrievedBetween: { start: "2026-10-07T12:59:55Z", end: "2026-10-07T13:00:00Z" } });
   assert.equal(footballSnapshotFreshness(data, Date.parse("2026-10-14T12:59:59Z")).status, "current");
   assert.equal(footballSnapshotFreshness(data, Date.parse("2026-10-14T13:00:00.001Z")).status, "stale");
 });
@@ -165,7 +165,8 @@ test("owner readback works, extra updater arguments are rejected, and discovery 
   const invalid = await app.fetch(mcpRequest("refresh_football", headers, { url: "https://arbitrary.example" }), env, ctx);
   assert.equal((await invalid.json()).error.code, -32602);
   const discover = await app.fetch(new Request("https://site.example/mcp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/list" }) }), env, ctx);
-  assert.deepEqual((await discover.json()).result.tools.map((tool) => tool.name), ["football_update_status", "refresh_football"]);
+  const declared = (await discover.json()).result.tools;
+  assert.deepEqual(declared.filter((tool) => !["get_current_matchup", "get_player_usage", "compare_players", "get_source_health", "get_game_day_context"].includes(tool.name)).map((tool) => tool.name), ["football_update_status", "refresh_football"]);
 });
 
 test("server-rendered page and public reader use the same stored snapshot, with no public write route", async (t) => {

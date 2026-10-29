@@ -102,16 +102,17 @@ function sourceFixtures(digest = "b".repeat(64)) {
   return new Map([
     ["https://github.com/nflverse/nfldata/commits/master/data/games.csv.atom", ["nflverse games metadata", atom]],
     ["https://github.com/nflverse/nflverse-data/releases/expanded_assets/weekly_rosters", ["nflverse roster metadata", release("weekly_rosters", "roster_weekly_2026.csv")]],
-    ["https://github.com/nflverse/nflverse-data/releases/expanded_assets/stats_player", ["nflverse player stats metadata", release("stats_player", "stats_player_reg_2026.csv")]],
+    ["https://github.com/nflverse/nflverse-data/releases/expanded_assets/stats_player", ["nflverse player stats metadata", release("stats_player", "stats_player_reg_2026.csv") + release("stats_player", "stats_player_week_2026.csv")]],
     [`https://raw.githubusercontent.com/nflverse/nfldata/${commit}/data/games.csv`, ["nflverse games feed", ""]],
     ["https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv", ["nflverse roster feed", ""]],
     ["https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2026.csv", ["nflverse player stats feed", ""]],
+    ["https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2026.csv", ["nflverse weekly player stats feed", ""]],
     ["https://www.dallascowboys.com/schedule/", ["Official Cowboys schedule", ""]],
     ["https://www.nfl.com/teams/dallas-cowboys/", ["Official NFL team record", ""]],
   ]);
 }
 
-test("all eight approved requests report their own source label", async () => {
+test("all nine approved requests report their own source label", async () => {
   const fixtures = sourceFixtures();
   for (const [failedUrl, [label]] of fixtures) {
     const fetcher = async (requestedUrl) => {

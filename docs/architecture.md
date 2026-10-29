@@ -2,7 +2,7 @@
 
 ## Answer
 
-The public product is an anonymous Market Context Lab with server-side data adapters, a validated D1 football snapshot with a versioned bundled fallback, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI endpoint, and an inspectable reliability receipt. October 5 maintenance refreshes the approved football sources and preserves the retrospective holdout. Exact deployment commits are recorded in Sites. Historical release results remain dated evidence; current source validation belongs in [data provenance](data-provenance.md). Public exploration remains anonymous. The separate hosted football updater uses the approved owner identity only for authorization.
+The public product is an anonymous Market Context Lab with server-side data adapters, a validated D1 football snapshot with a versioned bundled fallback, a six-hour D1 odds cache, a testable probability function, an anonymous AI request limit, a D1 monthly budget ledger, a Runtime AI endpoint, and an inspectable reliability receipt. The October 29 free-data showcase candidate adds recent player production, a deterministic what-if lab, observed source health, and cached NWS venue context while preserving the retrospective holdout. This architecture describes the implementation; deployment and production readback are separate release evidence. Exact deployment commits are recorded in Sites. Historical release results remain dated evidence; current source validation belongs in [data provenance](data-provenance.md). Public exploration remains anonymous. The separate hosted football updater uses the approved owner identity only for authorization.
 
 Showcase evidence:
 
@@ -127,7 +127,7 @@ The repository uses:
 
 ## Implementation boundary
 
-Visitor authentication and saved scenarios remain out of scope. A separate operator bearer token protects the aggregate budget status used by production monitoring. Persistence is limited to the validated football snapshot, normalized odds cache data, refresh controls, aggregate AI cost, anonymous request buckets, and bounded AI run metadata. None contains user identity, wagering history, prompts, or raw provider responses. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).
+Visitor authentication and saved scenarios remain out of scope. A separate operator bearer token protects the aggregate budget status used by production monitoring. Persistence is limited to the validated football snapshot, bounded NWS weather cache, normalized odds cache data, refresh controls, aggregate AI cost, anonymous request buckets, and bounded AI run metadata. None contains user identity, wagering history, prompts, or raw provider responses. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).
 
 ## Market coverage observability
 
@@ -137,4 +137,37 @@ Visitor authentication and saved scenarios remain out of scope. A separate opera
 
 The Worker and server-rendered page share a request-local football snapshot loaded from D1. The public `/api/football` reader exposes the same schema; the client rechecks on focus and at five-minute intervals without fetching vendors. A data-version change resets stale scenario assumptions, and a mismatched forecast request is rejected before provider work.
 
-The Site-hosted `/mcp` service exposes only owner-authorized football status and refresh operations. Sites-managed OAuth supplies trusted identity; a server-side owner email allowlist restricts data-bearing calls. Anonymous writes, service-only access without user identity, other users, and arbitrary updater arguments are denied. The existing public audience, AI/odds configuration, and budget controls are preserved. A one-hour shared cooldown and expiring D1 lease bound update work. One conditional statement publishes the complete validated payload. Existing D1 tables and migrations are unchanged; football storage is an additive migration. See [weekly update operations](weekly-football-updates.md).
+The Site-hosted `/mcp` service retains owner-authorized football status and refresh operations and adds the bounded public evidence readers documented below. Sites-managed OAuth supplies trusted identity; a server-side owner email allowlist restricts updater status and writes. The public evidence readers expose only bounded public football and weather fields. Anonymous writes, service-only access without user identity, other users, and arbitrary updater arguments are denied. The existing public audience, AI/odds configuration, and budget controls are preserved. A one-hour shared cooldown and expiring D1 lease bound update work. One conditional statement publishes the complete validated payload. Existing D1 tables and migrations are unchanged; football storage is an additive migration. See [weekly update operations](weekly-football-updates.md).
+
+## Free evidence showcase
+
+`GET /api/showcase` reads the same saved football state as the existing product and returns one data version, observation time, verified current matchup, player-usage comparison, source-health trace, and weather context. It does not silently combine a new bundled usage window with an older D1 football version. Existing D1 payloads without weekly usage report unavailable coverage until an approved owner refresh publishes a complete new payload. The previous site identity, public audience, content, and existing Wednesday 08:00 America/Chicago task are preserved.
+
+| Capability | Calculation and evidence boundary |
+|---|---|
+| Current opponent player comparison | `comparePlayerUsage` and `getPlayerUsage` use all eligible current active-roster QB/RB/WR/TE candidates and each team's last three completed games. Highest recent total PPR determines leaders with stable-ID ties. This is historical performance, not a projection or current availability claim. |
+| What-if lab | `calculateUsageScenario` varies carries, target share, and reception scoring at fixed historical efficiency; passing and other scoring remain constant. It validates bounds and missing-role evidence and resets exact baseline values. It has no network or paid inference dependency. |
+| Reliability control tower | `getSourceHealth` exposes saved refresh outcome, latest attempt and success times, source timestamps/hashes/counts, coverage, and an expandable evidence trace. Last successful duration is shown only when those saved timestamps support it. No uptime, accuracy, provider-cost, or latency distribution is fabricated. |
+| Game-day context | `readGameWeather` reads an allowlisted reviewed venue's NWS hourly period covering verified kickoff plus active alerts at check time. It reports forecast horizon, source and fetch times, cache state, and roof uncertainty. Unsupported venues or missing/out-of-horizon sources are unavailable. No fantasy points or game-win adjustment is applied. |
+
+The football updater adds a fourth weekly-statistics input to its pinned/checksummed sources and corroborates completed results and next kickoff with official team/NFL pages. Publication remains atomic with the existing lease, one-hour cooldown, readback, and last-good preservation. See [provenance](data-provenance.md) for full-league season-total reconciliation, exact selected sources, scoring, and replay instructions.
+
+The 52-check reliability fixture suite remains explicitly labeled `local_deterministic_simulation`. Its schema, unsupported-claim, rate-limit, cache, fallback, and abstention checks are executable synthetic cases, separate from actual saved production outcomes. Tool traces show recorded validation and bounded reads; they do not imply a new upstream football refresh occurred on each page view.
+
+### Read-only MCP tools
+
+| Tool | Bounded arguments and result |
+|---|---|
+| `get_current_matchup` | No arguments. Verified current league-week matchup, record, and verification time, or bye/unavailable state. |
+| `get_player_usage` | Exactly `team: "DAL"` or `team: "opponent"`. Complete recent team candidates and source evidence. |
+| `compare_players` | No arguments. Recent PPR production leaders, ties, usage, completeness, and source timestamps for the current matchup. |
+| `get_source_health` | No arguments. Latest recorded refresh outcome and source-validation trace. |
+| `get_game_day_context` | No arguments. Cached venue forecast/alerts with source times and limitations. |
+
+The tools reuse the Site's supported MCP endpoint. They do not create OAuth grants, configure credentials, infer player predictions, call a language model, or call paid AI/odds services. Strict JSON-RPC schemas disallow arbitrary URLs, coordinates, seasons, IDs, and forced refresh parameters. Existing owner authorization for `football_update_status` and `refresh_football` remains intact. A read-only weather call can populate the internal shared cache from the fixed free NWS sources; it changes no external resource.
+
+### NWS cache and roof boundary
+
+The current reviewed venue is AT&T Stadium. Its approximate coordinates come from the public-domain NFLScoreBot stadium dataset; the roof documentation identifies a retractable roof, and actual game-day roof position remains unknown. Outdoor conditions are venue-area context and must not be described as field conditions. If a future verified roof status is closed, outdoor conditions still do not modify fantasy scenarios. Other stadiums return `venue_not_reviewed` until their location and roof context are reviewed.
+
+NWS requests use a descriptive User-Agent, exact HTTPS host/path allowlists, no redirects, bounded one-megabyte bodies, and an eight-second default timeout. Shared D1 cache lifetimes are 24 hours for point/grid mapping, 30 minutes for forecast, and 10 minutes for active alerts. Atomic 30-second leases coordinate concurrent requests. Failed sources enter a ten-minute cooldown; HTTP 429 respects a bounded Retry-After up to 24 hours. The forecast source must be within 18 hours, and its hourly period must cover kickoff. Alerts mean active now, not forecast game-day alerts. Missing storage produces unavailable weather rather than an uncoordinated provider request. The additive `0004_game_weather_cache.sql` migration must be applied in the authorized release workflow before claiming production cache operation.

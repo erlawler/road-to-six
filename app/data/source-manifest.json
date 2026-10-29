@@ -1,48 +1,61 @@
 {
   "validatedAt": "2026-10-29",
-  "reviewedAt": "2026-10-29T01:28:01.988Z",
+  "reviewedAt": "2026-10-29T15:13:32.957Z",
   "inputs": {
     "games": {
-      "url": "https://raw.githubusercontent.com/nflverse/nfldata/c38ea50a7e40a1967d0299669bfd27976eb15bde/data/games.csv",
-      "sourceVersion": "c38ea50a7e40a1967d0299669bfd27976eb15bde",
-      "sourceUpdatedAt": "2026-10-29T01:15:16Z",
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/71a12ace57c76dd0dbf0397d80e00855375195bf/data/games.csv",
+      "sourceVersion": "71a12ace57c76dd0dbf0397d80e00855375195bf",
+      "sourceUpdatedAt": "2026-10-29T14:35:17Z",
       "metadataUrl": "https://github.com/nflverse/nfldata/commits/master/data/games.csv.atom",
       "metadataMethod": "github-commit-atom",
-      "expectedSha256": "ea39c2df01d53e4f9f681da5f6e0542f62d34292d07b381d2ba0b7bb4de4ca5c",
+      "expectedSha256": "fb9cce03e4a1349a69e293ab2981e284932b8743f1c3fb4e6f5811970d2c3e9c",
       "retrievedBetween": {
-        "start": "2026-10-29T01:28:01.599Z",
-        "end": "2026-10-29T01:28:01.676Z"
+        "start": "2026-10-29T15:13:32.425Z",
+        "end": "2026-10-29T15:13:32.531Z"
       }
     },
     "roster": {
       "url": "https://github.com/nflverse/nflverse-data/releases/download/weekly_rosters/roster_weekly_2026.csv",
-      "expectedSha256": "be3115867d314c66808f99cbf43324a41cd662a9c67240160a5c6b380915ca35",
-      "sourcePublishedAt": "2026-10-28T14:00:16Z",
+      "expectedSha256": "f06f231da0a09c55f5cadf27af4ccf25033531b329b6f7bf27d4eb6511f8fdf2",
+      "sourcePublishedAt": "2026-10-29T14:12:44Z",
       "metadataUrl": "https://github.com/nflverse/nflverse-data/releases/expanded_assets/weekly_rosters",
       "metadataMethod": "github-release-assets",
       "timestampBasis": "download-last-modified",
-      "sourceUpdatedAt": "2026-10-28T14:00:16.000Z",
+      "sourceUpdatedAt": "2026-10-29T14:12:44.000Z",
       "retrievedBetween": {
-        "start": "2026-10-29T01:28:01.600Z",
-        "end": "2026-10-29T01:28:01.907Z"
+        "start": "2026-10-29T15:13:32.426Z",
+        "end": "2026-10-29T15:13:32.850Z"
       }
     },
     "stats": {
       "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2026.csv",
       "expectedSha256": "e220f794c37f74bd68ab4ddfff5099f17e1614832f2350a6f5f4587f20c818d4",
-      "sourcePublishedAt": "2026-10-28T16:00:41Z",
+      "sourcePublishedAt": "2026-10-29T09:05:22Z",
       "metadataUrl": "https://github.com/nflverse/nflverse-data/releases/expanded_assets/stats_player",
       "metadataMethod": "github-release-assets",
       "timestampBasis": "download-last-modified",
-      "sourceUpdatedAt": "2026-10-28T16:00:41.000Z",
+      "sourceUpdatedAt": "2026-10-29T09:05:22.000Z",
       "retrievedBetween": {
-        "start": "2026-10-29T01:28:01.601Z",
-        "end": "2026-10-29T01:28:01.835Z"
+        "start": "2026-10-29T15:13:32.427Z",
+        "end": "2026-10-29T15:13:32.751Z"
+      }
+    },
+    "weeklyStats": {
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2026.csv",
+      "expectedSha256": "b917d0214111df215147f9728b8999b4a307bfd1a21831be7e6c848ccf3dbca0",
+      "sourcePublishedAt": "2026-10-29T09:05:02Z",
+      "metadataUrl": "https://github.com/nflverse/nflverse-data/releases/expanded_assets/stats_player",
+      "metadataMethod": "github-release-assets",
+      "timestampBasis": "download-last-modified",
+      "sourceUpdatedAt": "2026-10-29T09:05:02.000Z",
+      "retrievedBetween": {
+        "start": "2026-10-29T15:13:32.427Z",
+        "end": "2026-10-29T15:13:32.724Z"
       }
     }
   },
   "seasonVerification": {
-    "verifiedAt": "2026-10-29T01:28:01.988Z",
+    "verifiedAt": "2026-10-29T15:13:32.957Z",
     "sources": [
       "https://www.dallascowboys.com/schedule/",
       "https://www.nfl.com/teams/dallas-cowboys/"
@@ -103,18 +116,18 @@
     "evidence": [
       {
         "url": "https://www.dallascowboys.com/schedule/",
-        "sha256": "3e7d1416f5648f54d1390bb702cd33597dc387d64db21dea8192b50aa1e13219",
+        "sha256": "a170ca904cb322001d76897dda7675be3566eb7f8e99da0e575e731f42ab0429",
         "retrievedBetween": {
-          "start": "2026-10-29T01:28:01.907Z",
-          "end": "2026-10-29T01:28:01.988Z"
+          "start": "2026-10-29T15:13:32.851Z",
+          "end": "2026-10-29T15:13:32.957Z"
         }
       },
       {
         "url": "https://www.nfl.com/teams/dallas-cowboys/",
-        "sha256": "b5e86f41838736f12fdd197c252f7c25656146360910f464ef0e5c8005401068",
+        "sha256": "ef28ab3a302a0c2d731067f79f5c0544ba6c770d23258dcb5c76223609c2fa2b",
         "retrievedBetween": {
-          "start": "2026-10-29T01:28:01.908Z",
-          "end": "2026-10-29T01:28:01.980Z"
+          "start": "2026-10-29T15:13:32.852Z",
+          "end": "2026-10-29T15:13:32.918Z"
         }
       }
     ]

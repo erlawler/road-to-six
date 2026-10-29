@@ -466,7 +466,9 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
         <button ref={menuButton} className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen(!menuOpen)}>Menu <span aria-hidden="true">{menuOpen ? "−" : "+"}</span></button>
         <nav id="primary-navigation" className={menuOpen ? "is-open" : ""} aria-label="Primary navigation" onKeyDown={(event) => { if (event.key === "Escape") { setMenuOpen(false); menuButton.current?.focus(); } }}>
           <a href="#forecast" onClick={() => setMenuOpen(false)}>Forecast</a>
-          <a href="#fantasy" onClick={() => setMenuOpen(false)}>Fantasy lab</a>
+          <a href="#fantasy" onClick={() => setMenuOpen(false)}>Player lab</a>
+          <a href="#what-if" onClick={() => setMenuOpen(false)}>What-if</a>
+          <a href="#game-day" onClick={() => setMenuOpen(false)}>Game day</a>
           <a href="#reliability" onClick={() => setMenuOpen(false)}>Reliability</a>
           <a href="#model" onClick={() => setMenuOpen(false)}>Model audit</a>
           <a href="#case-study" onClick={() => setMenuOpen(false)}>Product case</a>
@@ -481,7 +483,7 @@ export default function FootballLab({ initialFootballState }: { initialFootballS
           <span className="eyebrow">Frontier AI skills showcase</span>
           <h1>Football evidence meets market reality.</h1>
           <p>
-            Explore Dallas matchups, change player assumptions, and see how football evidence compares with the market.
+            Compare real player usage, explore transparent scenarios, and inspect the sources behind Dallas matchup and game-day context.
           </p>
           <p className="ownership-line">
             Product strategy, architecture, risk, and release owned by Eric Lawler. Implemented with Codex.

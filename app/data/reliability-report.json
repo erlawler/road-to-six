@@ -540,11 +540,11 @@
       "detail": "The public showcase exposes a disabled licensed-data boundary with no credentials or API calls."
     }
   ],
-  "runAt": "2026-10-29T01:33:58.946Z",
-  "baseCommit": "5c27d8b76c95f2fe865ccf7f21b450504251a30f",
+  "runAt": "2026-10-29T15:11:23.774Z",
+  "baseCommit": "d76811c108da7964d4021bed12f4bfaf8836b61b",
   "sourceFingerprint": {
     "algorithm": "sha256",
-    "value": "e9e55906af105a42d7927ff9def1fc7f57106a03e270354380a5e4601136a077",
+    "value": "2efc2f5464b0ec950963aadd94e5803d15ee47ab7fd7375e73840a00d1d17d73",
     "files": [
       "evals/ai-explanation-cases.mjs",
       "lib/ai-contract.mjs",

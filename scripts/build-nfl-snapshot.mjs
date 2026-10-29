@@ -21,7 +21,8 @@ const evaluationOutputPath = resolve(args["evaluation-output"] ?? resolve(dirnam
 if (!snapshotAsOf) throw new Error("Provide the source validation date with --as-of=YYYY-MM-DD");
 const metadata = args["source-metadata"] ? JSON.parse(await readFile(args["source-metadata"], "utf8")) : { inputs: {} };
 const [gamesText, rosterText, statsText] = await Promise.all([readFile(gamesPath, "utf8"), readFile(rosterPath, "utf8"), readFile(statsPath, "utf8")]);
-const { snapshot, evaluation, evaluationText } = await buildFootballSnapshot({ gamesText, rosterText, statsText, snapshotAsOf, forecastSeason: args.season ? Number(args.season) : undefined, metadata });
+const weeklyStatsText = args["weekly-stats"] ? await readFile(args["weekly-stats"], "utf8") : undefined;
+const { snapshot, evaluation, evaluationText } = await buildFootballSnapshot({ gamesText, rosterText, statsText, weeklyStatsText, snapshotAsOf, forecastSeason: args.season ? Number(args.season) : undefined, metadata });
 await mkdir(dirname(outputPath), { recursive: true });
 await mkdir(dirname(evaluationOutputPath), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
