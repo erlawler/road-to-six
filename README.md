@@ -82,7 +82,7 @@ The following results describe the July 2026 release and bounded evaluation samp
 
 | Outcome | Verified evidence |
 |---|---|
-| Sourced football experience | Versioned 2026 roster and schedule snapshot with complete 2025 regular-season player baselines and weekly opponent leaders |
+| Sourced football experience | Versioned 2026 roster and schedule snapshot with 2026 regular-season player totals to date and weekly opponent leaders |
 | Transparent model evaluation | 2024 to 2025 walk-forward holdout: football-only Brier 0.220, market-aware Brier 0.207, market baseline Brier 0.206 |
 | Honest model conclusion | The market-aware baseline improved on football-only Elo but did not outperform the market baseline |
 | Live market integration | The anonymous production refresh returned 17 events from The Odds API, matched 11 Cowboys games, and applied a current Week 2 market with source, retrieval time, cache state, and selected-game applicability preserved |
