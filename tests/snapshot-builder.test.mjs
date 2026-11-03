@@ -17,7 +17,7 @@ const week2 = "2026,REG,,,2026-09-20,2026_02_NYG_DAL,DAL,NYG,-110,100,2,Home,1.5
 const rosterHeader = "season,week,game_type,status,team,full_name,position,gsis_id,jersey_number,years_exp";
 const currentPlayer = "2026,1,REG,ACT,DAL,Dak Prescott,QB,fixture,4,10";
 const statsFields = ["passing_yards", "passing_tds", "passing_interceptions", "rushing_yards", "rushing_tds", "receptions", "receiving_yards", "receiving_tds", "def_sacks", "def_qb_hits", "def_interceptions", "def_pass_defended", "fg_made", "fg_att"];
-const stats = `season,season_type,player_id,player_display_name,position,fantasy_points_ppr,${statsFields.join(",")}\n2025,REG,fixture,Dak Prescott,QB,100,${statsFields.map((field) => field === "passing_yards" ? "1000" : "0").join(",")}\n`;
+const stats = `season,season_type,player_id,player_display_name,position,fantasy_points_ppr,${statsFields.join(",")}\n2026,REG,fixture,Dak Prescott,QB,100,${statsFields.map((field) => field === "passing_yards" ? "1000" : "0").join(",")}\n`;
 
 async function fixture(context, overrides = {}) {
   const directory = await mkdtemp(join(tmpdir(), "road-to-six-snapshot-"));
@@ -175,7 +175,7 @@ test("historical validation does not bypass live freshness or probability integr
   const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
   const metadata = JSON.parse(await readFile(new URL("../app/data/source-manifest.json", import.meta.url), "utf8"));
   const evaluationText = await readFile(new URL("../app/data/model-evaluation.json", import.meta.url), "utf8");
-  const verifiedAt = Math.max(Date.parse(snapshot.season.verifiedAt), Date.parse(snapshot.manifest.reviewedAt ?? snapshot.season.verifiedAt), ...["games", "roster", "stats"].map((key) => Date.parse(snapshot.manifest.inputs[key].retrievedBetween.end)));
+  const verifiedAt = Date.parse(snapshot.season.verifiedAt);
   await assert.rejects(validateFootballSnapshot(snapshot, metadata, evaluationText, verifiedAt + 8 * 86_400_000), /Snapshot refresh needed under the weekly review policy/);
 
   // Re-sign the artifact checksum so this fails on the scorer comparison itself.
@@ -192,4 +192,28 @@ test("missing required source statistic columns fail instead of fabricating zero
   const result = f.run();
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /stats: missing records or required columns/);
+});
+
+test("player evidence selects only the active regular season and never revives 2025 totals", async (context) => {
+  const prior = stats.split("\n")[1].replace("2026,REG", "2025,REG").replace(",1000,", ",9999,");
+  const postseason = stats.split("\n")[1].replace("2026,REG", "2026,POST").replace(",1000,", ",8888,");
+  const f = await fixture(context, { asOf: "2026-09-14", stats: `${stats}${prior}\n${postseason}\n` });
+  assert.equal(f.run().status, 0);
+  const data = await f.read();
+  assert.equal(data.players[0].statsSeason, 2026);
+  assert.equal(data.players[0].stats.passingYards, 1000);
+  assert.equal(data.manifest.coverage.playerStatsSeason, 2026);
+  assert.equal(data.opponents.NYG.statsSeason, 2026);
+  const historical = await fixture(context, { stats: stats.replace("2026,REG", "2025,REG") });
+  const result = historical.run();
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /No current-season regular-season player statistics/);
+});
+
+test("an active player without current-season stats stays unavailable instead of inheriting prior totals", async (context) => {
+  const f = await fixture(context, { stats: stats.replace(",fixture,", ",another-player,") });
+  assert.equal(f.run().status, 0);
+  const data = await f.read();
+  assert.equal(data.players[0].statsSeason, 2026);
+  assert.equal(data.players[0].stats, null);
 });

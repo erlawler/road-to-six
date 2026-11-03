@@ -186,3 +186,86 @@ test("limits HTTP cache freshness to the D1 row's remaining lifetime", async (t)
     t.mock.timers.reset();
   }
 });
+
+test("odds failures report bounded diagnostics without leaking upstream secrets", async (t) => {
+  const secret = "synthetic-provider-key-must-not-leak";
+  const secretBody = { message: `https://provider.example/?apiKey=${secret}`, error_code: secret };
+  const cases = [
+    ["invalid key", () => Response.json({ ...secretBody, error_code: "INVALID_KEY" }, { status: 401 }), "provider_authentication_failed", 401],
+    ["quota", () => Response.json({ ...secretBody, error_code: "OUT_OF_USAGE_CREDITS" }, { status: 401 }), "provider_quota_exhausted", 401],
+    ["rate limit", () => Response.json(secretBody, { status: 429 }), "provider_rate_limited", 429],
+    ["gateway HTML", () => new Response(secret, { status: 503 }), "provider_http_error", 503],
+    ["invalid JSON", () => new Response(secret), "provider_invalid_response", 200],
+    ["object body", () => Response.json(secretBody), "provider_invalid_response", 200],
+    ["null event", () => Response.json([null]), "provider_invalid_response", 200],
+    ["invalid event", () => Response.json([{ home_team: "Dallas Cowboys" }]), "provider_invalid_response", 200],
+    ["oversized body", () => new Response(" ".repeat(2_000_001)), "provider_invalid_response", 200],
+    ["timeout", () => { throw new DOMException(secret, "TimeoutError"); }, "provider_timeout", null],
+    ["connection failure", () => { throw new Error(secret); }, "provider_connection_failed", null],
+  ];
+  for (const [name, upstream, reasonCode, upstreamStatus] of cases) {
+    await t.test(name, async () => {
+      const originalFetch = globalThis.fetch;
+      let calls = 0;
+      globalThis.fetch = async () => { calls++; return upstream(); };
+      try {
+        const url = new URL("../dist/server/index.js", import.meta.url);
+        url.searchParams.set("odds-diagnostic", name);
+        const { default: worker } = await import(url.href);
+        const env = { THE_ODDS_API_KEY: secret, DB: createD1() };
+        const ctx = { waitUntil() {}, passThroughOnException() {} };
+        const response = await worker.fetch(new Request("http://localhost/api/odds"), env, ctx);
+        const text = await response.text();
+        assert.equal(response.status, 502);
+        assert.equal(response.headers.get("cache-control"), "no-store");
+        assert.equal(response.headers.get("retry-after"), "60");
+        assert.equal(text.includes(secret), false);
+        assert.deepEqual(JSON.parse(text), { status: "upstream_unavailable", reasonCode, upstreamStatus, retryAfterSeconds: 60 });
+        const cooldown = await worker.fetch(new Request("http://localhost/api/odds"), env, ctx);
+        assert.equal(cooldown.status, 429);
+        assert.equal(calls, 1);
+      } finally { globalThis.fetch = originalFetch; }
+    });
+  }
+});
+
+test("a valid provider response without Cowboys coverage is cached as a coverage gap", async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async (input, init) => {
+    calls++;
+    const url = new URL(input);
+    assert.equal(url.searchParams.get("apiKey"), "test-key");
+    assert.equal(url.searchParams.get("markets"), "h2h,spreads,totals");
+    assert.equal(init.redirect, "error");
+    return Response.json([{ home_team: "New York Giants", away_team: "Philadelphia Eagles" }]);
+  };
+  try {
+    const url = new URL("../dist/server/index.js", import.meta.url);
+    url.searchParams.set("odds-coverage", "empty");
+    const { default: worker } = await import(url.href);
+    const env = { THE_ODDS_API_KEY: "  test-key\n", DB: createD1() };
+    const ctx = { waitUntil() {}, passThroughOnException() {} };
+    const first = await worker.fetch(new Request("http://localhost/api/odds"), env, ctx);
+    const second = await worker.fetch(new Request("http://localhost/api/odds"), env, ctx);
+    assert.equal(first.status, 200);
+    const payload = await first.json();
+    assert.equal(payload.status, "current");
+    assert.deepEqual(payload.events, []);
+    assert.equal((await second.json()).cached, true);
+    assert.equal(calls, 1);
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+test("a whitespace-only odds credential makes no provider request", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => { assert.fail("Missing credential must not reach the provider"); };
+  try {
+    const url = new URL("../dist/server/index.js", import.meta.url);
+    url.searchParams.set("odds-credential", "blank");
+    const { default: worker } = await import(url.href);
+    const response = await worker.fetch(new Request("http://localhost/api/odds"), { THE_ODDS_API_KEY: " \n ", DB: createD1() }, { waitUntil() {} });
+    assert.equal(response.status, 503);
+    assert.equal((await response.json()).status, "configuration_required");
+  } finally { globalThis.fetch = originalFetch; }
+});
