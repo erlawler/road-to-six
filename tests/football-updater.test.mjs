@@ -52,6 +52,35 @@ test("official verification checks every final, kickoff, record, bye and TBD wee
   assert.throws(() => verifyOfficialSeason(fallback.schedule, 2026, officialSchedule(), "Dallas Cowboys 3rd NFC East 3 - 4 - 0", fallback.schedule[7].kickoffAt), /started game/);
 });
 
+test("official overtime finals retain score, result and record verification", () => {
+  for (const [cowboysScore, opponentScore, label, record] of [
+    [30, 33, "L", { wins: 3, losses: 5, ties: 0 }],
+    [33, 30, "W", { wins: 4, losses: 4, ties: 0 }],
+    [30, 30, "T", { wins: 3, losses: 4, ties: 1 }],
+  ]) {
+    const candidate = structuredClone(fallback);
+    const game = candidate.schedule.find((g) => g.week === 8);
+    Object.assign(game, { status: "final", cowboysScore, opponentScore });
+    const final = `FINAL ${label} ${cowboysScore} - ${opponentScore}`;
+    const overtime = final.replace("FINAL", "FINAL/OT");
+    const schedule = officialSchedule(candidate).replace(final, overtime);
+    const nfl = `Dallas Cowboys 3rd NFC East ${record.wins} - ${record.losses} - ${record.ties}`;
+    const verifiedAt = "2026-11-02T23:00:00.000Z";
+    const verify = (html = schedule, team = nfl) => verifyOfficialSeason(candidate.schedule, 2026, html, team, verifiedAt);
+    const result = verify();
+    assert.deepEqual(result.record, record);
+    assert.equal(result.completedResults.length, 8);
+    assert.deepEqual(result.completedResults.at(-1), { week: 8, cowboysScore, opponentScore });
+    assert.equal(result.nextGame.week, 9);
+    assert.throws(() => verify(schedule.replace(overtime, `FINAL/OT ${label} 99 - ${opponentScore}`)), /Dallas score/);
+    assert.throws(() => verify(schedule.replace(overtime, `FINAL/OT ${label === "L" ? "W" : "L"} ${cowboysScore} - ${opponentScore}`)), /result label/);
+    assert.throws(() => verify(schedule, "Dallas Cowboys 3rd NFC East 3 - 4 - 0"), /team record/);
+    assert.throws(() => verify(schedule.replace("FINAL/OT", "FINAL/OTX")), /final is missing/);
+    game.status = "scheduled";
+    assert.throws(() => verify(), /final is missing/);
+  }
+});
+
 test("source retrieval rejects HTTP errors and oversized streaming bodies", async () => {
   await assert.rejects(boundedSource("https://source.example", async () => new Response("Unavailable", { status: 503 })));
   await assert.rejects(boundedSource("https://source.example", async () => new Response("123456"), 5), /size limit/);
