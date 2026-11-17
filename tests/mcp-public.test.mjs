@@ -160,7 +160,14 @@ test("clients on handshake revisions still connect, list tools and ping", async 
 
   const listed = (await (await app.fetch(legacy("tools/list", undefined, { headers: { "MCP-Protocol-Version": "2025-06-18" } }), {}, ctx)).json()).result;
   assert.deepEqual(listed.tools.map((tool) => tool.name), [...PUBLIC_TOOL_NAMES]);
-  assert.deepEqual((await (await app.fetch(legacy("ping"), {}, ctx)).json()).result.resultType, "complete");
+  // Handshake-era results keep their original shapes: no fields from the 2026-07-28 revision.
+  assert.deepEqual((await (await app.fetch(legacy("ping"), {}, ctx)).json()).result, {});
+  assert.deepEqual(Object.keys(listed), ["tools"]);
+  assert.deepEqual(Object.keys(known).sort(), ["capabilities", "instructions", "protocolVersion", "serverInfo"]);
+  const legacyCall = (await (await app.fetch(legacy("tools/call", { name: "get_source_health", arguments: {} }), {}, ctx)).json()).result;
+  assert.deepEqual(Object.keys(legacyCall).sort(), ["content", "isError", "structuredContent"]);
+  const legacyRead = (await (await app.fetch(legacy("resources/read", { uri: FORECAST_CARD_URI }), {}, ctx)).json()).result;
+  assert.deepEqual(Object.keys(legacyRead), ["contents"]);
   const unknown = await app.fetch(legacy("prompts/list"), {}, ctx);
   assert.equal(unknown.status, 200);
   assert.equal((await unknown.json()).error.code, JSONRPC_ERROR.methodNotFound);

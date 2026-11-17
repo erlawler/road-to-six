@@ -112,15 +112,19 @@ async function handleMcp(request: Request, env: Env, surface: Surface): Promise<
   const request_ = classifyRequest(message, request.headers);
   if (request_.error) return fail(request_.error.code, request_.error.message, request_.error.status, request_.error.data);
   const modern = request_.era === "modern";
-  const result = (value: Record<string, unknown>) => reply({ jsonrpc: "2.0", id, result: completeResult(value, MCP_SERVER_INFO) });
-  const cached = (value: Record<string, unknown>, ttlMs: number) => reply({ jsonrpc: "2.0", id, result: cacheableResult(value, MCP_SERVER_INFO, ttlMs) });
+  // Each era gets exactly its own result shape. Handshake-era clients may
+  // validate results strictly (an empty ping result must be an empty object),
+  // so the fields revision 2026-07-28 requires are added for modern requests only.
+  const result = (value: Record<string, unknown>) => reply({ jsonrpc: "2.0", id, result: modern ? completeResult(value, MCP_SERVER_INFO) : value });
+  const cached = (value: Record<string, unknown>, ttlMs: number) => reply({ jsonrpc: "2.0", id, result: modern ? cacheableResult(value, MCP_SERVER_INFO, ttlMs) : value });
   const instructions = surface === "owner" ? OWNER_INSTRUCTIONS : PUBLIC_INSTRUCTIONS;
   const tools = surface === "owner" ? [...OWNER_TOOLS, ...PUBLIC_TOOLS] : [...PUBLIC_TOOLS];
   const params = isRecord(message.params) ? message.params : {};
 
   switch (message.method) {
     case "server/discover":
-      return cached({ supportedVersions: [...SUPPORTED_PROTOCOL_VERSIONS], capabilities: CAPABILITIES, instructions }, DISCOVERY_TTL_MS);
+      // Discovery exists only in the modern revision, so it always answers in that shape.
+      return reply({ jsonrpc: "2.0", id, result: cacheableResult({ supportedVersions: [...SUPPORTED_PROTOCOL_VERSIONS], capabilities: CAPABILITIES, instructions }, MCP_SERVER_INFO, DISCOVERY_TTL_MS) });
     case "initialize":
       return result({ protocolVersion: negotiateLegacyVersion(params.protocolVersion), capabilities: CAPABILITIES, serverInfo: MCP_SERVER_INFO, instructions });
     case "ping":
