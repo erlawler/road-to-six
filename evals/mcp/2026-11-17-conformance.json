@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-11-17T04:45:34.652Z",
+  "suite": "@modelcontextprotocol/conformance",
+  "suiteVersion": "0.1.16",
+  "target": "http://127.0.0.1:8787/api/mcp (local fixture server)",
+  "note": "Only the scenarios that apply to this server were run. The suite had no server scenarios for revision 2026-07-28 at this version. The first run failed the ping scenario; the fix is described in docs/mcp-release-evidence-2026-11-17.md.",
+  "scenarios": [
+    {
+      "name": "server-initialize",
+      "passed": 1,
+      "total": 1
+    },
+    {
+      "name": "ping",
+      "passed": 1,
+      "total": 1
+    },
+    {
+      "name": "tools-list",
+      "passed": 1,
+      "total": 1
+    },
+    {
+      "name": "resources-list",
+      "passed": 1,
+      "total": 1
+    },
+    {
+      "name": "dns-rebinding-protection",
+      "passed": 2,
+      "total": 2
+    }
+  ],
+  "checksPassed": 6,
+  "checksTotal": 6
+}

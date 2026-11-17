@@ -170,6 +170,38 @@ Document OpenAI as the deployed Runtime AI provider. Present Anthropic only as a
 
 **Why:** The owner is presenting completed product work and capabilities. Skills-first positioning keeps the evidence useful to peers and practitioners while preserving truthful provider boundaries and preventing an unapproved social-publication path.
 
+## ADR 022: Open the evidence tools to any MCP client on a separate anonymous path
+
+**Status:** PROPOSED. Eric approved building a public MCP endpoint on November 17, 2026. The design below awaits his review of the pull request and a verified release.
+
+**Decision:** Serve the read-only evidence tools at `/api/mcp` with no sign-in, on the current stateless protocol revision (2026-07-28) and the handshake revisions older clients still use. Keep the owner updater tools only on the Site-hosted `/mcp` path, whose behavior does not change. Protect the public path with a shared rate limit that stores no identity.
+
+**Why:** The existing `/mcp` path sits behind the hosting platform's sign-in, so only one client family can reach it. A showcase that other assistants cannot connect to is a code sample, not a product. A separate path gives the public catalog least privilege (an owner tool is not even listed) and leaves the weekly refresh automation untouched. The tradeoff is a second surface to monitor and a shared limit that one heavy caller can exhaust for everyone for up to five minutes.
+
+## ADR 023: Keep the MCP forecast football-only
+
+**Status:** PROPOSED. Awaits owner review of the pull request.
+
+**Decision:** Expose the Elo baseline, its driver waterfall, and the six bounded what-if controls through `get_football_forecast`. Remove every market field before the shared probability function runs. Market-implied and market-aware values stay on the site.
+
+**Why:** The public-use review accepts market data for display inside the analytical interface and forbids exposing it through an API or standalone feed. A tool result is a machine-readable feed. The football-only estimate needs no paid source and no language model, so the tool costs nothing to run, and the calling assistant does the explaining. The tradeoff is real: the documented holdout shows the football-only baseline is less accurate than market prices, so every result says so and links the model card.
+
+## ADR 024: Treat the calling model as the user of every tool contract
+
+**Status:** PROPOSED. Awaits owner review of the pull request.
+
+**Decision:** Give every public tool a title, a description that says when to use it and what it is not, an enforced input schema, and a tested output schema. Add one evidence block to every result with status, staleness, reason, observation time, data version, sources, and the educational-use notice. Return argument problems as tool execution errors that name the problem, and keep protocol errors for unknown tools and malformed requests. Answer each protocol era in exactly its own response shape.
+
+**Why:** An assistant cannot ask a clarifying question of an API. It needs to know from the result alone whether a value is current, where it came from, and what to do when it is not. Execution errors let a model correct its own arguments, which a protocol error does not. The official conformance suite showed that mixing newer fields into older response shapes breaks strict clients, so the eras are kept apart. This changes one earlier behavior: invalid arguments previously returned protocol error `-32602`.
+
+## ADR 025: Prove agent use with fixed-rule evaluations and aggregate counts
+
+**Status:** PROPOSED. Awaits owner review of the pull request.
+
+**Decision:** Maintain labeled agent cases with decoy tools and grade saved transcripts with deterministic rules for tool selection, arguments, grounded figures, abstention, and the advice boundary. Count public tool calls only as daily aggregates by tool, client family, and outcome. Publish both, and state their limits beside them.
+
+**Why:** Protocol conformance shows the server speaks correctly. It does not show that an assistant picks the right tool or repeats a number faithfully, and it says nothing about whether anyone uses the endpoint. Fixed rules make a score reproducible from its transcript without a model acting as judge. Aggregate counts answer the adoption question while keeping public exploration anonymous under ADR 010. The answer checks are heuristics, client labels are self-reported, and counts are calls, not people.
+
 ## Current-season player evidence update, October 6, 2026
 
 **Decision:** At Eric's request, the roster snapshot and opponent rankings now use the active season's regular-season totals to date. This supersedes ADR 013's prior-season statistics choice. Select the statistics asset from the football season, validate every displayed statistics season, and retain source timestamps. The forecast formula and historical holdout remain unchanged. A missing current-season row stays unavailable. Existing stored snapshots with the old contract cannot override this release.

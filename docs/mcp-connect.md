@@ -69,7 +69,7 @@ Every result carries an `evidence` block. An assistant should check it before re
 | `sources` | Name, address and license of each source |
 | `notice` | The educational-use and non-affiliation statement |
 
-When a result is `unavailable`, the server has declined to substitute other data. The right answer is to say so.
+When a result is `unavailable`, the server has declined to substitute other data, and the right answer is to say so. Some unavailable results still carry the last saved details. Those details are not verified and should not be repeated as current.
 
 ## What this server will not do
 

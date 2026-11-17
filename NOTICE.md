@@ -16,6 +16,8 @@ The nflverse repository license applies only to rights the licensor has authorit
 
 The live adapter uses The Odds API. Current market data is normalized into consensus values and shown only inside the educational analytical interface. The same-site application endpoint is not documented or licensed as a standalone feed, does not enable cross-origin access, and caches results for six hours to protect the free allowance. The private key is configured server-side and the live display check passes.
 
+The Model Context Protocol endpoint returns no market data. Its forecast tool is football-only: market fields are removed before the probability function runs, and it never reads moneylines, spreads, totals, or the odds cache. Tool results carry the nflverse and National Weather Service attributions and licenses with the data.
+
 ## Names and marks
 
 Dallas Cowboys, NFL, Super Bowl, team names, player names, and related marks belong to their respective owners. Road to Six is an unofficial educational skills-showcase project. It does not use official logos, player images, uniform artwork, or endorsement claims.

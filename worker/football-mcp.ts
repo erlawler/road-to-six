@@ -109,9 +109,9 @@ async function handleMcp(request: Request, env: Env, surface: Surface): Promise<
   // Notifications carry no id and expect no body.
   if (message.id === undefined) return new Response(null, { status: 202, headers });
 
-  const request_ = classifyRequest(message, request.headers);
-  if (request_.error) return fail(request_.error.code, request_.error.message, request_.error.status, request_.error.data);
-  const modern = request_.era === "modern";
+  const classified = classifyRequest(message, request.headers);
+  if (classified.error) return fail(classified.error.code, classified.error.message, classified.error.status, classified.error.data);
+  const modern = classified.era === "modern";
   // Each era gets exactly its own result shape. Handshake-era clients may
   // validate results strictly (an empty ping result must be an empty object),
   // so the fields revision 2026-07-28 requires are added for modern requests only.
@@ -149,7 +149,7 @@ async function handleMcp(request: Request, env: Env, surface: Surface): Promise<
   const name = typeof params.name === "string" ? params.name : "";
   const publicTool = findPublicTool(name);
   if (publicTool) {
-    const client = clientFamily(request_.clientName, request.headers.get("user-agent"));
+    const client = clientFamily(classified.clientName, request.headers.get("user-agent"));
     const record = (outcome: McpUsageOutcome) => surface === "public"
       ? recordMcpUsage(env.DB, { surface, operation: publicTool.name, client, outcome })
       : Promise.resolve(false);

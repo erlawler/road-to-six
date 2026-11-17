@@ -1,0 +1,436 @@
+{
+  "url": "http://127.0.0.1:8787/api/mcp",
+  "generatedAt": "2026-11-17T04:44:59.058Z",
+  "sdk": {
+    "client": "2.4.0",
+    "classic": "1.32.2"
+  },
+  "runs": [
+    {
+      "label": "official client, 2025 handshake (default mode)",
+      "connection": {
+        "serverName": "road-to-six-football",
+        "serverVersion": "3.0.0",
+        "era": "legacy",
+        "protocolVersion": "2025-11-25",
+        "hasInstructions": true
+      },
+      "passed": true,
+      "checks": [
+        {
+          "name": "connects and identifies the server",
+          "passed": true,
+          "detail": {
+            "serverName": "road-to-six-football",
+            "serverVersion": "3.0.0",
+            "era": "legacy",
+            "protocolVersion": "2025-11-25",
+            "hasInstructions": true
+          }
+        },
+        {
+          "name": "lists exactly the public tools in catalog order",
+          "passed": true
+        },
+        {
+          "name": "every tool declares an output schema",
+          "passed": true
+        },
+        {
+          "name": "calls get_current_matchup",
+          "passed": true,
+          "detail": {
+            "toolStatus": "verified",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_player_usage",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls compare_players",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_source_health",
+          "passed": true,
+          "detail": {
+            "toolStatus": "current",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_game_day_context",
+          "passed": true,
+          "detail": {
+            "toolStatus": "unavailable",
+            "evidenceStatus": "unavailable",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_football_forecast",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "invalid arguments return a tool execution error",
+          "passed": true
+        },
+        {
+          "name": "an owner tool is unknown on the public endpoint",
+          "passed": true
+        },
+        {
+          "name": "lists the interface resource",
+          "passed": true
+        },
+        {
+          "name": "reads the interface resource",
+          "passed": true
+        },
+        {
+          "name": "negotiates the legacy era",
+          "passed": true,
+          "detail": "2025-11-25"
+        }
+      ]
+    },
+    {
+      "label": "official client, automatic negotiation",
+      "connection": {
+        "serverName": "road-to-six-football",
+        "serverVersion": "3.0.0",
+        "era": "modern",
+        "protocolVersion": "2026-07-28",
+        "hasInstructions": true
+      },
+      "passed": true,
+      "checks": [
+        {
+          "name": "connects and identifies the server",
+          "passed": true,
+          "detail": {
+            "serverName": "road-to-six-football",
+            "serverVersion": "3.0.0",
+            "era": "modern",
+            "protocolVersion": "2026-07-28",
+            "hasInstructions": true
+          }
+        },
+        {
+          "name": "lists exactly the public tools in catalog order",
+          "passed": true
+        },
+        {
+          "name": "every tool declares an output schema",
+          "passed": true
+        },
+        {
+          "name": "calls get_current_matchup",
+          "passed": true,
+          "detail": {
+            "toolStatus": "verified",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_player_usage",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls compare_players",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_source_health",
+          "passed": true,
+          "detail": {
+            "toolStatus": "current",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_game_day_context",
+          "passed": true,
+          "detail": {
+            "toolStatus": "unavailable",
+            "evidenceStatus": "unavailable",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_football_forecast",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "invalid arguments return a tool execution error",
+          "passed": true
+        },
+        {
+          "name": "an owner tool is unknown on the public endpoint",
+          "passed": true
+        },
+        {
+          "name": "lists the interface resource",
+          "passed": true
+        },
+        {
+          "name": "reads the interface resource",
+          "passed": true
+        },
+        {
+          "name": "negotiates the modern era",
+          "passed": true,
+          "detail": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "label": "official client, pinned to 2026-07-28",
+      "connection": {
+        "serverName": "road-to-six-football",
+        "serverVersion": "3.0.0",
+        "era": "modern",
+        "protocolVersion": "2026-07-28",
+        "hasInstructions": true
+      },
+      "passed": true,
+      "checks": [
+        {
+          "name": "connects and identifies the server",
+          "passed": true,
+          "detail": {
+            "serverName": "road-to-six-football",
+            "serverVersion": "3.0.0",
+            "era": "modern",
+            "protocolVersion": "2026-07-28",
+            "hasInstructions": true
+          }
+        },
+        {
+          "name": "lists exactly the public tools in catalog order",
+          "passed": true
+        },
+        {
+          "name": "every tool declares an output schema",
+          "passed": true
+        },
+        {
+          "name": "calls get_current_matchup",
+          "passed": true,
+          "detail": {
+            "toolStatus": "verified",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_player_usage",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls compare_players",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_source_health",
+          "passed": true,
+          "detail": {
+            "toolStatus": "current",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_game_day_context",
+          "passed": true,
+          "detail": {
+            "toolStatus": "unavailable",
+            "evidenceStatus": "unavailable",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_football_forecast",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "invalid arguments return a tool execution error",
+          "passed": true
+        },
+        {
+          "name": "an owner tool is unknown on the public endpoint",
+          "passed": true
+        },
+        {
+          "name": "lists the interface resource",
+          "passed": true
+        },
+        {
+          "name": "reads the interface resource",
+          "passed": true
+        },
+        {
+          "name": "negotiates the modern era",
+          "passed": true,
+          "detail": "2026-07-28"
+        }
+      ]
+    },
+    {
+      "label": "classic SDK client (handshake only)",
+      "connection": {
+        "serverName": "road-to-six-football",
+        "serverVersion": "3.0.0",
+        "era": "legacy"
+      },
+      "passed": true,
+      "checks": [
+        {
+          "name": "connects and identifies the server",
+          "passed": true,
+          "detail": {
+            "serverName": "road-to-six-football",
+            "serverVersion": "3.0.0",
+            "era": "legacy"
+          }
+        },
+        {
+          "name": "lists exactly the public tools in catalog order",
+          "passed": true
+        },
+        {
+          "name": "every tool declares an output schema",
+          "passed": true
+        },
+        {
+          "name": "calls get_current_matchup",
+          "passed": true,
+          "detail": {
+            "toolStatus": "verified",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_player_usage",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls compare_players",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_source_health",
+          "passed": true,
+          "detail": {
+            "toolStatus": "current",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_game_day_context",
+          "passed": true,
+          "detail": {
+            "toolStatus": "unavailable",
+            "evidenceStatus": "unavailable",
+            "stale": false
+          }
+        },
+        {
+          "name": "calls get_football_forecast",
+          "passed": true,
+          "detail": {
+            "toolStatus": "available",
+            "evidenceStatus": "ok",
+            "stale": false
+          }
+        },
+        {
+          "name": "invalid arguments return a tool execution error",
+          "passed": true
+        },
+        {
+          "name": "an owner tool is unknown on the public endpoint",
+          "passed": true
+        },
+        {
+          "name": "lists the interface resource",
+          "passed": true
+        },
+        {
+          "name": "reads the interface resource",
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "summary": [
+    "pass: official client, 2025 handshake (default mode) (14 of 14 checks)",
+    "pass: official client, automatic negotiation (14 of 14 checks)",
+    "pass: official client, pinned to 2026-07-28 (14 of 14 checks)",
+    "pass: classic SDK client (handshake only) (13 of 13 checks)"
+  ]
+}

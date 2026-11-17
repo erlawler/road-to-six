@@ -127,7 +127,7 @@ The repository uses:
 
 ## Implementation boundary
 
-Visitor authentication and saved scenarios remain out of scope. A separate operator bearer token protects the aggregate budget status used by production monitoring. Persistence is limited to the validated football snapshot, bounded NWS weather cache, normalized odds cache data, refresh controls, aggregate AI cost, anonymous request buckets, and bounded AI run metadata. None contains user identity, wagering history, prompts, or raw provider responses. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).
+Visitor authentication and saved scenarios remain out of scope. A separate operator bearer token protects the aggregate budget status used by production monitoring. Persistence is limited to the validated football snapshot, bounded NWS weather cache, normalized odds cache data, refresh controls, aggregate AI cost, anonymous request buckets, bounded AI run metadata, and aggregate MCP call counts. None contains user identity, wagering history, prompts, or raw provider responses. Sports data must remain within free source allowances, and bettor splits remain deferred. See [Data and Licensing Spike](data-licensing-spike.md).
 
 ## Market coverage observability
 
@@ -137,7 +137,7 @@ Visitor authentication and saved scenarios remain out of scope. A separate opera
 
 The Worker and server-rendered page share a request-local football snapshot loaded from D1. The public `/api/football` reader exposes the same schema; the client rechecks on focus and at five-minute intervals without fetching vendors. A data-version change resets stale scenario assumptions, and a mismatched forecast request is rejected before provider work.
 
-The Site-hosted `/mcp` service retains owner-authorized football status and refresh operations and adds the bounded public evidence readers documented below. Sites-managed OAuth supplies trusted identity; a server-side owner email allowlist restricts updater status and writes. The public evidence readers expose only bounded public football and weather fields. Anonymous writes, service-only access without user identity, other users, and arbitrary updater arguments are denied. The existing public audience, AI/odds configuration, and budget controls are preserved. A one-hour shared cooldown and expiring D1 lease bound update work. One conditional statement publishes the complete validated payload. Existing D1 tables and migrations are unchanged; football storage is an additive migration. See [weekly update operations](weekly-football-updates.md).
+The Site-hosted `/mcp` service retains owner-authorized football status and refresh operations and also serves the bounded public evidence readers documented below. Sites-managed OAuth supplies trusted identity; a server-side owner email allowlist restricts updater status and writes. The public evidence readers expose only bounded public football and weather fields. Anonymous writes, service-only access without user identity, other users, and arbitrary updater arguments are denied. The existing public audience, AI/odds configuration, and budget controls are preserved. A one-hour shared cooldown and expiring D1 lease bound update work. One conditional statement publishes the complete validated payload. Football storage, the weather cache, and the MCP usage aggregate are additive migrations; no existing table changes. See [weekly update operations](weekly-football-updates.md).
 
 ## Free evidence showcase
 
@@ -154,7 +154,20 @@ The football updater adds a fourth weekly-statistics input to its pinned/checksu
 
 The 52-check reliability fixture suite remains explicitly labeled `local_deterministic_simulation`. Its schema, unsupported-claim, rate-limit, cache, fallback, and abstention checks are executable synthetic cases, separate from actual saved production outcomes. Tool traces show recorded validation and bounded reads; they do not imply a new upstream football refresh occurred on each page view.
 
-### Read-only MCP tools
+### MCP endpoints
+
+Two paths share one protocol core in `worker/football-mcp.ts`, with the rules in `lib/mcp-protocol.mjs` and the tool catalog in `lib/mcp-tools.mjs`.
+
+| Path | Audience | Tools | Controls |
+|---|---|---|---|
+| `/mcp` | Signed-in use through the hosting platform, including the owner's weekly refresh | The two owner tools, then the six public tools | Platform sign-in, owner email allowlist for the owner tools, origin limited to the site and `chatgpt.com`. Behavior is unchanged apart from added fields. No rate limit or usage record. |
+| `/api/mcp` | Any MCP client, anonymous | The six public tools only | Read-only, shared rate limit, aggregate usage counts, origin allowlist with cross-origin headers for reviewed hosts and local developer tools, extendable through the optional non-secret `MCP_ALLOWED_ORIGINS` setting. An owner tool name is an unknown tool here. |
+
+`GET /api/mcp/usage` returns the public aggregate counts. Connection steps are in the [connect guide](mcp-connect.md).
+
+**Protocol.** Requests that carry per-request metadata are served statelessly under revision 2026-07-28: every result has `resultType`, discovery, list and resource-read results carry `ttlMs` and `cacheScope`, results identify the server in `_meta`, the `MCP-Protocol-Version`, `Mcp-Method` and `Mcp-Name` headers must match the body, an unsupported version returns error `-32022` with the supported list, a header problem returns `-32020`, and an unknown method returns HTTP 404. `server/discover` is implemented. Clients on the handshake revisions (2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05) still connect with `initialize`, and their responses keep the original shapes with none of the newer fields. Sessions, server-initiated requests, sampling, roots, logging, tasks and subscriptions are not implemented.
+
+**Public tools.**
 
 | Tool | Bounded arguments and result |
 |---|---|
@@ -163,8 +176,19 @@ The 52-check reliability fixture suite remains explicitly labeled `local_determi
 | `compare_players` | No arguments. Recent PPR production leaders, ties, usage, completeness, and source timestamps for the current matchup. |
 | `get_source_health` | No arguments. Latest recorded refresh outcome and source-validation trace. |
 | `get_game_day_context` | No arguments. Cached venue forecast/alerts with source times and limitations. |
+| `get_football_forecast` | Six optional availability controls, each a number from 0 to 100. Football-only win probability from the shared `calculateForecast` function, driver waterfall, illustrative band, model version, ratings date, and holdout context. |
 
-The tools reuse the Site's supported MCP endpoint. They do not create OAuth grants, configure credentials, infer player predictions, call a language model, or call paid AI/odds services. Strict JSON-RPC schemas disallow arbitrary URLs, coordinates, seasons, IDs, and forced refresh parameters. Existing owner authorization for `football_update_status` and `refresh_football` remains intact. A read-only weather call can populate the internal shared cache from the fixed free NWS sources; it changes no external resource.
+Each tool declares a title, an input schema, an output schema and read-only annotations. The declared input schema is the enforced rule: `validateToolArguments` runs the same schema through `lib/json-schema-lite.mjs`, and a violation returns a tool execution error (`isError: true`) that names the problem, so a calling model can correct itself. An unknown tool or a malformed request remains a protocol error. Tests validate real results in ready, degraded and unavailable states against the declared output schemas, and the official client SDK validates them again with its own validator.
+
+**Evidence block.** `buildEvidence` adds one `evidence` object to every public result: schema version, tool, normalized status (`ok`, `degraded`, `unavailable`), a reason whenever the status is not `ok`, a `stale` flag, the observation time, the football data version with its verification time and freshness, the sources with licenses, and the educational-use and non-affiliation notice. The block is additive, so each tool's existing fields are unchanged.
+
+**Football-only forecast.** `lib/football-forecast-tool.mjs` removes every market field before calling the shared probability function, and a test proves that changing all saved market values does not move the result. The market data license covers display inside the analytical interface, not redistribution as a feed, so market-implied and market-aware values stay on the site. The tool abstains unless the current matchup is verified.
+
+**Abuse control and usage.** Each public `tools/call` consumes one request from a shared aligned five-minute window of 120, stored in the existing `ai_rate_limit_window` table under its own scope. A limited call returns HTTP 429 with `Retry-After`. The limiter fails open, because these are free cached reads. `mcp_usage_daily` (migration `0005`) counts calls by day, tool, client family and outcome. Client names are self-reported, folded into a fixed list, and never stored raw. No IP address, user agent, or argument is stored. Writes are best effort: a missing table never fails a tool call, and the usage endpoint then reports `unavailable`. Aggregates older than 400 days are pruned.
+
+**In-chat card.** `get_football_forecast` links the `ui://road-to-six/forecast-card.html` resource through `_meta.ui.resourceUri`, following the MCP Apps extension revision 2026-01-26. The card is authored in `app/mcp/forecast-card.html` and generated into `lib/mcp-app-view-html.mjs` by `npm run mcp:view`; a test fails when they drift. It is one self-contained document with no dependency: it renders only with `textContent`, loads nothing external, makes no network request, and declares no content security metadata, so hosts apply the restrictive default policy. What-if sliders ask the host to call the forecast tool. Hosts without MCP Apps support receive the same result as text.
+
+The tools do not create OAuth grants, configure credentials, infer player predictions, call a language model, or call paid AI/odds services. Strict schemas disallow arbitrary URLs, coordinates, seasons, IDs, and forced refresh parameters. Existing owner authorization for `football_update_status` and `refresh_football` remains intact. A read-only weather call can populate the internal shared cache from the fixed free NWS sources; it changes no external resource.
 
 ### NWS cache and roof boundary
 
