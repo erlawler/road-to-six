@@ -12,6 +12,7 @@
     "data:snapshot": "node scripts/build-nfl-snapshot.mjs",
     "eval": "node scripts/run-ai-evals.mjs",
     "eval:live": "node scripts/run-live-ai-scorecard.mjs",
+    "eval:mcp": "node scripts/run-mcp-agent-eval.mjs",
     "mcp:view": "node scripts/build-mcp-app-view.mjs",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build && node --import ./tests/setup-worker-runtime.mjs --test tests/*.test.mjs",

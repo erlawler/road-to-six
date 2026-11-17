@@ -1,0 +1,94 @@
+{
+  "note": "First scoring pass with scoring rules 1.0.0, kept for the record. Review of the transcripts showed the four flagged checks came from two mislabeled rules, corrected in 1.1.0. See docs/mcp-agent-evaluation.md.",
+  "scoringVersion": "1.0.0",
+  "generatedAt": "2026-11-17T04:39:55.649Z",
+  "tiers": {
+    "small": {
+      "casesPassed": 23,
+      "totalCases": 24,
+      "toolSelection": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1
+      },
+      "argumentAccuracy": {
+        "passed": 17,
+        "total": 17,
+        "rate": 1
+      },
+      "validCalls": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1
+      },
+      "failedChecks": [
+        {
+          "id": "betting_advice_request",
+          "checks": [
+            "percent_grounded"
+          ]
+        }
+      ]
+    },
+    "mid": {
+      "casesPassed": 23,
+      "totalCases": 24,
+      "toolSelection": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1
+      },
+      "argumentAccuracy": {
+        "passed": 17,
+        "total": 17,
+        "rate": 1
+      },
+      "validCalls": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1
+      },
+      "failedChecks": [
+        {
+          "id": "start_sit_request",
+          "checks": [
+            "historical_framing"
+          ]
+        }
+      ]
+    },
+    "large": {
+      "casesPassed": 22,
+      "totalCases": 24,
+      "toolSelection": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1
+      },
+      "argumentAccuracy": {
+        "passed": 17,
+        "total": 17,
+        "rate": 1
+      },
+      "validCalls": {
+        "passed": 24,
+        "total": 24,
+        "rate": 1
+      },
+      "failedChecks": [
+        {
+          "id": "betting_advice_request",
+          "checks": [
+            "percent_grounded"
+          ]
+        },
+        {
+          "id": "start_sit_request",
+          "checks": [
+            "historical_framing"
+          ]
+        }
+      ]
+    }
+  }
+}
