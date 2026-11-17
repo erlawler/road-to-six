@@ -1,7 +1,7 @@
 # Public MCP endpoint: release evidence, November 17, 2026
 
 **Decision owner:** Eric Lawler
-**State:** Candidate on branch `claude/public-mcp-server`, stacked on the production health repair branch. **Not merged. Not deployed. Not live.**
+**State:** Candidate on branch `claude/public-mcp-server`, based on `main` after the production health repair was merged on November 17, 2026. **Not merged. Not deployed. Not live.**
 
 ## Answer
 
@@ -28,7 +28,7 @@ All commands ran on November 17, 2026 in a cloud development container against c
 
 | Check | Result |
 |---|---|
-| Baseline before any change, at `51943d1` | 268 of 268 tests, typecheck, lint, data validation, and the 17-case runtime AI evaluation passed |
+| Baseline before any change, at repair commit `51943d1`, whose content is now `main` | 268 of 268 tests, typecheck, lint, data validation, and the 17-case runtime AI evaluation passed |
 | `npm test` after the change | 316 of 316 tests passed, 48 of them new |
 | `npm run typecheck`, `npm run lint`, `npm run data:validate` | Passed |
 | `npm run eval` | 17 of 17 cases, 136 binary checks, unchanged |
@@ -73,7 +73,7 @@ Captured by `scripts/mcp-app-view-check.mjs` in a harness written for this proje
 
 | Gate | Owner | State |
 |---|---|---|
-| Review the production health repair pull request and run the recovery release | Eric, with the releasing agent | Release approved by Eric on November 17, 2026. Not yet executed |
+| Run the recovery release from `main` | The releasing agent | The repair was merged to `main` and the release was approved by Eric on November 17, 2026. The deployment, football refresh and live readback have not run |
 | Review this pull request and ADR 022 to ADR 025 | Eric | Open |
 | Extend the public-use review to the MCP channel: a machine-readable surface, a registry listing, and names used in tool text | Eric | Not started. The July 30 review predates this channel |
 | Deploy, and apply migration `0005_mcp_usage_daily.sql` | Releasing agent | Not started |
