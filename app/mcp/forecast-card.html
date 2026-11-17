@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Road to Six forecast card</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px;
+    font-family: var(--font-sans, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+    font-size: var(--font-text-md-size, 15px); line-height: 1.45;
+    color: var(--color-text-primary, CanvasText); background: var(--color-background-primary, Canvas);
+  }
+  main { max-width: 560px; margin: 0 auto; }
+  h1 { font-size: var(--font-heading-md-size, 20px); margin: 0 0 2px; line-height: 1.25; }
+  h2 { font-size: var(--font-text-md-size, 15px); margin: 20px 0 6px; }
+  p { margin: 0 0 6px; }
+  .eyebrow { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+  /* Fallback keeps secondary text above a 4.5 to 1 contrast ratio in light and dark schemes. */
+  .muted, .eyebrow { color: var(--color-text-secondary, color-mix(in srgb, CanvasText 70%, Canvas)); }
+  .small { font-size: 13px; }
+  .figure { display: flex; align-items: baseline; gap: 10px; margin: 14px 0 8px; }
+  .figure strong { font-size: 44px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .track {
+    position: relative; height: 14px; border-radius: 7px; margin: 0 0 8px;
+    background: var(--color-background-secondary, rgba(128, 128, 128, 0.22));
+  }
+  .band { position: absolute; top: 0; bottom: 0; border-radius: 7px; background: rgba(128, 128, 128, 0.38); }
+  .marker {
+    position: absolute; top: -4px; bottom: -4px; width: 4px; margin-left: -2px; border-radius: 2px;
+    background: var(--color-text-primary, CanvasText); transition: left 0.2s ease;
+  }
+  ul { list-style: none; margin: 0; padding: 0; }
+  .drivers li { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--color-border-secondary, rgba(128, 128, 128, 0.3)); }
+  .drivers span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .control { display: grid; grid-template-columns: minmax(0, 11em) 1fr 3.2em; align-items: center; gap: 8px; margin: 6px 0; }
+  .control output { text-align: right; font-variant-numeric: tabular-nums; }
+  input[type="range"] { width: 100%; margin: 0; accent-color: var(--color-text-primary, CanvasText); }
+  button {
+    font: inherit; padding: 6px 12px; margin-top: 6px; border-radius: 6px; cursor: pointer;
+    color: inherit; background: transparent; border: 1px solid var(--color-border-primary, GrayText);
+  }
+  button:disabled, input:disabled { cursor: not-allowed; opacity: 0.55; }
+  :focus-visible { outline: 2px solid var(--color-ring-primary, Highlight); outline-offset: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 8px; }
+  .chips li { font-size: 12px; padding: 2px 8px; border-radius: 10px; border: 1px solid var(--color-border-secondary, rgba(128, 128, 128, 0.45)); }
+  .chips li[data-tone="warn"] { border-color: var(--color-border-warning, #b45309); color: var(--color-text-warning, #b45309); }
+  a { color: inherit; }
+  [hidden] { display: none !important; }
+  @media (max-width: 420px) { .control { grid-template-columns: 1fr 3.2em; } .control label { grid-column: 1 / -1; } }
+  @media (prefers-reduced-motion: reduce) { .marker { transition: none; } }
+</style>
+</head>
+<body>
+<main aria-labelledby="title">
+  <header>
+    <p class="eyebrow">Road to Six, football-only model</p>
+    <h1 id="title">Waiting for the forecast</h1>
+    <p id="kickoff" class="muted small"></p>
+  </header>
+
+  <div id="status" role="status" aria-live="polite">
+    <section id="result" hidden>
+      <p class="figure"><strong id="percent"></strong><span class="muted">Cowboys win probability</span></p>
+      <div id="track" class="track" role="img" aria-label="">
+        <div id="band" class="band"></div><div id="marker" class="marker"></div>
+      </div>
+      <p id="summary" class="muted small"></p>
+    </section>
+    <p id="message">This card shows a forecast once the host shares a tool result.</p>
+  </div>
+
+  <section id="drivers-section" aria-labelledby="drivers-title" hidden>
+    <h2 id="drivers-title">What moves the estimate</h2>
+    <ul id="drivers" class="drivers"></ul>
+  </section>
+
+  <form id="controls" aria-labelledby="controls-title" hidden>
+    <h2 id="controls-title">What if</h2>
+    <p id="controls-help" class="muted small">Availability from 0 to 100 percent. 100 is the unchanged baseline.</p>
+    <div class="control"><label for="c-quarterback">Dak Prescott</label><input id="c-quarterback" name="quarterback" type="range" min="0" max="100" step="5" value="100"><output for="c-quarterback">100%</output></div>
+    <div class="control"><label for="c-lamb">CeeDee Lamb</label><input id="c-lamb" name="lamb" type="range" min="0" max="100" step="5" value="100"><output for="c-lamb">100%</output></div>
+    <div class="control"><label for="c-pickens">George Pickens</label><input id="c-pickens" name="pickens" type="range" min="0" max="100" step="5" value="100"><output for="c-pickens">100%</output></div>
+    <div class="control"><label for="c-williams">Javonte Williams</label><input id="c-williams" name="williams" type="range" min="0" max="100" step="5" value="100"><output for="c-williams">100%</output></div>
+    <div class="control"><label for="c-defense">Defensive core</label><input id="c-defense" name="defense" type="range" min="0" max="100" step="5" value="100"><output for="c-defense">100%</output></div>
+    <div class="control"><label for="c-opponentStar">Opponent production leader</label><input id="c-opponentStar" name="opponentStar" type="range" min="0" max="100" step="5" value="100"><output for="c-opponentStar">100%</output></div>
+    <button id="reset" type="button">Reset to baseline</button>
+  </form>
+
+  <footer>
+    <ul id="chips" class="chips" aria-label="Data freshness"></ul>
+    <p id="evaluation" class="muted small"></p>
+    <p id="notice" class="muted small">Educational analytics from an unofficial fan project that is not affiliated with the Dallas Cowboys or the NFL. Not betting, wagering, or fantasy start or sit advice.</p>
+    <p class="small"><a id="model-card" href="https://github.com/erlawler/road-to-six/blob/main/docs/model-card.md" target="_blank" rel="noopener noreferrer">Model card and limits</a></p>
+  </footer>
+</main>
+<script>
+(() => {
+  "use strict";
+  // A dependency-free MCP Apps view (extension revision 2026-01-26).
+  // It speaks JSON-RPC 2.0 with its host over postMessage, renders only with
+  // textContent, loads nothing external, and makes no network requests.
+  const APP_PROTOCOL_VERSION = "2026-01-26";
+  const TOOL_NAME = "get_football_forecast";
+  const CONTROL_KEYS = ["quarterback", "lamb", "pickens", "williams", "defense", "opponentStar"];
+  const host = window.parent;
+  const $ = (id) => document.getElementById(id);
+  const form = $("controls");
+  const pending = new Map();
+  let nextId = 1, debounce = 0, latestCall = 0, canCallTools = false, canOpenLinks = false;
+
+  const post = (message) => host.postMessage(message, "*");
+  const notify = (method, params) => post({ jsonrpc: "2.0", method, params });
+  const request = (method, params) => new Promise((resolve, reject) => {
+    const id = nextId++;
+    pending.set(id, { resolve, reject });
+    post({ jsonrpc: "2.0", id, method, params });
+  });
+
+  const percent = (value) => `${Number(value).toFixed(1)}%`;
+  const signed = (value) => `${value > 0 ? "+" : ""}${Number(value).toFixed(1)}`;
+  const when = (iso) => {
+    const time = Date.parse(iso);
+    // The zone is always shown so a time is never mistaken for another zone's.
+    return Number.isFinite(time) ? new Date(time).toLocaleString(undefined, {
+      month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short",
+    }) : "unknown";
+  };
+  const fill = (list, items, build) => {
+    list.replaceChildren(...items.map((item) => { const element = document.createElement("li"); build(element, item); return element; }));
+  };
+
+  function showMessage(text) {
+    $("result").hidden = true;
+    $("drivers-section").hidden = true;
+    $("message").hidden = false;
+    $("message").textContent = text;
+  }
+
+  function setControls(values) {
+    for (const key of CONTROL_KEYS) {
+      const input = form.elements.namedItem(key);
+      const value = typeof values?.[key] === "number" && values[key] >= 0 && values[key] <= 100 ? values[key] : 100;
+      input.value = String(value);
+      input.nextElementSibling.textContent = `${Math.round(Number(input.value))}%`;
+    }
+  }
+
+  function readPayload(result) {
+    if (result?.structuredContent && typeof result.structuredContent === "object") return result.structuredContent;
+    try { return JSON.parse(result.content.find((item) => item.type === "text").text); } catch { return null; }
+  }
+
+  function renderEvidence(data) {
+    const evidence = data.evidence, chips = [];
+    if (evidence.stale) chips.push({ text: "Stale data", tone: "warn" });
+    if (evidence.status !== "ok") chips.push({ text: `Status: ${evidence.status}`, tone: "warn" });
+    chips.push({ text: `Verified ${when(evidence.football?.verifiedAt)}` });
+    chips.push({ text: `Read ${when(evidence.observedAt)}` });
+    chips.push({ text: `Data ${evidence.football?.dataVersion ?? "unknown"}` });
+    fill($("chips"), chips, (element, chip) => { element.textContent = chip.text; if (chip.tone) element.dataset.tone = chip.tone; });
+    $("evaluation").textContent = data.evaluation?.note ?? "";
+    if (typeof evidence.notice === "string") $("notice").textContent = evidence.notice;
+  }
+
+  function render(result) {
+    if (!result) return;
+    if (result.isError) return showMessage(result.content?.[0]?.text ?? "The forecast tool returned an error.");
+    const data = readPayload(result);
+    if (!data || !data.evidence) return showMessage("The forecast result could not be read.");
+    renderEvidence(data);
+    const matchup = data.matchup;
+    $("title").textContent = matchup ? `Dallas ${matchup.venue === "away" ? "at" : "vs"} ${matchup.opponentName}, Week ${matchup.week}` : "Dallas Cowboys forecast";
+    $("kickoff").textContent = matchup?.kickoffAt ? `Kickoff ${when(matchup.kickoffAt)}` : "";
+    if (data.status !== "available" || !data.forecast) {
+      form.hidden = true;
+      return showMessage(`No forecast is available. ${data.reasons?.[0] ?? data.evidence.reason ?? "The current matchup is not verified."}`);
+    }
+    const forecast = data.forecast, band = forecast.illustrativeBandPercent;
+    $("percent").textContent = percent(forecast.cowboysWinPercent);
+    $("marker").style.left = `${forecast.cowboysWinPercent}%`;
+    $("band").style.left = `${band.low}%`;
+    $("band").style.width = `${Math.max(0, band.high - band.low)}%`;
+    $("track").setAttribute("aria-label", `Estimate ${percent(forecast.cowboysWinPercent)}, illustrative band ${percent(band.low)} to ${percent(band.high)}`);
+    $("summary").textContent = forecast.scenarioApplied
+      ? `Baseline ${percent(forecast.baselinePercent)}. This scenario moves it ${signed(forecast.scenarioDeltaPoints)} points. Illustrative band ${percent(band.low)} to ${percent(band.high)}.`
+      : `Baseline with every control at 100. Illustrative band ${percent(band.low)} to ${percent(band.high)}, not a calibrated interval.`;
+    fill($("drivers"), forecast.drivers, (element, driver) => {
+      const label = document.createElement("span"), impact = document.createElement("span");
+      label.textContent = driver.label;
+      impact.textContent = `${signed(driver.impactPoints)} points`;
+      element.title = driver.evidence;
+      element.append(label, impact);
+    });
+    setControls(forecast.controls);
+    $("message").hidden = true;
+    $("result").hidden = false;
+    $("drivers-section").hidden = false;
+    form.hidden = false;
+  }
+
+  async function recalculate() {
+    if (!canCallTools) return;
+    const args = {};
+    for (const key of CONTROL_KEYS) {
+      const value = Number(form.elements.namedItem(key).value);
+      if (value !== 100) args[key] = value;
+    }
+    const call = ++latestCall;
+    form.setAttribute("aria-busy", "true");
+    try {
+      const result = await request("tools/call", { name: TOOL_NAME, arguments: args });
+      if (call !== latestCall) return;
+      render(result);
+      const data = readPayload(result);
+      if (data?.forecast) {
+        // Keep the assistant's context in step with what the person set here.
+        request("ui/update-model-context", { content: [{ type: "text", text:
+          `Road to Six forecast card: football-only Cowboys win probability ${percent(data.forecast.cowboysWinPercent)} `
+          + `(baseline ${percent(data.forecast.baselinePercent)}) with controls ${JSON.stringify(data.forecast.controls)}. `
+          + `Data version ${data.evidence.football.dataVersion}, read ${data.evidence.observedAt}. Educational analysis, not betting advice.` }] }).catch(() => {});
+      }
+    } catch (error) {
+      if (call === latestCall) showMessage(`The host could not complete the what-if request. ${error instanceof Error ? error.message : ""}`.trim());
+    } finally {
+      if (call === latestCall) form.removeAttribute("aria-busy");
+    }
+  }
+
+  function applyContext(context) {
+    if (!context || typeof context !== "object") return;
+    if (context.theme === "light" || context.theme === "dark") document.documentElement.style.colorScheme = context.theme;
+    const variables = context.styles?.variables;
+    if (variables && typeof variables === "object") {
+      for (const [name, value] of Object.entries(variables)) {
+        if (/^--[a-z0-9-]+$/.test(name) && typeof value === "string") document.documentElement.style.setProperty(name, value);
+      }
+    }
+  }
+
+  window.addEventListener("message", (event) => {
+    if (event.source !== host) return;
+    const message = event.data;
+    if (!message || message.jsonrpc !== "2.0") return;
+    if (message.method === undefined) {
+      const entry = pending.get(message.id);
+      if (!entry) return;
+      pending.delete(message.id);
+      if (message.error) entry.reject(new Error(String(message.error.message ?? "Request failed")));
+      else entry.resolve(message.result);
+      return;
+    }
+    if (message.id !== undefined) {
+      const known = message.method === "ui/resource-teardown" || message.method === "ping";
+      post(known ? { jsonrpc: "2.0", id: message.id, result: {} }
+        : { jsonrpc: "2.0", id: message.id, error: { code: -32601, message: "Method not found" } });
+      return;
+    }
+    const params = message.params ?? {};
+    if (message.method === "ui/notifications/tool-input") setControls(params.arguments);
+    else if (message.method === "ui/notifications/tool-result") render(params);
+    else if (message.method === "ui/notifications/tool-cancelled") showMessage("The forecast request was cancelled.");
+    else if (message.method === "ui/notifications/host-context-changed") applyContext(params);
+  });
+
+  form.addEventListener("input", (event) => {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement)) return;
+    input.nextElementSibling.textContent = `${Math.round(Number(input.value))}%`;
+    clearTimeout(debounce);
+    debounce = setTimeout(recalculate, 250);
+  });
+  $("reset").addEventListener("click", () => { setControls({}); clearTimeout(debounce); recalculate(); });
+  $("model-card").addEventListener("click", (event) => {
+    if (!canOpenLinks) return;
+    event.preventDefault();
+    request("ui/open-link", { url: event.currentTarget.href }).catch(() => {});
+  });
+
+  if (typeof ResizeObserver === "function") {
+    new ResizeObserver(() => {
+      const box = document.documentElement.getBoundingClientRect();
+      notify("ui/notifications/size-changed", { width: Math.ceil(box.width), height: Math.ceil(box.height) });
+    }).observe(document.documentElement);
+  }
+
+  if (host === window) return showMessage("Open this card inside an MCP Apps host to see a forecast.");
+  request("ui/initialize", {
+    appInfo: { name: "road-to-six-forecast-card", version: "1.0.0" },
+    appCapabilities: { availableDisplayModes: ["inline"] },
+    protocolVersion: APP_PROTOCOL_VERSION,
+  }).then((result) => {
+    canCallTools = Boolean(result?.hostCapabilities?.serverTools);
+    canOpenLinks = Boolean(result?.hostCapabilities?.openLinks);
+    applyContext(result?.hostContext);
+    if (!canCallTools) {
+      for (const element of form.elements) element.disabled = true;
+      $("controls-help").textContent = "This host does not let the card recalculate. Ask the assistant for a what-if scenario instead.";
+    }
+    notify("ui/notifications/initialized", {});
+  }).catch(() => showMessage("The host did not complete the card handshake."));
+})();
+</script>
+</body>
+</html>

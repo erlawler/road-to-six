@@ -2,7 +2,7 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 import { handleApiRequest } from "./api";
-import { handleFootballMcp } from "./football-mcp";
+import { handleFootballMcp, handleMcpUsage, handlePublicMcp } from "./football-mcp";
 import { readFootballState } from "../lib/football-store.mjs";
 import { footballRequestContext } from "../lib/football-context";
 import bundledSnapshot from "../app/data/nfl-snapshot.json";
@@ -17,6 +17,7 @@ interface Env {
   AI_MONTHLY_BUDGET_USD?: string;
   BUDGET_STATUS_TOKEN?: string;
   FOOTBALL_UPDATER_OWNER_EMAIL?: string;
+  MCP_ALLOWED_ORIGINS?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -62,6 +63,9 @@ const worker = {
     const url = new URL(request.url);
 
     if (url.pathname === "/mcp") return handleFootballMcp(request, env);
+    // Anonymous read-only MCP endpoint and its aggregate usage counts.
+    if (url.pathname === "/api/mcp") return handlePublicMcp(request, env);
+    if (url.pathname === "/api/mcp/usage") return handleMcpUsage(request, env);
     if (url.pathname === "/api/showcase") {
       if (request.method !== "GET") return new Response(null, { status: 405, headers: { Allow: "GET" } });
       if (url.search) return Response.json({ error: "This endpoint accepts no query parameters" }, { status: 400 });

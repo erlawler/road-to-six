@@ -142,6 +142,22 @@ The deployed runtime uses the OpenAI Responses API. The product patterns demonst
 
 Anthropic is not integrated in v1.0.0. Supporting it would require a separate adapter, approved-model allowlist, pricing rules, provider-specific contract tests, and a fresh release evaluation before public use.
 
+## Use it from an AI assistant
+
+Road to Six is also built to be used by AI assistants through the [Model Context Protocol](https://modelcontextprotocol.io/). Six read-only tools return the same deterministic evidence the site shows, and every result says how fresh it is and where it came from.
+
+> **Evidence status, November 17, 2026:** implemented and verified locally against the official client SDKs, the applicable official conformance scenarios, a browser check of the in-chat card, and a three-model agent evaluation. **Not deployed.** No production call, client app connection, registry listing, or real usage is claimed. See the [release evidence note](docs/mcp-release-evidence-2026-11-17.md).
+
+| Product decision | Why |
+|---|---|
+| The assistant is the user | Each tool says when to use it and what it is not, enforces its declared schema, and returns one evidence block with status, staleness, and sources |
+| Football-only forecast | Market data is licensed for display in the site, not as a feed, so the tool excludes it and says the baseline is less accurate than market prices |
+| The server never explains | No language model runs on this path. The calling assistant explains, so runtime AI cost stays at zero |
+| Unavailable means unavailable | A tool abstains with a reason instead of substituting data, and the evaluation checks that assistants repeat that honestly |
+| Anonymous by design | A shared rate limit and aggregate call counts, with no address, user agent, or argument stored |
+
+Start with the [connect guide](docs/mcp-connect.md), then the [agent evaluation](docs/mcp-agent-evaluation.md).
+
 ## Showcase evidence
 
 | Artifact | What it demonstrates |
@@ -160,7 +176,10 @@ Anthropic is not integrated in v1.0.0. Supporting it would require a separate ad
 | [Synthetic persona simulations](docs/synthetic-persona-sessions.md) | Five target-profile simulations, modeled task evidence, prioritized hypotheses, and explicit AI evidence limits |
 | [Optional moderated research kit](docs/usability-session-kit.md) | Consent, task script, scoring, notes, and privacy controls if future human research is commissioned |
 | [Codex collaboration](docs/codex-collaboration.md) | Eric's ownership, Codex acceleration, governance, and human approval points |
-| [Decision log](docs/decision-log.md) | Twenty-one product, architecture, positioning, and release-governance decisions with rationale |
+| [Decision log](docs/decision-log.md) | Twenty-one product, architecture, positioning, and release-governance decisions with rationale, plus four proposed MCP decisions awaiting owner review |
+| [MCP connect guide](docs/mcp-connect.md) | Server address, client steps with dated sources, tool reference, and how to read the evidence block |
+| [MCP agent evaluation](docs/mcp-agent-evaluation.md) | Labeled cases, decoy tools, fixed-rule scoring, dated scorecards, and stated limits |
+| [MCP release evidence](docs/mcp-release-evidence-2026-11-17.md) | What was verified locally, what was not, and the gates before the endpoint is called live |
 | [MVP backlog](docs/mvp-backlog.md) | Prioritization, sequencing, acceptance criteria, and delivery status |
 | [Measurement plan](docs/measurement-plan.md) | Vision, adoption, integrity, model, and platform measures |
 | [Data and licensing spike](docs/data-licensing-spike.md) | Source selection, cost model, rights review, and exit criteria |

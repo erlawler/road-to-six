@@ -8,6 +8,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 
+- A public, read-only Model Context Protocol endpoint at `/api/mcp` for any MCP client, with no sign-in, a shared rate limit, and the owner updater tools kept on the separate Site-hosted path. Implemented and tested locally; not deployed.
+- Protocol revision 2026-07-28 support: stateless per-request metadata, required result fields, cache hints, version and header errors, and `server/discover`, alongside the handshake revisions older clients use.
+- A `get_football_forecast` tool that returns the football-only Elo estimate, its drivers, and six bounded what-if controls without reading market prices.
+- One evidence block on every public tool result (status, staleness, reason, observation time, data version, sources, and the educational-use notice), plus titles, enforced input schemas, and tested output schemas.
+- An in-chat forecast card for hosts that support the MCP Apps extension, self-contained and served under the default restrictive content security policy.
+- Aggregate MCP usage counts by day, tool, client family, and outcome at `/api/mcp/usage`, storing no address, user agent, or argument.
+- An agent evaluation with 24 labeled cases, five decoy tools, and fixed-rule scoring, with dated model-in-the-loop scorecards.
+- A registry listing file, a manual publish workflow gated on a live endpoint check, a client connect guide, a local fixture server, and interoperability and browser checks.
+
 - A shared odds-market normalizer that matches NFL event timestamps to the Cowboys schedule in Central time and keeps client and server forecast inputs identical.
 - An authenticated operator budget view for application-metered spend and smoke-test eligibility.
 - Regression coverage for night-game UTC rollover, strict AI field types, cached-token pricing, snapshot freshness, favicon routing, and text contrast.
@@ -20,6 +29,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
+- MCP tool argument problems now return a tool execution error that names the problem, so a calling model can correct itself. They previously returned protocol error `-32602`.
+- MCP discovery now lists every protocol revision the server answers, current revision first.
 - Updated GPT-5.6 Luna, Terra, and Sol rates to current official pricing while preserving the $9.50 application cutoff and conservative request reservation.
 - Made the snapshot builder require an explicit source-validation date and derive its holdout label from completed evaluation seasons.
 - Corrected small-text contrast and removed an undefined color-token reference.

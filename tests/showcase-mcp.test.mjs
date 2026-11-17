@@ -10,7 +10,8 @@ const worker = async () => (await import(new URL(`../dist/server/index.js?showca
 test("MCP discovers bounded read-only evidence tools while keeping refresh owner-only", async () => {
   const app = await worker();
   const discovery = await (await app.fetch(req("server/discover"), {}, ctx)).json();
-  assert.deepEqual(discovery.result.supportedVersions, ["2026-07-28"]);
+  // The server is dual-era: the current stateless revision first, then the handshake revisions it still answers.
+  assert.deepEqual(discovery.result.supportedVersions, ["2026-07-28", "2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05"]);
   const listed = await (await app.fetch(req("tools/list"), {}, ctx)).json();
   for (const name of names) {
     const tool = listed.result.tools.find((item) => item.name === name);
@@ -27,7 +28,10 @@ test("public evidence rejects URL injection, unknown teams and non-string teams 
   try {
     for (const [name, args] of [["get_source_health", { url: "https://evil.example/" }], ["get_player_usage", { team: "PHI" }], ["get_player_usage", { team: ["DAL"] }], ["compare_players", { ids: ["guessed"] }]]) {
       const body = await (await app.fetch(req("tools/call", { name, arguments: args }), env, ctx)).json();
-      assert.equal(body.error.code, -32602);
+      // Argument problems are tool execution errors, so a calling model can read the reason and correct itself.
+      assert.equal(body.result.isError, true);
+      assert.match(body.result.content[0].text, /^Invalid arguments for /);
+      assert.equal(body.result.structuredContent, undefined);
     }
     assert.equal(reads, 0); assert.equal(requests, 0);
   } finally { globalThis.fetch = previous; }

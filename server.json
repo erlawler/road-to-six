@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.erlawler/road-to-six",
+  "title": "Road to Six",
+  "description": "Sourced, read-only Dallas Cowboys matchup evidence with freshness on every result. Unofficial.",
+  "version": "3.0.0",
+  "websiteUrl": "https://road-to-six-erl.erlrickylre.chatgpt.site/",
+  "repository": {
+    "url": "https://github.com/erlawler/road-to-six",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://road-to-six-erl.erlrickylre.chatgpt.site/api/mcp"
+    }
+  ]
+}

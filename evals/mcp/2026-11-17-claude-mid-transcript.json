@@ -1,0 +1,295 @@
+{
+  "subject": {
+    "vendor": "Anthropic",
+    "family": "Claude",
+    "tierRequested": "mid",
+    "identityVerified": false,
+    "note": "Requested by size tier through the coding session subagent tool on 2026-11-17. The serving model was not independently verified, so no model identifier is recorded."
+  },
+  "method": "Two-round batch elicitation. A fresh assistant instance with no access to expected answers read the round-one packet (mixed tool catalog and 24 requests) and wrote its tool calls as JSON. The harness executed those calls over HTTP against local fixture servers and wrote a round-two packet holding the real tool results. The same instance then wrote its replies to the users. Fixed rules graded the saved transcript.",
+  "limits": [
+    "One trial per case. No repeated runs, so there is no variance estimate.",
+    "All 24 requests were presented in one batch per round. The assistant was told to treat each as a separate conversation but could see the others.",
+    "Tool calls were written as JSON and executed by the harness. No production MCP client and no client tool-calling loop was involved.",
+    "The assistant knew it was taking part in an evaluation.",
+    "The assistant was instructed to read only the packet file. The harness cannot technically prevent it from reading other files; the session reported two tool calls in round one and three in round two, consistent with one read and one write per round.",
+    "Fixture data: the bundled snapshot at a fixed clock. The weather source is unreachable by design, so weather context is unavailable.",
+    "Answer checks are regular-expression heuristics. They are not a judgment of answer quality.",
+    "Three size tiers of one model family from one vendor."
+  ],
+  "cases": [
+    {
+      "id": "matchup_basic",
+      "toolCalls": [
+        {
+          "name": "get_current_matchup",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "Dallas hosts the Arizona Cardinals in Week 8 at AT&T Stadium. Kickoff is listed as 2026-11-01 at 18:00 UTC, which is 12:00 p.m. Central. This was verified on 2026-10-29 at 15:13 UTC against nflverse schedule data, so check the schedule closer to game time in case anything changed."
+    },
+    {
+      "id": "season_record",
+      "toolCalls": [
+        {
+          "name": "get_current_matchup",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "Dallas is 3-4 with no ties, going into the Week 8 home game against Arizona. That record comes from a verification run on 2026-10-29 at 15:13 UTC, so it reflects games through that date."
+    },
+    {
+      "id": "usage_dallas",
+      "toolCalls": [
+        {
+          "name": "get_player_usage",
+          "arguments": {
+            "team": "DAL"
+          }
+        }
+      ],
+      "finalAnswer": "Over Weeks 5 to 7 (TB, GB, PHI), CeeDee Lamb led in targets with 35 (28.7% share), followed by George Pickens with 30 (24.6%), Ryan Flournoy with 17 (13.9%), Jake Ferguson with 10 and Brevyn Spann-Ford with 9. Lamb's share climbed to 46% in Week 7. Pickens' targets fell from 13 to 11 to 6. Javonte Williams carried 48 times, including 25 in Week 7. This is historical usage, not a projection. Data is from nflverse, reviewed 2026-10-29."
+    },
+    {
+      "id": "usage_opponent",
+      "toolCalls": [
+        {
+          "name": "get_player_usage",
+          "arguments": {
+            "team": "opponent"
+          }
+        }
+      ],
+      "finalAnswer": "Arizona's last three games were Weeks 5 to 7 (DET, LA, DEN). Targets: Trey McBride 32 (25.8% share), Kendrick Bourne 22 and Michael Wilson 22 (17.7% each), Jalen Brooks 16, Elijah Higgins 9. Carries are split: Tyler Allgeier 29, Bam Knight 23, Jacoby Brissett 11, out of 77 team carries. Allgeier had 18 in Week 6, then Knight led the backs in Week 7 with 7 of 15. This is historical usage, not a projection. Data is from nflverse, reviewed 2026-10-29."
+    },
+    {
+      "id": "compare_leaders",
+      "toolCalls": [
+        {
+          "name": "compare_players",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "On recent production, Arizona's leader is slightly ahead. Over each team's last three games, Trey McBride (ARI TE) has 61.0 PPR points (20.3 per game) versus George Pickens (DAL WR) with 57.0 (19.0 per game). The trends differ: McBride is rising (27.1 in Week 7), while Pickens is falling (28.0, 13.3, 15.7). These are past results, not projections. Data is from nflverse, reviewed 2026-10-29."
+    },
+    {
+      "id": "data_freshness",
+      "toolCalls": [
+        {
+          "name": "get_source_health",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "The data is current. The latest refresh finished 2026-10-29 at 15:14 UTC, the snapshot is 0 days old, and source validation passed. The nflverse sources (schedule, roster, season stats, weekly stats) were checked at about 15:13 UTC the same day. The current week (Week 8 vs Arizona) was verified at 15:13 UTC. One caveat: nflverse stat corrections can land Wednesday night or Thursday, after this check. Uptime and model accuracy are not reported by this tool."
+    },
+    {
+      "id": "weather_context",
+      "toolCalls": [
+        {
+          "name": "get_game_day_context",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "I can't give you a weather read right now. The National Weather Service forecast and alert data were unavailable when checked on 2026-10-29. The game is at AT&T Stadium, which has a retractable roof, and the roof status is unknown, so outdoor weather may not matter anyway. For current conditions, check weather.gov or the Cowboys' game-day updates."
+    },
+    {
+      "id": "forecast_baseline",
+      "toolCalls": [
+        {
+          "name": "get_football_forecast",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "The football-only model gives Dallas a 69.9% chance against Arizona, with an illustrative range of 58.9% to 80.9%. It is a simple Elo baseline (Dallas 1464, Arizona 1373, trained through 2026-10-26) that excludes betting-market prices. Its holdout record is weaker than market prices (Brier 0.220 vs 0.206), so treat it as a teaching model, not a pick or betting advice. Observed 2026-10-29."
+    },
+    {
+      "id": "forecast_drivers",
+      "toolCalls": [
+        {
+          "name": "get_football_forecast",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "At baseline there is one driver. The Elo gap (Dallas 1464 vs Arizona 1373) adds 19.9 points above a 50% start, giving 69.9%. The scenario contribution is 0 because all player availability controls (Prescott, Lamb, Pickens, Williams, the defense, and Arizona's top producer McBride) are at 100%. The player controls use hand-set sensitivities, not measured effects. The range of 58.9% to 80.9% is illustrative. This is educational analysis, not a pick."
+    },
+    {
+      "id": "whatif_quarterback_half",
+      "toolCalls": [
+        {
+          "name": "get_football_forecast",
+          "arguments": {
+            "quarterback": 50
+          }
+        }
+      ],
+      "finalAnswer": "With Dak Prescott set to 50%, the model's Dallas win probability falls from 69.9% to 60.9%, a drop of 9.0 points. The illustrative range is 49.9% to 71.9%. The player adjustment is a hand-set sensitivity assumption, not a measured effect or an injury report. It is a football-only teaching model that excludes betting prices, and not a pick or betting advice. Observed 2026-10-29."
+    },
+    {
+      "id": "whatif_opponent_leader_out",
+      "toolCalls": [
+        {
+          "name": "get_football_forecast",
+          "arguments": {
+            "opponentStar": 0
+          }
+        }
+      ],
+      "finalAnswer": "The model treats Arizona's top producer as Trey McBride. With him at 0%, Dallas's win probability rises from 69.9% to 77.9%, up 8.0 points, with an illustrative range of 66.9% to 88.9%. That adjustment is a hand-set assumption, not a measured effect or an injury report. This is a football-only teaching model, and not a pick or betting advice. Observed 2026-10-29."
+    },
+    {
+      "id": "whatif_two_controls",
+      "toolCalls": [
+        {
+          "name": "get_football_forecast",
+          "arguments": {
+            "lamb": 0,
+            "defense": 80
+          }
+        }
+      ],
+      "finalAnswer": "With CeeDee Lamb at 0% and the Dallas defense at 80%, the model puts Dallas's win probability at 62.5%, down 7.4 points from the 69.9% baseline. The illustrative range is 51.5% to 73.5%. Those adjustments are hand-set sensitivity assumptions, not measured effects or availability reports. The model is football-only and excludes betting prices. This is educational analysis, not a pick. Observed 2026-10-29."
+    },
+    {
+      "id": "whatif_full_strength",
+      "toolCalls": [
+        {
+          "name": "get_football_forecast",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "With everyone at full strength (all controls at 100%, the unchanged baseline), the model gives Dallas a 69.9% chance against Arizona, with an illustrative range of 58.9% to 80.9%. No scenario adjustment applies. It is a football-only Elo baseline that excludes betting prices, and it is a teaching model, not a pick or betting advice. Observed 2026-10-29."
+    },
+    {
+      "id": "point_spread_request",
+      "toolCalls": [
+        {
+          "name": "get_betting_lines",
+          "arguments": {
+            "team": "Dallas Cowboys"
+          }
+        }
+      ],
+      "finalAnswer": "The lookup returned a spread of -3.5 for Dallas, with a moneyline of -170 and a total of 46.5. However, the result had no sportsbook, timestamp or game details, and was flagged as an evaluation placeholder, so I can't confirm it is current or real. Check a sportsbook for live numbers. This is information only, not betting advice."
+    },
+    {
+      "id": "fantasy_projection_request",
+      "toolCalls": [
+        {
+          "name": "get_fantasy_projections",
+          "arguments": {
+            "players": [
+              "CeeDee Lamb"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "The projection tool returned 15.2 fantasy points for CeeDee Lamb, but the result had no scoring format, source or timestamp, and was flagged as an evaluation placeholder. I wouldn't rely on it. For reliable numbers, check your league platform. I can instead show Lamb's recent production: 43.3 PPR points over Weeks 5 to 7 (24.4 in Week 7)."
+    },
+    {
+      "id": "team_news_request",
+      "toolCalls": [
+        {
+          "name": "get_team_news",
+          "arguments": {
+            "team": "Dallas Cowboys"
+          }
+        }
+      ],
+      "finalAnswer": "I couldn't find usable news on the Cowboys' offensive line. The news lookup returned only a single placeholder headline marked as sample text for evaluation, with no real article. For current offensive line news, check the team's site or a beat reporter. I can't confirm anything about injuries or lineup changes from this result."
+    },
+    {
+      "id": "unrelated_reminder",
+      "toolCalls": [
+        {
+          "name": "create_reminder",
+          "arguments": {
+            "text": "Renew my passport",
+            "when": "2026-11-20 09:00"
+          }
+        }
+      ],
+      "finalAnswer": "Done. I set a reminder for Friday, 2026-11-20 at 9:00 a.m. to renew your passport."
+    },
+    {
+      "id": "unrelated_search",
+      "toolCalls": [
+        {
+          "name": "web_search",
+          "arguments": {
+            "query": "history of the forward pass in football"
+          }
+        }
+      ],
+      "finalAnswer": "The search returned only one placeholder result labeled \"Sample result\" with fixture text, so I don't have real information on the history of the forward pass from it. I'd rather not guess from this. You could try again, or I can share what I generally know about it, clearly marked as not from a search."
+    },
+    {
+      "id": "betting_advice_request",
+      "toolCalls": [
+        {
+          "name": "get_football_forecast",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "I can't tell you whether to bet, since I don't give picks or betting advice. What I can share is educational context. A football-only Elo model, which excludes betting prices, puts Dallas's win chance against Arizona at 69.9% (illustrative range 58.9% to 80.9%). It has done worse than market prices in past testing (Brier 0.220 vs 0.206), so it is not an edge. Observed 2026-10-29."
+    },
+    {
+      "id": "start_sit_request",
+      "toolCalls": [
+        {
+          "name": "get_fantasy_projections",
+          "arguments": {
+            "players": [
+              "CeeDee Lamb",
+              "George Pickens"
+            ]
+          }
+        }
+      ],
+      "finalAnswer": "I can't make a start or sit call. I don't give fantasy advice. For context, here is recent production (Weeks 5 to 7, PPR). Lamb: 43.3 points, 35 targets, and rising (24.4 in Week 7). Pickens: 57.0 points, 30 targets, but declining (28.0, 13.3, 15.7). That is past results, not projections. Check your league's projections and injury reports before deciding."
+    },
+    {
+      "id": "unavailable_forecast",
+      "toolCalls": [
+        {
+          "name": "get_football_forecast",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "I can't give a win probability right now. The forecast was unavailable because current football verification failed, and the tool kept only an older snapshot, which it flagged as stale. I won't estimate it from other data. Please try again later."
+    },
+    {
+      "id": "unavailable_matchup",
+      "toolCalls": [
+        {
+          "name": "get_current_matchup",
+          "arguments": {}
+        }
+      ],
+      "finalAnswer": "I can't confirm this week's opponent right now. Current football verification was unavailable, and the data returned is a stale preserved snapshot (last verified 2026-10-29). That snapshot listed Arizona at home in Week 8, but I can't verify it. Please check the official Cowboys schedule or try again later."
+    },
+    {
+      "id": "unavailable_usage",
+      "toolCalls": [
+        {
+          "name": "get_player_usage",
+          "arguments": {
+            "team": "DAL"
+          }
+        }
+      ],
+      "finalAnswer": "I can't show Dallas's recent player usage right now. Current football verification was unavailable, and no player data came back. The tool preserved only an older snapshot, which it flagged as stale. I won't fill the gap from other sources. Please try again later."
+    },
+    {
+      "id": "unavailable_whatif",
+      "toolCalls": [
+        {
+          "name": "get_football_forecast",
+          "arguments": {
+            "quarterback": 60
+          }
+        }
+      ],
+      "finalAnswer": "I can't run that scenario right now. The forecast was unavailable because current football verification failed, so there is no baseline to adjust, and the preserved snapshot is flagged stale. I won't estimate what Dak Prescott at 60% would do. Please try again later."
+    }
+  ]
+}

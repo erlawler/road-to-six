@@ -1,0 +1,133 @@
+{
+  "generatedAt": "2026-11-17T04:45:03.478Z",
+  "harness": "project-written host page, Chromium via Playwright",
+  "appProtocolVersion": "2026-01-26",
+  "contentSecurityPolicy": "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' data:; connect-src 'none'",
+  "passed": true,
+  "summary": "22 of 22 checks passed",
+  "checks": [
+    {
+      "name": "renders the baseline forecast from the tool result",
+      "passed": true,
+      "detail": "69.9%"
+    },
+    {
+      "name": "names the verified matchup",
+      "passed": true,
+      "detail": "Dallas vs Arizona Cardinals, Week 8"
+    },
+    {
+      "name": "lists the model's drivers",
+      "passed": true
+    },
+    {
+      "name": "shows data version and read time",
+      "passed": true,
+      "detail": [
+        "Verified Oct 29, 2026, 3:13 PM UTC",
+        "Read Oct 29, 2026, 3:14 PM UTC",
+        "Data nflverse-2026-10-29-6f881cc9096d"
+      ]
+    },
+    {
+      "name": "keeps the unofficial fan project notice visible",
+      "passed": true
+    },
+    {
+      "name": "labels every control",
+      "passed": true
+    },
+    {
+      "name": "announces updates politely",
+      "passed": true
+    },
+    {
+      "name": "performs the handshake in order",
+      "passed": true
+    },
+    {
+      "name": "declares app info, capabilities and protocol version",
+      "passed": true,
+      "detail": {
+        "appInfo": {
+          "name": "road-to-six-forecast-card",
+          "version": "1.0.0"
+        },
+        "appCapabilities": {
+          "availableDisplayModes": [
+            "inline"
+          ]
+        },
+        "protocolVersion": "2026-01-26"
+      }
+    },
+    {
+      "name": "reports its size so the host can fit the frame",
+      "passed": true,
+      "detail": {
+        "width": 600,
+        "height": 847
+      }
+    },
+    {
+      "name": "asks the host to call the forecast tool with only the changed control",
+      "passed": true,
+      "detail": [
+        {
+          "name": "get_football_forecast",
+          "arguments": {
+            "quarterback": 50
+          }
+        }
+      ]
+    },
+    {
+      "name": "shows the scenario result and its change from baseline",
+      "passed": true,
+      "detail": "Baseline 69.9%. This scenario moves it -9.0 points. Illustrative band 49.9% to 71.9%."
+    },
+    {
+      "name": "shares the scenario with the assistant's context",
+      "passed": true
+    },
+    {
+      "name": "reset returns every control to the baseline",
+      "passed": true
+    },
+    {
+      "name": "shows a tool execution error instead of a number",
+      "passed": true
+    },
+    {
+      "name": "abstains visibly when evidence is unavailable",
+      "passed": true,
+      "detail": "No forecast is available. Current football verification is unavailable; the last good snapshot is preserved."
+    },
+    {
+      "name": "reports a cancelled request",
+      "passed": true
+    },
+    {
+      "name": "answers the teardown request",
+      "passed": true
+    },
+    {
+      "name": "rejects an unknown host request",
+      "passed": true
+    },
+    {
+      "name": "renders in a dark, phone-width host",
+      "passed": true
+    },
+    {
+      "name": "makes no request outside the local harness",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "raises no console errors, warnings or policy violations",
+      "passed": true,
+      "detail": []
+    }
+  ]
+}
