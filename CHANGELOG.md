@@ -34,6 +34,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Security
 
 - Upgraded vinext and Cloudflare development dependencies to remove all current npm audit findings.
+- Upgraded Next.js from 16.4.2 to 16.4.5, the first patched release for moderate advisory [GHSA-mfr8-8qww-v76h](https://github.com/advisories/GHSA-mfr8-8qww-v76h), returning `npm audit` to zero findings as of November 17, 2026. The [same release](https://github.com/vercel/next.js/releases/tag/v16.4.5) also patches six other moderate Next.js advisories that `npm audit` did not report on that date.
 - Tightened Runtime AI validation so numeric strings and other invalid JSON field types fail closed to the deterministic response.
 - Tightened the page content security policy to deny unspecified sources, forms, frames, media, workers, inline event-handler scripts, and inline style elements.
 - Retained only the framework inline-script allowance and the dynamic probability-ring style attribute required by the current runtime, with the tradeoff documented in ADR 018.
