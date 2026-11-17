@@ -195,7 +195,7 @@ test("owner readback works, extra updater arguments are rejected, and discovery 
   assert.equal((await invalid.json()).error.code, -32602);
   const discover = await app.fetch(new Request("https://site.example/mcp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/list" }) }), env, ctx);
   const declared = (await discover.json()).result.tools;
-  assert.deepEqual(declared.filter((tool) => !["get_current_matchup", "get_player_usage", "compare_players", "get_source_health", "get_game_day_context"].includes(tool.name)).map((tool) => tool.name), ["football_update_status", "refresh_football"]);
+  assert.deepEqual(declared.filter((tool) => !["get_current_matchup", "get_player_usage", "compare_players", "get_source_health", "get_game_day_context", "get_football_forecast"].includes(tool.name)).map((tool) => tool.name), ["football_update_status", "refresh_football"]);
 });
 
 test("server-rendered page and public reader use the same stored snapshot, with no public write route", async (t) => {
