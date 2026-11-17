@@ -6,6 +6,7 @@ import { handleFootballMcp } from "./football-mcp";
 import { readFootballState } from "../lib/football-store.mjs";
 import { footballRequestContext } from "../lib/football-context";
 import bundledSnapshot from "../app/data/nfl-snapshot.json";
+import { readShowcase } from "./showcase";
 
 interface Env {
   ASSETS: Fetcher;
@@ -61,6 +62,12 @@ const worker = {
     const url = new URL(request.url);
 
     if (url.pathname === "/mcp") return handleFootballMcp(request, env);
+    if (url.pathname === "/api/showcase") {
+      if (request.method !== "GET") return new Response(null, { status: 405, headers: { Allow: "GET" } });
+      if (url.search) return Response.json({ error: "This endpoint accepts no query parameters" }, { status: 400 });
+      const evidence = await readShowcase(env);
+      return Response.json(evidence, { headers: { "Cache-Control": "no-store", "X-Football-Data-Version": evidence.dataVersion, "X-Content-Type-Options": "nosniff" } });
+    }
     if (url.pathname === "/api/football") {
       if (request.method !== "GET") return new Response(null, { status: 405, headers: { Allow: "GET" } });
       const state = await readFootballState(env, bundledSnapshot);

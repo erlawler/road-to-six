@@ -169,3 +169,7 @@
 Document OpenAI as the deployed Runtime AI provider. Present Anthropic only as an example of a modern LLM platform to which the contract-first controls could transfer after separate implementation, pricing, evaluation, and release approval.
 
 **Why:** The owner is presenting completed product work and capabilities. Skills-first positioning keeps the evidence useful to peers and practitioners while preserving truthful provider boundaries and preventing an unapproved social-publication path.
+
+## Current-season player evidence update, October 6, 2026
+
+**Decision:** At Eric's request, the roster snapshot and opponent rankings now use the active season's regular-season totals to date. This supersedes ADR 013's prior-season statistics choice. Select the statistics asset from the football season, validate every displayed statistics season, and retain source timestamps. The forecast formula and historical holdout remain unchanged. A missing current-season row stays unavailable. Existing stored snapshots with the old contract cannot override this release.

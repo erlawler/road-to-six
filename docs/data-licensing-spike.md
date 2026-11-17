@@ -100,3 +100,12 @@ The MVP tests whether football-only and market-aware probabilities differ in use
 
 **ADVANCE** football data, free odds, forecasting, and cost-capped runtime AI implementation.  
 **DEFER** bettor splits, paid sports feeds, and historical odds.
+
+
+## October 29 free evidence showcase scope
+
+This addition uses nflverse-data release assets for weekly player statistics (`stats_player_week_2026.csv`), season totals, and weekly rosters under the [repository CC BY 4.0 license](https://github.com/nflverse/nflverse-data/blob/main/LICENSE.md), with attribution and transformation notice. The [nflverse licensing overview](https://nflverse.com/#licensing) distinguishes FTN's different terms; FTN participation data is excluded. The existing separate nfldata schedule endpoint remains attributed without extending the release repository's CC BY label to it.
+
+Weather uses the [NWS API](https://www.weather.gov/documentation/services-web-api) and its [public-domain and attribution notice](https://www.weather.gov/disclaimer). The current approximate stadium point uses the public-domain [NFLScoreBot stadium dataset](https://github.com/NFLScoreBot/stadiums), with roof context attributed to the stadium and architect sources stored in the weather adapter. No third-party player image, medical detail, or proprietary narrative is copied. Public readers receive bounded normalized evidence, source links, and timestamps.
+
+FantasyPros access and public redistribution rights are not assumed. This implementation does not use its credentials, truncated responses, paid tiers, or production projections. Its prior synthetic reliability fixtures remain labeled tests. The new comparison is real historical production, and the what-if result is deterministic arithmetic rather than a vendor projection or AI inference. No paid AI or odds call is needed by these four added capabilities. Exact source validation is in [data provenance](data-provenance.md); deployment and production readback must be verified separately.

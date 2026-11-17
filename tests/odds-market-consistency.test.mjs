@@ -150,7 +150,7 @@ test("clears live market state when the forecast API reports bundled evidence", 
 
 test("the forecast API uses a next-day UTC event as current market evidence", async (context) => {
   // Exercise market matching before kickoff, independently of the test run date.
-  context.mock.timers.enable({ apis: ["Date"], now: Math.max(Date.parse(snapshot.season.verifiedAt), Date.parse(snapshot.manifest.reviewedAt ?? snapshot.season.verifiedAt), ...["games", "roster", "stats"].map((key) => Date.parse(snapshot.manifest.inputs[key].retrievedBetween.end))) });
+  context.mock.timers.enable({ apis: ["Date"], now: Date.parse(snapshot.season.verifiedAt) });
   const game = snapshot.schedule.find((candidate) => candidate.status === "scheduled"
     && candidate.kickoffAt && candidate.kickoffAt.slice(0, 10) !== candidate.date);
   assert.ok(game, "The verified snapshot must include an upcoming Central-date rollover game");

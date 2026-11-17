@@ -4,7 +4,7 @@ import test from "node:test";
 
 const templateRoot = new URL("../", import.meta.url);
 const snapshot = JSON.parse(await readFile(new URL("../app/data/nfl-snapshot.json", import.meta.url), "utf8"));
-test.beforeEach((t) => t.mock.timers.enable({ apis: ["Date"], now: Date.parse(snapshot.manifest.inputs.roster.retrievedBetween.end) + 60_000 }));
+test.beforeEach((t) => t.mock.timers.enable({ apis: ["Date"], now: Date.parse(snapshot.manifest.reviewedAt ?? snapshot.manifest.inputs.roster.retrievedBetween.end) + 60_000 }));
 const upcomingGame = snapshot.schedule.find((game) => game.status === "scheduled" && game.kickoffAt);
 
 function customProperties(css) {
@@ -128,11 +128,27 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Frontier AI skills showcase/);
   assert.match(html, /Football evidence meets market reality/);
   assert.match(html, /Interactive forecast/);
+  for (const id of ["forecast", "fantasy", "what-if", "game-day", "fantasy-impact", "reliability"]) assert.match(html, new RegExp(`id="${id}"`));
+  assert.match(html, /Player Decision Lab/);
+  assert.match(html, /Two teams\. Recent production\. Real evidence\./);
+  assert.match(html, /historical performance leaders, not live fantasy projections/);
+  assert.match(html, /Usage what-if lab/);
+  assert.match(html, /Change an assumption\. Inspect the arithmetic\./);
+  assert.match(html, /Waiting for complete player usage/);
+  assert.match(html, /National Weather Service forecasts and alerts/);
+  assert.match(html, /no invented fantasy-point adjustment/);
+  assert.match(html, /AI Reliability Dashboard/);
+  assert.match(html, /saved production snapshot and its latest refresh outcome/);
+  assert.match(html, /Separate test evidence:/);
+  assert.match(html, /Cowboys Fantasy Impact/);
+  assert.doesNotMatch(html, /Synthetic demonstration, not current FantasyPros projections|Fictional player/);
+  assert.match(html, /Simulated test/);
+  assert.match(html, /Unmeasured/);
   assert.match(html, /Model audit/);
   assert.match(html, /Market Context Lab/);
   assert.match(html, /Measure the forecast against the market/);
   assert.match(html, /Dak Prescott/);
-  assert.match(html, /Weekly matchup\. Real baselines\./);
+  assert.match(html, /Weekly matchup\. Current-season stats\./);
   assert.match(html, /George Pickens participation/);
   assert.match(html, /Javonte Williams participation/);
   assert.match(html, /New York Giants/);
@@ -144,7 +160,7 @@ test("server renders the Road to Six market lab", async () => {
   const select = html.match(/<select[^>]*id="game-select"[\s\S]*?<\/select>/)?.[0] ?? "";
   for (const game of snapshot.schedule.filter((game) => game.status === "final" || !game.kickoffAt)) assert.equal(select.includes(game.id), false);
   assert.equal(select.includes(upcomingGame.id), true);
-  assert.match(html, /Kenny Gainwell/);
+  assert.match(html, new RegExp(snapshot.opponents[upcomingGame.opponent].leaders[0].name));
   assert.match(html, /Refresh odds/);
   assert.match(html, /Uncertainty to keep in view/);
   assert.match(html, /The Odds API current markets/);
@@ -155,7 +171,12 @@ test("server renders the Road to Six market lab", async () => {
   assert.match(html, /Incremental user value is unmeasured/);
   assert.match(html, /What changed from baseline/);
   assert.match(html, /Contributions below add to a 50% starting point/);
-  assert.match(html, /top four stat producers from the roster snapshot verified/);
+  assert.match(html, /top four active production leaders/);
+  assert.doesNotMatch(html, /2025 PPR points|Historical player baseline: 2025/);
+  const quarterback = snapshot.players.find((player) => player.name === "Dak Prescott");
+  const receiver = snapshot.players.find((player) => player.name === "CeeDee Lamb");
+  assert.ok(html.includes(`${quarterback.stats.passingYards.toLocaleString()} pass yds, ${quarterback.stats.passingTds} pass TD in ${quarterback.statsSeason} to date`));
+  assert.ok(html.includes(`${receiver.stats.receptions} rec, ${receiver.stats.receivingYards.toLocaleString()} yds in ${receiver.statsSeason} to date`));
   assert.match(html, /#(?:<!-- -->)?1(?:<!-- -->)? rank/);
   assert.match(html, /2024-2025/);
   assert.match(html, /<span class="sr-only">2024 to 2025<\/span>/);

@@ -1358,23 +1358,101 @@ function medianMoneyline(values: number[]) {
     : Math.round(100 * (1 - probability) / probability);
 }
 
-async function fetchOddsPayload(env: RuntimeEnv) {
-  if (!env.THE_ODDS_API_KEY) throw new Error("Odds provider is not configured");
+type OddsFailureReason =
+  | "provider_authentication_failed"
+  | "provider_quota_exhausted"
+  | "provider_rate_limited"
+  | "provider_http_error"
+  | "provider_timeout"
+  | "provider_connection_failed"
+  | "provider_invalid_response";
+
+class OddsProviderError extends Error {
+  constructor(readonly reasonCode: OddsFailureReason, readonly upstreamStatus: number | null = null) {
+    super(reasonCode);
+  }
+}
+
+function oddsRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+async function readOddsProviderBody(response: Response): Promise<unknown> {
+  const maxBytes = response.ok ? 2_000_000 : 16_384;
+  const invalid = () => new OddsProviderError("provider_invalid_response", response.status);
+  if (!response.body) throw invalid();
+  if (Number(response.headers.get("content-length")) > maxBytes) {
+    void response.body.cancel().catch(() => {});
+    throw invalid();
+  }
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let bytes = 0, text = "";
+  while (true) {
+    const part = await reader.read();
+    if (part.done) break;
+    bytes += part.value.byteLength;
+    if (bytes > maxBytes) {
+      void reader.cancel().catch(() => {});
+      throw invalid();
+    }
+    text += decoder.decode(part.value, { stream: true });
+  }
+  try { return JSON.parse(text + decoder.decode()); }
+  catch { throw invalid(); }
+}
+
+async function fetchOddsEvents(apiKey: string) {
   const url = new URL("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/");
-  url.searchParams.set("apiKey", env.THE_ODDS_API_KEY);
+  url.searchParams.set("apiKey", apiKey);
   url.searchParams.set("regions", "us");
   url.searchParams.set("markets", "h2h,spreads,totals");
   url.searchParams.set("oddsFormat", "american");
   url.searchParams.set("dateFormat", "iso");
-  const response = await fetch(url, { signal: AbortSignal.timeout(8_000), redirect: "error" });
-  if (!response.ok) throw new Error(`Odds provider returned status ${response.status}`);
-  const events = await response.json() as Array<Record<string, unknown>>;
+  const signal = AbortSignal.timeout(8_000);
+  let upstreamStatus: number | null = null;
+  try {
+    const response = await fetch(url, { signal, redirect: "error" });
+    upstreamStatus = response.status;
+    if (!response.ok) {
+      // Map only documented codes. Never return provider messages, URLs or credentials.
+      let code: unknown;
+      try {
+        const body = await readOddsProviderBody(response);
+        if (oddsRecord(body)) code = body.error_code;
+      } catch { /* HTTP status remains useful for non-JSON gateway responses. */ }
+      const reason: OddsFailureReason = code === "OUT_OF_USAGE_CREDITS" ? "provider_quota_exhausted"
+        : code === "EXCEEDED_FREQ_LIMIT" || response.status === 429 ? "provider_rate_limited"
+        : ["MISSING_KEY", "INVALID_KEY", "DEACTIVATED_KEY"].includes(String(code)) || [401, 403].includes(response.status) ? "provider_authentication_failed"
+        : "provider_http_error";
+      throw new OddsProviderError(reason, response.status);
+    }
+    const events = await readOddsProviderBody(response);
+    if (!Array.isArray(events) || !events.every(oddsRecord)) {
+      throw new OddsProviderError("provider_invalid_response", response.status);
+    }
+    return events;
+  } catch (error) {
+    if (error instanceof OddsProviderError) throw error;
+    throw new OddsProviderError(signal.aborted || (error instanceof DOMException && error.name === "TimeoutError")
+      ? "provider_timeout" : "provider_connection_failed", upstreamStatus);
+  }
+}
+
+async function fetchOddsPayload(env: RuntimeEnv) {
+  const apiKey = env.THE_ODDS_API_KEY?.trim();
+  if (!apiKey) throw new Error("Odds provider is not configured");
+  const events = await fetchOddsEvents(apiKey);
   const dallasEvents = events.filter(
     (event) => event.home_team === "Dallas Cowboys" || event.away_team === "Dallas Cowboys",
   );
 
   const normalized: Array<Record<string, unknown>> = dallasEvents.map((event) => {
-    const bookmakers = Array.isArray(event.bookmakers) ? event.bookmakers as Array<Record<string, unknown>> : [];
+    if (typeof event.id !== "string" || typeof event.home_team !== "string" || typeof event.away_team !== "string"
+      || typeof event.commence_time !== "string" || !Number.isFinite(Date.parse(event.commence_time))) {
+      throw new OddsProviderError("provider_invalid_response", 200);
+    }
+    const bookmakers = Array.isArray(event.bookmakers) ? event.bookmakers.filter(oddsRecord) : [];
     const opponentTeam = event.home_team === "Dallas Cowboys" ? event.away_team : event.home_team;
     const cowboysMoneylines: number[] = [];
     const opponentMoneylines: number[] = [];
@@ -1386,14 +1464,14 @@ async function fetchOddsPayload(env: RuntimeEnv) {
     const reportedMarketUpdates: string[] = [];
 
     for (const bookmaker of bookmakers) {
-      const markets = Array.isArray(bookmaker.markets) ? bookmaker.markets as Array<Record<string, unknown>> : [];
+      const markets = Array.isArray(bookmaker.markets) ? bookmaker.markets.filter(oddsRecord) : [];
       let bookCowboysMoneyline: number | null = null;
       let bookOpponentMoneyline: number | null = null;
       let hasSpread = false;
       let hasTotal = false;
       const bookUpdates: string[] = [];
       for (const market of markets) {
-        const outcomes = Array.isArray(market.outcomes) ? market.outcomes as Array<Record<string, unknown>> : [];
+        const outcomes = Array.isArray(market.outcomes) ? market.outcomes.filter(oddsRecord) : [];
         if (market.key === "h2h") {
           for (const outcome of outcomes) {
             const price = typeof outcome.price === "number" ? outcome.price : NaN;
@@ -1484,7 +1562,7 @@ async function oddsResponse(env: RuntimeEnv) {
   const cached = await readOddsCache(env);
   if (cached) return jsonResponse(cached, 200, oddsCacheHeaders(cached));
 
-  if (!env.THE_ODDS_API_KEY) {
+  if (!env.THE_ODDS_API_KEY?.trim()) {
     return jsonResponse({
       status: "configuration_required",
       message: "Using the bundled nflverse market snapshot until a free odds key is configured.",
@@ -1553,9 +1631,11 @@ async function oddsResponse(env: RuntimeEnv) {
       200,
       oddsCacheHeaders(payload),
     );
-  } catch {
+  } catch (error) {
     return jsonResponse({
       status: "upstream_unavailable",
+      reasonCode: error instanceof OddsProviderError ? error.reasonCode : "odds_processing_failed",
+      upstreamStatus: error instanceof OddsProviderError ? error.upstreamStatus : null,
       retryAfterSeconds: ODDS_REFRESH_COOLDOWN_SECONDS,
     }, 502, {
       "Retry-After": String(ODDS_REFRESH_COOLDOWN_SECONDS),

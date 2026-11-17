@@ -1,12 +1,20 @@
 import bundledSnapshot from "../app/data/nfl-snapshot.json";
 import { readFootballState, refreshFootballState } from "../lib/football-store.mjs";
 import { cowboysSeasonState } from "../lib/season-state.mjs";
+import { readEvidenceTool } from "./showcase";
 
 type Env = { DB?: D1Database; FOOTBALL_UPDATER_OWNER_EMAIL?: string };
 const tools = [
   { name: "football_update_status", description: "Read Road to Six football verification status and current season facts. Owner only.", inputSchema: { type: "object", properties: {}, additionalProperties: false }, annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false } },
   { name: "refresh_football", description: "Refresh and atomically publish this Site's football snapshot from fixed approved free sources. Retains the last good snapshot on failure. Never calls paid AI or odds providers. Owner only; repeated calls within one hour do not refetch.", inputSchema: { type: "object", properties: {}, additionalProperties: false }, annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true } },
 ];
+const readTools = [
+  { name: "get_current_matchup", description: "Read the verified current league-week Cowboys matchup, record and source time. Reports a bye or unavailable state instead of substituting a later game.", inputSchema: { type: "object", properties: {}, additionalProperties: false } },
+  { name: "get_player_usage", description: "Read complete historical player production and usage for Dallas or its verified current opponent across the last three completed team games. PPR production, targets and carries are historical, not projections.", inputSchema: { type: "object", properties: { team: { type: "string", enum: ["DAL", "opponent"] } }, required: ["team"], additionalProperties: false } },
+  { name: "compare_players", description: "Compare the deterministic recent PPR production leaders for Dallas and its verified current opponent, including ties, coverage and source timestamps. No AI inference or live fantasy projection.", inputSchema: { type: "object", properties: {}, additionalProperties: false } },
+  { name: "get_source_health", description: "Read actual saved snapshot health, latest refresh outcome and source-validation trace. Does not invent uptime history, model accuracy or provider cost metrics.", inputSchema: { type: "object", properties: {}, additionalProperties: false } },
+  { name: "get_game_day_context", description: "Read cached free NWS forecast and alerts for the verified game venue, with forecast horizon and roof limitations. No fantasy-point adjustments; unavailable evidence is explicit.", inputSchema: { type: "object", properties: {}, additionalProperties: false } },
+].map((tool) => ({ ...tool, annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: tool.name === "get_game_day_context" } }));
 
 function reply(body: unknown, status = 200) {
   return Response.json(body, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
@@ -36,11 +44,28 @@ export async function handleFootballMcp(request: Request, env: Env): Promise<Res
   } catch { return reply({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "Invalid JSON-RPC request" } }, 400); }
   const id = message.id ?? null;
   const result = (value: unknown) => reply({ jsonrpc: "2.0", id, result: value });
-  if (message.method === "initialize") return result({ protocolVersion: ["2024-11-05", "2025-03-26", "2025-06-18"].includes(message.params?.protocolVersion ?? "") ? message.params?.protocolVersion : "2025-06-18", capabilities: { tools: {} }, serverInfo: { name: "road-to-six-football", version: "1.0.0" }, instructions: "Only the Site owner may read updater status or publish football data. Do not call AI or odds endpoints." });
+  if (message.method === "server/discover") return result({ supportedVersions: ["2026-07-28"], capabilities: { tools: {} } });
+  if (message.method === "initialize") return result({ protocolVersion: ["2024-11-05", "2025-03-26", "2025-06-18", "2026-07-28"].includes(message.params?.protocolVersion ?? "") ? message.params?.protocolVersion : "2026-07-28", capabilities: { tools: {} }, serverInfo: { name: "road-to-six-football", version: "2.0.0" }, instructions: "Evidence tools return bounded public deterministic facts, not AI inference or fantasy projections. Only the Site owner may read updater status or publish football data. Do not call AI or odds endpoints." });
   if (message.method === "notifications/initialized") return new Response(null, { status: 202 });
   if (message.method === "ping") return result({});
-  if (message.method === "tools/list") return result({ tools });
+  if (message.method === "tools/list") return result({ tools: [...tools, ...readTools] });
   if (message.method !== "tools/call") return reply({ jsonrpc: "2.0", id, error: { code: -32601, message: "Method not found" } });
+
+  const publicTool = readTools.find((tool) => tool.name === message.params?.name);
+  if (publicTool) {
+    const args = message.params?.arguments ?? {};
+    const valid = args && typeof args === "object" && !Array.isArray(args)
+      && (publicTool.name === "get_player_usage"
+        ? Object.keys(args).length === 1 && typeof args.team === "string" && ["DAL", "opponent"].includes(args.team)
+        : Object.keys(args).length === 0);
+    if (!valid) return reply({ jsonrpc: "2.0", id, error: { code: -32602, message: "Arguments do not match this bounded read-only tool" } });
+    try {
+      const output = await readEvidenceTool(publicTool.name, args, env);
+      return result({ content: [{ type: "text", text: JSON.stringify(output) }], structuredContent: output });
+    } catch {
+      return result({ isError: true, content: [{ type: "text", text: "Evidence is unavailable. No external write or paid provider call was made." }] });
+    }
+  }
 
   // Sites dispatch supplies verified identity headers. Its service token alone
   // supplies no user identity and never authorizes this public Site's writer.

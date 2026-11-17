@@ -1,6 +1,6 @@
 # Source freshness and coverage policy
 
-**Updated:** October 5, 2026
+**Updated:** October 29, 2026
 **Scope:** Football freshness is enforced by the authenticated hosted updater, shared data reader, forecast API, and browser. See [weekly update operations](weekly-football-updates.md) for activation and verification requirements.
 **Owner:** Eric Lawler owns source review and release acceptance. Codex can prepare source comparisons and validated candidate artifacts within authorized scope.
 
@@ -12,14 +12,16 @@ Use upstream publication or commit time only when recorded by the source. Use re
 |---|---|---|
 | NFL schedule | Review at least every 7 days during the season; verify a selected game's date and venue within 24 hours before kickoff when demonstrating or releasing a forecast for it. | Show the validated date. After 7 days, describe it as a dated schedule snapshot. A changed matchup, time, or venue requires source reconciliation before calling it current. |
 | Active roster and opponent leaders | Validate roster membership at least every 7 days during the season and after a known roster-source update that changes a featured player or selected opponent. | Say active as of the validation date. Past the target, mark roster membership as needing refresh. If a join fails, expose missing coverage instead of silently substituting a player. |
-| Complete 2025 player production | A completed-season baseline does not expire every 7 days. Recheck official source revisions with the roster refresh and preserve the season, checksum, and validation evidence. | Label the data as complete 2025 production. Do not call it current-season form. Missing prior-season production is a coverage gap, not automatically an application failure. |
+| Current-season player production | Review with the roster and schedule at least every 7 days. Fetch the regular-season totals for the selected season and preserve their source timestamp and checksum. | Label totals with their actual season and source date. Missing current-season production stays unavailable; never substitute prior-year totals. |
+| Recent weekly player usage | Refresh atomically with the four football inputs; verify full-season reconciliation and the latest three completed team games. | Preserve actual source update/retrieval times. Fewer than three games, missing coverage, a bye, stale review, or an unverified matchup abstains. Wednesday night/Thursday corrections may arrive after the unchanged Wednesday 08:00 America/Chicago task. |
+| Game-day weather | Shared NWS caches: 24-hour point mapping, 30-minute hourly forecast, 10-minute active alerts. Forecast source no older than 18 hours; period must cover kickoff. | Show source/fetch times and forecast horizon. Unknown roof status, unreviewed venue, missing storage, invalid data, rate limits, and source failures remain explicit. Alerts are active now; outdoor weather is never an invented fantasy modifier. |
 | Ratings and backtest | Rebuild only from a documented model/data release; preserve the development window, holdout window, source evidence, and model version. | The historical holdout validates its stated baseline and inputs. It does not validate manually assigned player sensitivity coefficients or future-season accuracy. |
 | Current moneyline, spread, and total | Apply only supported, matched markets within the six-hour cache lifetime. Preserve provider timestamps, retrieval time, cache expiry, event match, and market-specific sportsbook counts. | One participating book is a single-source price. Missing spreads, totals, or paired moneylines must be explicit. Expired or unmatched data must not be described as current or multi-book consensus. |
 | Archived market snapshot | Retain only with its captured date and baseline label. It has no current-market freshness guarantee. | Show baseline or unavailable state distinctly. A fallback is evidence of availability design, not evidence of current odds. |
 
 The 7-day and 24-hour targets are product operating choices, not vendor service guarantees. A monthly health check alone does not satisfy an in-season weekly freshness target. No new automation, source subscription, or deployment is created by this policy.
 
-`npm run data:validate` validates the immutable bundled fallback at its recorded verification time, including hashes, joins, model calculations, and official evidence consistency. It makes no claim that this fallback is current today. Every hosted refresh uses the same validator with the actual current time and rejects stale, future, incomplete, or conflicting evidence before publication. The public page and forecast API read the same D1 version; a failed data read is visible and cannot silently renew the source dates. Precise review and retrieval timestamps determine the seven-day window for hosted data, avoiding premature expiration at UTC midnight. Legacy bundled data retains its conservative date-only age. Completed 2025 player statistics remain explicitly historical.
+`npm run data:validate` validates the immutable bundled fallback at its recorded verification time, including hashes, joins, model calculations, and official evidence consistency. It makes no claim that this fallback is current today. Every hosted refresh uses the same validator with the actual current time and rejects stale, future, incomplete, or conflicting evidence before publication. The public page and forecast API read the same D1 version; a failed data read is visible and cannot silently renew the source dates. Precise review and retrieval timestamps determine the seven-day window for hosted data, avoiding premature expiration at UTC midnight. Legacy bundled data retains its conservative date-only age. Current-season statistics participate in the same freshness check as roster and schedule evidence. Stored snapshots with the old historical-stat contract use the verified bundled release until the updater publishes compatible data.
 
 ## Current season and scenario behavior
 
@@ -33,9 +35,9 @@ Scenarios are held in memory only. On page load the next eligible matchup and ba
 
 The approved cadence is Wednesday at 8 a.m. America/Chicago, using a Site-linked cloud task and the owner-only football updater. The supported connection, controlled update/readback, and saved schedule must be verified before calling it enabled. Its source and publication operations require no Mac and no paid AI or odds calls. The separate monthly health check is preserved.
 
-On success the updater atomically replaces the football snapshot and verification evidence in D1. On failure it retains the last good payload and successful timestamp, records failure status, and notifies the owner. Public readers see dated evidence and a warning. The updater validates all final scores, actual record, remaining schedule, official next kickoff, bye/TBD weeks, roster coverage, and rating calculations. Scenario controls remain hypothetical and cannot change actual results.
+On success the updater atomically replaces the football snapshot and verification evidence in D1. On failure it retains the last good payload and successful timestamp, records failure status, and notifies the owner. Public readers see dated evidence and a warning. The updater validates all final scores, actual record, remaining schedule, official next kickoff, bye/TBD weeks, roster coverage, and rating calculations. Scenario controls remain hypothetical and cannot change actual results. The weekly-statistics source joins the same atomic candidate; stale or conflicting totals retain the last good complete payload. Public usage never splices new bundle evidence into an older saved football version.
 
-Wednesday-only operation means weekend results may remain pending until Wednesday. A kickoff that has passed without a verified final pauses scenarios. The site is not a live scoreboard, injury report, or automatic current-season player-performance model. The 24-hour pre-kickoff recommendation for a demonstration remains separate from the owner's chosen weekly cadence; no extra daily schedule is implied.
+Wednesday-only operation means weekend results may remain pending until Wednesday. A kickoff that has passed without a verified final pauses scenarios. The site is not a live scoreboard or injury report. Recent production compares validated historical team-game windows; it is not a live fantasy projection model. The 24-hour pre-kickoff recommendation for a demonstration remains separate from the owner's chosen weekly cadence; no extra daily schedule is implied.
 
 ## Coverage decision rules
 
@@ -43,7 +45,7 @@ Wednesday-only operation means weekend results may remain pending until Wednesda
 2. A returned provider event that cannot be joined to the product's schedule requires explicit reconciliation evidence. Never guess the match.
 3. A field returned correctly by the provider but discarded or mislabeled by the application is an application defect.
 4. A stale football snapshot is a maintenance gap even when live odds work. Report those states separately.
-5. A completed prior-season statistic may remain valid while current roster membership becomes stale. Evaluate each source category independently.
+5. Review statistics, roster membership, and schedule independently. Fresh roster data cannot renew an old statistics review.
 
 ## Release evidence
 

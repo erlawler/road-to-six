@@ -11,7 +11,7 @@ const game = (week, date, result = null) => ({
 function fixture(schedule, date = "2026-10-05") {
   const source = { metadataStatus: "verified", sourceUpdatedAt: `${date}T10:00:00Z`, retrievedBetween: { start: `${date}T11:00:00Z`, end: `${date}T11:01:00Z` } };
   return { dataVersion: "fixture-v1", asOf: date, schedule,
-    manifest: { validatedAt: date, validationStatus: "passed", inputs: { games: source, roster: source } },
+    manifest: { validatedAt: date, validationStatus: "passed", inputs: { games: source, roster: source, stats: source } },
     season: { verifiedAt: `${date}T11:02:00Z`, byeWeeks: [14], weeks: seasonWeekCalendar([
       { week: 4, gameday: "2026-10-01" }, { week: 5, gameday: "2026-10-08" },
       { week: 13, gameday: "2026-12-03" }, { week: 14, gameday: "2026-12-10" }, { week: 15, gameday: "2026-12-17" },

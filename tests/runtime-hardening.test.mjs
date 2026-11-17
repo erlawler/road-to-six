@@ -10,7 +10,7 @@ const env = {
   THE_ODDS_API_KEY: "test-key",
   ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) },
 };
-test.beforeEach(() => { mock.timers.reset(); mock.timers.enable({ apis: ["Date"], now: Date.parse(snapshot.manifest.inputs.roster.retrievedBetween.end) + 60_000 }); });
+test.beforeEach(() => { mock.timers.reset(); mock.timers.enable({ apis: ["Date"], now: Date.parse(snapshot.manifest.reviewedAt ?? snapshot.manifest.inputs.roster.retrievedBetween.end) + 60_000 }); });
 test.afterEach(() => mock.timers.reset());
 
 const ctx = { waitUntil() {}, passThroughOnException() {} };
@@ -209,8 +209,9 @@ test("reconciles a request to its reserved month when the provider finishes afte
   mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-09-30T23:59:59Z") });
   const current = structuredClone(snapshot);
   current.asOf = current.manifest.validatedAt = "2026-09-30";
+  current.manifest.reviewedAt = "2026-09-30T20:00:00Z";
   current.season.verifiedAt = "2026-09-30T20:00:00Z";
-  for (const key of ["games", "roster"]) Object.assign(current.manifest.inputs[key], { sourceUpdatedAt: "2026-09-30T19:00:00Z", retrievedBetween: { start: "2026-09-30T19:30:00Z", end: "2026-09-30T19:31:00Z" } });
+  for (const input of Object.values(current.manifest.inputs)) Object.assign(input, { sourceUpdatedAt: "2026-09-30T19:00:00Z", retrievedBetween: { start: "2026-09-30T19:30:00Z", end: "2026-09-30T19:31:00Z" } });
   for (const game of current.schedule.filter((game) => game.date > current.asOf)) Object.assign(game, { status: "scheduled", cowboysScore: null, opponentScore: null });
   const d1 = createD1({ budgetBalances: { "2026-10": 200_000 }, footballSnapshot: current });
   let providerCalls = 0;
